@@ -1,0 +1,43 @@
+# Minimal docker-compose stack used by deploy/smoke/smoke.sh to verify the
+# EspoDental module loads on a fresh EspoCRM container. Not for production.
+
+name: espodental-smoke
+
+services:
+  smoke-db:
+    image: mariadb:10.11
+    container_name: espodental-smoke-db
+    environment:
+      MARIADB_ROOT_PASSWORD: smoke-root
+      MARIADB_DATABASE: espocrm_smoke
+      MARIADB_USER: espocrm
+      MARIADB_PASSWORD: smoke-secret
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    tmpfs:
+      - /var/lib/mysql
+
+  smoke-web:
+    image: espocrm/espocrm:9.2.7
+    container_name: espodental-smoke-web
+    depends_on:
+      smoke-db:
+        condition: service_healthy
+    environment:
+      ESPOCRM_DATABASE_PLATFORM: Mysql
+      ESPOCRM_DATABASE_HOST: smoke-db
+      ESPOCRM_DATABASE_PORT: 3306
+      ESPOCRM_DATABASE_NAME: espocrm_smoke
+      ESPOCRM_DATABASE_USER: espocrm
+      ESPOCRM_DATABASE_PASSWORD: smoke-secret
+      ESPOCRM_ADMIN_USERNAME: admin
+      ESPOCRM_ADMIN_PASSWORD: smoke-admin
+      ESPOCRM_SITE_URL: http://localhost:18080
+    volumes:
+      - ../../src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental:ro
+      - ../../src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental:ro
+    ports:
+      - "18080:80"
