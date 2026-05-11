@@ -1,0 +1,10 @@
+{
+    "labels": {"Create TreatmentStage": "Crear etapa"},
+    "fields": {
+        "name": "Nombre", "card": "Ficha", "sequence": "Secuencia",
+        "dateStart": "Inicio", "dateEnd": "Fin", "durationMonths": "Duracion (meses)",
+        "description": "Descripcion", "goals": "Objetivos", "status": "Estado"
+    },
+    "options": {"status": {"planned": "Planificada", "in_progress": "En progreso", "completed": "Completada", "skipped": "Omitida"}},
+    "links": {"card": "Ficha"}
+}

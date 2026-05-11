@@ -1,0 +1,13 @@
+{
+    "labels": {"Create CephalometricMeasurement": "Add Measurement"},
+    "fields": {
+        "name": "Name", "card": "Card", "code": "Code",
+        "value": "Value", "unit": "Unit", "normalRange": "Normal range",
+        "phase": "Phase", "measuredAt": "Measured at", "notes": "Notes"
+    },
+    "options": {
+        "unit": {"degree": "°", "mm": "mm", "ratio": "ratio"},
+        "phase": {"initial": "Initial", "interim": "Interim", "final": "Final"}
+    },
+    "links": {"card": "Card"}
+}

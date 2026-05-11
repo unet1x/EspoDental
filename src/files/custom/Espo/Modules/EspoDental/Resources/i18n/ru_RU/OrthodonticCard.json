@@ -1,0 +1,46 @@
+{
+    "labels": {
+        "Create OrthodonticCard": "Создать ортодонтическую карту",
+        "Close Card": "Закрыть карту", "Reopen Card": "Открыть заново",
+        "Closed": "Закрыта", "Reopened": "Открыта заново",
+        "Overview": "Основное", "Diagnosis": "Диагноз", "Plan": "План"
+    },
+    "fields": {
+        "name": "Название", "cardNumber": "Номер карты",
+        "patient": "Пациент", "clinic": "Клиника", "doctor": "Ортодонт",
+        "dateOpen": "Дата открытия", "dateClose": "Дата закрытия",
+        "status": "Статус", "chiefComplaint": "Жалоба", "anamnesis": "Анамнез",
+        "diagnosis": "Диагноз", "malocclusionClass": "Класс окклюзии",
+        "skeletalClass": "Скелетный класс", "growthStage": "Стадия роста",
+        "apparatusType": "Аппарат", "estimatedDurationMonths": "Срок лечения, мес",
+        "treatmentPlan": "План лечения", "extractionPlan": "План экстракций", "notes": "Заметки"
+    },
+    "options": {
+        "status": {
+            "open": "Открыта", "in_treatment": "В лечении",
+            "retention": "Ретенция", "completed": "Завершена", "cancelled": "Отменена"
+        },
+        "malocclusionClass": {
+            "": "—", "I": "I класс", "II_div1": "II.1 класс", "II_div2": "II.2 класс",
+            "III": "III класс", "crossbite": "Перекрёстный прикус",
+            "openbite": "Открытый прикус", "deepbite": "Глубокий прикус", "other": "Прочее"
+        },
+        "skeletalClass": {"": "—", "I": "I", "II": "II", "III": "III", "mixed": "Смешанный"},
+        "growthStage": {
+            "": "—", "pre_pubertal": "Допубертатный", "pubertal": "Пубертатный",
+            "post_pubertal": "Постпубертатный", "adult": "Взрослый"
+        },
+        "apparatusType": {
+            "": "—", "brackets_metal": "Брекеты металлические",
+            "brackets_ceramic": "Брекеты керамические", "brackets_lingual": "Лингвальные брекеты",
+            "aligners": "Элайнеры", "plates": "Пластинки", "headgear": "Лицевая дуга",
+            "twin_block": "Twin-block", "retainer": "Ретейнер", "other": "Прочее"
+        }
+    },
+    "links": {
+        "patient": "Пациент", "clinic": "Клиника", "doctor": "Ортодонт",
+        "stages": "Этапы", "toothMovementPlans": "Планы перемещения",
+        "photos": "Фото", "cephMeasurements": "Цефалометрия"
+    },
+    "boolFilters": {"activeCards": "Только активные", "myDoctor": "Мои (врач)"}
+}

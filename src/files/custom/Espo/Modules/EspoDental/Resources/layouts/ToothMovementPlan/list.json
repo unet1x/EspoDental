@@ -1,0 +1,5 @@
+[
+    {"name": "toothNumber"}, {"name": "name"},
+    {"name": "mesialMm"}, {"name": "rotationDeg"}, {"name": "torqueDeg"},
+    {"name": "status"}
+]

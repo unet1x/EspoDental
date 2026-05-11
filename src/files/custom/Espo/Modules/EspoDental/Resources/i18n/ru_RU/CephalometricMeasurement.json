@@ -1,0 +1,13 @@
+{
+    "labels": {"Create CephalometricMeasurement": "Добавить замер"},
+    "fields": {
+        "name": "Название", "card": "Карта", "code": "Параметр",
+        "value": "Значение", "unit": "Ед.", "normalRange": "Норма",
+        "phase": "Фаза", "measuredAt": "Дата замера", "notes": "Заметки"
+    },
+    "options": {
+        "unit": {"degree": "°", "mm": "мм", "ratio": "коэф."},
+        "phase": {"initial": "Начало", "interim": "Промежуточная", "final": "Финал"}
+    },
+    "links": {"card": "Карта"}
+}

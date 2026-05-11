@@ -1,0 +1,21 @@
+[
+    {"label": "Overview", "rows": [
+        [{"name": "name"}, {"name": "cardNumber"}],
+        [{"name": "patient"}, {"name": "doctor"}],
+        [{"name": "clinic"}, {"name": "status"}],
+        [{"name": "dateOpen"}, {"name": "dateClose"}],
+        [{"name": "chiefComplaint", "fullWidth": true}]
+    ]},
+    {"label": "Diagnosis", "rows": [
+        [{"name": "diagnosis", "fullWidth": true}],
+        [{"name": "anamnesis", "fullWidth": true}],
+        [{"name": "malocclusionClass"}, {"name": "skeletalClass"}],
+        [{"name": "growthStage"}, {"name": "apparatusType"}]
+    ]},
+    {"label": "Plan", "rows": [
+        [{"name": "estimatedDurationMonths"}, false],
+        [{"name": "treatmentPlan", "fullWidth": true}],
+        [{"name": "extractionPlan", "fullWidth": true}],
+        [{"name": "notes", "fullWidth": true}]
+    ]}
+]

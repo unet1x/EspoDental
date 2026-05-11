@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 200},
+        "card": {"type": "link", "required": true},
+        "type": {
+            "type": "enum",
+            "options": [
+                "extra_front", "extra_smile", "extra_profile", "extra_3q",
+                "intra_front", "intra_lateral_right", "intra_lateral_left",
+                "intra_upper_occlusal", "intra_lower_occlusal",
+                "xray_panoramic", "xray_cephalometric",
+                "model_upper", "model_lower", "other"
+            ],
+            "required": true,
+            "default": "intra_front"
+        },
+        "takenAt": {"type": "datetime", "required": true},
+        "phase": {
+            "type": "enum",
+            "options": ["initial", "interim", "final", "retention"],
+            "default": "initial"
+        },
+        "description": {"type": "text"},
+        "orthancUid": {"type": "varchar", "maxLength": 128},
+        "file": {"type": "file"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "card": {"type": "belongsTo", "entity": "OrthodonticCard", "foreign": "photos"},
+        "file": {"type": "belongsTo", "entity": "Attachment"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "takenAt", "order": "desc"},
+    "indexes": {"card_phase": {"columns": ["cardId", "phase", "type"]}}
+}

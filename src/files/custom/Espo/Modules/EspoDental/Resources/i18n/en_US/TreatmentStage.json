@@ -1,0 +1,10 @@
+{
+    "labels": {"Create TreatmentStage": "Create Stage"},
+    "fields": {
+        "name": "Name", "card": "Card", "sequence": "Sequence",
+        "dateStart": "Start", "dateEnd": "End", "durationMonths": "Duration (months)",
+        "description": "Description", "goals": "Goals", "status": "Status"
+    },
+    "options": {"status": {"planned": "Planned", "in_progress": "In progress", "completed": "Completed", "skipped": "Skipped"}},
+    "links": {"card": "Card"}
+}

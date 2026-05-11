@@ -1,0 +1,13 @@
+{
+    "labels": {"Create ToothMovementPlan": "Create Tooth Movement Plan", "Tooth": "Tooth", "Movements": "Movements"},
+    "fields": {
+        "name": "Name", "card": "Card", "toothNumber": "Tooth number (FDI)",
+        "currentPosition": "Current position", "targetPosition": "Target position",
+        "rotationDeg": "Rotation (deg)", "intrusionMm": "Intrusion (mm)", "extrusionMm": "Extrusion (mm)",
+        "mesialMm": "Mesial (mm)", "distalMm": "Distal (mm)",
+        "buccalMm": "Buccal (mm)", "lingualMm": "Lingual (mm)", "torqueDeg": "Torque (deg)",
+        "notes": "Notes", "status": "Status"
+    },
+    "options": {"status": {"planned": "Planned", "in_progress": "In progress", "completed": "Completed"}},
+    "links": {"card": "Card"}
+}

@@ -1,0 +1,13 @@
+{
+    "labels": {"Create ToothMovementPlan": "Создать план перемещения", "Tooth": "Зуб", "Movements": "Перемещения"},
+    "fields": {
+        "name": "Название", "card": "Карта", "toothNumber": "Номер зуба (FDI)",
+        "currentPosition": "Текущее положение", "targetPosition": "Целевое положение",
+        "rotationDeg": "Ротация (°)", "intrusionMm": "Интрузия (мм)", "extrusionMm": "Экструзия (мм)",
+        "mesialMm": "Медиально (мм)", "distalMm": "Дистально (мм)",
+        "buccalMm": "Буккально (мм)", "lingualMm": "Лингвально (мм)", "torqueDeg": "Торк (°)",
+        "notes": "Заметки", "status": "Статус"
+    },
+    "options": {"status": {"planned": "Запланирован", "in_progress": "В процессе", "completed": "Завершён"}},
+    "links": {"card": "Карта"}
+}

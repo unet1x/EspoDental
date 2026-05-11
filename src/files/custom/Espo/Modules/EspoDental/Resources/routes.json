@@ -52,5 +52,15 @@
         "route": "/EspoDental/Calendar/move",
         "method": "post",
         "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Calendar", "action": "move"}
+    },
+    {
+        "route": "/EspoDental/OrthodonticCard/close",
+        "method": "post",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\OrthodonticCard", "action": "close"}
+    },
+    {
+        "route": "/EspoDental/OrthodonticCard/reopen",
+        "method": "post",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\OrthodonticCard", "action": "reopen"}
     }
 ]

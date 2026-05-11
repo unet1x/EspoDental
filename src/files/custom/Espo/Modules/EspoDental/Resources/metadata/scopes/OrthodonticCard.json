@@ -1,0 +1,5 @@
+{
+    "entity": true, "module": "EspoDental", "object": true,
+    "tab": true, "stream": true, "importable": false, "layouts": true,
+    "languageIsGlobal": true, "type": "Base"
+}

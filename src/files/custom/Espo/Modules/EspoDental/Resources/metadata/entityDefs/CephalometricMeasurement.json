@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 200},
+        "card": {"type": "link", "required": true},
+        "code": {
+            "type": "enum",
+            "options": [
+                "SNA", "SNB", "ANB", "FMA", "SN_GoGn", "U1_SN", "U1_NA", "L1_NB", "L1_GoGn",
+                "IMPA", "Interincisal", "Wits", "PFH", "AFH", "PFH_AFH", "other"
+            ],
+            "required": true
+        },
+        "value": {"type": "float", "required": true},
+        "unit": {"type": "enum", "options": ["degree", "mm", "ratio"], "default": "degree"},
+        "normalRange": {"type": "varchar", "maxLength": 32},
+        "phase": {"type": "enum", "options": ["initial", "interim", "final"], "default": "initial"},
+        "measuredAt": {"type": "date"},
+        "notes": {"type": "text"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "card": {"type": "belongsTo", "entity": "OrthodonticCard", "foreign": "cephMeasurements"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "indexes": {"card_phase": {"columns": ["cardId", "phase", "code"]}}
+}

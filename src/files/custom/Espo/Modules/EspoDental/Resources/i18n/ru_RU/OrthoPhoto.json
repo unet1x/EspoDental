@@ -1,0 +1,20 @@
+{
+    "labels": {"Create OrthoPhoto": "Добавить ортодонтическое фото"},
+    "fields": {
+        "name": "Название", "card": "Карта", "type": "Вид", "phase": "Фаза",
+        "takenAt": "Дата съёмки", "description": "Описание",
+        "orthancUid": "Orthanc UID", "file": "Файл"
+    },
+    "options": {
+        "type": {
+            "extra_front": "Лицо фронт", "extra_smile": "Улыбка", "extra_profile": "Профиль",
+            "extra_3q": "3/4", "intra_front": "Внутр. фронт",
+            "intra_lateral_right": "Внутр. правая", "intra_lateral_left": "Внутр. левая",
+            "intra_upper_occlusal": "Верхняя окклюзионная", "intra_lower_occlusal": "Нижняя окклюзионная",
+            "xray_panoramic": "ОПТГ", "xray_cephalometric": "ТРГ",
+            "model_upper": "Модель верх", "model_lower": "Модель низ", "other": "Прочее"
+        },
+        "phase": {"initial": "Начало", "interim": "Промежуточная", "final": "Финал", "retention": "Ретенция"}
+    },
+    "links": {"card": "Карта"}
+}

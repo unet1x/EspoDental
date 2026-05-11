@@ -1,0 +1,9 @@
+[
+    {"name": "cardNumber"},
+    {"name": "patient"},
+    {"name": "doctor"},
+    {"name": "dateOpen"},
+    {"name": "malocclusionClass"},
+    {"name": "apparatusType"},
+    {"name": "status"}
+]

@@ -1,0 +1,34 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 200},
+        "card": {"type": "link", "required": true},
+        "sequence": {"type": "int", "default": 1, "min": 1},
+        "dateStart": {"type": "date"},
+        "dateEnd": {"type": "date"},
+        "durationMonths": {"type": "int", "min": 0, "max": 60},
+        "description": {"type": "text"},
+        "goals": {"type": "text"},
+        "status": {
+            "type": "enum",
+            "options": ["planned", "in_progress", "completed", "skipped"],
+            "default": "planned",
+            "style": {
+                "planned": "default",
+                "in_progress": "primary",
+                "completed": "success",
+                "skipped": "muted"
+            }
+        },
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "card": {"type": "belongsTo", "entity": "OrthodonticCard", "foreign": "stages"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "sequence", "order": "asc"},
+    "indexes": {"card_seq": {"columns": ["cardId", "sequence"]}}
+}

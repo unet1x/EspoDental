@@ -1,0 +1,13 @@
+{
+    "labels": {"Create CephalometricMeasurement": "Anadir medicion"},
+    "fields": {
+        "name": "Nombre", "card": "Ficha", "code": "Codigo",
+        "value": "Valor", "unit": "Unidad", "normalRange": "Rango normal",
+        "phase": "Fase", "measuredAt": "Fecha medicion", "notes": "Notas"
+    },
+    "options": {
+        "unit": {"degree": "°", "mm": "mm", "ratio": "ratio"},
+        "phase": {"initial": "Inicial", "interim": "Intermedia", "final": "Final"}
+    },
+    "links": {"card": "Ficha"}
+}

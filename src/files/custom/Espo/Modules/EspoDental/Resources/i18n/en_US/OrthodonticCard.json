@@ -1,0 +1,46 @@
+{
+    "labels": {
+        "Create OrthodonticCard": "Create Orthodontic Card",
+        "Close Card": "Close Card", "Reopen Card": "Reopen Card",
+        "Closed": "Closed", "Reopened": "Reopened",
+        "Overview": "Overview", "Diagnosis": "Diagnosis", "Plan": "Plan"
+    },
+    "fields": {
+        "name": "Name", "cardNumber": "Card Number",
+        "patient": "Patient", "clinic": "Clinic", "doctor": "Orthodontist",
+        "dateOpen": "Date opened", "dateClose": "Date closed",
+        "status": "Status", "chiefComplaint": "Chief complaint", "anamnesis": "Anamnesis",
+        "diagnosis": "Diagnosis", "malocclusionClass": "Malocclusion class",
+        "skeletalClass": "Skeletal class", "growthStage": "Growth stage",
+        "apparatusType": "Appliance", "estimatedDurationMonths": "Est. duration, months",
+        "treatmentPlan": "Treatment plan", "extractionPlan": "Extraction plan", "notes": "Notes"
+    },
+    "options": {
+        "status": {
+            "open": "Open", "in_treatment": "In treatment",
+            "retention": "Retention", "completed": "Completed", "cancelled": "Cancelled"
+        },
+        "malocclusionClass": {
+            "": "—", "I": "Class I", "II_div1": "Class II.1", "II_div2": "Class II.2",
+            "III": "Class III", "crossbite": "Crossbite",
+            "openbite": "Open bite", "deepbite": "Deep bite", "other": "Other"
+        },
+        "skeletalClass": {"": "—", "I": "I", "II": "II", "III": "III", "mixed": "Mixed"},
+        "growthStage": {
+            "": "—", "pre_pubertal": "Pre-pubertal", "pubertal": "Pubertal",
+            "post_pubertal": "Post-pubertal", "adult": "Adult"
+        },
+        "apparatusType": {
+            "": "—", "brackets_metal": "Metal brackets",
+            "brackets_ceramic": "Ceramic brackets", "brackets_lingual": "Lingual brackets",
+            "aligners": "Aligners", "plates": "Plates", "headgear": "Headgear",
+            "twin_block": "Twin-block", "retainer": "Retainer", "other": "Other"
+        }
+    },
+    "links": {
+        "patient": "Patient", "clinic": "Clinic", "doctor": "Orthodontist",
+        "stages": "Stages", "toothMovementPlans": "Tooth movement plans",
+        "photos": "Photos", "cephMeasurements": "Cephalometrics"
+    },
+    "boolFilters": {"activeCards": "Active only", "myDoctor": "My (doctor)"}
+}

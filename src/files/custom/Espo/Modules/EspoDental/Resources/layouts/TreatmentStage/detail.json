@@ -1,0 +1,8 @@
+[{"rows": [
+    [{"name": "name"}, {"name": "sequence"}],
+    [{"name": "card"}, {"name": "status"}],
+    [{"name": "dateStart"}, {"name": "dateEnd"}],
+    [{"name": "durationMonths"}, false],
+    [{"name": "goals", "fullWidth": true}],
+    [{"name": "description", "fullWidth": true}]
+]}]

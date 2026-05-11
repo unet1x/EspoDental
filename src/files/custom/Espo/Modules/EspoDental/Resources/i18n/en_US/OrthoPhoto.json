@@ -1,0 +1,20 @@
+{
+    "labels": {"Create OrthoPhoto": "Add Ortho Photo"},
+    "fields": {
+        "name": "Name", "card": "Card", "type": "Type", "phase": "Phase",
+        "takenAt": "Taken at", "description": "Description",
+        "orthancUid": "Orthanc UID", "file": "File"
+    },
+    "options": {
+        "type": {
+            "extra_front": "Face frontal", "extra_smile": "Smile", "extra_profile": "Profile",
+            "extra_3q": "3/4 view", "intra_front": "Intraoral frontal",
+            "intra_lateral_right": "Intraoral right", "intra_lateral_left": "Intraoral left",
+            "intra_upper_occlusal": "Upper occlusal", "intra_lower_occlusal": "Lower occlusal",
+            "xray_panoramic": "Panoramic X-ray", "xray_cephalometric": "Cephalometric X-ray",
+            "model_upper": "Upper model", "model_lower": "Lower model", "other": "Other"
+        },
+        "phase": {"initial": "Initial", "interim": "Interim", "final": "Final", "retention": "Retention"}
+    },
+    "links": {"card": "Card"}
+}

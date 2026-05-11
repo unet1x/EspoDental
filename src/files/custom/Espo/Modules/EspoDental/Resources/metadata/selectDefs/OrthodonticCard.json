@@ -1,0 +1,6 @@
+{
+    "boolFilterClassNameMap": {
+        "activeCards": "Espo\\Modules\\EspoDental\\Classes\\Select\\OrthodonticCard\\BoolFilters\\ActiveCards",
+        "myDoctor": "Espo\\Modules\\EspoDental\\Classes\\Select\\OrthodonticCard\\BoolFilters\\MyDoctor"
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 200},
+        "card": {"type": "link", "required": true},
+        "toothNumber": {"type": "varchar", "maxLength": 4, "required": true},
+        "currentPosition": {"type": "text"},
+        "targetPosition": {"type": "text"},
+        "movements": {"type": "jsonObject"},
+        "rotationDeg": {"type": "float"},
+        "intrusionMm": {"type": "float"},
+        "extrusionMm": {"type": "float"},
+        "mesialMm": {"type": "float"},
+        "distalMm": {"type": "float"},
+        "buccalMm": {"type": "float"},
+        "lingualMm": {"type": "float"},
+        "torqueDeg": {"type": "float"},
+        "notes": {"type": "text"},
+        "status": {
+            "type": "enum",
+            "options": ["planned", "in_progress", "completed"],
+            "default": "planned",
+            "style": {"planned": "default", "in_progress": "primary", "completed": "success"}
+        },
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "card": {"type": "belongsTo", "entity": "OrthodonticCard", "foreign": "toothMovementPlans"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "indexes": {"card_tooth": {"columns": ["cardId", "toothNumber"]}}
+}

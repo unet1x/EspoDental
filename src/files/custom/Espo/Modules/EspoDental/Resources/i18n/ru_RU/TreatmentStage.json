@@ -1,0 +1,10 @@
+{
+    "labels": {"Create TreatmentStage": "Создать этап"},
+    "fields": {
+        "name": "Название", "card": "Карта", "sequence": "Порядок",
+        "dateStart": "Начало", "dateEnd": "Окончание", "durationMonths": "Длительность, мес",
+        "description": "Описание", "goals": "Цели", "status": "Статус"
+    },
+    "options": {"status": {"planned": "Запланирован", "in_progress": "В процессе", "completed": "Завершён", "skipped": "Пропущен"}},
+    "links": {"card": "Карта"}
+}

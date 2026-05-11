@@ -1,0 +1,4 @@
+[
+    {"name": "code"}, {"name": "value"}, {"name": "unit"}, {"name": "normalRange"},
+    {"name": "phase"}, {"name": "measuredAt"}, {"name": "card"}
+]

@@ -1,0 +1,15 @@
+[
+    {"label": "Tooth", "rows": [
+        [{"name": "name"}, {"name": "toothNumber"}],
+        [{"name": "card"}, {"name": "status"}],
+        [{"name": "currentPosition", "fullWidth": true}],
+        [{"name": "targetPosition", "fullWidth": true}]
+    ]},
+    {"label": "Movements", "rows": [
+        [{"name": "mesialMm"}, {"name": "distalMm"}],
+        [{"name": "buccalMm"}, {"name": "lingualMm"}],
+        [{"name": "intrusionMm"}, {"name": "extrusionMm"}],
+        [{"name": "rotationDeg"}, {"name": "torqueDeg"}],
+        [{"name": "notes", "fullWidth": true}]
+    ]}
+]

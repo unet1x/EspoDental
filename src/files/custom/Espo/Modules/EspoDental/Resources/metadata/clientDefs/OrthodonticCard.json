@@ -1,0 +1,27 @@
+{
+    "controller": "controllers/record",
+    "color": "#E377C2",
+    "iconClass": "fas fa-teeth-open",
+    "kanbanViewMode": true,
+    "boolFilterList": ["activeCards", "myDoctor"],
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "close",
+                    "labelText": "Close Card",
+                    "style": "primary",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/orthodontic-card/close"
+                },
+                {
+                    "name": "reopen",
+                    "labelText": "Reopen Card",
+                    "style": "default",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/orthodontic-card/reopen"
+                }
+            ]
+        }
+    }
+}

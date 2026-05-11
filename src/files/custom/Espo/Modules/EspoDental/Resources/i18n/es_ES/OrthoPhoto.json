@@ -1,0 +1,20 @@
+{
+    "labels": {"Create OrthoPhoto": "Anadir foto ortodoncica"},
+    "fields": {
+        "name": "Nombre", "card": "Ficha", "type": "Tipo", "phase": "Fase",
+        "takenAt": "Fecha", "description": "Descripcion",
+        "orthancUid": "Orthanc UID", "file": "Archivo"
+    },
+    "options": {
+        "type": {
+            "extra_front": "Cara frontal", "extra_smile": "Sonrisa", "extra_profile": "Perfil",
+            "extra_3q": "Tres cuartos", "intra_front": "Intraoral frontal",
+            "intra_lateral_right": "Intraoral derecha", "intra_lateral_left": "Intraoral izquierda",
+            "intra_upper_occlusal": "Oclusal superior", "intra_lower_occlusal": "Oclusal inferior",
+            "xray_panoramic": "Panoramica", "xray_cephalometric": "Cefalometrica",
+            "model_upper": "Modelo superior", "model_lower": "Modelo inferior", "other": "Otro"
+        },
+        "phase": {"initial": "Inicial", "interim": "Intermedia", "final": "Final", "retention": "Retencion"}
+    },
+    "links": {"card": "Ficha"}
+}

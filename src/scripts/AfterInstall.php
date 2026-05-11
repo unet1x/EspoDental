@@ -42,6 +42,11 @@ class AfterInstall
         'SalaryProfile',
         'SalaryEntry',
         'SalaryBonus',
+        'OrthodonticCard',
+        'TreatmentStage',
+        'ToothMovementPlan',
+        'OrthoPhoto',
+        'CephalometricMeasurement',
     ];
 
     private const ROLES = [
@@ -72,6 +77,11 @@ class AfterInstall
                 'SalaryProfile'        => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'all'],
                 'SalaryEntry'          => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'all'],
                 'SalaryBonus'          => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
+                'OrthodonticCard'      => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'all'],
+                'TreatmentStage'       => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
+                'ToothMovementPlan'    => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
+                'OrthoPhoto'           => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
+                'CephalometricMeasurement' => ['create' => 'yes', 'read' => 'all', 'edit' => 'all', 'delete' => 'all', 'stream' => 'no'],
             ],
         ],
         'EspoDental Doctor' => [
@@ -101,6 +111,11 @@ class AfterInstall
                 'SalaryProfile'        => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'SalaryEntry'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'own'],
                 'SalaryBonus'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'OrthodonticCard'      => ['create' => 'yes', 'read' => 'team', 'edit' => 'team', 'delete' => 'no',   'stream' => 'team'],
+                'TreatmentStage'       => ['create' => 'yes', 'read' => 'team', 'edit' => 'team', 'delete' => 'team', 'stream' => 'no'],
+                'ToothMovementPlan'    => ['create' => 'yes', 'read' => 'team', 'edit' => 'team', 'delete' => 'team', 'stream' => 'no'],
+                'OrthoPhoto'           => ['create' => 'yes', 'read' => 'team', 'edit' => 'team', 'delete' => 'team', 'stream' => 'no'],
+                'CephalometricMeasurement' => ['create' => 'yes', 'read' => 'team', 'edit' => 'team', 'delete' => 'team', 'stream' => 'no'],
             ],
         ],
         'EspoDental Assistant' => [
@@ -130,6 +145,11 @@ class AfterInstall
                 'SalaryProfile'        => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'SalaryEntry'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'own'],
                 'SalaryBonus'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'OrthodonticCard'      => ['create' => 'no',  'read' => 'team', 'edit' => 'no',   'delete' => 'no',   'stream' => 'team'],
+                'TreatmentStage'       => ['create' => 'no',  'read' => 'team', 'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'ToothMovementPlan'    => ['create' => 'no',  'read' => 'team', 'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'OrthoPhoto'           => ['create' => 'yes', 'read' => 'team', 'edit' => 'team', 'delete' => 'no',   'stream' => 'no'],
+                'CephalometricMeasurement' => ['create' => 'no', 'read' => 'team', 'edit' => 'no', 'delete' => 'no',   'stream' => 'no'],
             ],
         ],
         'EspoDental Administrator' => [
@@ -159,6 +179,11 @@ class AfterInstall
                 'SalaryProfile'        => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'no',   'stream' => 'all'],
                 'SalaryEntry'          => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'no',   'stream' => 'all'],
                 'SalaryBonus'          => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
+                'OrthodonticCard'      => ['create' => 'no',  'read' => 'all',  'edit' => 'team', 'delete' => 'no',   'stream' => 'all'],
+                'TreatmentStage'       => ['create' => 'no',  'read' => 'all',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'ToothMovementPlan'    => ['create' => 'no',  'read' => 'all',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'OrthoPhoto'           => ['create' => 'no',  'read' => 'all',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'CephalometricMeasurement' => ['create' => 'no', 'read' => 'all', 'edit' => 'no', 'delete' => 'no',   'stream' => 'no'],
             ],
         ],
         'EspoDental Stock Manager' => [
@@ -188,6 +213,11 @@ class AfterInstall
                 'SalaryProfile'        => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'SalaryEntry'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'own'],
                 'SalaryBonus'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'OrthodonticCard'      => ['create' => 'no',  'read' => 'no',   'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'TreatmentStage'       => ['create' => 'no',  'read' => 'no',   'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'ToothMovementPlan'    => ['create' => 'no',  'read' => 'no',   'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'OrthoPhoto'           => ['create' => 'no',  'read' => 'no',   'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'CephalometricMeasurement' => ['create' => 'no', 'read' => 'no', 'edit' => 'no',  'delete' => 'no',   'stream' => 'no'],
             ],
         ],
     ];

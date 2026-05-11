@@ -1,0 +1,46 @@
+{
+    "labels": {
+        "Create OrthodonticCard": "Crear ficha ortodoncica",
+        "Close Card": "Cerrar ficha", "Reopen Card": "Reabrir ficha",
+        "Closed": "Cerrada", "Reopened": "Reabierta",
+        "Overview": "General", "Diagnosis": "Diagnostico", "Plan": "Plan"
+    },
+    "fields": {
+        "name": "Nombre", "cardNumber": "Numero",
+        "patient": "Paciente", "clinic": "Clinica", "doctor": "Ortodoncista",
+        "dateOpen": "Fecha apertura", "dateClose": "Fecha cierre",
+        "status": "Estado", "chiefComplaint": "Motivo de consulta", "anamnesis": "Anamnesis",
+        "diagnosis": "Diagnostico", "malocclusionClass": "Clase de maloclusion",
+        "skeletalClass": "Clase esqueletica", "growthStage": "Etapa de crecimiento",
+        "apparatusType": "Aparatologia", "estimatedDurationMonths": "Duracion estimada (meses)",
+        "treatmentPlan": "Plan de tratamiento", "extractionPlan": "Plan de extracciones", "notes": "Notas"
+    },
+    "options": {
+        "status": {
+            "open": "Abierta", "in_treatment": "En tratamiento",
+            "retention": "Retencion", "completed": "Completada", "cancelled": "Cancelada"
+        },
+        "malocclusionClass": {
+            "": "—", "I": "Clase I", "II_div1": "Clase II.1", "II_div2": "Clase II.2",
+            "III": "Clase III", "crossbite": "Mordida cruzada",
+            "openbite": "Mordida abierta", "deepbite": "Mordida profunda", "other": "Otra"
+        },
+        "skeletalClass": {"": "—", "I": "I", "II": "II", "III": "III", "mixed": "Mixta"},
+        "growthStage": {
+            "": "—", "pre_pubertal": "Pre-puberal", "pubertal": "Puberal",
+            "post_pubertal": "Post-puberal", "adult": "Adulto"
+        },
+        "apparatusType": {
+            "": "—", "brackets_metal": "Brackets metalicos",
+            "brackets_ceramic": "Brackets ceramicos", "brackets_lingual": "Brackets linguales",
+            "aligners": "Alineadores", "plates": "Placas", "headgear": "Casco extraoral",
+            "twin_block": "Twin-block", "retainer": "Retenedor", "other": "Otro"
+        }
+    },
+    "links": {
+        "patient": "Paciente", "clinic": "Clinica", "doctor": "Ortodoncista",
+        "stages": "Etapas", "toothMovementPlans": "Planes de movimiento",
+        "photos": "Fotos", "cephMeasurements": "Cefalometria"
+    },
+    "boolFilters": {"activeCards": "Solo activas", "myDoctor": "Mias (doctor)"}
+}

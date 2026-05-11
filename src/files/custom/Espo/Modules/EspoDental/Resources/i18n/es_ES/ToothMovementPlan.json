@@ -1,0 +1,13 @@
+{
+    "labels": {"Create ToothMovementPlan": "Crear plan de movimiento", "Tooth": "Diente", "Movements": "Movimientos"},
+    "fields": {
+        "name": "Nombre", "card": "Ficha", "toothNumber": "Numero (FDI)",
+        "currentPosition": "Posicion actual", "targetPosition": "Posicion objetivo",
+        "rotationDeg": "Rotacion (°)", "intrusionMm": "Intrusion (mm)", "extrusionMm": "Extrusion (mm)",
+        "mesialMm": "Mesial (mm)", "distalMm": "Distal (mm)",
+        "buccalMm": "Vestibular (mm)", "lingualMm": "Lingual (mm)", "torqueDeg": "Torque (°)",
+        "notes": "Notas", "status": "Estado"
+    },
+    "options": {"status": {"planned": "Planificado", "in_progress": "En progreso", "completed": "Completado"}},
+    "links": {"card": "Ficha"}
+}

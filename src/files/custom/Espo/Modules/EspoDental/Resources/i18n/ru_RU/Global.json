@@ -25,7 +25,12 @@
         "NotificationLog": "Уведомление",
         "SalaryProfile": "Профиль ЗП",
         "SalaryEntry": "Начисление ЗП",
-        "SalaryBonus": "Бонус/штраф"
+        "SalaryBonus": "Бонус/штраф",
+        "OrthodonticCard": "Ортодонтическая карта",
+        "TreatmentStage": "Этап лечения",
+        "ToothMovementPlan": "План перемещения зуба",
+        "OrthoPhoto": "Ортодонтическое фото",
+        "CephalometricMeasurement": "Цефалометрия"
     },
     "scopeNamesPlural": {
         "Clinic": "Клиники",
@@ -53,7 +58,12 @@
         "NotificationLog": "Уведомления",
         "SalaryProfile": "Профили ЗП",
         "SalaryEntry": "Начисления ЗП",
-        "SalaryBonus": "Бонусы/штрафы"
+        "SalaryBonus": "Бонусы/штрафы",
+        "OrthodonticCard": "Ортодонтические карты",
+        "TreatmentStage": "Этапы лечения",
+        "ToothMovementPlan": "Планы перемещения зубов",
+        "OrthoPhoto": "Ортодонтические фото",
+        "CephalometricMeasurement": "Цефалометрия"
     },
     "labels": {
         "EspoDental": "Стоматология"
@@ -68,7 +78,8 @@
         "RecentVisits": "Недавние приёмы",
         "MonthlyRevenue": "Выручка по месяцам",
         "PayrollThisMonth": "ЗП за месяц",
-        "ResourceCalendar": "Календарь ресурсов"
+        "ResourceCalendar": "Календарь ресурсов",
+        "ActiveOrthoCases": "Активные ортодонтические случаи"
     },
     "boolFilters": {
         "today": "Сегодня",
@@ -84,6 +95,7 @@
         "onlyFailed": "Только с ошибкой",
         "draftOnly": "Только черновики",
         "paidOnly": "Только выплаченные",
-        "pendingOnly": "Только ожидающие"
+        "pendingOnly": "Только ожидающие",
+        "activeCards": "Только активные"
     }
 }

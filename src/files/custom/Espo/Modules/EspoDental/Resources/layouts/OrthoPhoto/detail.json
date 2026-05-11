@@ -1,0 +1,7 @@
+[{"rows": [
+    [{"name": "name"}, {"name": "type"}],
+    [{"name": "card"}, {"name": "phase"}],
+    [{"name": "takenAt"}, {"name": "orthancUid"}],
+    [{"name": "file", "fullWidth": true}],
+    [{"name": "description", "fullWidth": true}]
+]}]

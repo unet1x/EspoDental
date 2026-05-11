@@ -25,7 +25,12 @@
         "NotificationLog": "Notificacion",
         "SalaryProfile": "Perfil salarial",
         "SalaryEntry": "Nomina",
-        "SalaryBonus": "Bonificacion"
+        "SalaryBonus": "Bonificacion",
+        "OrthodonticCard": "Ficha ortodoncica",
+        "TreatmentStage": "Etapa de tratamiento",
+        "ToothMovementPlan": "Plan de movimiento dental",
+        "OrthoPhoto": "Foto ortodoncica",
+        "CephalometricMeasurement": "Medicion cefalometrica"
     },
     "scopeNamesPlural": {
         "Clinic": "Clinicas",
@@ -53,7 +58,12 @@
         "NotificationLog": "Notificaciones",
         "SalaryProfile": "Perfiles salariales",
         "SalaryEntry": "Nominas",
-        "SalaryBonus": "Bonificaciones"
+        "SalaryBonus": "Bonificaciones",
+        "OrthodonticCard": "Fichas ortodoncicas",
+        "TreatmentStage": "Etapas de tratamiento",
+        "ToothMovementPlan": "Planes de movimiento dental",
+        "OrthoPhoto": "Fotos ortodoncicas",
+        "CephalometricMeasurement": "Mediciones cefalometricas"
     },
     "labels": {
         "EspoDental": "Odontologia"
@@ -68,7 +78,8 @@
         "RecentVisits": "Visitas recientes",
         "MonthlyRevenue": "Ingresos mensuales",
         "PayrollThisMonth": "Nomina del mes",
-        "ResourceCalendar": "Calendario de recursos"
+        "ResourceCalendar": "Calendario de recursos",
+        "ActiveOrthoCases": "Casos ortodoncicos activos"
     },
     "boolFilters": {
         "today": "Hoy",
@@ -84,6 +95,7 @@
         "onlyFailed": "Solo fallidas",
         "draftOnly": "Solo borradores",
         "paidOnly": "Solo pagadas",
-        "pendingOnly": "Solo pendientes"
+        "pendingOnly": "Solo pendientes",
+        "activeCards": "Solo activas"
     }
 }
