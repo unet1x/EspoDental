@@ -67,7 +67,8 @@
         "LowStockMaterials": "Stock bajo",
         "RecentVisits": "Visitas recientes",
         "MonthlyRevenue": "Ingresos mensuales",
-        "PayrollThisMonth": "Nomina del mes"
+        "PayrollThisMonth": "Nomina del mes",
+        "ResourceCalendar": "Calendario de recursos"
     },
     "boolFilters": {
         "today": "Hoy",

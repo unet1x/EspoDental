@@ -42,5 +42,15 @@
         "route": "/EspoDental/SalaryEntry/cancel",
         "method": "post",
         "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "cancel"}
+    },
+    {
+        "route": "/EspoDental/Calendar/appointments",
+        "method": "get",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Calendar", "action": "appointments"}
+    },
+    {
+        "route": "/EspoDental/Calendar/move",
+        "method": "post",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Calendar", "action": "move"}
     }
 ]

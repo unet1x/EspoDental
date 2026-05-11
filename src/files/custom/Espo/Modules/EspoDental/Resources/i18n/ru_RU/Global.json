@@ -67,7 +67,8 @@
         "LowStockMaterials": "Низкий остаток",
         "RecentVisits": "Недавние приёмы",
         "MonthlyRevenue": "Выручка по месяцам",
-        "PayrollThisMonth": "ЗП за месяц"
+        "PayrollThisMonth": "ЗП за месяц",
+        "ResourceCalendar": "Календарь ресурсов"
     },
     "boolFilters": {
         "today": "Сегодня",
