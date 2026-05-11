@@ -29,14 +29,51 @@ class Calendar
         $date = (string) ($request->getQueryParam('date') ?? (new DateTimeImmutable('today'))->format('Y-m-d'));
         $view = (string) ($request->getQueryParam('view') ?? 'day');
         $clinicId = $request->getQueryParam('clinicId');
+        $cabinetId = $request->getQueryParam('cabinetId');
         if (!in_array($view, ['day', 'week'], true)) {
             $view = 'day';
         }
         return $this->calendarService->getDayData(
             $date,
             $clinicId !== null && $clinicId !== '' ? (string) $clinicId : null,
-            $view
+            $view,
+            $cabinetId !== null && $cabinetId !== '' ? (string) $cabinetId : null
         );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getActionFreeSlots(Request $request): array
+    {
+        $this->assertAccess();
+        $today = (new DateTimeImmutable('today'))->format('Y-m-d');
+        $from = (string) ($request->getQueryParam('dateFrom') ?? $today);
+        $to = (string) ($request->getQueryParam('dateTo') ?? $from);
+        $duration = (int) ($request->getQueryParam('durationMinutes') ?? 30);
+        $clinicId = $request->getQueryParam('clinicId');
+        $cabinetId = $request->getQueryParam('cabinetId');
+        $doctorId = $request->getQueryParam('doctorId');
+        $workStart = (int) ($request->getQueryParam('workStartHour') ?? 8);
+        $workEnd = (int) ($request->getQueryParam('workEndHour') ?? 21);
+        $step = (int) ($request->getQueryParam('stepMinutes') ?? 15);
+        $limit = (int) ($request->getQueryParam('limit') ?? 50);
+        if ($duration <= 0) {
+            throw new BadRequest('durationMinutes must be positive');
+        }
+        $slots = $this->calendarService->findFreeSlots(
+            $from,
+            $to,
+            $duration,
+            $clinicId !== null && $clinicId !== '' ? (string) $clinicId : null,
+            $cabinetId !== null && $cabinetId !== '' ? (string) $cabinetId : null,
+            $doctorId !== null && $doctorId !== '' ? (string) $doctorId : null,
+            $workStart,
+            $workEnd,
+            $step,
+            $limit
+        );
+        return ['slots' => $slots, 'count' => count($slots)];
     }
 
     public function postActionMove(Request $request): stdClass

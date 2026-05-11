@@ -81,6 +81,11 @@
         "ResourceCalendar": "Календарь ресурсов",
         "ActiveOrthoCases": "Активные ортодонтические случаи"
     },
+    "calendar": {
+        "Day": "День", "Week": "Неделя", "Today": "Сегодня",
+        "Find slot": "Найти слот", "Slot duration (minutes)": "Длительность слота (мин)",
+        "No free slots": "Свободных слотов нет", "Free slots": "Свободные слоты"
+    },
     "boolFilters": {
         "today": "Сегодня",
         "upcoming": "Предстоящие",

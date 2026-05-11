@@ -81,6 +81,11 @@
         "ResourceCalendar": "Resource Calendar",
         "ActiveOrthoCases": "Active Ortho Cases"
     },
+    "calendar": {
+        "Day": "Day", "Week": "Week", "Today": "Today",
+        "Find slot": "Find slot", "Slot duration (minutes)": "Slot duration (minutes)",
+        "No free slots": "No free slots", "Free slots": "Free slots"
+    },
     "boolFilters": {
         "today": "Today",
         "upcoming": "Upcoming",

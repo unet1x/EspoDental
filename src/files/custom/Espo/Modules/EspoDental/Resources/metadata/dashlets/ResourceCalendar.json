@@ -4,7 +4,13 @@
     "options": {
         "fields": {
             "title": {"type": "varchar", "default": "Resource Calendar"},
+            "defaultView": {
+                "type": "enum",
+                "default": "day",
+                "options": ["day", "week"]
+            },
             "clinic": {"type": "link", "view": "views/fields/link", "entity": "Clinic"},
+            "cabinet": {"type": "link", "view": "views/fields/link", "entity": "Cabinet"},
             "rowMinutes": {
                 "type": "enumInt",
                 "default": 30,

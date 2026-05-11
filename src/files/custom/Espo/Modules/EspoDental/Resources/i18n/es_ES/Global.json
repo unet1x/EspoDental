@@ -81,6 +81,11 @@
         "ResourceCalendar": "Calendario de recursos",
         "ActiveOrthoCases": "Casos ortodoncicos activos"
     },
+    "calendar": {
+        "Day": "Dia", "Week": "Semana", "Today": "Hoy",
+        "Find slot": "Buscar hueco", "Slot duration (minutes)": "Duracion del hueco (min)",
+        "No free slots": "Sin huecos libres", "Free slots": "Huecos libres"
+    },
     "boolFilters": {
         "today": "Hoy",
         "upcoming": "Proximas",

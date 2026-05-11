@@ -54,6 +54,11 @@
         "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Calendar", "action": "move"}
     },
     {
+        "route": "/EspoDental/Calendar/freeSlots",
+        "method": "get",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Calendar", "action": "freeSlots"}
+    },
+    {
         "route": "/EspoDental/OrthodonticCard/close",
         "method": "post",
         "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\OrthodonticCard", "action": "close"}
