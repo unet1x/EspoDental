@@ -56,11 +56,27 @@ make build
 
 ### 2.3 What `AfterInstall.php` does
 
-- Adds five scopes-based roles: Manager / Doctor / Assistant / Administrator /
-  Stock Manager.
-- Seeds the ACL matrix across **all** module entities (currently 32 scopes).
-- Marks scopes `entity=true`, `tab=true`, `module=EspoDental` (already done by
-  metadata, the script only makes sure ACL is consistent after upgrades).
+When you install the module via **Administration → Extensions**, the bundled
+`AfterInstall.php` runs automatically and does **three** things:
+
+- Creates 5 teams (`EspoDental Doctors`, `EspoDental Assistants`, …).
+- Creates 5 ACL roles (`EspoDental Manager`, `Doctor`, `Assistant`,
+  `Administrator`, `Stock Manager`) with the full permission matrix across
+  the 29 module scopes.
+- Creates 8 starter service categories (Therapy, Surgery, Orthopedics,
+  Orthodontics, Hygiene, Diagnostics, Implantology, Pediatric).
+
+The operation is **idempotent** — re-running it on existing installs is safe
+and skips records that already exist.
+
+For **Docker volume-mount installs** the Extensions UI flow is not used.
+Run the same seeder from CLI:
+
+```bash
+docker compose exec espocrm php command.php espo-dental-seed-roles
+```
+
+The CLI command writes a summary of how many records were created.
 
 ### 2.1 Установка на Synology DSM
 
@@ -84,8 +100,25 @@ make build
 
 ### 2.3 Что делает `AfterInstall.php`
 
-- Создаёт 5 ролей: Manager / Doctor / Assistant / Administrator / Stock Manager.
-- Сидирует матрицу ACL по всем 32 scope-ам модуля.
+При установке через **Администрирование → Расширения** скрипт автоматически:
+
+- Создаёт 5 команд (`EspoDental Doctors`, `EspoDental Assistants`, …).
+- Создаёт 5 ролей (`EspoDental Manager / Doctor / Assistant / Administrator /
+  Stock Manager`) с полной матрицей прав по 29 scope-ам модуля.
+- Создаёт 8 стартовых категорий услуг (Therapy, Surgery, Orthopedics,
+  Orthodontics, Hygiene, Diagnostics, Implantology, Pediatric).
+
+Операция **идемпотентна** — повторный запуск безопасен и пропускает
+существующие записи.
+
+Для **mount-установки в Docker** (когда модуль не ставится через UI)
+можно запустить тот же сидер из CLI:
+
+```bash
+docker compose exec espocrm php command.php espo-dental-seed-roles
+```
+
+Команда печатает короткую сводку: сколько записей было создано.
 
 ---
 

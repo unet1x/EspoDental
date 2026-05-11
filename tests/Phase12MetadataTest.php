@@ -191,7 +191,9 @@ final class Phase12MetadataTest extends TestCase
 
     public function testAfterInstallContainsOrthoScopes(): void
     {
-        $code = (string) file_get_contents(__DIR__ . '/../src/scripts/AfterInstall.php');
+        $code = (string) file_get_contents(
+            __DIR__ . '/../src/files/custom/Espo/Modules/EspoDental/Tools/Installer/RoleSeeder.php'
+        );
         foreach (self::ENTITIES as $e) {
             $this->assertStringContainsString("'{$e}'", $code);
         }

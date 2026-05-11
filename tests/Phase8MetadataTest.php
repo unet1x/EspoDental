@@ -129,7 +129,9 @@ final class Phase8MetadataTest extends TestCase
 
     public function testAfterInstallContainsNotificationLog(): void
     {
-        $code = (string) file_get_contents(__DIR__ . '/../src/scripts/AfterInstall.php');
+        $code = (string) file_get_contents(
+            __DIR__ . '/../src/files/custom/Espo/Modules/EspoDental/Tools/Installer/RoleSeeder.php'
+        );
         $this->assertStringContainsString("'NotificationLog'", $code);
     }
 

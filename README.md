@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4)]()
 [![EspoCRM](https://img.shields.io/badge/EspoCRM-%E2%89%A59.2-1F77B4)]()
-[![Tests](https://img.shields.io/badge/tests-168-2CA02C)]()
+[![Tests](https://img.shields.io/badge/tests-180-2CA02C)]()
 
 > A free, MIT-licensed **dental clinic information system** built on top of
 > [EspoCRM](https://www.espocrm.com/) 9.2+. Multi-clinic from day one, RU / EN / ES,
@@ -48,9 +48,12 @@ Multi-clinic out of the box — every entity is scoped by `Clinic`.
 
 #### Production: Docker (Synology DSM / Linux)
 
+The Compose stack mounts the module sources directly into the EspoCRM
+container — **no zip upload is needed**.
+
 ```bash
 # 1. Clone module sources
-sudo git clone https://github.com/<you>/EspoDental.git /volume1/espomodule
+sudo git clone https://github.com/unet1x/EspoDental.git /volume1/espomodule
 
 # 2. Copy stack and env
 mkdir -p /volume1/docker/espodental
@@ -64,25 +67,54 @@ sudo chown -R 999:999 /volume1/docker/espodental/bd
 sudo chown -R 33:33   /volume2/espodental/data
 sudo chown -R 33:33   /volume1/espomodule
 
-# 4. Start
+# 4. Start the stack
 cd /volume1/docker/espodental && docker compose up -d
+docker compose ps                                # wait until both healthy
+
+# 5. Finish EspoCRM installer in a browser: open http://<nas>:8080/
+#    Database / admin fields are pre-filled from .env, click Next.
+
+# 6. Register the module and seed teams + roles + service categories.
+docker compose exec espocrm php rebuild.php
+docker compose exec espocrm php command.php espo-dental-seed-roles
 ```
 
-Open `http://<nas>:8080/`, log in as `admin`, then go to
-**Administration → Extensions → Upload extension** and install
-`build/EspoDental-X.Y.Z.zip`. The bundled `AfterInstall.php` will create
-roles and seed required scopes.
+The last command is idempotent — safe to re-run after every upgrade. It
+creates the five `EspoDental ...` teams, the five `EspoDental ...` roles
+with the full ACL matrix, and the eight starter service categories
+(Therapy, Surgery, Orthopedics, …).
 
-#### Development install (bare metal)
+Assign the roles to users in **Administration → Users**, then move on to
+[docs/user-guide.md](docs/user-guide.md) for day-to-day workflows.
+
+#### Production: install via Extensions UI
+
+If you prefer the classic Extension-installer flow (e.g. you manage EspoCRM
+on bare-metal and don't use the Compose stack):
 
 ```bash
-git clone https://github.com/<you>/EspoDental.git
+git clone https://github.com/unet1x/EspoDental.git
 cd EspoDental
-composer install                       # phpcs, phpunit, phpstan
-make build                             # produces build/EspoDental-X.Y.Z.zip
+bash bin/build                          # produces build/EspoDental-X.Y.Z.zip
 ```
 
-Then upload the zip via **Administration → Extensions** in your EspoCRM.
+Then upload the zip via **Administration → Extensions → Upload extension**.
+`AfterInstall.php` runs automatically and seeds teams, roles and service
+categories.
+
+You can also download a pre-built zip from the
+[Releases page](https://github.com/unet1x/EspoDental/releases) instead of
+running `bin/build`.
+
+#### Development install
+
+```bash
+git clone https://github.com/unet1x/EspoDental.git
+cd EspoDental
+composer install                       # phpcs, phpunit, phpstan
+vendor/bin/phpunit tests --no-coverage # run the test suite
+bash bin/build                         # build the zip
+```
 
 ### Roles created on install
 
@@ -144,9 +176,12 @@ MIT — see [LICENSE](LICENSE).
 
 #### Synology DSM (Container Manager)
 
+Compose-стек **монтирует исходники модуля прямо в контейнер EspoCRM** —
+zip загружать **не нужно**.
+
 ```bash
 # 1. Клон сорсов модуля
-sudo git clone https://github.com/<you>/EspoDental.git /volume1/espomodule
+sudo git clone https://github.com/unet1x/EspoDental.git /volume1/espomodule
 
 # 2. Положить стек и env
 mkdir -p /volume1/docker/espodental
@@ -160,14 +195,40 @@ sudo chown -R 999:999 /volume1/docker/espodental/bd
 sudo chown -R 33:33   /volume2/espodental/data
 sudo chown -R 33:33   /volume1/espomodule
 
-# 4. Запуск
+# 4. Старт
 cd /volume1/docker/espodental && docker compose up -d
+docker compose ps                                # дождаться healthy
+
+# 5. Пройти установщик EspoCRM в браузере: http://<nas>:8080/
+#    Поля БД/админа подставлены из .env, жми Next.
+
+# 6. Зарегистрировать модуль и засеять команды, роли, категории услуг.
+docker compose exec espocrm php rebuild.php
+docker compose exec espocrm php command.php espo-dental-seed-roles
 ```
 
-После старта зайти на `http://<nas>:8080/` под `admin`, далее
-**Администрирование → Расширения → Загрузить** и установить
-`build/EspoDental-X.Y.Z.zip`. Скрипт `AfterInstall.php` создаст роли и сидирует
-ACL.
+Последняя команда идемпотентна — её можно перезапускать после каждого
+обновления. Она создаёт 5 команд `EspoDental ...`, 5 ролей с матрицей
+прав и 8 стартовых категорий услуг.
+
+Назначь роли пользователям в **Администрирование → Пользователи** и
+переходи к [docs/user-guide.md](docs/user-guide.md).
+
+#### Установка через UI Extensions
+
+Если хочется классической установки расширения (например, без compose):
+
+```bash
+git clone https://github.com/unet1x/EspoDental.git
+cd EspoDental
+bash bin/build         # build/EspoDental-X.Y.Z.zip
+```
+
+Загрузить zip в **Администрирование → Расширения**. `AfterInstall.php`
+сработает автоматически и сделает то же самое, что CLI-команда выше.
+
+Готовые zip-файлы доступны в разделе
+[Releases](https://github.com/unet1x/EspoDental/releases).
 
 ### Роли
 

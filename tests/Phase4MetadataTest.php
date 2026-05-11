@@ -196,7 +196,9 @@ final class Phase4MetadataTest extends TestCase
 
     public function testAfterInstallSeedsAppointmentScope(): void
     {
-        $code = (string) file_get_contents(__DIR__ . '/../src/scripts/AfterInstall.php');
+        $code = (string) file_get_contents(
+            __DIR__ . '/../src/files/custom/Espo/Modules/EspoDental/Tools/Installer/RoleSeeder.php'
+        );
         $this->assertStringContainsString("'Appointment'", $code);
         $this->assertStringContainsString("'AppointmentStatusLog'", $code);
         $this->assertStringContainsString("'Visit'", $code);

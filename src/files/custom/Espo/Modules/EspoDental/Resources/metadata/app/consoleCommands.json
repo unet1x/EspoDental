@@ -1,0 +1,5 @@
+{
+    "espo-dental-seed-roles": {
+        "className": "Espo\\Modules\\EspoDental\\Tools\\Console\\SeedRolesCommand"
+    }
+}

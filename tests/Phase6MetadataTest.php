@@ -158,7 +158,9 @@ final class Phase6MetadataTest extends TestCase
 
     public function testAfterInstallScopesUpdated(): void
     {
-        $code = (string) file_get_contents(__DIR__ . '/../src/scripts/AfterInstall.php');
+        $code = (string) file_get_contents(
+            __DIR__ . '/../src/files/custom/Espo/Modules/EspoDental/Tools/Installer/RoleSeeder.php'
+        );
         $this->assertStringContainsString("'Invoice'", $code);
         $this->assertStringContainsString("'InvoiceLine'", $code);
         $this->assertStringContainsString("'Payment'", $code);

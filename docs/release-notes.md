@@ -2,6 +2,25 @@
 
 > Latest first. Versions follow SemVer with leading `0.` until 1.0.
 
+## 0.15.0 — Console seeder + GitHub Release workflow
+
+- Refactored `AfterInstall.php` — extracted seeding logic into
+  `Tools/Installer/RoleSeeder.php` (idempotent service used by both
+  Extensions UI installer and CLI).
+- New console command `espo-dental-seed-roles`
+  (`Tools/Console/SeedRolesCommand.php`) registered via
+  `Resources/metadata/app/consoleCommands.json`. Lets you seed teams,
+  roles and starter service categories on Docker volume-mount installs
+  without having to upload a zip.
+- Updated `README.md` and `docs/admin-guide.md`: Docker section now
+  reflects the volume-mount flow, links to Releases, mentions the new
+  CLI command.
+- Added `.github/workflows/release.yml`: every push of a tag `v*.*.*`
+  builds the extension zip and publishes a GitHub Release with the
+  artifact attached.
+- `Phase15MetadataTest`: 6 assertions.
+- **Tests:** ~180 / ~1980 assertions.
+
 ## 0.14.0 — Polish: docs + Docker smoke
 
 - Added `README.md` (EN + RU dual sections, install, roles, features).

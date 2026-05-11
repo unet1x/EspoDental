@@ -170,7 +170,9 @@ final class Phase5MetadataTest extends TestCase
 
     public function testAfterInstallSeedsServiceCategoriesAndScopes(): void
     {
-        $code = (string) file_get_contents(__DIR__ . '/../src/scripts/AfterInstall.php');
+        $code = (string) file_get_contents(
+            __DIR__ . '/../src/files/custom/Espo/Modules/EspoDental/Tools/Installer/RoleSeeder.php'
+        );
         $this->assertStringContainsString("'ServiceCategory'", $code);
         $this->assertStringContainsString("'Service'", $code);
         $this->assertStringContainsString("'VisitServiceLine'", $code);

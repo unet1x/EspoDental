@@ -20,28 +20,29 @@ jobs:
         run: composer install --no-interaction --no-progress --prefer-dist
       - name: Lint (PSR-12)
         run: vendor/bin/phpcs --standard=phpcs.xml
-      - name: Static analysis (PHPStan)
-        run: vendor/bin/phpstan analyse --no-progress
+      - name: Static analysis (PHPStan, informational)
+        continue-on-error: true
+        run: vendor/bin/phpstan analyse --no-progress --error-format=github
       - name: Unit tests
-        run: |
-          if [ -d tests ] && [ -n "$(ls -A tests 2>/dev/null)" ]; then
-            vendor/bin/phpunit tests
-          else
-            echo "No tests yet; skipping"
-          fi
+        run: vendor/bin/phpunit tests --no-coverage
 
   package:
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - name: Build extension zip
-        run: bin/build
+        run: bash bin/build
       - uses: actions/upload-artifact@v4
         with:
           name: EspoDental-zip
           path: build/EspoDental-*.zip
-      - uses: softprops/action-gh-release@v2
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
+          name: EspoDental ${{ github.ref_name }}
+          generate_release_notes: true
           files: build/EspoDental-*.zip

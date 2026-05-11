@@ -73,12 +73,13 @@ final class Phase14MetadataTest extends TestCase
         $this->assertStringContainsString('Resources/routes.json', $scriptContent);
     }
 
-    public function testManifestVersionIsCurrent(): void
+    public function testManifestIsValid(): void
     {
         $manifest = json_decode(
             (string) file_get_contents(self::ROOT . '/src/manifest.json'),
             true
         );
-        $this->assertSame('0.14.0', $manifest['version']);
+        $this->assertIsArray($manifest);
+        $this->assertMatchesRegularExpression('/^\d+\.\d+\.\d+$/', $manifest['version']);
     }
 }

@@ -149,7 +149,9 @@ final class Phase7MetadataTest extends TestCase
 
     public function testAfterInstallScopesUpdated(): void
     {
-        $code = (string) file_get_contents(__DIR__ . '/../src/scripts/AfterInstall.php');
+        $code = (string) file_get_contents(
+            __DIR__ . '/../src/files/custom/Espo/Modules/EspoDental/Tools/Installer/RoleSeeder.php'
+        );
         foreach (self::ENTITIES as $entity) {
             $this->assertStringContainsString("'{$entity}'", $code);
         }
