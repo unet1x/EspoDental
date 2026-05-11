@@ -1,0 +1,22 @@
+{
+    "labels": {"Create StockMovement": "Create Movement"},
+    "fields": {
+        "name": "Name", "material": "Material", "clinic": "Clinic",
+        "type": "Type", "direction": "Direction", "quantity": "Quantity",
+        "unit": "Unit", "unitPrice": "Unit price", "totalCost": "Total cost",
+        "performedAt": "Performed at", "performedBy": "Performed by", "batch": "Batch",
+        "expiryDate": "Expiry", "reason": "Reason",
+        "sourceVisit": "Source visit", "sourceVisitServiceLine": "Source line"
+    },
+    "options": {
+        "type": {
+            "receipt": "Receipt", "consumption": "Consumption (visit)",
+            "writeoff": "Write-off", "transfer_out": "Transfer (out)",
+            "transfer_in": "Transfer (in)", "adjustment": "Adjustment",
+            "return": "Return"
+        },
+        "direction": {"in": "Inbound", "out": "Outbound"}
+    },
+    "links": {"material": "Material", "clinic": "Clinic"},
+    "boolFilters": {"today": "Today", "thisMonth": "This month"}
+}

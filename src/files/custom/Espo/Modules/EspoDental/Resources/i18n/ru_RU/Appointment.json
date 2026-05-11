@@ -1,0 +1,76 @@
+{
+    "labels": {
+        "Create Appointment": "Создать запись",
+        "Overview": "Основное",
+        "Booking": "Запись",
+        "Other": "Прочее",
+        "Start Visit": "Начать приём"
+    },
+    "fields": {
+        "name": "Название",
+        "parent": "Пациент",
+        "doctor": "Врач",
+        "assistant": "Ассистент",
+        "cabinet": "Кабинет",
+        "clinic": "Клиника",
+        "dateStart": "Начало",
+        "dateEnd": "Окончание",
+        "duration": "Длительность",
+        "status": "Статус",
+        "source": "Источник",
+        "bookedBy": "Записал",
+        "color": "Цвет",
+        "complaints": "Жалобы",
+        "description": "Описание",
+        "reminderSent": "Напоминание отправлено",
+        "visit": "Приём",
+        "statusLogs": "История статусов",
+        "assignedUser": "Ответственный",
+        "teams": "Команды"
+    },
+    "options": {
+        "status": {
+            "planned": "Запланировано",
+            "rescheduled": "Перенесено",
+            "cancelled": "Отменено",
+            "arrived": "Пациент явился",
+            "in_progress": "Идёт приём",
+            "finished": "Завершено",
+            "no_show": "Не явился"
+        },
+        "source": {
+            "": "—",
+            "walk_in": "Самообращение",
+            "phone": "Звонок",
+            "online": "Онлайн-запись",
+            "portal": "Портал пациента",
+            "referral": "Рекомендация",
+            "other": "Другое"
+        }
+    },
+    "links": {
+        "parent": "Пациент",
+        "doctor": "Врач",
+        "assistant": "Ассистент",
+        "cabinet": "Кабинет",
+        "clinic": "Клиника",
+        "visit": "Приём",
+        "statusLogs": "История статусов"
+    },
+    "boolFilters": {
+        "onlyMy": "Только мои",
+        "myDoctor": "Мои как врача",
+        "today": "Сегодня",
+        "upcoming": "Будущие"
+    },
+    "messages": {
+        "Convert lead first": "Сначала сконвертируйте предв. пациента в пациента",
+        "Status not allowed for start": "Начать приём можно только из статусов Запланировано / Перенесено / Пациент явился",
+        "Confirm start visit": "Начать приём по этой записи?",
+        "Visit started": "Приём начат"
+    },
+    "tooltips": {
+        "duration": "Длительность приёма",
+        "reminderSent": "Установлено модулем напоминаний"
+    }
+}

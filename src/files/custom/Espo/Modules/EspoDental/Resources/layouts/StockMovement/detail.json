@@ -1,0 +1,10 @@
+[{"rows": [
+    [{"name": "material"}, {"name": "clinic"}],
+    [{"name": "type"}, {"name": "direction"}],
+    [{"name": "quantity"}, {"name": "unit"}],
+    [{"name": "unitPrice"}, {"name": "totalCost"}],
+    [{"name": "performedAt"}, {"name": "performedBy"}],
+    [{"name": "batch"}, {"name": "expiryDate"}],
+    [{"name": "sourceVisit"}, {"name": "sourceVisitServiceLine"}],
+    [{"name": "reason", "fullWidth": true}]
+]}]

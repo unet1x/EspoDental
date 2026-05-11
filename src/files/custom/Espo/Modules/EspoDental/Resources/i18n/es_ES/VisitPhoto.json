@@ -1,0 +1,34 @@
+{
+    "labels": {"Create VisitPhoto": "Crear foto"},
+    "fields": {
+        "name": "Nombre",
+        "visit": "Visita",
+        "patient": "Paciente",
+        "stage": "Etapa",
+        "category": "Categoria",
+        "tooth": "Diente",
+        "image": "Imagen",
+        "orthancStudyUid": "Orthanc Study UID",
+        "orthancUrl": "URL Orthanc",
+        "notes": "Notas",
+        "recordedAt": "Registrado el"
+    },
+    "options": {
+        "stage": {"before": "Antes", "during": "Durante", "after": "Despues"},
+        "category": {
+            "": "—",
+            "intraoral": "Intraoral",
+            "extraoral": "Extraoral",
+            "xray": "Periapical",
+            "panoramic": "Panoramica",
+            "ct": "TC",
+            "scan": "Escaner",
+            "other": "Otro"
+        }
+    },
+    "links": {"visit": "Visita", "patient": "Paciente"},
+    "tooltips": {
+        "tooth": "Numero FDI del diente, si aplica",
+        "orthancStudyUid": "UID del estudio en Orthanc PACS"
+    }
+}

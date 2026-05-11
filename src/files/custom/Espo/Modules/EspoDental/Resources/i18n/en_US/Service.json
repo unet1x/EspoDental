@@ -1,0 +1,19 @@
+{
+    "labels": {"Create Service": "Create Service"},
+    "fields": {
+        "name": "Name",
+        "code": "Code",
+        "category": "Category",
+        "price": "Price",
+        "duration": "Duration (min)",
+        "color": "Color",
+        "perTooth": "Per Tooth",
+        "icd10": "ICD-10",
+        "description": "Description",
+        "isActive": "Active",
+        "vatRate": "VAT %"
+    },
+    "links": {"category": "Category", "visitLines": "Visit Lines"},
+    "boolFilters": {"onlyActive": "Only active"},
+    "tooltips": {"perTooth": "Service applies to a specific tooth"}
+}

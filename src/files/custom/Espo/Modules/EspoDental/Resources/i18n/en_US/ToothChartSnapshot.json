@@ -1,0 +1,33 @@
+{
+    "labels": {
+        "Create ToothChartSnapshot": "Create Tooth Chart",
+        "Tooth": "Tooth",
+        "Note": "Note",
+        "Edit Tooth": "Edit Tooth"
+    },
+    "fields": {
+        "name": "Name",
+        "patient": "Patient",
+        "visit": "Visit",
+        "doctor": "Doctor",
+        "dentitionType": "Dentition",
+        "teeth": "Teeth",
+        "recordedAt": "Recorded At",
+        "notes": "Notes"
+    },
+    "options": {
+        "dentitionType": {"adult": "Adult", "child": "Child", "mixed": "Mixed"},
+        "healthy": "Healthy",
+        "caries": "Caries",
+        "filling": "Filling",
+        "root_canal": "Root canal",
+        "crown": "Crown",
+        "bridge": "Bridge",
+        "veneer": "Veneer",
+        "implant": "Implant",
+        "extracted": "Extracted",
+        "missing": "Missing",
+        "sealant": "Sealant"
+    },
+    "links": {"patient": "Patient", "visit": "Visit"}
+}

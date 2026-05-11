@@ -1,0 +1,81 @@
+{
+    "labels": {
+        "Create Invoice": "Crear factura",
+        "Overview": "General",
+        "Amounts": "Importes",
+        "Other": "Otros",
+        "Issue": "Emitir",
+        "Storno": "Storno",
+        "Accept Payment": "Aceptar pago",
+        "Print PDF": "Imprimir PDF",
+        "Invoice": "Factura",
+        "Patient": "Paciente",
+        "Service": "Servicio",
+        "Teeth": "Dientes",
+        "Qty": "Cant.",
+        "Unit": "Precio",
+        "Disc": "Dto.",
+        "Amount": "Importe",
+        "Subtotal": "Subtotal",
+        "Discount": "Descuento",
+        "VAT": "IVA",
+        "Total": "Total",
+        "Paid": "Pagado",
+        "Balance": "Saldo",
+        "Issued at": "Emitida"
+    },
+    "fields": {
+        "number": "Numero",
+        "name": "Nombre",
+        "patient": "Paciente",
+        "clinic": "Clinica",
+        "visit": "Visita",
+        "status": "Estado",
+        "issuedAt": "Emitida el",
+        "dueDate": "Vencimiento",
+        "currency": "Moneda",
+        "subtotal": "Subtotal",
+        "discountAmount": "Descuento",
+        "vatAmount": "IVA",
+        "totalAmount": "Total",
+        "paidAmount": "Pagado",
+        "balance": "Saldo",
+        "notes": "Notas",
+        "stornoOf": "Storno de"
+    },
+    "options": {
+        "status": {
+            "draft": "Borrador",
+            "issued": "Emitida",
+            "partial_paid": "Parcialmente pagada",
+            "paid": "Pagada",
+            "storno": "Storno",
+            "cancelled": "Cancelada"
+        }
+    },
+    "links": {
+        "patient": "Paciente",
+        "clinic": "Clinica",
+        "visit": "Visita",
+        "lines": "Lineas",
+        "payments": "Pagos",
+        "stornoOf": "Storno de"
+    },
+    "boolFilters": {
+        "onlyOpen": "Solo abiertas",
+        "onlyOverdue": "Solo vencidas"
+    },
+    "messages": {
+        "Only draft can be issued": "Solo se pueden emitir borradores",
+        "Confirm issue invoice": "Emitir esta factura?",
+        "Invoice issued": "Factura emitida",
+        "Cannot storno": "Esta factura no se puede stornar",
+        "Storno reason": "Motivo del storno",
+        "Invoice storno-ed": "Storno creado",
+        "Invoice not payable": "Esta factura no es pagable",
+        "Payment amount": "Importe del pago",
+        "Payment method (cash/card/bank_transfer/online/terminal/other)": "Metodo (cash/card/bank_transfer/online/terminal/other)",
+        "Payment accepted": "Pago aceptado",
+        "PDF build failed": "Error al generar PDF"
+    }
+}

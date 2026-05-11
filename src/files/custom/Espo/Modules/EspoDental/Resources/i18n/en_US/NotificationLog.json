@@ -1,0 +1,24 @@
+{
+    "labels": {"Create NotificationLog": "Create Notification"},
+    "fields": {
+        "name": "Name", "patient": "Patient", "appointment": "Appointment",
+        "channel": "Channel", "kind": "Kind",
+        "recipient": "Recipient", "subject": "Subject", "messageText": "Message",
+        "status": "Status", "errorMessage": "Error",
+        "scheduledFor": "Scheduled for", "sentAt": "Sent at",
+        "attempts": "Attempts", "payload": "Payload"
+    },
+    "options": {
+        "channel": {"email": "Email", "telegram": "Telegram", "sms": "SMS", "internal": "Internal"},
+        "kind": {
+            "appointment_reminder": "Appointment reminder",
+            "questionnaire_invite": "Health questionnaire",
+            "low_stock": "Low stock",
+            "manual": "Manual",
+            "other": "Other"
+        },
+        "status": {"queued": "Queued", "sent": "Sent", "failed": "Failed", "skipped": "Skipped"}
+    },
+    "links": {"patient": "Patient", "appointment": "Appointment"},
+    "boolFilters": {"onlyFailed": "Only failed", "today": "Today"}
+}

@@ -1,0 +1,21 @@
+{
+    "labels": {
+        "Create QuestionnaireToken": "Создать токен"
+    },
+    "fields": {
+        "name": "Название",
+        "token": "Токен",
+        "patient": "Пациент",
+        "preliminaryPatient": "Из предв. пациента",
+        "questionnaire": "Анкета",
+        "language": "Язык",
+        "expiresAt": "Истекает",
+        "isUsed": "Использован",
+        "usedAt": "Дата использования"
+    },
+    "links": {
+        "patient": "Пациент",
+        "preliminaryPatient": "Из предв. пациента",
+        "questionnaire": "Анкета"
+    }
+}

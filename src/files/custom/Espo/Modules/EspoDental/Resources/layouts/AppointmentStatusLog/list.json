@@ -1,0 +1,8 @@
+[
+    {"name": "changedAt"},
+    {"name": "appointment", "link": true},
+    {"name": "fromStatus"},
+    {"name": "toStatus"},
+    {"name": "changedBy"},
+    {"name": "durationInPrevious"}
+]

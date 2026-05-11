@@ -1,0 +1,12 @@
+[
+    {
+        "rows": [
+            [{"name": "visit"}, {"name": "service"}],
+            [{"name": "doctor"}, {"name": "teethNumbers"}],
+            [{"name": "quantity"}, {"name": "unitPrice"}],
+            [{"name": "discount"}, {"name": "vatRate"}],
+            [{"name": "amount"}, {"name": "vatAmount"}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

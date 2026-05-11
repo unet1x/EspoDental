@@ -1,0 +1,46 @@
+{
+    "labels": {
+        "Create Visit": "Создать приём",
+        "Overview": "Основное",
+        "Clinical": "Клиническое",
+        "Other": "Прочее",
+        "Finish Visit": "Завершить приём"
+    },
+    "fields": {
+        "name": "Название",
+        "appointment": "Запись",
+        "patient": "Пациент",
+        "doctor": "Врач",
+        "assistant": "Ассистент",
+        "cabinet": "Кабинет",
+        "clinic": "Клиника",
+        "status": "Статус",
+        "complaints": "Жалобы",
+        "performed": "Что выполнено",
+        "recommendations": "Рекомендации",
+        "startedAt": "Начало",
+        "finishedAt": "Окончание",
+        "totalAmount": "Сумма",
+        "assignedUser": "Ответственный",
+        "teams": "Команды"
+    },
+    "options": {
+        "status": {
+            "in_progress": "Идёт приём",
+            "finished": "Завершён",
+            "cancelled": "Отменён"
+        }
+    },
+    "links": {
+        "appointment": "Запись",
+        "patient": "Пациент",
+        "doctor": "Врач",
+        "cabinet": "Кабинет",
+        "clinic": "Клиника"
+    },
+    "messages": {
+        "Only in-progress visits can be finished": "Завершить можно только приём в статусе «Идёт»",
+        "Confirm finish visit": "Завершить приём? Будет сформирован счёт.",
+        "Visit finished": "Приём завершён"
+    }
+}

@@ -1,0 +1,7 @@
+[
+    {"name": "name", "link": true, "notSortable": false},
+    {"name": "phone"},
+    {"name": "emailAddress"},
+    {"name": "status"},
+    {"name": "createdAt"}
+]

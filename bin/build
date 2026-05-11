@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+#
+# Build EspoDental as an EspoCRM extension .zip ready for upload via
+# Administration -> Extensions.
+
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+SRC="${ROOT}/src"
+BUILD="${ROOT}/build"
+
+if [[ ! -f "${SRC}/manifest.json" ]]; then
+    echo "Error: ${SRC}/manifest.json not found" >&2
+    exit 1
+fi
+
+VERSION=$(awk -F'"' '/"version"/ {print $4; exit}' "${SRC}/manifest.json")
+
+if [[ -z "${VERSION}" ]]; then
+    echo "Error: cannot read version from manifest.json" >&2
+    exit 1
+fi
+
+ARTIFACT="${BUILD}/EspoDental-${VERSION}.zip"
+
+mkdir -p "${BUILD}"
+rm -f "${ARTIFACT}"
+
+INCLUDED=(manifest.json files)
+if [[ -d "${SRC}/scripts" ]]; then
+    INCLUDED+=(scripts)
+fi
+
+(cd "${SRC}" && zip -qr "${ARTIFACT}" "${INCLUDED[@]}")
+
+echo "Built: ${ARTIFACT}"

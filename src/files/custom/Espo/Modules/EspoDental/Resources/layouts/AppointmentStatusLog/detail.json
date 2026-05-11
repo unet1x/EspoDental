@@ -1,0 +1,18 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "appointment"},
+                {"name": "changedAt"}
+            ],
+            [
+                {"name": "fromStatus"},
+                {"name": "toStatus"}
+            ],
+            [
+                {"name": "changedBy"},
+                {"name": "durationInPrevious"}
+            ]
+        ]
+    }
+]

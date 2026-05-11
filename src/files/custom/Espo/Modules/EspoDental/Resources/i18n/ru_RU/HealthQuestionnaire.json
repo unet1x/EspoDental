@@ -1,0 +1,43 @@
+{
+    "labels": {
+        "Create HealthQuestionnaire": "Создать анкету",
+        "Overview": "Основное",
+        "Files": "Файлы",
+        "Audit": "Аудит",
+        "Print PDF": "Печать PDF",
+        "Copy URL": "Скопировать ссылку"
+    },
+    "fields": {
+        "name": "Название",
+        "patient": "Пациент",
+        "language": "Язык",
+        "items": "Ответы",
+        "alertItems": "Алерты",
+        "hasAlerts": "Есть алерты",
+        "filledAt": "Заполнена",
+        "expiresAt": "Истекает",
+        "isExpired": "Истекла",
+        "signatureAttachment": "Подпись",
+        "pdfFile": "PDF файл",
+        "submittedFromIp": "IP отправки",
+        "submittedUserAgent": "User-Agent",
+        "notes": "Комментарии"
+    },
+    "options": {
+        "language": {
+            "ru_RU": "Русский",
+            "en_US": "English",
+            "es_ES": "Espanol"
+        }
+    },
+    "links": {
+        "patient": "Пациент"
+    },
+    "tooltips": {
+        "alertItems": "Пункты с положительным ответом, требующие внимания врача"
+    },
+    "messages": {
+        "Show QR to patient": "Покажите QR-код пациенту: он отсканирует его камерой планшета и заполнит анкету.",
+        "Copied": "Скопировано"
+    }
+}

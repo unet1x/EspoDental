@@ -1,0 +1,19 @@
+{
+    "labels": {"Create InvoiceLine": "Anadir linea"},
+    "fields": {
+        "name": "Nombre",
+        "invoice": "Factura",
+        "service": "Servicio",
+        "doctor": "Doctor",
+        "teethNumbers": "Dientes",
+        "quantity": "Cant.",
+        "unitPrice": "Precio unit.",
+        "discount": "Descuento %",
+        "amount": "Importe",
+        "vatRate": "IVA %",
+        "vatAmount": "IVA",
+        "sourceVisitServiceLine": "Linea origen",
+        "notes": "Notas"
+    },
+    "links": {"invoice": "Factura", "service": "Servicio"}
+}

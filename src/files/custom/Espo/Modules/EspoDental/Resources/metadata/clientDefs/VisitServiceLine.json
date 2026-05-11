@@ -1,0 +1,5 @@
+{
+    "controller": "controllers/record",
+    "color": "#FF7F0E",
+    "iconClass": "fas fa-tooth"
+}

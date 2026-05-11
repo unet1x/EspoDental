@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/monthly-revenue",
+    "aclScope": "Payment",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Monthly Revenue"},
+            "monthsBack": {"type": "int", "default": 12, "min": 3, "max": 36}
+        }
+    }
+}

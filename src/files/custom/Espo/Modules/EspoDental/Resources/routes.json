@@ -1,0 +1,26 @@
+[
+    {
+        "route": "/EspoDental/Public/HealthQuestionnaire/{token}/submit",
+        "method": "post",
+        "noAuth": true,
+        "params": {
+            "controller": "Espo\\Modules\\EspoDental\\Controllers\\PublicHealthQuestionnaire",
+            "action": "submit"
+        }
+    },
+    {
+        "route": "/EspoDental/Report/monthlyRevenue",
+        "method": "get",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Report", "action": "monthlyRevenue"}
+    },
+    {
+        "route": "/EspoDental/Report/invoiceSummary",
+        "method": "get",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Report", "action": "invoiceSummary"}
+    },
+    {
+        "route": "/EspoDental/Report/lowStockSummary",
+        "method": "get",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Report", "action": "lowStockSummary"}
+    }
+]

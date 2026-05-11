@@ -1,0 +1,19 @@
+{
+    "labels": {"Create Service": "Создать услугу"},
+    "fields": {
+        "name": "Название",
+        "code": "Код",
+        "category": "Категория",
+        "price": "Цена",
+        "duration": "Длительность (мин)",
+        "color": "Цвет",
+        "perTooth": "На зуб",
+        "icd10": "Код МКБ-10",
+        "description": "Описание",
+        "isActive": "Активна",
+        "vatRate": "НДС (%)"
+    },
+    "links": {"category": "Категория", "visitLines": "Позиции"},
+    "boolFilters": {"onlyActive": "Только активные"},
+    "tooltips": {"perTooth": "Услуга применяется к конкретному зубу"}
+}

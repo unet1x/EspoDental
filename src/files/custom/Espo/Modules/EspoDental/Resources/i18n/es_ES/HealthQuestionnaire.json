@@ -1,0 +1,43 @@
+{
+    "labels": {
+        "Create HealthQuestionnaire": "Crear cuestionario",
+        "Overview": "General",
+        "Files": "Archivos",
+        "Audit": "Auditoria",
+        "Print PDF": "Imprimir PDF",
+        "Copy URL": "Copiar enlace"
+    },
+    "fields": {
+        "name": "Nombre",
+        "patient": "Paciente",
+        "language": "Idioma",
+        "items": "Respuestas",
+        "alertItems": "Alertas",
+        "hasAlerts": "Tiene alertas",
+        "filledAt": "Completado el",
+        "expiresAt": "Vence el",
+        "isExpired": "Vencido",
+        "signatureAttachment": "Firma",
+        "pdfFile": "Archivo PDF",
+        "submittedFromIp": "IP de envio",
+        "submittedUserAgent": "User Agent",
+        "notes": "Notas"
+    },
+    "options": {
+        "language": {
+            "ru_RU": "Ruso",
+            "en_US": "Ingles",
+            "es_ES": "Espanol"
+        }
+    },
+    "links": {
+        "patient": "Paciente"
+    },
+    "tooltips": {
+        "alertItems": "Respuestas positivas que requieren atencion del medico."
+    },
+    "messages": {
+        "Show QR to patient": "Muestre el codigo QR al paciente; lo escaneara con la camara de la tableta y completara el cuestionario.",
+        "Copied": "Copiado"
+    }
+}

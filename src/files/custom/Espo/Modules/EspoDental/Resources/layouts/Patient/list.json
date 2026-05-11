@@ -1,0 +1,10 @@
+[
+    {"name": "vip", "width": 4},
+    {"name": "restrictions", "width": 4},
+    {"name": "name", "link": true},
+    {"name": "phone"},
+    {"name": "emailAddress"},
+    {"name": "cardNumber"},
+    {"name": "balance"},
+    {"name": "status"}
+]

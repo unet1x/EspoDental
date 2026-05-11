@@ -1,0 +1,15 @@
+{
+    "labels": {"Create LowStockAlert": "Crear alerta"},
+    "fields": {
+        "name": "Nombre", "material": "Material", "clinic": "Clinica",
+        "level": "Nivel", "currentStock": "Stock actual",
+        "threshold": "Umbral", "status": "Estado", "raisedAt": "Generada el",
+        "resolvedAt": "Resuelta el", "acknowledgedBy": "Reconocida por", "notes": "Notas"
+    },
+    "options": {
+        "level": {"low": "Bajo", "critical": "Critico", "out": "Agotado"},
+        "status": {"open": "Abierta", "acknowledged": "Reconocida", "resolved": "Resuelta"}
+    },
+    "links": {"material": "Material", "clinic": "Clinica"},
+    "boolFilters": {"onlyOpen": "Solo abiertas"}
+}

@@ -1,0 +1,25 @@
+{
+    "labels": {"Create Material": "Создать материал", "Overview": "Основное", "Stock": "Склад"},
+    "fields": {
+        "name": "Название", "code": "Код", "sku": "Артикул", "category": "Категория",
+        "unit": "Ед. изм.", "manufacturer": "Производитель", "vendor": "Поставщик",
+        "price": "Цена", "color": "Цвет",
+        "minStock": "Минимум", "criticalStock": "Критич. остаток", "maxStock": "Максимум",
+        "currentStock": "Остаток", "stockLevel": "Уровень",
+        "expiryControl": "Контроль срока годности", "isActive": "Активен", "description": "Описание"
+    },
+    "options": {
+        "unit": {
+            "pcs": "шт", "ml": "мл", "g": "г", "kg": "кг", "l": "л",
+            "box": "коробка", "pack": "упаковка", "syringe": "шприц",
+            "tube": "тюбик", "cartridge": "картридж"
+        },
+        "stockLevel": {"": "—", "ok": "В норме", "low": "Низкий", "critical": "Критический", "out": "Закончился"}
+    },
+    "links": {"category": "Категория", "movements": "Операции", "serviceMaterials": "В услугах", "alerts": "Алерты"},
+    "boolFilters": {"onlyActive": "Только активные", "lowStock": "Низкий остаток", "criticalStock": "Критический"},
+    "tooltips": {
+        "minStock": "Уровень для предупреждения",
+        "criticalStock": "Срочно дозаказать"
+    }
+}

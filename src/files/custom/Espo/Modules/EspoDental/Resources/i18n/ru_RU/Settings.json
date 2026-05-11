@@ -1,0 +1,17 @@
+{
+    "labels": {"EspoDental": "EspoDental", "EspoDental Settings": "Настройки EspoDental"},
+    "fields": {
+        "espoDentalTelegramEnabled": "Telegram-уведомления включены",
+        "espoDentalTelegramBotToken": "Telegram bot token",
+        "espoDentalTelegramApiBase": "Telegram API base URL",
+        "espoDentalReminderHoursBefore": "Напоминание за (часов)",
+        "espoDentalReminderSecondHoursBefore": "Доп. напоминание за (часов)",
+        "espoDentalReminderWindowMinutes": "Окно срабатывания, мин",
+        "espoDentalDefaultCurrency": "Валюта по умолчанию"
+    },
+    "tooltips": {
+        "espoDentalReminderHoursBefore": "Время до приёма, когда отправляется первое напоминание",
+        "espoDentalReminderSecondHoursBefore": "Второе напоминание (0 — выкл.)",
+        "espoDentalReminderWindowMinutes": "Допустимое расхождение от целевого момента"
+    }
+}

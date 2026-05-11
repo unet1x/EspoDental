@@ -1,0 +1,8 @@
+[
+    {"name": "name", "link": true},
+    {"name": "clinic"},
+    {"name": "code"},
+    {"name": "color"},
+    {"name": "order"},
+    {"name": "isActive"}
+]

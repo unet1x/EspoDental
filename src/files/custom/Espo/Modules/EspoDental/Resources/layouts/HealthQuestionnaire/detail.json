@@ -1,0 +1,48 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [
+                {"name": "patient"},
+                {"name": "language"}
+            ],
+            [
+                {"name": "filledAt"},
+                {"name": "expiresAt"}
+            ],
+            [
+                {"name": "hasAlerts"},
+                {"name": "isExpired"}
+            ],
+            [
+                {"name": "alertItems", "fullWidth": true}
+            ]
+        ]
+    },
+    {
+        "label": "Files",
+        "rows": [
+            [
+                {"name": "signatureAttachment"},
+                {"name": "pdfFile"}
+            ]
+        ]
+    },
+    {
+        "label": "Audit",
+        "rows": [
+            [
+                {"name": "submittedFromIp"},
+                {"name": "submittedUserAgent"}
+            ],
+            [
+                {"name": "createdAt"},
+                {"name": "modifiedAt"}
+            ],
+            [
+                {"name": "createdBy"},
+                {"name": "modifiedBy"}
+            ]
+        ]
+    }
+]

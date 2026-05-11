@@ -1,0 +1,13 @@
+[
+    "vip",
+    "restrictions",
+    "isChild",
+    "status",
+    "clinic",
+    "assignedUser",
+    "preferredChannel",
+    "createdAt",
+    "firstVisitDate",
+    "questionnaireExpired",
+    "questionnaireHasAlerts"
+]

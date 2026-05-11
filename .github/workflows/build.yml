@@ -1,0 +1,47 @@
+name: build
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          tools: composer:v2
+      - name: Install dev dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+      - name: Lint (PSR-12)
+        run: vendor/bin/phpcs --standard=phpcs.xml
+      - name: Static analysis (PHPStan)
+        run: vendor/bin/phpstan analyse --no-progress
+      - name: Unit tests
+        run: |
+          if [ -d tests ] && [ -n "$(ls -A tests 2>/dev/null)" ]; then
+            vendor/bin/phpunit tests
+          else
+            echo "No tests yet; skipping"
+          fi
+
+  package:
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build extension zip
+        run: bin/build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: EspoDental-zip
+          path: build/EspoDental-*.zip
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: build/EspoDental-*.zip

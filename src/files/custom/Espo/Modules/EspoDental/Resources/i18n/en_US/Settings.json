@@ -1,0 +1,17 @@
+{
+    "labels": {"EspoDental": "EspoDental", "EspoDental Settings": "EspoDental Settings"},
+    "fields": {
+        "espoDentalTelegramEnabled": "Telegram reminders enabled",
+        "espoDentalTelegramBotToken": "Telegram bot token",
+        "espoDentalTelegramApiBase": "Telegram API base URL",
+        "espoDentalReminderHoursBefore": "First reminder hours before",
+        "espoDentalReminderSecondHoursBefore": "Second reminder hours before",
+        "espoDentalReminderWindowMinutes": "Trigger window, minutes",
+        "espoDentalDefaultCurrency": "Default currency"
+    },
+    "tooltips": {
+        "espoDentalReminderHoursBefore": "Hours before the appointment when first reminder is sent",
+        "espoDentalReminderSecondHoursBefore": "Second reminder (0 to disable)",
+        "espoDentalReminderWindowMinutes": "Allowed drift from the target moment"
+    }
+}

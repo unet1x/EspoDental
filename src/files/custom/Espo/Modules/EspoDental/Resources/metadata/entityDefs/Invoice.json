@@ -1,0 +1,58 @@
+{
+    "fields": {
+        "number": {"type": "varchar", "maxLength": 32, "readOnly": true, "trim": true},
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "patient": {"type": "link", "required": true},
+        "clinic": {"type": "link", "required": true},
+        "visit": {"type": "link"},
+        "status": {
+            "type": "enum",
+            "options": ["draft", "issued", "partial_paid", "paid", "storno", "cancelled"],
+            "default": "draft",
+            "audited": true,
+            "style": {
+                "draft": "muted",
+                "issued": "primary",
+                "partial_paid": "warning",
+                "paid": "success",
+                "storno": "danger",
+                "cancelled": "muted"
+            }
+        },
+        "issuedAt": {"type": "datetime"},
+        "dueDate": {"type": "date"},
+        "currency": {"type": "varchar", "maxLength": 8, "default": "RUB"},
+        "subtotal": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "discountAmount": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "vatAmount": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "totalAmount": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "paidAmount": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "balance": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "notes": {"type": "text"},
+        "stornoOf": {"type": "link"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "assignedUser": {"type": "link", "view": "views/fields/assigned-user"},
+        "teams": {"type": "linkMultiple", "view": "views/fields/teams"}
+    },
+    "links": {
+        "patient": {"type": "belongsTo", "entity": "Patient", "foreign": "invoices"},
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "visit": {"type": "belongsTo", "entity": "Visit", "foreign": "invoices"},
+        "lines": {"type": "hasMany", "entity": "InvoiceLine", "foreign": "invoice"},
+        "payments": {"type": "hasMany", "entity": "Payment", "foreign": "invoice"},
+        "stornoOf": {"type": "belongsTo", "entity": "Invoice"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"},
+        "assignedUser": {"type": "belongsTo", "entity": "User"},
+        "teams": {"type": "hasMany", "entity": "Team", "relationName": "entityTeam", "layoutRelationshipsDisabled": true}
+    },
+    "collection": {"orderBy": "issuedAt", "order": "desc"},
+    "indexes": {
+        "number": {"columns": ["number"], "unique": true},
+        "patient_status": {"columns": ["patientId", "status"]},
+        "issued": {"columns": ["issuedAt"]}
+    }
+}

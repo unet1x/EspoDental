@@ -1,0 +1,20 @@
+{
+    "controller": "controllers/record",
+    "color": "#D62728",
+    "iconClass": "fas fa-stethoscope",
+    "kanbanViewMode": false,
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "finishVisit",
+                    "labelText": "Finish Visit",
+                    "style": "primary",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/visit/finish-visit",
+                    "hidden": false
+                }
+            ]
+        }
+    }
+}

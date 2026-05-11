@@ -1,0 +1,19 @@
+{
+    "labels": {"Create Service": "Crear servicio"},
+    "fields": {
+        "name": "Nombre",
+        "code": "Codigo",
+        "category": "Categoria",
+        "price": "Precio",
+        "duration": "Duracion (min)",
+        "color": "Color",
+        "perTooth": "Por diente",
+        "icd10": "CIE-10",
+        "description": "Descripcion",
+        "isActive": "Activo",
+        "vatRate": "IVA %"
+    },
+    "links": {"category": "Categoria", "visitLines": "Lineas de visita"},
+    "boolFilters": {"onlyActive": "Solo activos"},
+    "tooltips": {"perTooth": "El servicio aplica a un diente especifico"}
+}

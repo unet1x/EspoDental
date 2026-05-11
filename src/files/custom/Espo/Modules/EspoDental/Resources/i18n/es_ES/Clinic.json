@@ -1,0 +1,30 @@
+{
+    "labels": {
+        "Create Clinic": "Crear clinica",
+        "Overview": "General",
+        "Other": "Otros"
+    },
+    "fields": {
+        "name": "Nombre",
+        "code": "Codigo",
+        "address": "Direccion",
+        "phone": "Telefono",
+        "email": "Email",
+        "timezone": "Zona horaria",
+        "defaultCurrency": "Moneda por defecto",
+        "color": "Color",
+        "description": "Descripcion",
+        "isActive": "Activa",
+        "cabinets": "Gabinetes",
+        "patients": "Pacientes",
+        "preliminaryPatients": "Pacientes preliminares"
+    },
+    "links": {
+        "cabinets": "Gabinetes",
+        "patients": "Pacientes",
+        "preliminaryPatients": "Pacientes preliminares"
+    },
+    "tooltips": {
+        "code": "Codigo unico corto de la clinica, usado en numeracion de facturas e informes."
+    }
+}

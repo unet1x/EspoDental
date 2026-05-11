@@ -1,0 +1,15 @@
+{
+    "labels": {"Create LowStockAlert": "Создать алерт"},
+    "fields": {
+        "name": "Название", "material": "Материал", "clinic": "Клиника",
+        "level": "Уровень", "currentStock": "Текущий остаток",
+        "threshold": "Порог", "status": "Статус", "raisedAt": "Зафиксирован",
+        "resolvedAt": "Закрыт", "acknowledgedBy": "Подтвердил", "notes": "Заметки"
+    },
+    "options": {
+        "level": {"low": "Низкий", "critical": "Критический", "out": "Закончился"},
+        "status": {"open": "Открыт", "acknowledged": "Подтверждён", "resolved": "Закрыт"}
+    },
+    "links": {"material": "Материал", "clinic": "Клиника"},
+    "boolFilters": {"onlyOpen": "Только открытые"}
+}

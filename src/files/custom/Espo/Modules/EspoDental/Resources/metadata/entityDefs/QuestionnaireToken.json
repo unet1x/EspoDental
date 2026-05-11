@@ -1,0 +1,60 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 64
+        },
+        "token": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 64
+        },
+        "patient": {
+            "type": "link",
+            "required": true
+        },
+        "preliminaryPatient": {
+            "type": "link"
+        },
+        "questionnaire": {
+            "type": "link",
+            "readOnly": true
+        },
+        "language": {
+            "type": "enum",
+            "options": ["ru_RU", "en_US", "es_ES"],
+            "default": "ru_RU"
+        },
+        "expiresAt": {
+            "type": "datetime",
+            "required": true
+        },
+        "isUsed": {
+            "type": "bool",
+            "default": false,
+            "readOnly": true
+        },
+        "usedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "patient": {"type": "belongsTo", "entity": "Patient"},
+        "preliminaryPatient": {"type": "belongsTo", "entity": "PreliminaryPatient"},
+        "questionnaire": {"type": "belongsTo", "entity": "HealthQuestionnaire", "foreign": "tokens"},
+        "createdBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc"
+    },
+    "indexes": {
+        "token": {"columns": ["token"], "unique": true},
+        "patient": {"columns": ["patientId"]},
+        "expires": {"columns": ["expiresAt", "isUsed"]}
+    }
+}

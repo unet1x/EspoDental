@@ -1,0 +1,33 @@
+{
+    "labels": {
+        "Create ToothChartSnapshot": "Crear odontograma",
+        "Tooth": "Diente",
+        "Note": "Nota",
+        "Edit Tooth": "Editar diente"
+    },
+    "fields": {
+        "name": "Nombre",
+        "patient": "Paciente",
+        "visit": "Visita",
+        "doctor": "Doctor",
+        "dentitionType": "Denticion",
+        "teeth": "Dientes",
+        "recordedAt": "Registrado en",
+        "notes": "Notas"
+    },
+    "options": {
+        "dentitionType": {"adult": "Adulto", "child": "Infantil", "mixed": "Mixta"},
+        "healthy": "Sano",
+        "caries": "Caries",
+        "filling": "Empaste",
+        "root_canal": "Endodoncia",
+        "crown": "Corona",
+        "bridge": "Puente",
+        "veneer": "Carilla",
+        "implant": "Implante",
+        "extracted": "Extraido",
+        "missing": "Ausente",
+        "sealant": "Sellado"
+    },
+    "links": {"patient": "Paciente", "visit": "Visita"}
+}

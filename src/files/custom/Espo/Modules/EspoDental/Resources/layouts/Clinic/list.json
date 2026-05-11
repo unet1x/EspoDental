@@ -1,0 +1,8 @@
+[
+    {"name": "name", "link": true},
+    {"name": "code"},
+    {"name": "phone"},
+    {"name": "email"},
+    {"name": "timezone"},
+    {"name": "isActive"}
+]

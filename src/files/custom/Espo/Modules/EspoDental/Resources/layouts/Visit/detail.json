@@ -1,0 +1,54 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [
+                {"name": "patient"},
+                {"name": "status"}
+            ],
+            [
+                {"name": "doctor"},
+                {"name": "assistant"}
+            ],
+            [
+                {"name": "appointment"},
+                {"name": "cabinet"}
+            ],
+            [
+                {"name": "startedAt"},
+                {"name": "finishedAt"}
+            ]
+        ]
+    },
+    {
+        "label": "Clinical",
+        "rows": [
+            [
+                {"name": "complaints", "fullWidth": true}
+            ],
+            [
+                {"name": "performed", "fullWidth": true}
+            ],
+            [
+                {"name": "recommendations", "fullWidth": true}
+            ]
+        ]
+    },
+    {
+        "label": "Other",
+        "rows": [
+            [
+                {"name": "totalAmount"},
+                {"name": "clinic"}
+            ],
+            [
+                {"name": "assignedUser"},
+                {"name": "teams"}
+            ],
+            [
+                {"name": "createdAt"},
+                {"name": "modifiedAt"}
+            ]
+        ]
+    }
+]

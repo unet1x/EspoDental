@@ -1,0 +1,11 @@
+{
+    "EspoDentalCheckExpiredQuestionnaires": {
+        "jobClassName": "Espo\\Modules\\EspoDental\\Jobs\\CheckExpiredQuestionnaires"
+    },
+    "EspoDentalCheckStockThresholds": {
+        "jobClassName": "Espo\\Modules\\EspoDental\\Jobs\\CheckStockThresholds"
+    },
+    "EspoDentalSendAppointmentReminders": {
+        "jobClassName": "Espo\\Modules\\EspoDental\\Jobs\\SendAppointmentReminders"
+    }
+}

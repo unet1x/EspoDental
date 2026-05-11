@@ -1,0 +1,25 @@
+{
+    "labels": {"Create Material": "Crear material", "Overview": "General", "Stock": "Stock"},
+    "fields": {
+        "name": "Nombre", "code": "Codigo", "sku": "SKU", "category": "Categoria",
+        "unit": "Unidad", "manufacturer": "Fabricante", "vendor": "Proveedor",
+        "price": "Precio", "color": "Color",
+        "minStock": "Min stock", "criticalStock": "Stock critico", "maxStock": "Max stock",
+        "currentStock": "Stock actual", "stockLevel": "Nivel",
+        "expiryControl": "Control de caducidad", "isActive": "Activo", "description": "Descripcion"
+    },
+    "options": {
+        "unit": {
+            "pcs": "uds", "ml": "ml", "g": "g", "kg": "kg", "l": "l",
+            "box": "caja", "pack": "paquete", "syringe": "jeringa",
+            "tube": "tubo", "cartridge": "cartucho"
+        },
+        "stockLevel": {"": "—", "ok": "OK", "low": "Bajo", "critical": "Critico", "out": "Agotado"}
+    },
+    "links": {"category": "Categoria", "movements": "Movimientos", "serviceMaterials": "En servicios", "alerts": "Alertas"},
+    "boolFilters": {"onlyActive": "Solo activos", "lowStock": "Stock bajo", "criticalStock": "Critico"},
+    "tooltips": {
+        "minStock": "Umbral de advertencia",
+        "criticalStock": "Umbral urgente"
+    }
+}

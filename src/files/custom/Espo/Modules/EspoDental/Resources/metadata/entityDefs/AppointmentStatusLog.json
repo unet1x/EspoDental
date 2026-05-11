@@ -1,0 +1,46 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 255
+        },
+        "appointment": {
+            "type": "link",
+            "required": true
+        },
+        "fromStatus": {
+            "type": "enum",
+            "options": ["", "planned", "rescheduled", "cancelled", "arrived", "in_progress", "finished", "no_show"],
+            "default": ""
+        },
+        "toStatus": {
+            "type": "enum",
+            "options": ["planned", "rescheduled", "cancelled", "arrived", "in_progress", "finished", "no_show"],
+            "required": true
+        },
+        "changedAt": {
+            "type": "datetime",
+            "required": true
+        },
+        "changedBy": {
+            "type": "link",
+            "view": "views/fields/user"
+        },
+        "durationInPrevious": {
+            "type": "int",
+            "tooltip": true
+        }
+    },
+    "links": {
+        "appointment": {"type": "belongsTo", "entity": "Appointment", "foreign": "statusLogs"},
+        "changedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {
+        "orderBy": "changedAt",
+        "order": "desc"
+    },
+    "indexes": {
+        "appointment_changed": {"columns": ["appointmentId", "changedAt"]}
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/low-stock-materials",
+    "aclScope": "Material",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Low Stock Materials"},
+            "displayRecords": {"type": "int", "default": 8, "min": 1, "max": 30}
+        }
+    }
+}

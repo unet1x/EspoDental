@@ -1,0 +1,8 @@
+[
+    {"name": "dateStart"},
+    {"name": "parent", "link": true},
+    {"name": "doctor"},
+    {"name": "cabinet"},
+    {"name": "status"},
+    {"name": "duration"}
+]

@@ -1,0 +1,9 @@
+[
+    {"name": "name", "link": true},
+    {"name": "code"},
+    {"name": "category"},
+    {"name": "unit"},
+    {"name": "currentStock"},
+    {"name": "stockLevel"},
+    {"name": "minStock"}
+]

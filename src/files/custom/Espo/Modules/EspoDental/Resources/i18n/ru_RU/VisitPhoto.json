@@ -1,0 +1,34 @@
+{
+    "labels": {"Create VisitPhoto": "Добавить снимок"},
+    "fields": {
+        "name": "Название",
+        "visit": "Приём",
+        "patient": "Пациент",
+        "stage": "Этап",
+        "category": "Тип",
+        "tooth": "Зуб",
+        "image": "Файл",
+        "orthancStudyUid": "Orthanc Study UID",
+        "orthancUrl": "Ссылка Orthanc",
+        "notes": "Заметки",
+        "recordedAt": "Дата"
+    },
+    "options": {
+        "stage": {"before": "До", "during": "В процессе", "after": "После"},
+        "category": {
+            "": "—",
+            "intraoral": "Интраоральное",
+            "extraoral": "Экстраоральное",
+            "xray": "Прицельный",
+            "panoramic": "ОПТГ",
+            "ct": "КТ",
+            "scan": "Скан",
+            "other": "Другое"
+        }
+    },
+    "links": {"visit": "Приём", "patient": "Пациент"},
+    "tooltips": {
+        "tooth": "FDI-номер зуба, если применимо",
+        "orthancStudyUid": "UID DICOM-исследования в Orthanc PACS"
+    }
+}

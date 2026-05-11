@@ -1,0 +1,10 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}, {"name": "code"}],
+            [{"name": "color"}, {"name": "order"}],
+            [{"name": "isActive"}, {"name": "createdAt"}],
+            [{"name": "description", "fullWidth": true}]
+        ]
+    }
+]

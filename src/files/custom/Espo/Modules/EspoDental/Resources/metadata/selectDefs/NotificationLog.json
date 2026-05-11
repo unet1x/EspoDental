@@ -1,0 +1,6 @@
+{
+    "boolFilterClassNameMap": {
+        "onlyFailed": "Espo\\Modules\\EspoDental\\Classes\\Select\\NotificationLog\\BoolFilters\\OnlyFailed",
+        "today": "Espo\\Modules\\EspoDental\\Classes\\Select\\NotificationLog\\BoolFilters\\Today"
+    }
+}

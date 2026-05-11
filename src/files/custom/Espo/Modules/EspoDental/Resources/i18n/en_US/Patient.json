@@ -1,0 +1,95 @@
+{
+    "labels": {
+        "Create Patient": "Create Patient",
+        "Overview": "Overview",
+        "Contact": "Contact",
+        "Family": "Family",
+        "Notes": "Notes",
+        "Health Questionnaire": "Health Questionnaire",
+        "Other": "Other"
+    },
+    "fields": {
+        "name": "Full Name",
+        "lastName": "Last Name",
+        "firstName": "First Name",
+        "middleName": "Middle Name",
+        "gender": "Gender",
+        "phone": "Phone",
+        "emailAddress": "Email",
+        "dateOfBirth": "Date of Birth",
+        "age": "Age",
+        "address": "Address",
+        "notes": "Notes",
+        "telegram": "Telegram",
+        "telegramChatId": "Telegram Chat ID",
+        "remindersEnabled": "Reminders Enabled",
+        "whatsapp": "WhatsApp",
+        "preferredChannel": "Preferred Channel",
+        "vip": "VIP",
+        "restrictions": "Restrictions",
+        "cardNumber": "Card #",
+        "firstVisitDate": "First Visit Date",
+        "isChild": "Child",
+        "parentLastName": "Parent Last Name",
+        "parentFirstName": "Parent First Name",
+        "parentMiddleName": "Parent Middle Name",
+        "parentPhone": "Parent Phone",
+        "parentRelation": "Relation",
+        "balance": "Balance",
+        "status": "Status",
+        "clinic": "Clinic",
+        "convertedFromPreliminary": "From Lead Patient",
+        "lastQuestionnaireAt": "Questionnaire Filled At",
+        "questionnaireExpired": "Questionnaire Expired",
+        "questionnaireHasAlerts": "Questionnaire Has Alerts",
+        "healthQuestionnaires": "Health Questionnaires",
+        "questionnaireTokens": "Questionnaire Tokens",
+        "description": "Description",
+        "assignedUser": "Assigned User",
+        "teams": "Teams"
+    },
+    "options": {
+        "gender": {
+            "": "—",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "preferredChannel": {
+            "": "—",
+            "email": "Email",
+            "sms": "SMS",
+            "telegram": "Telegram",
+            "whatsapp": "WhatsApp",
+            "phone": "Phone"
+        },
+        "parentRelation": {
+            "": "—",
+            "mother": "Mother",
+            "father": "Father",
+            "guardian": "Guardian",
+            "other": "Other"
+        },
+        "status": {
+            "active": "Active",
+            "inactive": "Inactive",
+            "archived": "Archived"
+        }
+    },
+    "links": {
+        "clinic": "Clinic",
+        "convertedFromPreliminary": "From Lead Patient"
+    },
+    "boolFilters": {
+        "onlyMy": "Only my",
+        "vip": "VIP",
+        "restrictions": "With Restrictions"
+    },
+    "tooltips": {
+        "cardNumber": "Paper card number (unique).",
+        "restrictions": "Medical restrictions present; shown as alert on the patient card.",
+        "balance": "Current balance: positive = prepayment, negative = debt.",
+        "questionnaireExpired": "Health questionnaire is missing or older than 1 year — ask the patient to fill it again.",
+        "questionnaireHasAlerts": "Questionnaire has flagged items that require doctor attention."
+    }
+}

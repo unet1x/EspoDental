@@ -1,0 +1,78 @@
+{
+    "scopeNames": {
+        "Clinic": "Clinic",
+        "Cabinet": "Cabinet",
+        "PreliminaryPatient": "Lead Patient",
+        "Patient": "Patient",
+        "HealthQuestionnaire": "Health Questionnaire",
+        "QuestionnaireToken": "Questionnaire Token",
+        "Appointment": "Appointment",
+        "AppointmentStatusLog": "Status Log",
+        "Visit": "Visit",
+        "ServiceCategory": "Service Category",
+        "Service": "Service",
+        "VisitServiceLine": "Visit Service Line",
+        "ToothChartSnapshot": "Tooth Chart",
+        "VisitPhoto": "Photo",
+        "Invoice": "Invoice",
+        "InvoiceLine": "Invoice Line",
+        "Payment": "Payment",
+        "MaterialCategory": "Material Category",
+        "Material": "Material",
+        "StockMovement": "Stock Movement",
+        "ServiceMaterial": "Service Material",
+        "LowStockAlert": "Low Stock Alert",
+        "NotificationLog": "Notification"
+    },
+    "scopeNamesPlural": {
+        "Clinic": "Clinics",
+        "Cabinet": "Cabinets",
+        "PreliminaryPatient": "Lead Patients",
+        "Patient": "Patients",
+        "HealthQuestionnaire": "Health Questionnaires",
+        "QuestionnaireToken": "Questionnaire Tokens",
+        "Appointment": "Appointments",
+        "AppointmentStatusLog": "Status Logs",
+        "Visit": "Visits",
+        "ServiceCategory": "Service Categories",
+        "Service": "Services",
+        "VisitServiceLine": "Visit Service Lines",
+        "ToothChartSnapshot": "Tooth Charts",
+        "VisitPhoto": "Photos",
+        "Invoice": "Invoices",
+        "InvoiceLine": "Invoice Lines",
+        "Payment": "Payments",
+        "MaterialCategory": "Material Categories",
+        "Material": "Materials",
+        "StockMovement": "Stock Movements",
+        "ServiceMaterial": "Service Materials",
+        "LowStockAlert": "Low Stock Alerts",
+        "NotificationLog": "Notifications"
+    },
+    "labels": {
+        "EspoDental": "Dental"
+    },
+    "messages": {
+        "espoDentalReady": "EspoDental module is active"
+    },
+    "dashlets": {
+        "TodaysAppointments": "Today's Appointments",
+        "OpenInvoices": "Open Invoices",
+        "LowStockMaterials": "Low Stock Materials",
+        "RecentVisits": "Recent Visits",
+        "MonthlyRevenue": "Monthly Revenue"
+    },
+    "boolFilters": {
+        "today": "Today",
+        "upcoming": "Upcoming",
+        "thisWeek": "This Week",
+        "thisMonth": "This Month",
+        "myDoctor": "My (Doctor)",
+        "onlyOpen": "Only Open",
+        "onlyOverdue": "Only Overdue",
+        "onlyActive": "Only Active",
+        "lowStock": "Low Stock",
+        "criticalStock": "Critical",
+        "onlyFailed": "Only Failed"
+    }
+}

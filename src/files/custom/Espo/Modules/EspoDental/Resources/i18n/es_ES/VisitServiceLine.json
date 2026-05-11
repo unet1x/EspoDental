@@ -1,0 +1,22 @@
+{
+    "labels": {"Create VisitServiceLine": "Anadir linea"},
+    "fields": {
+        "name": "Nombre",
+        "visit": "Visita",
+        "service": "Servicio",
+        "doctor": "Doctor",
+        "teethNumbers": "Dientes (coma)",
+        "quantity": "Cant.",
+        "unitPrice": "Precio unit.",
+        "discount": "Descuento %",
+        "amount": "Importe",
+        "vatRate": "IVA %",
+        "vatAmount": "IVA",
+        "notes": "Notas"
+    },
+    "links": {"visit": "Visita", "service": "Servicio"},
+    "tooltips": {
+        "teethNumbers": "Numeros FDI separados por coma, p.ej. 16,26",
+        "discount": "Porcentaje de descuento (0..100)"
+    }
+}

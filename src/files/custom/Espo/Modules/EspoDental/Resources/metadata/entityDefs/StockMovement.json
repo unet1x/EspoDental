@@ -1,0 +1,50 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "material": {"type": "link", "required": true},
+        "clinic": {"type": "link", "required": true},
+        "type": {
+            "type": "enum",
+            "options": ["receipt", "consumption", "writeoff", "transfer_out", "transfer_in", "adjustment", "return"],
+            "default": "consumption",
+            "required": true,
+            "audited": true
+        },
+        "direction": {
+            "type": "enum",
+            "options": ["in", "out"],
+            "required": true,
+            "readOnly": true
+        },
+        "quantity": {"type": "float", "required": true, "min": 0, "default": 0},
+        "unit": {"type": "varchar", "maxLength": 16, "readOnly": true},
+        "unitPrice": {"type": "currency", "default": "0.00"},
+        "totalCost": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "performedAt": {"type": "datetime", "required": true},
+        "performedBy": {"type": "link", "view": "views/fields/user"},
+        "sourceVisit": {"type": "link"},
+        "sourceVisitServiceLine": {"type": "link"},
+        "batch": {"type": "varchar", "maxLength": 64},
+        "expiryDate": {"type": "date"},
+        "reason": {"type": "text"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "material": {"type": "belongsTo", "entity": "Material", "foreign": "movements"},
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "performedBy": {"type": "belongsTo", "entity": "User"},
+        "sourceVisit": {"type": "belongsTo", "entity": "Visit"},
+        "sourceVisitServiceLine": {"type": "belongsTo", "entity": "VisitServiceLine"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "performedAt", "order": "desc"},
+    "indexes": {
+        "material_performed": {"columns": ["materialId", "performedAt"]},
+        "clinic_performed": {"columns": ["clinicId", "performedAt"]},
+        "type": {"columns": ["type"]}
+    }
+}

@@ -1,0 +1,5 @@
+{
+    "labels": {"Create MaterialCategory": "Crear categoria"},
+    "fields": {"name": "Nombre", "code": "Codigo", "color": "Color", "order": "Orden", "isActive": "Activa", "description": "Descripcion"},
+    "links": {"materials": "Materiales"}
+}

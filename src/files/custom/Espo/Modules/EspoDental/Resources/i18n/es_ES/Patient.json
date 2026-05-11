@@ -1,0 +1,95 @@
+{
+    "labels": {
+        "Create Patient": "Crear paciente",
+        "Overview": "General",
+        "Contact": "Contacto",
+        "Family": "Familia",
+        "Notes": "Notas",
+        "Health Questionnaire": "Cuestionario de salud",
+        "Other": "Otros"
+    },
+    "fields": {
+        "name": "Nombre completo",
+        "lastName": "Apellido",
+        "firstName": "Nombre",
+        "middleName": "Segundo nombre",
+        "gender": "Genero",
+        "phone": "Telefono",
+        "emailAddress": "Email",
+        "dateOfBirth": "Fecha de nacimiento",
+        "age": "Edad",
+        "address": "Direccion",
+        "notes": "Notas",
+        "telegram": "Telegram",
+        "telegramChatId": "Telegram Chat ID",
+        "remindersEnabled": "Recordatorios activos",
+        "whatsapp": "WhatsApp",
+        "preferredChannel": "Canal preferido",
+        "vip": "VIP",
+        "restrictions": "Restricciones",
+        "cardNumber": "Numero de ficha",
+        "firstVisitDate": "Primera visita",
+        "isChild": "Nino",
+        "parentLastName": "Apellido del padre/madre",
+        "parentFirstName": "Nombre del padre/madre",
+        "parentMiddleName": "Segundo nombre del padre/madre",
+        "parentPhone": "Telefono del padre/madre",
+        "parentRelation": "Relacion",
+        "balance": "Saldo",
+        "status": "Estado",
+        "clinic": "Clinica",
+        "convertedFromPreliminary": "Desde paciente preliminar",
+        "lastQuestionnaireAt": "Cuestionario completado el",
+        "questionnaireExpired": "Cuestionario vencido",
+        "questionnaireHasAlerts": "Cuestionario con alertas",
+        "healthQuestionnaires": "Cuestionarios de salud",
+        "questionnaireTokens": "Tokens de cuestionarios",
+        "description": "Descripcion",
+        "assignedUser": "Asignado a",
+        "teams": "Equipos"
+    },
+    "options": {
+        "gender": {
+            "": "—",
+            "male": "Masculino",
+            "female": "Femenino",
+            "other": "Otro"
+        },
+        "preferredChannel": {
+            "": "—",
+            "email": "Email",
+            "sms": "SMS",
+            "telegram": "Telegram",
+            "whatsapp": "WhatsApp",
+            "phone": "Telefono"
+        },
+        "parentRelation": {
+            "": "—",
+            "mother": "Madre",
+            "father": "Padre",
+            "guardian": "Tutor",
+            "other": "Otro"
+        },
+        "status": {
+            "active": "Activo",
+            "inactive": "Inactivo",
+            "archived": "Archivado"
+        }
+    },
+    "links": {
+        "clinic": "Clinica",
+        "convertedFromPreliminary": "Desde paciente preliminar"
+    },
+    "boolFilters": {
+        "onlyMy": "Solo mios",
+        "vip": "VIP",
+        "restrictions": "Con restricciones"
+    },
+    "tooltips": {
+        "cardNumber": "Numero unico de la ficha en papel.",
+        "restrictions": "Existen restricciones medicas, se muestra como alerta en la ficha.",
+        "balance": "Saldo actual: positivo = adelanto, negativo = deuda.",
+        "questionnaireExpired": "El cuestionario de salud falta o tiene mas de un ano, pida que se complete de nuevo.",
+        "questionnaireHasAlerts": "El cuestionario tiene puntos marcados que requieren atencion del medico."
+    }
+}

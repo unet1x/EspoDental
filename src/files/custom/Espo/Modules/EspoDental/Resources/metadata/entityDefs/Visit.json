@@ -1,0 +1,96 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 255
+        },
+        "appointment": {
+            "type": "link",
+            "required": true
+        },
+        "patient": {
+            "type": "link",
+            "required": true
+        },
+        "doctor": {
+            "type": "link",
+            "required": true,
+            "view": "views/fields/user"
+        },
+        "assistant": {
+            "type": "link",
+            "view": "views/fields/user"
+        },
+        "cabinet": {
+            "type": "link"
+        },
+        "clinic": {
+            "type": "link"
+        },
+        "status": {
+            "type": "enum",
+            "options": ["in_progress", "finished", "cancelled"],
+            "default": "in_progress",
+            "audited": true,
+            "style": {
+                "in_progress": "info",
+                "finished": "success",
+                "cancelled": "danger"
+            }
+        },
+        "complaints": {
+            "type": "text"
+        },
+        "performed": {
+            "type": "text"
+        },
+        "recommendations": {
+            "type": "text"
+        },
+        "startedAt": {
+            "type": "datetime",
+            "required": true
+        },
+        "finishedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "totalAmount": {
+            "type": "currency",
+            "readOnly": true,
+            "default": "0.00"
+        },
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "assignedUser": {"type": "link", "view": "views/fields/assigned-user"},
+        "teams": {"type": "linkMultiple", "view": "views/fields/teams"}
+    },
+    "links": {
+        "appointment": {"type": "belongsTo", "entity": "Appointment", "foreign": "visit"},
+        "patient": {"type": "belongsTo", "entity": "Patient", "foreign": "visits"},
+        "doctor": {"type": "belongsTo", "entity": "User"},
+        "assistant": {"type": "belongsTo", "entity": "User"},
+        "cabinet": {"type": "belongsTo", "entity": "Cabinet"},
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "serviceLines": {"type": "hasMany", "entity": "VisitServiceLine", "foreign": "visit"},
+        "photos": {"type": "hasMany", "entity": "VisitPhoto", "foreign": "visit"},
+        "toothChartSnapshots": {"type": "hasMany", "entity": "ToothChartSnapshot", "foreign": "visit"},
+        "invoices": {"type": "hasMany", "entity": "Invoice", "foreign": "visit"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"},
+        "assignedUser": {"type": "belongsTo", "entity": "User"},
+        "teams": {"type": "hasMany", "entity": "Team", "relationName": "entityTeam", "layoutRelationshipsDisabled": true}
+    },
+    "collection": {
+        "orderBy": "startedAt",
+        "order": "desc"
+    },
+    "indexes": {
+        "startedAt": {"columns": ["startedAt", "deleted"]},
+        "patient_started": {"columns": ["patientId", "startedAt"]},
+        "doctor_started": {"columns": ["doctorId", "startedAt"]}
+    }
+}

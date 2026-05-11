@@ -1,0 +1,95 @@
+{
+    "labels": {
+        "Create Patient": "Создать пациента",
+        "Overview": "Основное",
+        "Contact": "Контакты",
+        "Family": "Семья",
+        "Notes": "Заметки",
+        "Health Questionnaire": "Анкета здоровья",
+        "Other": "Прочее"
+    },
+    "fields": {
+        "name": "ФИО",
+        "lastName": "Фамилия",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "gender": "Пол",
+        "phone": "Телефон",
+        "emailAddress": "Email",
+        "dateOfBirth": "Дата рождения",
+        "age": "Возраст",
+        "address": "Адрес",
+        "notes": "Заметки",
+        "telegram": "Telegram",
+        "telegramChatId": "Telegram chat ID",
+        "remindersEnabled": "Напоминания включены",
+        "whatsapp": "WhatsApp",
+        "preferredChannel": "Предпочитаемая связь",
+        "vip": "VIP",
+        "restrictions": "Ограничения",
+        "cardNumber": "№ карты",
+        "firstVisitDate": "Дата первого приема",
+        "isChild": "Ребенок",
+        "parentLastName": "Фамилия родителя",
+        "parentFirstName": "Имя родителя",
+        "parentMiddleName": "Отчество родителя",
+        "parentPhone": "Телефон родителя",
+        "parentRelation": "Степень родства",
+        "balance": "Баланс",
+        "status": "Статус",
+        "clinic": "Клиника",
+        "convertedFromPreliminary": "Из предв. пациента",
+        "lastQuestionnaireAt": "Анкета заполнена",
+        "questionnaireExpired": "Анкета устарела",
+        "questionnaireHasAlerts": "Алерты в анкете",
+        "healthQuestionnaires": "Анкеты здоровья",
+        "questionnaireTokens": "Токены анкеты",
+        "description": "Описание",
+        "assignedUser": "Ответственный",
+        "teams": "Команды"
+    },
+    "options": {
+        "gender": {
+            "": "—",
+            "male": "Мужской",
+            "female": "Женский",
+            "other": "Третий"
+        },
+        "preferredChannel": {
+            "": "—",
+            "email": "Email",
+            "sms": "SMS",
+            "telegram": "Telegram",
+            "whatsapp": "WhatsApp",
+            "phone": "Телефон"
+        },
+        "parentRelation": {
+            "": "—",
+            "mother": "Мать",
+            "father": "Отец",
+            "guardian": "Опекун",
+            "other": "Другое"
+        },
+        "status": {
+            "active": "Активный",
+            "inactive": "Неактивный",
+            "archived": "Архив"
+        }
+    },
+    "links": {
+        "clinic": "Клиника",
+        "convertedFromPreliminary": "Из предв. пациента"
+    },
+    "boolFilters": {
+        "onlyMy": "Только мои",
+        "vip": "VIP",
+        "restrictions": "С ограничениями"
+    },
+    "tooltips": {
+        "cardNumber": "Номер бумажной карточки (уникальный)",
+        "restrictions": "Есть медицинские ограничения, отображается в карточке как алерт",
+        "balance": "Текущий баланс: положительный — предоплата, отрицательный — долг",
+        "questionnaireExpired": "Анкета здоровья отсутствует или старше 1 года — попросите перезаполнить",
+        "questionnaireHasAlerts": "В анкете есть отмеченные пункты, требующие внимания врача"
+    }
+}

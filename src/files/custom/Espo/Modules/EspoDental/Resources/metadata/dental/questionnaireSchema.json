@@ -1,0 +1,104 @@
+{
+    "version": 1,
+    "groups": [
+        {
+            "id": "general",
+            "labels": {
+                "ru_RU": "Общее состояние здоровья",
+                "en_US": "General health",
+                "es_ES": "Salud general"
+            },
+            "items": [
+                {"id": "general.hypertension", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Гипертония / повышенное давление", "en_US": "Hypertension", "es_ES": "Hipertension"}},
+                {"id": "general.heart", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Сердечно-сосудистые заболевания", "en_US": "Heart / cardiovascular disease", "es_ES": "Enfermedad cardiovascular"}},
+                {"id": "general.diabetes", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Сахарный диабет", "en_US": "Diabetes", "es_ES": "Diabetes"}},
+                {"id": "general.thyroid", "type": "bool",
+                    "labels": {"ru_RU": "Заболевания щитовидной железы", "en_US": "Thyroid disease", "es_ES": "Enfermedad de tiroides"}},
+                {"id": "general.bleeding", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Нарушения свертываемости крови", "en_US": "Bleeding disorders", "es_ES": "Trastornos de la coagulacion"}},
+                {"id": "general.hepatitis", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Гепатит / заболевания печени", "en_US": "Hepatitis / liver disease", "es_ES": "Hepatitis / enfermedad hepatica"}},
+                {"id": "general.hiv", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "ВИЧ / СПИД", "en_US": "HIV / AIDS", "es_ES": "VIH / SIDA"}},
+                {"id": "general.cancer", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Онкологические заболевания", "en_US": "Cancer", "es_ES": "Cancer"}},
+                {"id": "general.epilepsy", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Эпилепсия / судороги", "en_US": "Epilepsy / seizures", "es_ES": "Epilepsia / convulsiones"}},
+                {"id": "general.notes", "type": "text",
+                    "labels": {"ru_RU": "Прочие хронические заболевания", "en_US": "Other chronic conditions", "es_ES": "Otras enfermedades cronicas"}}
+            ]
+        },
+        {
+            "id": "allergies",
+            "labels": {
+                "ru_RU": "Аллергии",
+                "en_US": "Allergies",
+                "es_ES": "Alergias"
+            },
+            "items": [
+                {"id": "allergy.anesthetics", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Аллергия на анестетики", "en_US": "Allergy to anesthetics", "es_ES": "Alergia a anestesicos"}},
+                {"id": "allergy.antibiotics", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Аллергия на антибиотики", "en_US": "Allergy to antibiotics", "es_ES": "Alergia a antibioticos"}},
+                {"id": "allergy.latex", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Аллергия на латекс", "en_US": "Latex allergy", "es_ES": "Alergia al latex"}},
+                {"id": "allergy.metals", "type": "bool",
+                    "labels": {"ru_RU": "Аллергия на металлы", "en_US": "Metals allergy", "es_ES": "Alergia a metales"}},
+                {"id": "allergy.notes", "type": "text",
+                    "labels": {"ru_RU": "Прочие аллергии", "en_US": "Other allergies", "es_ES": "Otras alergias"}}
+            ]
+        },
+        {
+            "id": "medications",
+            "labels": {
+                "ru_RU": "Текущие лекарства",
+                "en_US": "Current medications",
+                "es_ES": "Medicamentos actuales"
+            },
+            "items": [
+                {"id": "med.anticoagulants", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Антикоагулянты (варфарин и т.п.)", "en_US": "Anticoagulants (warfarin etc.)", "es_ES": "Anticoagulantes (warfarina, etc.)"}},
+                {"id": "med.bisphosphonates", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Бисфосфонаты", "en_US": "Bisphosphonates", "es_ES": "Bifosfonatos"}},
+                {"id": "med.list", "type": "text",
+                    "labels": {"ru_RU": "Список регулярных лекарств", "en_US": "List of regular medications", "es_ES": "Lista de medicamentos regulares"}}
+            ]
+        },
+        {
+            "id": "dental",
+            "labels": {
+                "ru_RU": "Стоматологический анамнез",
+                "en_US": "Dental history",
+                "es_ES": "Antecedentes dentales"
+            },
+            "items": [
+                {"id": "dental.bruxism", "type": "bool",
+                    "labels": {"ru_RU": "Бруксизм (скрежетание зубами)", "en_US": "Bruxism (teeth grinding)", "es_ES": "Bruxismo"}},
+                {"id": "dental.tmj", "type": "bool",
+                    "labels": {"ru_RU": "Боли в челюсти / щелчки ВНЧС", "en_US": "TMJ pain or clicking", "es_ES": "Dolor o chasquidos en ATM"}},
+                {"id": "dental.sensitive", "type": "bool",
+                    "labels": {"ru_RU": "Повышенная чувствительность зубов", "en_US": "Tooth sensitivity", "es_ES": "Sensibilidad dental"}},
+                {"id": "dental.last_visit", "type": "text",
+                    "labels": {"ru_RU": "Когда был последний визит к стоматологу", "en_US": "Last dental visit", "es_ES": "Ultima visita al dentista"}}
+            ]
+        },
+        {
+            "id": "female",
+            "conditional": {"showIf": {"patientGender": "female"}},
+            "labels": {
+                "ru_RU": "Дополнительно для женщин",
+                "en_US": "For female patients",
+                "es_ES": "Para pacientes femeninas"
+            },
+            "items": [
+                {"id": "female.pregnancy", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Беременность", "en_US": "Pregnancy", "es_ES": "Embarazo"}},
+                {"id": "female.lactation", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Кормление грудью", "en_US": "Breastfeeding", "es_ES": "Lactancia"}}
+            ]
+        }
+    ]
+}

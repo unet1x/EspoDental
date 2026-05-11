@@ -1,0 +1,15 @@
+[
+    {
+        "rows": [
+            [{"name": "number"}, {"name": "status"}],
+            [{"name": "patient"}, {"name": "clinic"}],
+            [{"name": "invoice"}, {"name": "method"}],
+            [{"name": "direction"}, {"name": "amount"}],
+            [{"name": "currency"}, {"name": "paidAt"}],
+            [{"name": "receivedBy"}, {"name": "refundOf"}],
+            [{"name": "notes", "fullWidth": true}],
+            [{"name": "assignedUser"}, {"name": "teams"}],
+            [{"name": "createdAt"}, {"name": "modifiedAt"}]
+        ]
+    }
+]

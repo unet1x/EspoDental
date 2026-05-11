@@ -1,0 +1,8 @@
+{
+    "boolFilterClassNameMap": {
+        "today": "Espo\\Modules\\EspoDental\\Classes\\Select\\Appointment\\BoolFilters\\Today",
+        "upcoming": "Espo\\Modules\\EspoDental\\Classes\\Select\\Appointment\\BoolFilters\\Upcoming",
+        "thisWeek": "Espo\\Modules\\EspoDental\\Classes\\Select\\Appointment\\BoolFilters\\ThisWeek",
+        "myDoctor": "Espo\\Modules\\EspoDental\\Classes\\Select\\Appointment\\BoolFilters\\MyDoctor"
+    }
+}

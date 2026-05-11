@@ -1,0 +1,33 @@
+{
+    "labels": {
+        "Create ToothChartSnapshot": "Добавить зубную формулу",
+        "Tooth": "Зуб",
+        "Note": "Заметка",
+        "Edit Tooth": "Изменить зуб"
+    },
+    "fields": {
+        "name": "Название",
+        "patient": "Пациент",
+        "visit": "Приём",
+        "doctor": "Врач",
+        "dentitionType": "Прикус",
+        "teeth": "Зубы",
+        "recordedAt": "Дата фиксации",
+        "notes": "Заметки"
+    },
+    "options": {
+        "dentitionType": {"adult": "Постоянный", "child": "Молочный", "mixed": "Смешанный"},
+        "healthy": "Здоров",
+        "caries": "Кариес",
+        "filling": "Пломба",
+        "root_canal": "Корневой канал",
+        "crown": "Коронка",
+        "bridge": "Мост",
+        "veneer": "Винир",
+        "implant": "Имплант",
+        "extracted": "Удалён",
+        "missing": "Отсутствует",
+        "sealant": "Герметик"
+    },
+    "links": {"patient": "Пациент", "visit": "Приём"}
+}

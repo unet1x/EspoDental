@@ -1,0 +1,8 @@
+[
+    {"name": "patient", "link": true},
+    {"name": "filledAt"},
+    {"name": "expiresAt"},
+    {"name": "hasAlerts"},
+    {"name": "isExpired"},
+    {"name": "language"}
+]

@@ -1,0 +1,48 @@
+{
+    "fields": {
+        "espoDentalTelegramEnabled": {
+            "type": "bool",
+            "default": false,
+            "tab": "EspoDental"
+        },
+        "espoDentalTelegramBotToken": {
+            "type": "password",
+            "tab": "EspoDental"
+        },
+        "espoDentalTelegramApiBase": {
+            "type": "url",
+            "default": "https://api.telegram.org",
+            "tab": "EspoDental"
+        },
+        "espoDentalReminderHoursBefore": {
+            "type": "int",
+            "default": 24,
+            "min": 1,
+            "max": 168,
+            "tab": "EspoDental",
+            "tooltip": true
+        },
+        "espoDentalReminderSecondHoursBefore": {
+            "type": "int",
+            "default": 2,
+            "min": 0,
+            "max": 48,
+            "tab": "EspoDental",
+            "tooltip": true
+        },
+        "espoDentalReminderWindowMinutes": {
+            "type": "int",
+            "default": 30,
+            "min": 5,
+            "max": 240,
+            "tab": "EspoDental",
+            "tooltip": true
+        },
+        "espoDentalDefaultCurrency": {
+            "type": "varchar",
+            "maxLength": 8,
+            "default": "RUB",
+            "tab": "EspoDental"
+        }
+    }
+}

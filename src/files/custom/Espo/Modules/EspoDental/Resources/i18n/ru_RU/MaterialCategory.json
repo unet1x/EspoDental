@@ -1,0 +1,5 @@
+{
+    "labels": {"Create MaterialCategory": "Создать категорию"},
+    "fields": {"name": "Название", "code": "Код", "color": "Цвет", "order": "Порядок", "isActive": "Активна", "description": "Описание"},
+    "links": {"materials": "Материалы"}
+}

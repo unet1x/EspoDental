@@ -1,0 +1,116 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 200,
+            "trim": true
+        },
+        "code": {
+            "type": "varchar",
+            "maxLength": 40,
+            "trim": true,
+            "tooltip": true
+        },
+        "address": {
+            "type": "address"
+        },
+        "phone": {
+            "type": "phone",
+            "typeList": ["Main", "Fax", "Mobile", "Other"],
+            "defaultType": "Main"
+        },
+        "email": {
+            "type": "email"
+        },
+        "timezone": {
+            "type": "enum",
+            "view": "views/preferences/fields/timezone",
+            "default": "Europe/Moscow"
+        },
+        "defaultCurrency": {
+            "type": "enum",
+            "options": ["RUB", "USD", "EUR", "KZT", "BYN", "UAH", "GEL", "TRY", "AED"],
+            "default": "RUB",
+            "audited": true
+        },
+        "color": {
+            "type": "varchar",
+            "maxLength": 9,
+            "view": "views/fields/colorpicker"
+        },
+        "description": {
+            "type": "text"
+        },
+        "isActive": {
+            "type": "bool",
+            "default": true
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        }
+    },
+    "links": {
+        "cabinets": {
+            "type": "hasMany",
+            "entity": "Cabinet",
+            "foreign": "clinic"
+        },
+        "patients": {
+            "type": "hasMany",
+            "entity": "Patient",
+            "foreign": "clinic"
+        },
+        "preliminaryPatients": {
+            "type": "hasMany",
+            "entity": "PreliminaryPatient",
+            "foreign": "clinic"
+        },
+        "appointments": {
+            "type": "hasMany",
+            "entity": "Appointment",
+            "foreign": "clinic"
+        },
+        "visits": {
+            "type": "hasMany",
+            "entity": "Visit",
+            "foreign": "clinic"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        }
+    },
+    "collection": {
+        "orderBy": "name",
+        "order": "asc"
+    },
+    "indexes": {
+        "name": {
+            "columns": ["name"]
+        },
+        "code": {
+            "columns": ["code"],
+            "unique": true
+        }
+    }
+}

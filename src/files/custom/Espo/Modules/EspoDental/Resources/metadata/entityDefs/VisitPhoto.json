@@ -1,0 +1,40 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 255},
+        "visit": {"type": "link", "required": true},
+        "patient": {"type": "link"},
+        "stage": {
+            "type": "enum",
+            "options": ["before", "during", "after"],
+            "default": "before",
+            "required": true
+        },
+        "category": {
+            "type": "enum",
+            "options": ["", "intraoral", "extraoral", "xray", "panoramic", "ct", "scan", "other"],
+            "default": ""
+        },
+        "tooth": {"type": "varchar", "maxLength": 8, "tooltip": true},
+        "image": {"type": "image"},
+        "orthancStudyUid": {"type": "varchar", "maxLength": 128, "tooltip": true},
+        "orthancUrl": {"type": "url"},
+        "notes": {"type": "text"},
+        "recordedAt": {"type": "datetime", "required": true},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "visit": {"type": "belongsTo", "entity": "Visit", "foreign": "photos"},
+        "patient": {"type": "belongsTo", "entity": "Patient", "foreign": "photos"},
+        "image": {"type": "belongsTo", "entity": "Attachment"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "recordedAt", "order": "desc"},
+    "indexes": {
+        "visit_stage": {"columns": ["visitId", "stage"]},
+        "patient": {"columns": ["patientId"]}
+    }
+}

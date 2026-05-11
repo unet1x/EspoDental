@@ -1,0 +1,9 @@
+[{"rows": [
+    [{"name": "name"}, {"name": "status"}],
+    [{"name": "material"}, {"name": "clinic"}],
+    [{"name": "level"}, {"name": "raisedAt"}],
+    [{"name": "currentStock"}, {"name": "threshold"}],
+    [{"name": "acknowledgedBy"}, {"name": "resolvedAt"}],
+    [{"name": "notes", "fullWidth": true}],
+    [{"name": "assignedUser"}, {"name": "teams"}]
+]}]

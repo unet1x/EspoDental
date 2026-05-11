@@ -1,0 +1,9 @@
+[
+    {"name": "number", "link": true},
+    {"name": "paidAt"},
+    {"name": "patient"},
+    {"name": "method"},
+    {"name": "direction"},
+    {"name": "amount"},
+    {"name": "status"}
+]

@@ -1,0 +1,45 @@
+{
+    "labels": {"Create Payment": "Aceptar pago", "Refund": "Reembolso"},
+    "fields": {
+        "number": "Numero",
+        "name": "Nombre",
+        "patient": "Paciente",
+        "clinic": "Clinica",
+        "invoice": "Factura",
+        "method": "Metodo",
+        "amount": "Importe",
+        "currency": "Moneda",
+        "status": "Estado",
+        "direction": "Direccion",
+        "paidAt": "Pagado el",
+        "receivedBy": "Recibido por",
+        "refundOf": "Reembolso de",
+        "notes": "Notas"
+    },
+    "options": {
+        "method": {
+            "cash": "Efectivo",
+            "card": "Tarjeta",
+            "bank_transfer": "Transferencia",
+            "online": "Online",
+            "terminal": "Terminal",
+            "other": "Otro"
+        },
+        "status": {
+            "pending": "Pendiente",
+            "completed": "Completado",
+            "cancelled": "Cancelado",
+            "refunded": "Reembolsado"
+        },
+        "direction": {"in": "Entrada", "out": "Salida"}
+    },
+    "links": {"patient": "Paciente", "invoice": "Factura"},
+    "boolFilters": {"onlyMy": "Solo mios", "today": "Hoy"},
+    "messages": {
+        "Cannot refund this payment": "No se puede reembolsar este pago",
+        "Refund amount": "Importe del reembolso",
+        "Refund reason": "Motivo del reembolso",
+        "Refund created": "Reembolso creado"
+    },
+    "tooltips": {"direction": "Entrada — la clinica recibe; Salida — reembolso al paciente"}
+}

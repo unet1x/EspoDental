@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 255},
+        "code": {"type": "varchar", "maxLength": 50, "trim": true},
+        "category": {"type": "link", "required": true},
+        "price": {"type": "currency", "default": "0.00", "required": true},
+        "duration": {"type": "int", "default": 30, "min": 0, "max": 600},
+        "color": {"type": "varchar", "maxLength": 9, "view": "views/fields/colorpicker"},
+        "perTooth": {"type": "bool", "default": false, "tooltip": true},
+        "icd10": {"type": "varchar", "maxLength": 16},
+        "description": {"type": "text"},
+        "isActive": {"type": "bool", "default": true},
+        "vatRate": {"type": "float", "default": 0, "min": 0, "max": 100},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "category": {"type": "belongsTo", "entity": "ServiceCategory", "foreign": "services"},
+        "visitLines": {"type": "hasMany", "entity": "VisitServiceLine", "foreign": "service"},
+        "serviceMaterials": {"type": "hasMany", "entity": "ServiceMaterial", "foreign": "service"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "name", "order": "asc"},
+    "indexes": {
+        "code": {"columns": ["code"]},
+        "category_active": {"columns": ["categoryId", "isActive"]},
+        "name": {"columns": ["name"]}
+    }
+}

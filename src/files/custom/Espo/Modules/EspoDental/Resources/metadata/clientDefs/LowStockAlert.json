@@ -1,0 +1,6 @@
+{
+    "controller": "controllers/record",
+    "color": "#E74C3C",
+    "iconClass": "fas fa-triangle-exclamation",
+    "boolFilterList": ["onlyOpen"]
+}

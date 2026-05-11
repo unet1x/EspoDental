@@ -1,0 +1,62 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [
+                {"name": "parent"},
+                {"name": "status"}
+            ],
+            [
+                {"name": "dateStart"},
+                {"name": "dateEnd"}
+            ],
+            [
+                {"name": "doctor"},
+                {"name": "assistant"}
+            ],
+            [
+                {"name": "cabinet"},
+                {"name": "clinic"}
+            ],
+            [
+                {"name": "complaints", "fullWidth": true}
+            ]
+        ]
+    },
+    {
+        "label": "Booking",
+        "rows": [
+            [
+                {"name": "bookedBy"},
+                {"name": "source"}
+            ],
+            [
+                {"name": "color"},
+                {"name": "reminderSent"}
+            ]
+        ]
+    },
+    {
+        "label": "Other",
+        "rows": [
+            [
+                {"name": "description", "fullWidth": true}
+            ],
+            [
+                {"name": "visit"}
+            ],
+            [
+                {"name": "assignedUser"},
+                {"name": "teams"}
+            ],
+            [
+                {"name": "createdAt"},
+                {"name": "modifiedAt"}
+            ],
+            [
+                {"name": "createdBy"},
+                {"name": "modifiedBy"}
+            ]
+        ]
+    }
+]

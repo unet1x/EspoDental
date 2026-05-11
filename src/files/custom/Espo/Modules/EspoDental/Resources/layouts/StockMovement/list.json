@@ -1,0 +1,9 @@
+[
+    {"name": "performedAt"},
+    {"name": "material", "link": true},
+    {"name": "type"},
+    {"name": "direction"},
+    {"name": "quantity"},
+    {"name": "totalCost"},
+    {"name": "clinic"}
+]

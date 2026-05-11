@@ -1,0 +1,6 @@
+{
+    "healthQuestionnaire": {
+        "className": "Espo\\Modules\\EspoDental\\EntryPoints\\HealthQuestionnaire",
+        "authRequired": false
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "boolFilterClassNameMap": {
+        "onlyOpen": "Espo\\Modules\\EspoDental\\Classes\\Select\\Invoice\\BoolFilters\\OnlyOpen",
+        "onlyOverdue": "Espo\\Modules\\EspoDental\\Classes\\Select\\Invoice\\BoolFilters\\OnlyOverdue"
+    }
+}

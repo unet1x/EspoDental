@@ -1,0 +1,17 @@
+{
+    "labels": {"EspoDental": "EspoDental", "EspoDental Settings": "Ajustes de EspoDental"},
+    "fields": {
+        "espoDentalTelegramEnabled": "Recordatorios de Telegram activos",
+        "espoDentalTelegramBotToken": "Token del bot de Telegram",
+        "espoDentalTelegramApiBase": "URL base de la API de Telegram",
+        "espoDentalReminderHoursBefore": "Horas antes del 1er recordatorio",
+        "espoDentalReminderSecondHoursBefore": "Horas antes del 2do recordatorio",
+        "espoDentalReminderWindowMinutes": "Ventana de disparo, min",
+        "espoDentalDefaultCurrency": "Moneda predeterminada"
+    },
+    "tooltips": {
+        "espoDentalReminderHoursBefore": "Horas antes de la cita del primer recordatorio",
+        "espoDentalReminderSecondHoursBefore": "Segundo recordatorio (0 desactiva)",
+        "espoDentalReminderWindowMinutes": "Desviacion permitida del momento objetivo"
+    }
+}

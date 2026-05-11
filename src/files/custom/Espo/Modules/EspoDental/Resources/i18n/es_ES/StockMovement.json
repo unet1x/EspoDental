@@ -1,0 +1,22 @@
+{
+    "labels": {"Create StockMovement": "Crear movimiento"},
+    "fields": {
+        "name": "Nombre", "material": "Material", "clinic": "Clinica",
+        "type": "Tipo", "direction": "Direccion", "quantity": "Cantidad",
+        "unit": "Unidad", "unitPrice": "Precio", "totalCost": "Coste",
+        "performedAt": "Realizado el", "performedBy": "Realizado por", "batch": "Lote",
+        "expiryDate": "Caducidad", "reason": "Motivo",
+        "sourceVisit": "Visita origen", "sourceVisitServiceLine": "Linea origen"
+    },
+    "options": {
+        "type": {
+            "receipt": "Recepcion", "consumption": "Consumo (visita)",
+            "writeoff": "Baja", "transfer_out": "Transferencia (salida)",
+            "transfer_in": "Transferencia (entrada)", "adjustment": "Ajuste",
+            "return": "Devolucion"
+        },
+        "direction": {"in": "Entrada", "out": "Salida"}
+    },
+    "links": {"material": "Material", "clinic": "Clinica"},
+    "boolFilters": {"today": "Hoy", "thisMonth": "Este mes"}
+}

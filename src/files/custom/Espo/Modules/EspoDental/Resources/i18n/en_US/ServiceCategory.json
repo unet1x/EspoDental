@@ -1,0 +1,12 @@
+{
+    "labels": {"Create ServiceCategory": "Create Category"},
+    "fields": {
+        "name": "Name",
+        "code": "Code",
+        "color": "Color",
+        "order": "Order",
+        "isActive": "Active",
+        "description": "Description"
+    },
+    "links": {"services": "Services"}
+}

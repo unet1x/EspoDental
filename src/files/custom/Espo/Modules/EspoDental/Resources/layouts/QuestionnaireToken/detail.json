@@ -1,0 +1,24 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "patient"},
+                {"name": "language"}
+            ],
+            [
+                {"name": "expiresAt"},
+                {"name": "isUsed"}
+            ],
+            [
+                {"name": "usedAt"},
+                {"name": "questionnaire"}
+            ],
+            [
+                {"name": "preliminaryPatient"}
+            ],
+            [
+                {"name": "token"}
+            ]
+        ]
+    }
+]

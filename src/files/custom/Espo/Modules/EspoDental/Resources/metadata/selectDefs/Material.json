@@ -1,0 +1,7 @@
+{
+    "boolFilterClassNameMap": {
+        "onlyActive": "Espo\\Modules\\EspoDental\\Classes\\Select\\Material\\BoolFilters\\OnlyActive",
+        "lowStock": "Espo\\Modules\\EspoDental\\Classes\\Select\\Material\\BoolFilters\\LowStock",
+        "criticalStock": "Espo\\Modules\\EspoDental\\Classes\\Select\\Material\\BoolFilters\\CriticalStock"
+    }
+}

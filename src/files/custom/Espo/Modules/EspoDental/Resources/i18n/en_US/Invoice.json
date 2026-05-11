@@ -1,0 +1,81 @@
+{
+    "labels": {
+        "Create Invoice": "Create Invoice",
+        "Overview": "Overview",
+        "Amounts": "Amounts",
+        "Other": "Other",
+        "Issue": "Issue",
+        "Storno": "Storno",
+        "Accept Payment": "Accept Payment",
+        "Print PDF": "Print PDF",
+        "Invoice": "Invoice",
+        "Patient": "Patient",
+        "Service": "Service",
+        "Teeth": "Teeth",
+        "Qty": "Qty",
+        "Unit": "Unit",
+        "Disc": "Disc",
+        "Amount": "Amount",
+        "Subtotal": "Subtotal",
+        "Discount": "Discount",
+        "VAT": "VAT",
+        "Total": "Total",
+        "Paid": "Paid",
+        "Balance": "Balance",
+        "Issued at": "Issued at"
+    },
+    "fields": {
+        "number": "Number",
+        "name": "Name",
+        "patient": "Patient",
+        "clinic": "Clinic",
+        "visit": "Visit",
+        "status": "Status",
+        "issuedAt": "Issued At",
+        "dueDate": "Due Date",
+        "currency": "Currency",
+        "subtotal": "Subtotal",
+        "discountAmount": "Discount",
+        "vatAmount": "VAT",
+        "totalAmount": "Total",
+        "paidAmount": "Paid",
+        "balance": "Balance",
+        "notes": "Notes",
+        "stornoOf": "Storno of"
+    },
+    "options": {
+        "status": {
+            "draft": "Draft",
+            "issued": "Issued",
+            "partial_paid": "Partially paid",
+            "paid": "Paid",
+            "storno": "Storno",
+            "cancelled": "Cancelled"
+        }
+    },
+    "links": {
+        "patient": "Patient",
+        "clinic": "Clinic",
+        "visit": "Visit",
+        "lines": "Lines",
+        "payments": "Payments",
+        "stornoOf": "Storno of"
+    },
+    "boolFilters": {
+        "onlyOpen": "Only open",
+        "onlyOverdue": "Only overdue"
+    },
+    "messages": {
+        "Only draft can be issued": "Only draft invoices can be issued",
+        "Confirm issue invoice": "Issue this invoice?",
+        "Invoice issued": "Invoice issued",
+        "Cannot storno": "This invoice cannot be storno-ed",
+        "Storno reason": "Storno reason",
+        "Invoice storno-ed": "Storno created",
+        "Invoice not payable": "This invoice is not payable",
+        "Payment amount": "Payment amount",
+        "Payment method (cash/card/bank_transfer/online/terminal/other)": "Payment method (cash/card/bank_transfer/online/terminal/other)",
+        "Payment accepted": "Payment accepted",
+        "PDF build failed": "PDF build failed"
+    }
+}

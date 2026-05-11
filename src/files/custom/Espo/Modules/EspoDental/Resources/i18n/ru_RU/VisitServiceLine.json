@@ -1,0 +1,22 @@
+{
+    "labels": {"Create VisitServiceLine": "Добавить позицию"},
+    "fields": {
+        "name": "Название",
+        "visit": "Приём",
+        "service": "Услуга",
+        "doctor": "Врач",
+        "teethNumbers": "Зубы (через запятую)",
+        "quantity": "Кол-во",
+        "unitPrice": "Цена за ед.",
+        "discount": "Скидка %",
+        "amount": "Сумма",
+        "vatRate": "НДС %",
+        "vatAmount": "НДС",
+        "notes": "Комментарий"
+    },
+    "links": {"visit": "Приём", "service": "Услуга"},
+    "tooltips": {
+        "teethNumbers": "FDI-номера через запятую, например: 16,26",
+        "discount": "Процент скидки (0..100)"
+    }
+}

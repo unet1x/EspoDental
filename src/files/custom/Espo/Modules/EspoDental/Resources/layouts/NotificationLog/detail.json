@@ -1,0 +1,9 @@
+[{"rows": [
+    [{"name": "patient"}, {"name": "appointment"}],
+    [{"name": "channel"}, {"name": "kind"}],
+    [{"name": "recipient"}, {"name": "status"}],
+    [{"name": "subject"}, {"name": "scheduledFor"}],
+    [{"name": "sentAt"}, {"name": "attempts"}],
+    [{"name": "messageText", "fullWidth": true}],
+    [{"name": "errorMessage", "fullWidth": true}]
+]}]

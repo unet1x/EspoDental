@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create AppointmentStatusLog": "Создать запись лога"
+    },
+    "fields": {
+        "name": "Название",
+        "appointment": "Запись",
+        "fromStatus": "Откуда",
+        "toStatus": "Куда",
+        "changedAt": "Время изменения",
+        "changedBy": "Изменил",
+        "durationInPrevious": "Длительность в предыдущем (сек)"
+    },
+    "links": {
+        "appointment": "Запись"
+    },
+    "tooltips": {
+        "durationInPrevious": "Сколько секунд запись находилась в предыдущем статусе"
+    }
+}

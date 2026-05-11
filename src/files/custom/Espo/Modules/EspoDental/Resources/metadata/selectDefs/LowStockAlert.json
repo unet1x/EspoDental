@@ -1,0 +1,5 @@
+{
+    "boolFilterClassNameMap": {
+        "onlyOpen": "Espo\\Modules\\EspoDental\\Classes\\Select\\LowStockAlert\\BoolFilters\\OnlyOpen"
+    }
+}

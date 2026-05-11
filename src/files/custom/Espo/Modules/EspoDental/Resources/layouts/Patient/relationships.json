@@ -1,0 +1,11 @@
+[
+    "appointments",
+    "visits",
+    "toothChartSnapshots",
+    "photos",
+    "invoices",
+    "payments",
+    "notificationLogs",
+    "healthQuestionnaires",
+    "questionnaireTokens"
+]

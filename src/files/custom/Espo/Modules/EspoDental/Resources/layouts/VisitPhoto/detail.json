@@ -1,0 +1,13 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}, {"name": "stage"}],
+            [{"name": "visit"}, {"name": "patient"}],
+            [{"name": "category"}, {"name": "tooth"}],
+            [{"name": "image", "fullWidth": true}],
+            [{"name": "orthancStudyUid"}, {"name": "orthancUrl"}],
+            [{"name": "recordedAt"}, {"name": "createdAt"}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

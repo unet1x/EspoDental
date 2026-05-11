@@ -1,0 +1,6 @@
+{
+    "controller": "controllers/record",
+    "color": "#8C564B",
+    "iconClass": "fas fa-box",
+    "boolFilterList": ["onlyActive", "lowStock", "criticalStock"]
+}

@@ -1,0 +1,26 @@
+{
+    "params": {
+        "espoDentalTelegramEnabled": {
+            "level": "system"
+        },
+        "espoDentalTelegramBotToken": {
+            "level": "system",
+            "isSensitive": true
+        },
+        "espoDentalTelegramApiBase": {
+            "level": "system"
+        },
+        "espoDentalReminderHoursBefore": {
+            "level": "global"
+        },
+        "espoDentalReminderSecondHoursBefore": {
+            "level": "global"
+        },
+        "espoDentalReminderWindowMinutes": {
+            "level": "system"
+        },
+        "espoDentalDefaultCurrency": {
+            "level": "global"
+        }
+    }
+}

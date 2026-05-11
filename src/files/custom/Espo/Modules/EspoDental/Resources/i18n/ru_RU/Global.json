@@ -1,0 +1,78 @@
+{
+    "scopeNames": {
+        "Clinic": "Клиника",
+        "Cabinet": "Кабинет",
+        "PreliminaryPatient": "Предв. пациент",
+        "Patient": "Пациент",
+        "HealthQuestionnaire": "Анкета здоровья",
+        "QuestionnaireToken": "Токен анкеты",
+        "Appointment": "Запись",
+        "AppointmentStatusLog": "Лог статуса записи",
+        "Visit": "Приём",
+        "ServiceCategory": "Категория услуг",
+        "Service": "Услуга",
+        "VisitServiceLine": "Позиция приёма",
+        "ToothChartSnapshot": "Зубная формула",
+        "VisitPhoto": "Снимок",
+        "Invoice": "Счёт",
+        "InvoiceLine": "Позиция счёта",
+        "Payment": "Платёж",
+        "MaterialCategory": "Категория материала",
+        "Material": "Материал",
+        "StockMovement": "Складская операция",
+        "ServiceMaterial": "Норма списания",
+        "LowStockAlert": "Алерт остатка",
+        "NotificationLog": "Уведомление"
+    },
+    "scopeNamesPlural": {
+        "Clinic": "Клиники",
+        "Cabinet": "Кабинеты",
+        "PreliminaryPatient": "Предварительные пациенты",
+        "Patient": "Пациенты",
+        "HealthQuestionnaire": "Анкеты здоровья",
+        "QuestionnaireToken": "Токены анкет",
+        "Appointment": "Записи",
+        "AppointmentStatusLog": "Лог статусов",
+        "Visit": "Приёмы",
+        "ServiceCategory": "Категории услуг",
+        "Service": "Услуги",
+        "VisitServiceLine": "Позиции приёма",
+        "ToothChartSnapshot": "Зубные формулы",
+        "VisitPhoto": "Снимки",
+        "Invoice": "Счета",
+        "InvoiceLine": "Позиции счёта",
+        "Payment": "Платежи",
+        "MaterialCategory": "Категории материалов",
+        "Material": "Материалы",
+        "StockMovement": "Складские операции",
+        "ServiceMaterial": "Нормы списания",
+        "LowStockAlert": "Алерты остатка",
+        "NotificationLog": "Уведомления"
+    },
+    "labels": {
+        "EspoDental": "Стоматология"
+    },
+    "messages": {
+        "espoDentalReady": "Модуль EspoDental активирован"
+    },
+    "dashlets": {
+        "TodaysAppointments": "Сегодняшние приёмы",
+        "OpenInvoices": "Открытые счета",
+        "LowStockMaterials": "Низкий остаток",
+        "RecentVisits": "Недавние приёмы",
+        "MonthlyRevenue": "Выручка по месяцам"
+    },
+    "boolFilters": {
+        "today": "Сегодня",
+        "upcoming": "Предстоящие",
+        "thisWeek": "На этой неделе",
+        "thisMonth": "В этом месяце",
+        "myDoctor": "Мои (врач)",
+        "onlyOpen": "Только открытые",
+        "onlyOverdue": "Только просроченные",
+        "onlyActive": "Только активные",
+        "lowStock": "Низкий остаток",
+        "criticalStock": "Критический",
+        "onlyFailed": "Только с ошибкой"
+    }
+}

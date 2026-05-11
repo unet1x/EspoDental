@@ -1,0 +1,7 @@
+[
+    {"name": "recordedAt"},
+    {"name": "patient", "link": true},
+    {"name": "visit"},
+    {"name": "dentitionType"},
+    {"name": "doctor"}
+]

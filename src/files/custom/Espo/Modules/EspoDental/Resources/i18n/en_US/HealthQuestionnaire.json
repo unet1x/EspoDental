@@ -1,0 +1,43 @@
+{
+    "labels": {
+        "Create HealthQuestionnaire": "Create Questionnaire",
+        "Overview": "Overview",
+        "Files": "Files",
+        "Audit": "Audit",
+        "Print PDF": "Print PDF",
+        "Copy URL": "Copy URL"
+    },
+    "fields": {
+        "name": "Name",
+        "patient": "Patient",
+        "language": "Language",
+        "items": "Answers",
+        "alertItems": "Alerts",
+        "hasAlerts": "Has Alerts",
+        "filledAt": "Filled At",
+        "expiresAt": "Expires At",
+        "isExpired": "Expired",
+        "signatureAttachment": "Signature",
+        "pdfFile": "PDF File",
+        "submittedFromIp": "Submitted From IP",
+        "submittedUserAgent": "User Agent",
+        "notes": "Notes"
+    },
+    "options": {
+        "language": {
+            "ru_RU": "Russian",
+            "en_US": "English",
+            "es_ES": "Spanish"
+        }
+    },
+    "links": {
+        "patient": "Patient"
+    },
+    "tooltips": {
+        "alertItems": "Items with positive answers that require doctor attention."
+    },
+    "messages": {
+        "Show QR to patient": "Show the QR code to the patient — they will scan it with the tablet camera and fill the questionnaire.",
+        "Copied": "Copied"
+    }
+}

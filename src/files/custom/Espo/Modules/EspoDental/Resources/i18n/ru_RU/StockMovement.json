@@ -1,0 +1,22 @@
+{
+    "labels": {"Create StockMovement": "Создать операцию"},
+    "fields": {
+        "name": "Название", "material": "Материал", "clinic": "Клиника",
+        "type": "Тип", "direction": "Направление", "quantity": "Количество",
+        "unit": "Ед.", "unitPrice": "Цена", "totalCost": "Сумма",
+        "performedAt": "Дата", "performedBy": "Кем", "batch": "Партия",
+        "expiryDate": "Срок годности", "reason": "Причина",
+        "sourceVisit": "Источник: приём", "sourceVisitServiceLine": "Источник: позиция"
+    },
+    "options": {
+        "type": {
+            "receipt": "Поступление", "consumption": "Списание (приём)",
+            "writeoff": "Списание (брак)", "transfer_out": "Перемещение (расход)",
+            "transfer_in": "Перемещение (приход)", "adjustment": "Корректировка",
+            "return": "Возврат"
+        },
+        "direction": {"in": "Приход", "out": "Расход"}
+    },
+    "links": {"material": "Материал", "clinic": "Клиника"},
+    "boolFilters": {"today": "Сегодня", "thisMonth": "В этом месяце"}
+}

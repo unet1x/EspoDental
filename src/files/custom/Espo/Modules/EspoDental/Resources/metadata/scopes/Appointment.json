@@ -1,0 +1,14 @@
+{
+    "entity": true,
+    "module": "EspoDental",
+    "object": true,
+    "tab": true,
+    "stream": true,
+    "importable": true,
+    "layouts": true,
+    "kanbanViewMode": true,
+    "calendar": true,
+    "activity": false,
+    "languageIsGlobal": true,
+    "type": "Base"
+}

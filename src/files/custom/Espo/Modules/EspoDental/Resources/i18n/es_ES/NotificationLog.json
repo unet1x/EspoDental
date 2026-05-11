@@ -1,0 +1,24 @@
+{
+    "labels": {"Create NotificationLog": "Crear notificacion"},
+    "fields": {
+        "name": "Nombre", "patient": "Paciente", "appointment": "Cita",
+        "channel": "Canal", "kind": "Tipo",
+        "recipient": "Destinatario", "subject": "Asunto", "messageText": "Mensaje",
+        "status": "Estado", "errorMessage": "Error",
+        "scheduledFor": "Programada", "sentAt": "Enviada",
+        "attempts": "Intentos", "payload": "Payload"
+    },
+    "options": {
+        "channel": {"email": "Email", "telegram": "Telegram", "sms": "SMS", "internal": "Interna"},
+        "kind": {
+            "appointment_reminder": "Recordatorio de cita",
+            "questionnaire_invite": "Cuestionario de salud",
+            "low_stock": "Stock bajo",
+            "manual": "Manual",
+            "other": "Otra"
+        },
+        "status": {"queued": "En cola", "sent": "Enviada", "failed": "Fallida", "skipped": "Omitida"}
+    },
+    "links": {"patient": "Paciente", "appointment": "Cita"},
+    "boolFilters": {"onlyFailed": "Solo fallidas", "today": "Hoy"}
+}

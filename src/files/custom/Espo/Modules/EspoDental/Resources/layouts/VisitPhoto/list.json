@@ -1,0 +1,8 @@
+[
+    {"name": "recordedAt"},
+    {"name": "name", "link": true},
+    {"name": "stage"},
+    {"name": "category"},
+    {"name": "tooth"},
+    {"name": "patient"}
+]

@@ -1,0 +1,5 @@
+[{"rows": [
+    [{"name": "service"}, {"name": "material"}],
+    [{"name": "quantity"}, {"name": "createdAt"}],
+    [{"name": "notes", "fullWidth": true}]
+]}]

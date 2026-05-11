@@ -1,0 +1,7 @@
+[
+    {"name": "startedAt"},
+    {"name": "patient", "link": true},
+    {"name": "doctor"},
+    {"name": "status"},
+    {"name": "totalAmount"}
+]

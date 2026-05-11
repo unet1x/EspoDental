@@ -1,0 +1,25 @@
+{
+    "labels": {"Create Material": "Create Material", "Overview": "Overview", "Stock": "Stock"},
+    "fields": {
+        "name": "Name", "code": "Code", "sku": "SKU", "category": "Category",
+        "unit": "Unit", "manufacturer": "Manufacturer", "vendor": "Vendor",
+        "price": "Price", "color": "Color",
+        "minStock": "Min Stock", "criticalStock": "Critical Stock", "maxStock": "Max Stock",
+        "currentStock": "Current Stock", "stockLevel": "Level",
+        "expiryControl": "Expiry Control", "isActive": "Active", "description": "Description"
+    },
+    "options": {
+        "unit": {
+            "pcs": "pcs", "ml": "ml", "g": "g", "kg": "kg", "l": "l",
+            "box": "box", "pack": "pack", "syringe": "syringe",
+            "tube": "tube", "cartridge": "cartridge"
+        },
+        "stockLevel": {"": "—", "ok": "OK", "low": "Low", "critical": "Critical", "out": "Out of stock"}
+    },
+    "links": {"category": "Category", "movements": "Movements", "serviceMaterials": "Used in Services", "alerts": "Alerts"},
+    "boolFilters": {"onlyActive": "Only active", "lowStock": "Low stock", "criticalStock": "Critical"},
+    "tooltips": {
+        "minStock": "Warning threshold",
+        "criticalStock": "Urgent re-order threshold"
+    }
+}

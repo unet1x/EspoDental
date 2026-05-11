@@ -1,0 +1,30 @@
+{
+    "labels": {
+        "Create Clinic": "Создать клинику",
+        "Overview": "Основное",
+        "Other": "Прочее"
+    },
+    "fields": {
+        "name": "Название",
+        "code": "Код",
+        "address": "Адрес",
+        "phone": "Телефон",
+        "email": "Email",
+        "timezone": "Часовой пояс",
+        "defaultCurrency": "Валюта по умолчанию",
+        "color": "Цвет",
+        "description": "Описание",
+        "isActive": "Активна",
+        "cabinets": "Кабинеты",
+        "patients": "Пациенты",
+        "preliminaryPatients": "Предварительные пациенты"
+    },
+    "links": {
+        "cabinets": "Кабинеты",
+        "patients": "Пациенты",
+        "preliminaryPatients": "Предварительные пациенты"
+    },
+    "tooltips": {
+        "code": "Короткий уникальный код клиники, используется в нумерации счетов и отчётах"
+    }
+}

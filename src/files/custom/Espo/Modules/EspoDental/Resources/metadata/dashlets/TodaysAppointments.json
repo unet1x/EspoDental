@@ -1,0 +1,15 @@
+{
+    "view": "espo-dental:views/dashlets/todays-appointments",
+    "aclScope": "Appointment",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Today's Appointments"},
+            "displayRecords": {"type": "int", "default": 8, "min": 1, "max": 30},
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "default": 0,
+                "options": [0, 0.5, 1, 2, 5, 10]
+            }
+        }
+    }
+}

@@ -1,0 +1,6 @@
+{
+    "boolFilterClassNameMap": {
+        "today": "Espo\\Modules\\EspoDental\\Classes\\Select\\Visit\\BoolFilters\\Today",
+        "thisMonth": "Espo\\Modules\\EspoDental\\Classes\\Select\\Visit\\BoolFilters\\ThisMonth"
+    }
+}

@@ -1,0 +1,115 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [
+                {"name": "lastName"},
+                {"name": "firstName"}
+            ],
+            [
+                {"name": "middleName"},
+                {"name": "gender"}
+            ],
+            [
+                {"name": "phone"},
+                {"name": "emailAddress"}
+            ],
+            [
+                {"name": "dateOfBirth"},
+                {"name": "age"}
+            ],
+            [
+                {"name": "vip"},
+                {"name": "restrictions"}
+            ],
+            [
+                {"name": "cardNumber"},
+                {"name": "status"}
+            ],
+            [
+                {"name": "clinic"},
+                {"name": "assignedUser"}
+            ]
+        ]
+    },
+    {
+        "label": "Contact",
+        "rows": [
+            [
+                {"name": "address"}
+            ],
+            [
+                {"name": "telegram"},
+                {"name": "telegramChatId"}
+            ],
+            [
+                {"name": "whatsapp"},
+                {"name": "preferredChannel"}
+            ],
+            [
+                {"name": "remindersEnabled"},
+                {"name": "balance"}
+            ]
+        ]
+    },
+    {
+        "label": "Family",
+        "rows": [
+            [
+                {"name": "isChild"},
+                {"name": "parentRelation"}
+            ],
+            [
+                {"name": "parentLastName"},
+                {"name": "parentFirstName"}
+            ],
+            [
+                {"name": "parentMiddleName"},
+                {"name": "parentPhone"}
+            ]
+        ]
+    },
+    {
+        "label": "Notes",
+        "rows": [
+            [
+                {"name": "notes", "fullWidth": true}
+            ],
+            [
+                {"name": "description", "fullWidth": true}
+            ]
+        ]
+    },
+    {
+        "label": "Health Questionnaire",
+        "rows": [
+            [
+                {"name": "lastQuestionnaireAt"},
+                {"name": "questionnaireExpired"}
+            ],
+            [
+                {"name": "questionnaireHasAlerts"}
+            ]
+        ]
+    },
+    {
+        "label": "Other",
+        "rows": [
+            [
+                {"name": "firstVisitDate"},
+                {"name": "convertedFromPreliminary"}
+            ],
+            [
+                {"name": "teams"}
+            ],
+            [
+                {"name": "createdAt"},
+                {"name": "modifiedAt"}
+            ],
+            [
+                {"name": "createdBy"},
+                {"name": "modifiedBy"}
+            ]
+        ]
+    }
+]

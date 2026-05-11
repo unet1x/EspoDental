@@ -1,0 +1,18 @@
+{
+    "controller": "controllers/record",
+    "color": "#9467BD",
+    "iconClass": "fas fa-clipboard-check",
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "printPdf",
+                    "labelText": "Print PDF",
+                    "style": "default",
+                    "acl": "read",
+                    "actionHandler": "espo-dental:handlers/health-questionnaire/print-pdf"
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,7 @@
+[
+    {"name": "patient", "link": true},
+    {"name": "expiresAt"},
+    {"name": "isUsed"},
+    {"name": "usedAt"},
+    {"name": "language"}
+]

@@ -1,0 +1,8 @@
+[
+    {"name": "raisedAt"},
+    {"name": "material", "link": true},
+    {"name": "level"},
+    {"name": "currentStock"},
+    {"name": "threshold"},
+    {"name": "status"}
+]

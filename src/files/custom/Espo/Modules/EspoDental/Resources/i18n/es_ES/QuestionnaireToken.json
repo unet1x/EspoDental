@@ -1,0 +1,21 @@
+{
+    "labels": {
+        "Create QuestionnaireToken": "Crear token"
+    },
+    "fields": {
+        "name": "Nombre",
+        "token": "Token",
+        "patient": "Paciente",
+        "preliminaryPatient": "Desde paciente preliminar",
+        "questionnaire": "Cuestionario",
+        "language": "Idioma",
+        "expiresAt": "Vence el",
+        "isUsed": "Usado",
+        "usedAt": "Usado el"
+    },
+    "links": {
+        "patient": "Paciente",
+        "preliminaryPatient": "Desde paciente preliminar",
+        "questionnaire": "Cuestionario"
+    }
+}

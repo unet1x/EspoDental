@@ -1,0 +1,24 @@
+{
+    "labels": {"Create NotificationLog": "Создать уведомление"},
+    "fields": {
+        "name": "Название", "patient": "Пациент", "appointment": "Приём",
+        "channel": "Канал", "kind": "Тип",
+        "recipient": "Получатель", "subject": "Тема", "messageText": "Текст",
+        "status": "Статус", "errorMessage": "Ошибка",
+        "scheduledFor": "Запланировано", "sentAt": "Отправлено",
+        "attempts": "Попыток", "payload": "Полезная нагрузка"
+    },
+    "options": {
+        "channel": {"email": "Email", "telegram": "Telegram", "sms": "SMS", "internal": "Внутреннее"},
+        "kind": {
+            "appointment_reminder": "Напоминание о приёме",
+            "questionnaire_invite": "Анкета здоровья",
+            "low_stock": "Низкий остаток",
+            "manual": "Вручную",
+            "other": "Прочее"
+        },
+        "status": {"queued": "В очереди", "sent": "Отправлено", "failed": "Ошибка", "skipped": "Пропущено"}
+    },
+    "links": {"patient": "Пациент", "appointment": "Приём"},
+    "boolFilters": {"onlyFailed": "Только с ошибкой", "today": "Сегодня"}
+}

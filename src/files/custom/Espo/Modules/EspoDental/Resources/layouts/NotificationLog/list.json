@@ -1,0 +1,9 @@
+[
+    {"name": "createdAt"},
+    {"name": "patient"},
+    {"name": "appointment"},
+    {"name": "channel"},
+    {"name": "kind"},
+    {"name": "status"},
+    {"name": "sentAt"}
+]

@@ -1,0 +1,63 @@
+{
+    "labels": {
+        "Create PreliminaryPatient": "Create Lead Patient",
+        "Convert to Patient": "Convert to Patient",
+        "Overview": "Overview",
+        "Conversion": "Conversion",
+        "Other": "Other"
+    },
+    "fields": {
+        "name": "Full Name",
+        "lastName": "Last Name",
+        "firstName": "First Name",
+        "middleName": "Middle Name",
+        "gender": "Gender",
+        "phone": "Phone",
+        "emailAddress": "Email",
+        "dateOfBirth": "Date of Birth",
+        "age": "Age",
+        "status": "Status",
+        "source": "Source",
+        "clinic": "Clinic",
+        "convertedToPatient": "Patient",
+        "convertedAt": "Converted At",
+        "description": "Description",
+        "assignedUser": "Assigned User",
+        "teams": "Teams"
+    },
+    "options": {
+        "gender": {
+            "": "—",
+            "male": "Male",
+            "female": "Female",
+            "other": "Other"
+        },
+        "status": {
+            "entered": "Entered",
+            "booked": "Booked",
+            "processed": "Processed",
+            "no_show": "No Show"
+        },
+        "source": {
+            "": "—",
+            "walk_in": "Walk-in",
+            "phone": "Phone Call",
+            "online": "Online Booking",
+            "referral": "Referral",
+            "other": "Other"
+        }
+    },
+    "links": {
+        "clinic": "Clinic",
+        "convertedToPatient": "Patient"
+    },
+    "boolFilters": {
+        "onlyMy": "Only my"
+    },
+    "messages": {
+        "Convert to Patient confirm": "All fields will be copied into a new Patient. Source status will become \"Processed\".",
+        "Issue questionnaire QR": "Issue a QR code for the health questionnaire right now (valid for 24 hours)",
+        "Converted": "Converted to Patient",
+        "Already converted": "Already converted"
+    }
+}

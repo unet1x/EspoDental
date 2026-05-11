@@ -1,0 +1,19 @@
+{
+    "controller": "controllers/record",
+    "color": "#2CA02C",
+    "iconClass": "fas fa-cash-register",
+    "boolFilterList": ["onlyMy", "today"],
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "refund",
+                    "labelText": "Refund",
+                    "style": "danger",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/payment/refund"
+                }
+            ]
+        }
+    }
+}

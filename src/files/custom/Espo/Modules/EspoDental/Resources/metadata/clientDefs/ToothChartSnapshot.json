@@ -1,0 +1,9 @@
+{
+    "controller": "controllers/record",
+    "color": "#2CA02C",
+    "iconClass": "fas fa-teeth-open",
+    "recordViews": {
+        "detail": "espo-dental:views/tooth-chart-snapshot/record/detail",
+        "edit": "espo-dental:views/tooth-chart-snapshot/record/edit"
+    }
+}

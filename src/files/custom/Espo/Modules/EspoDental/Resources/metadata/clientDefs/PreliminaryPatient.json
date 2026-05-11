@@ -1,0 +1,22 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": ["onlyMy"],
+    "color": "#FF7F0E",
+    "iconClass": "fas fa-user-clock",
+    "kanbanViewMode": true,
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "convertToPatient",
+                    "labelText": "Convert to Patient",
+                    "style": "primary",
+                    "acl": "edit",
+                    "aclScope": "Patient",
+                    "actionHandler": "espo-dental:handlers/preliminary-patient/convert-to-patient",
+                    "hidden": false
+                }
+            ]
+        }
+    }
+}

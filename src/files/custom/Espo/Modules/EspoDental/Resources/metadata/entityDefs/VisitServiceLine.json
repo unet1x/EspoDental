@@ -1,0 +1,32 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "visit": {"type": "link", "required": true},
+        "service": {"type": "link", "required": true},
+        "doctor": {"type": "link", "view": "views/fields/user"},
+        "teethNumbers": {"type": "varchar", "maxLength": 64, "tooltip": true},
+        "quantity": {"type": "int", "default": 1, "min": 1, "max": 100, "required": true},
+        "unitPrice": {"type": "currency", "default": "0.00", "required": true},
+        "discount": {"type": "float", "default": 0, "min": 0, "max": 100, "tooltip": true},
+        "amount": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "vatRate": {"type": "float", "default": 0, "min": 0, "max": 100},
+        "vatAmount": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "notes": {"type": "text"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "visit": {"type": "belongsTo", "entity": "Visit", "foreign": "serviceLines"},
+        "service": {"type": "belongsTo", "entity": "Service", "foreign": "visitLines"},
+        "doctor": {"type": "belongsTo", "entity": "User"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "createdAt", "order": "asc"},
+    "indexes": {
+        "visit": {"columns": ["visitId", "deleted"]},
+        "service": {"columns": ["serviceId"]}
+    }
+}

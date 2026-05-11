@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create AppointmentStatusLog": "Crear registro de estado"
+    },
+    "fields": {
+        "name": "Nombre",
+        "appointment": "Cita",
+        "fromStatus": "Desde",
+        "toStatus": "Hasta",
+        "changedAt": "Cambiado el",
+        "changedBy": "Cambiado por",
+        "durationInPrevious": "Segundos en el anterior"
+    },
+    "links": {
+        "appointment": "Cita"
+    },
+    "tooltips": {
+        "durationInPrevious": "Segundos que la cita estuvo en el estado anterior"
+    }
+}

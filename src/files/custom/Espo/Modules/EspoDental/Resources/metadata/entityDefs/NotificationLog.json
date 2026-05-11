@@ -1,0 +1,53 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "patient": {"type": "link"},
+        "appointment": {"type": "link"},
+        "channel": {
+            "type": "enum",
+            "options": ["email", "telegram", "sms", "internal"],
+            "required": true
+        },
+        "kind": {
+            "type": "enum",
+            "options": ["appointment_reminder", "questionnaire_invite", "low_stock", "manual", "other"],
+            "default": "appointment_reminder"
+        },
+        "recipient": {"type": "varchar", "maxLength": 255},
+        "subject": {"type": "varchar", "maxLength": 255},
+        "messageText": {"type": "text"},
+        "status": {
+            "type": "enum",
+            "options": ["queued", "sent", "failed", "skipped"],
+            "default": "queued",
+            "audited": true,
+            "style": {
+                "queued": "default",
+                "sent": "success",
+                "failed": "danger",
+                "skipped": "muted"
+            }
+        },
+        "errorMessage": {"type": "text"},
+        "scheduledFor": {"type": "datetime"},
+        "sentAt": {"type": "datetime"},
+        "attempts": {"type": "int", "default": 0, "readOnly": true},
+        "payload": {"type": "jsonObject"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "patient": {"type": "belongsTo", "entity": "Patient", "foreign": "notificationLogs"},
+        "appointment": {"type": "belongsTo", "entity": "Appointment", "foreign": "notificationLogs"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "createdAt", "order": "desc"},
+    "indexes": {
+        "appointment_channel": {"columns": ["appointmentId", "channel", "kind"]},
+        "scheduled": {"columns": ["scheduledFor", "status"]},
+        "patient": {"columns": ["patientId"]}
+    }
+}

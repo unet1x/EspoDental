@@ -1,0 +1,76 @@
+{
+    "labels": {
+        "Create Appointment": "Create Appointment",
+        "Overview": "Overview",
+        "Booking": "Booking",
+        "Other": "Other",
+        "Start Visit": "Start Visit"
+    },
+    "fields": {
+        "name": "Name",
+        "parent": "Patient",
+        "doctor": "Doctor",
+        "assistant": "Assistant",
+        "cabinet": "Cabinet",
+        "clinic": "Clinic",
+        "dateStart": "Start",
+        "dateEnd": "End",
+        "duration": "Duration",
+        "status": "Status",
+        "source": "Source",
+        "bookedBy": "Booked By",
+        "color": "Color",
+        "complaints": "Complaints",
+        "description": "Description",
+        "reminderSent": "Reminder Sent",
+        "visit": "Visit",
+        "statusLogs": "Status Logs",
+        "assignedUser": "Assigned User",
+        "teams": "Teams"
+    },
+    "options": {
+        "status": {
+            "planned": "Planned",
+            "rescheduled": "Rescheduled",
+            "cancelled": "Cancelled",
+            "arrived": "Arrived",
+            "in_progress": "In progress",
+            "finished": "Finished",
+            "no_show": "No show"
+        },
+        "source": {
+            "": "—",
+            "walk_in": "Walk-in",
+            "phone": "Phone Call",
+            "online": "Online Booking",
+            "portal": "Patient Portal",
+            "referral": "Referral",
+            "other": "Other"
+        }
+    },
+    "links": {
+        "parent": "Patient",
+        "doctor": "Doctor",
+        "assistant": "Assistant",
+        "cabinet": "Cabinet",
+        "clinic": "Clinic",
+        "visit": "Visit",
+        "statusLogs": "Status Logs"
+    },
+    "boolFilters": {
+        "onlyMy": "Only my",
+        "myDoctor": "My as doctor",
+        "today": "Today",
+        "upcoming": "Upcoming"
+    },
+    "messages": {
+        "Convert lead first": "Convert the lead patient to a Patient before starting the visit",
+        "Status not allowed for start": "Visit can be started only from Planned / Rescheduled / Arrived",
+        "Confirm start visit": "Start the visit for this appointment?",
+        "Visit started": "Visit started"
+    },
+    "tooltips": {
+        "duration": "Duration of the appointment",
+        "reminderSent": "Set by the reminders module"
+    }
+}

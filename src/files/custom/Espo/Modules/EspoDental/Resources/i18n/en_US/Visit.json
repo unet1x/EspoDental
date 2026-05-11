@@ -1,0 +1,46 @@
+{
+    "labels": {
+        "Create Visit": "Create Visit",
+        "Overview": "Overview",
+        "Clinical": "Clinical",
+        "Other": "Other",
+        "Finish Visit": "Finish Visit"
+    },
+    "fields": {
+        "name": "Name",
+        "appointment": "Appointment",
+        "patient": "Patient",
+        "doctor": "Doctor",
+        "assistant": "Assistant",
+        "cabinet": "Cabinet",
+        "clinic": "Clinic",
+        "status": "Status",
+        "complaints": "Complaints",
+        "performed": "Performed",
+        "recommendations": "Recommendations",
+        "startedAt": "Started At",
+        "finishedAt": "Finished At",
+        "totalAmount": "Total Amount",
+        "assignedUser": "Assigned User",
+        "teams": "Teams"
+    },
+    "options": {
+        "status": {
+            "in_progress": "In progress",
+            "finished": "Finished",
+            "cancelled": "Cancelled"
+        }
+    },
+    "links": {
+        "appointment": "Appointment",
+        "patient": "Patient",
+        "doctor": "Doctor",
+        "cabinet": "Cabinet",
+        "clinic": "Clinic"
+    },
+    "messages": {
+        "Only in-progress visits can be finished": "Only in-progress visits can be finished",
+        "Confirm finish visit": "Finish the visit? An invoice will be generated.",
+        "Visit finished": "Visit finished"
+    }
+}

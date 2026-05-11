@@ -1,0 +1,89 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 200
+        },
+        "patient": {
+            "type": "link",
+            "required": true
+        },
+        "language": {
+            "type": "enum",
+            "options": ["ru_RU", "en_US", "es_ES"],
+            "default": "ru_RU"
+        },
+        "items": {
+            "type": "jsonObject",
+            "readOnly": true
+        },
+        "alertItems": {
+            "type": "jsonArray",
+            "readOnly": true,
+            "tooltip": true
+        },
+        "hasAlerts": {
+            "type": "bool",
+            "readOnly": true,
+            "default": false
+        },
+        "filledAt": {
+            "type": "datetime",
+            "required": true
+        },
+        "expiresAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "isExpired": {
+            "type": "bool",
+            "readOnly": true,
+            "default": false
+        },
+        "signatureAttachment": {
+            "type": "file",
+            "previewSize": "medium",
+            "accept": ["image/png", "image/jpeg"]
+        },
+        "pdfFile": {
+            "type": "file",
+            "readOnly": true
+        },
+        "submittedFromIp": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 64
+        },
+        "submittedUserAgent": {
+            "type": "varchar",
+            "readOnly": true,
+            "maxLength": 512
+        },
+        "notes": {
+            "type": "text"
+        },
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "teams": {"type": "linkMultiple", "view": "views/fields/teams"}
+    },
+    "links": {
+        "patient": {"type": "belongsTo", "entity": "Patient"},
+        "signatureAttachment": {"type": "belongsTo", "entity": "Attachment"},
+        "pdfFile": {"type": "belongsTo", "entity": "Attachment"},
+        "tokens": {"type": "hasMany", "entity": "QuestionnaireToken", "foreign": "questionnaire"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"},
+        "teams": {"type": "hasMany", "entity": "Team", "relationName": "entityTeam", "layoutRelationshipsDisabled": true}
+    },
+    "collection": {
+        "orderBy": "filledAt",
+        "order": "desc"
+    },
+    "indexes": {
+        "patient_filled": {"columns": ["patientId", "filledAt"]},
+        "expires": {"columns": ["expiresAt"]}
+    }
+}

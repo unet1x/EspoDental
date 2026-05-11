@@ -1,0 +1,19 @@
+{
+    "labels": {"Create InvoiceLine": "Add Line"},
+    "fields": {
+        "name": "Name",
+        "invoice": "Invoice",
+        "service": "Service",
+        "doctor": "Doctor",
+        "teethNumbers": "Teeth",
+        "quantity": "Qty",
+        "unitPrice": "Unit price",
+        "discount": "Discount %",
+        "amount": "Amount",
+        "vatRate": "VAT %",
+        "vatAmount": "VAT",
+        "sourceVisitServiceLine": "Source line",
+        "notes": "Notes"
+    },
+    "links": {"invoice": "Invoice", "service": "Service"}
+}

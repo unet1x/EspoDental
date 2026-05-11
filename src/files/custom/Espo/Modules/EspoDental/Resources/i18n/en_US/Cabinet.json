@@ -1,0 +1,18 @@
+{
+    "labels": {
+        "Create Cabinet": "Create Cabinet"
+    },
+    "fields": {
+        "name": "Name",
+        "code": "Code",
+        "clinic": "Clinic",
+        "color": "Color",
+        "equipment": "Equipment",
+        "order": "Order",
+        "isActive": "Active",
+        "description": "Description"
+    },
+    "links": {
+        "clinic": "Clinic"
+    }
+}

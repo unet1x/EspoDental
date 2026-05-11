@@ -1,0 +1,41 @@
+{
+    "controller": "controllers/record",
+    "color": "#BCBD22",
+    "iconClass": "fas fa-file-invoice-dollar",
+    "kanbanViewMode": true,
+    "boolFilterList": ["onlyOpen", "onlyOverdue"],
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "issue",
+                    "labelText": "Issue",
+                    "style": "primary",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/invoice/issue"
+                },
+                {
+                    "name": "acceptPayment",
+                    "labelText": "Accept Payment",
+                    "style": "primary",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/invoice/accept-payment"
+                },
+                {
+                    "name": "storno",
+                    "labelText": "Storno",
+                    "style": "danger",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/invoice/storno"
+                },
+                {
+                    "name": "printPdf",
+                    "labelText": "Print PDF",
+                    "style": "default",
+                    "acl": "read",
+                    "actionHandler": "espo-dental:handlers/invoice/print-pdf"
+                }
+            ]
+        }
+    }
+}

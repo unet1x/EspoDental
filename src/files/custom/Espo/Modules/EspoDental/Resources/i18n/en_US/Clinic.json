@@ -1,0 +1,30 @@
+{
+    "labels": {
+        "Create Clinic": "Create Clinic",
+        "Overview": "Overview",
+        "Other": "Other"
+    },
+    "fields": {
+        "name": "Name",
+        "code": "Code",
+        "address": "Address",
+        "phone": "Phone",
+        "email": "Email",
+        "timezone": "Timezone",
+        "defaultCurrency": "Default Currency",
+        "color": "Color",
+        "description": "Description",
+        "isActive": "Active",
+        "cabinets": "Cabinets",
+        "patients": "Patients",
+        "preliminaryPatients": "Lead Patients"
+    },
+    "links": {
+        "cabinets": "Cabinets",
+        "patients": "Patients",
+        "preliminaryPatients": "Lead Patients"
+    },
+    "tooltips": {
+        "code": "Short unique clinic code; used in invoice numbers and reports."
+    }
+}

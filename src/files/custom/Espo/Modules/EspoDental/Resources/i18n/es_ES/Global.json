@@ -1,0 +1,78 @@
+{
+    "scopeNames": {
+        "Clinic": "Clinica",
+        "Cabinet": "Gabinete",
+        "PreliminaryPatient": "Paciente preliminar",
+        "Patient": "Paciente",
+        "HealthQuestionnaire": "Cuestionario de salud",
+        "QuestionnaireToken": "Token de cuestionario",
+        "Appointment": "Cita",
+        "AppointmentStatusLog": "Registro de estado",
+        "Visit": "Visita",
+        "ServiceCategory": "Categoria de servicio",
+        "Service": "Servicio",
+        "VisitServiceLine": "Linea de visita",
+        "ToothChartSnapshot": "Odontograma",
+        "VisitPhoto": "Foto",
+        "Invoice": "Factura",
+        "InvoiceLine": "Linea de factura",
+        "Payment": "Pago",
+        "MaterialCategory": "Categoria de material",
+        "Material": "Material",
+        "StockMovement": "Movimiento de stock",
+        "ServiceMaterial": "Norma de consumo",
+        "LowStockAlert": "Alerta de stock bajo",
+        "NotificationLog": "Notificacion"
+    },
+    "scopeNamesPlural": {
+        "Clinic": "Clinicas",
+        "Cabinet": "Gabinetes",
+        "PreliminaryPatient": "Pacientes preliminares",
+        "Patient": "Pacientes",
+        "HealthQuestionnaire": "Cuestionarios de salud",
+        "QuestionnaireToken": "Tokens de cuestionarios",
+        "Appointment": "Citas",
+        "AppointmentStatusLog": "Registros de estado",
+        "Visit": "Visitas",
+        "ServiceCategory": "Categorias de servicio",
+        "Service": "Servicios",
+        "VisitServiceLine": "Lineas de visita",
+        "ToothChartSnapshot": "Odontogramas",
+        "VisitPhoto": "Fotos",
+        "Invoice": "Facturas",
+        "InvoiceLine": "Lineas de factura",
+        "Payment": "Pagos",
+        "MaterialCategory": "Categorias de material",
+        "Material": "Materiales",
+        "StockMovement": "Movimientos de stock",
+        "ServiceMaterial": "Normas de consumo",
+        "LowStockAlert": "Alertas de stock bajo",
+        "NotificationLog": "Notificaciones"
+    },
+    "labels": {
+        "EspoDental": "Odontologia"
+    },
+    "messages": {
+        "espoDentalReady": "Modulo EspoDental activo"
+    },
+    "dashlets": {
+        "TodaysAppointments": "Citas de hoy",
+        "OpenInvoices": "Facturas abiertas",
+        "LowStockMaterials": "Stock bajo",
+        "RecentVisits": "Visitas recientes",
+        "MonthlyRevenue": "Ingresos mensuales"
+    },
+    "boolFilters": {
+        "today": "Hoy",
+        "upcoming": "Proximas",
+        "thisWeek": "Esta semana",
+        "thisMonth": "Este mes",
+        "myDoctor": "Mias (doctor)",
+        "onlyOpen": "Solo abiertas",
+        "onlyOverdue": "Solo vencidas",
+        "onlyActive": "Solo activos",
+        "lowStock": "Stock bajo",
+        "criticalStock": "Critico",
+        "onlyFailed": "Solo fallidas"
+    }
+}

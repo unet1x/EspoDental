@@ -1,0 +1,18 @@
+{
+    "labels": {
+        "Create Cabinet": "Crear gabinete"
+    },
+    "fields": {
+        "name": "Nombre",
+        "code": "Codigo",
+        "clinic": "Clinica",
+        "color": "Color",
+        "equipment": "Equipamiento",
+        "order": "Orden",
+        "isActive": "Activo",
+        "description": "Descripcion"
+    },
+    "links": {
+        "clinic": "Clinica"
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "labels": {
+        "Create Appointment": "Crear cita",
+        "Overview": "General",
+        "Booking": "Reserva",
+        "Other": "Otros",
+        "Start Visit": "Iniciar visita"
+    },
+    "fields": {
+        "name": "Nombre",
+        "parent": "Paciente",
+        "doctor": "Doctor",
+        "assistant": "Asistente",
+        "cabinet": "Gabinete",
+        "clinic": "Clinica",
+        "dateStart": "Inicio",
+        "dateEnd": "Fin",
+        "duration": "Duracion",
+        "status": "Estado",
+        "source": "Origen",
+        "bookedBy": "Reservado por",
+        "color": "Color",
+        "complaints": "Motivo de consulta",
+        "description": "Descripcion",
+        "reminderSent": "Recordatorio enviado",
+        "visit": "Visita",
+        "statusLogs": "Historial de estado",
+        "assignedUser": "Asignado a",
+        "teams": "Equipos"
+    },
+    "options": {
+        "status": {
+            "planned": "Planificada",
+            "rescheduled": "Reprogramada",
+            "cancelled": "Cancelada",
+            "arrived": "Paciente llegó",
+            "in_progress": "En curso",
+            "finished": "Finalizada",
+            "no_show": "No asistio"
+        },
+        "source": {
+            "": "—",
+            "walk_in": "Llegada espontanea",
+            "phone": "Telefono",
+            "online": "Reserva en linea",
+            "portal": "Portal del paciente",
+            "referral": "Referido",
+            "other": "Otro"
+        }
+    },
+    "links": {
+        "parent": "Paciente",
+        "doctor": "Doctor",
+        "assistant": "Asistente",
+        "cabinet": "Gabinete",
+        "clinic": "Clinica",
+        "visit": "Visita",
+        "statusLogs": "Historial de estado"
+    },
+    "boolFilters": {
+        "onlyMy": "Solo mios",
+        "myDoctor": "Mios como doctor",
+        "today": "Hoy",
+        "upcoming": "Proximas"
+    },
+    "messages": {
+        "Convert lead first": "Primero convierta el paciente preliminar en paciente",
+        "Status not allowed for start": "La visita solo puede iniciarse desde Planificada / Reprogramada / Llegada",
+        "Confirm start visit": "Iniciar la visita para esta cita?",
+        "Visit started": "Visita iniciada"
+    },
+    "tooltips": {
+        "duration": "Duracion de la cita",
+        "reminderSent": "Establecido por el modulo de recordatorios"
+    }
+}

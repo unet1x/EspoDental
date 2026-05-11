@@ -1,0 +1,27 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [{"name": "number"}, {"name": "status"}],
+            [{"name": "patient"}, {"name": "clinic"}],
+            [{"name": "visit"}, {"name": "currency"}],
+            [{"name": "issuedAt"}, {"name": "dueDate"}]
+        ]
+    },
+    {
+        "label": "Amounts",
+        "rows": [
+            [{"name": "subtotal"}, {"name": "discountAmount"}],
+            [{"name": "vatAmount"}, {"name": "totalAmount"}],
+            [{"name": "paidAmount"}, {"name": "balance"}]
+        ]
+    },
+    {
+        "label": "Other",
+        "rows": [
+            [{"name": "stornoOf"}, {"name": "assignedUser"}],
+            [{"name": "teams"}, {"name": "createdAt"}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

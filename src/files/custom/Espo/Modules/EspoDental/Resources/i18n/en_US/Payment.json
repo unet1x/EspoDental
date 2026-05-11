@@ -1,0 +1,45 @@
+{
+    "labels": {"Create Payment": "Accept Payment", "Refund": "Refund"},
+    "fields": {
+        "number": "Number",
+        "name": "Name",
+        "patient": "Patient",
+        "clinic": "Clinic",
+        "invoice": "Invoice",
+        "method": "Method",
+        "amount": "Amount",
+        "currency": "Currency",
+        "status": "Status",
+        "direction": "Direction",
+        "paidAt": "Paid At",
+        "receivedBy": "Received By",
+        "refundOf": "Refund of",
+        "notes": "Notes"
+    },
+    "options": {
+        "method": {
+            "cash": "Cash",
+            "card": "Card",
+            "bank_transfer": "Bank transfer",
+            "online": "Online",
+            "terminal": "Terminal",
+            "other": "Other"
+        },
+        "status": {
+            "pending": "Pending",
+            "completed": "Completed",
+            "cancelled": "Cancelled",
+            "refunded": "Refunded"
+        },
+        "direction": {"in": "Inbound", "out": "Outbound"}
+    },
+    "links": {"patient": "Patient", "invoice": "Invoice"},
+    "boolFilters": {"onlyMy": "Only my", "today": "Today"},
+    "messages": {
+        "Cannot refund this payment": "This payment cannot be refunded",
+        "Refund amount": "Refund amount",
+        "Refund reason": "Refund reason",
+        "Refund created": "Refund created"
+    },
+    "tooltips": {"direction": "Inbound — clinic receives; Outbound — refund to the patient"}
+}

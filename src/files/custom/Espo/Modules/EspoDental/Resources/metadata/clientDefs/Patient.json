@@ -1,0 +1,46 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": ["onlyMy", "vip", "restrictions"],
+    "color": "#17BECF",
+    "iconClass": "fas fa-user-injured",
+    "kanbanViewMode": false,
+    "dynamicLogic": {
+        "fields": {
+            "parentLastName": {
+                "visible": {
+                    "conditionGroup": [
+                        {"type": "isTrue", "attribute": "isChild"}
+                    ]
+                }
+            },
+            "parentFirstName": {
+                "visible": {
+                    "conditionGroup": [
+                        {"type": "isTrue", "attribute": "isChild"}
+                    ]
+                }
+            },
+            "parentMiddleName": {
+                "visible": {
+                    "conditionGroup": [
+                        {"type": "isTrue", "attribute": "isChild"}
+                    ]
+                }
+            },
+            "parentPhone": {
+                "visible": {
+                    "conditionGroup": [
+                        {"type": "isTrue", "attribute": "isChild"}
+                    ]
+                }
+            },
+            "parentRelation": {
+                "visible": {
+                    "conditionGroup": [
+                        {"type": "isTrue", "attribute": "isChild"}
+                    ]
+                }
+            }
+        }
+    }
+}

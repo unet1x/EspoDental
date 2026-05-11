@@ -1,0 +1,115 @@
+# EspoDental stack for Synology DSM Container Manager.
+#
+# Place this file at /volume1/docker/espodental/docker-compose.yml
+# together with .env (copied from .env.example) and backup.sh.
+#
+# Required host directories (create them once, set proper ownership):
+#   /volume1/docker/espodental/bd        - MariaDB data
+#   /volume2/espodental/data             - EspoCRM 'data' (uploads, config, logs, cache)
+#   /volume1/espomodule                  - EspoDental module sources (git clone)
+#
+# Ownership (DSM SSH):
+#   sudo chown -R 999:999 /volume1/docker/espodental/bd
+#   sudo chown -R 33:33   /volume2/espodental/data
+#   sudo chown -R 33:33   /volume1/espomodule
+# (33 = www-data inside the espocrm image, 999 = mysql inside the mariadb image)
+
+name: espodental
+
+x-espo-common-env: &espo-common-env
+  ESPOCRM_DATABASE_PLATFORM: Mysql
+  ESPOCRM_DATABASE_HOST: mariadb
+  ESPOCRM_DATABASE_PORT: 3306
+  ESPOCRM_DATABASE_NAME: ${ESPOCRM_DATABASE_NAME}
+  ESPOCRM_DATABASE_USER: ${ESPOCRM_DATABASE_USER}
+  ESPOCRM_DATABASE_PASSWORD: ${ESPOCRM_DATABASE_PASSWORD}
+  ESPOCRM_ADMIN_USERNAME: ${ESPOCRM_ADMIN_USERNAME}
+  ESPOCRM_ADMIN_PASSWORD: ${ESPOCRM_ADMIN_PASSWORD}
+  ESPOCRM_SITE_URL: ${ESPOCRM_SITE_URL}
+  ESPOCRM_CONFIG_USE_WEB_SOCKET: "true"
+  ESPOCRM_CONFIG_WEB_SOCKET_URL: ${ESPOCRM_WEBSOCKET_URL}
+  ESPOCRM_CONFIG_WEB_SOCKET_ZERO_M_Q_SUBSCRIBER_DSN: tcp://espocrm-websocket:7777
+  ESPOCRM_CONFIG_WEB_SOCKET_ZERO_M_Q_SUBMISSION_DSN: tcp://espocrm-websocket:7777
+  ESPOCRM_CONFIG_DEFAULT_LANGUAGE: ru_RU
+  ESPOCRM_CONFIG_TIMEZONE: ${TZ}
+  PHP_MAX_EXECUTION_TIME: ${PHP_MAX_EXECUTION_TIME}
+  PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT}
+  PHP_UPLOAD_MAX_FILE_SIZE: ${PHP_UPLOAD_MAX_FILE_SIZE}
+  PHP_POST_MAX_SIZE: ${PHP_POST_MAX_SIZE}
+  TZ: ${TZ}
+
+x-espo-common-volumes: &espo-common-volumes
+  - /volume2/espodental/data:/var/www/html/data
+  - /volume1/espomodule/src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental
+  - /volume1/espomodule/src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental
+
+services:
+  mariadb:
+    image: mariadb:10.11
+    container_name: espodental-db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_DATABASE: ${ESPOCRM_DATABASE_NAME}
+      MARIADB_USER: ${ESPOCRM_DATABASE_USER}
+      MARIADB_PASSWORD: ${ESPOCRM_DATABASE_PASSWORD}
+      TZ: ${TZ}
+    volumes:
+      - /volume1/docker/espodental/bd:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
+    networks:
+      - espodental
+
+  espocrm:
+    image: espocrm/espocrm:9.2.7
+    container_name: espodental-web
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      <<: *espo-common-env
+    volumes: *espo-common-volumes
+    ports:
+      - "${ESPOCRM_HTTP_PORT}:80"
+    networks:
+      - espodental
+
+  espocrm-daemon:
+    image: espocrm/espocrm:9.2.7
+    container_name: espodental-daemon
+    restart: unless-stopped
+    depends_on:
+      espocrm:
+        condition: service_started
+    environment:
+      <<: *espo-common-env
+      ESPOCRM_CONFIG_CRON_DISABLED: "false"
+    volumes: *espo-common-volumes
+    entrypoint: docker-daemon.sh
+    networks:
+      - espodental
+
+  espocrm-websocket:
+    image: espocrm/espocrm:9.2.7
+    container_name: espodental-websocket
+    restart: unless-stopped
+    depends_on:
+      espocrm:
+        condition: service_started
+    environment:
+      <<: *espo-common-env
+    volumes: *espo-common-volumes
+    entrypoint: docker-websocket.sh
+    ports:
+      - "${ESPOCRM_WS_PORT}:8080"
+    networks:
+      - espodental
+
+networks:
+  espodental:
+    driver: bridge

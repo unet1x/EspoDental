@@ -1,0 +1,220 @@
+{
+    "fields": {
+        "name": {
+            "type": "personName",
+            "isPersonalData": true,
+            "view": "views/fields/person-name"
+        },
+        "lastName": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100,
+            "trim": true,
+            "isPersonalData": true
+        },
+        "firstName": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 100,
+            "trim": true,
+            "isPersonalData": true
+        },
+        "middleName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true,
+            "isPersonalData": true
+        },
+        "gender": {
+            "type": "enum",
+            "options": ["", "male", "female", "other"],
+            "default": ""
+        },
+        "phone": {
+            "type": "phone",
+            "required": true,
+            "typeList": ["Mobile", "Home", "Work", "Other"],
+            "defaultType": "Mobile",
+            "isPersonalData": true
+        },
+        "emailAddress": {
+            "type": "email",
+            "isPersonalData": true
+        },
+        "dateOfBirth": {
+            "type": "date",
+            "isPersonalData": true
+        },
+        "age": {
+            "type": "int",
+            "notStorable": true,
+            "readOnly": true,
+            "view": "espo-dental:views/patient/fields/age"
+        },
+        "address": {
+            "type": "address",
+            "isPersonalData": true
+        },
+        "notes": {
+            "type": "text"
+        },
+        "telegram": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true,
+            "tooltip": true
+        },
+        "telegramChatId": {
+            "type": "varchar",
+            "maxLength": 64,
+            "trim": true,
+            "tooltip": true
+        },
+        "remindersEnabled": {
+            "type": "bool",
+            "default": true,
+            "tooltip": true
+        },
+        "whatsapp": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true,
+            "tooltip": true
+        },
+        "preferredChannel": {
+            "type": "enum",
+            "options": ["", "email", "sms", "telegram", "whatsapp", "phone"],
+            "default": "phone"
+        },
+        "vip": {
+            "type": "bool",
+            "default": false,
+            "audited": true
+        },
+        "restrictions": {
+            "type": "bool",
+            "default": false,
+            "audited": true,
+            "tooltip": true
+        },
+        "cardNumber": {
+            "type": "varchar",
+            "maxLength": 50,
+            "trim": true,
+            "tooltip": true
+        },
+        "firstVisitDate": {
+            "type": "date",
+            "readOnly": true
+        },
+        "isChild": {
+            "type": "bool",
+            "default": false
+        },
+        "parentLastName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true,
+            "isPersonalData": true
+        },
+        "parentFirstName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true,
+            "isPersonalData": true
+        },
+        "parentMiddleName": {
+            "type": "varchar",
+            "maxLength": 100,
+            "trim": true,
+            "isPersonalData": true
+        },
+        "parentPhone": {
+            "type": "phone",
+            "isPersonalData": true
+        },
+        "parentRelation": {
+            "type": "enum",
+            "options": ["", "mother", "father", "guardian", "other"],
+            "default": ""
+        },
+        "balance": {
+            "type": "currency",
+            "readOnly": true,
+            "default": "0.00",
+            "tooltip": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["active", "inactive", "archived"],
+            "default": "active",
+            "audited": true,
+            "style": {
+                "active": "success",
+                "inactive": "default",
+                "archived": "warning"
+            }
+        },
+        "clinic": {
+            "type": "link"
+        },
+        "convertedFromPreliminary": {
+            "type": "linkOne",
+            "readOnly": true
+        },
+        "lastQuestionnaireAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "questionnaireExpired": {
+            "type": "bool",
+            "readOnly": true,
+            "default": true,
+            "tooltip": true
+        },
+        "questionnaireHasAlerts": {
+            "type": "bool",
+            "readOnly": true,
+            "default": false,
+            "tooltip": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "assignedUser": {"type": "link", "view": "views/fields/assigned-user"},
+        "teams": {"type": "linkMultiple", "view": "views/fields/teams"}
+    },
+    "links": {
+        "clinic": {"type": "belongsTo", "entity": "Clinic", "foreign": "patients"},
+        "convertedFromPreliminary": {"type": "belongsTo", "entity": "PreliminaryPatient", "foreign": "convertedToPatient"},
+        "healthQuestionnaires": {"type": "hasMany", "entity": "HealthQuestionnaire", "foreign": "patient"},
+        "questionnaireTokens": {"type": "hasMany", "entity": "QuestionnaireToken", "foreign": "patient"},
+        "appointments": {"type": "hasChildren", "entity": "Appointment", "foreign": "parent"},
+        "visits": {"type": "hasMany", "entity": "Visit", "foreign": "patient"},
+        "toothChartSnapshots": {"type": "hasMany", "entity": "ToothChartSnapshot", "foreign": "patient"},
+        "photos": {"type": "hasMany", "entity": "VisitPhoto", "foreign": "patient"},
+        "invoices": {"type": "hasMany", "entity": "Invoice", "foreign": "patient"},
+        "payments": {"type": "hasMany", "entity": "Payment", "foreign": "patient"},
+        "notificationLogs": {"type": "hasMany", "entity": "NotificationLog", "foreign": "patient"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"},
+        "assignedUser": {"type": "belongsTo", "entity": "User"},
+        "teams": {"type": "hasMany", "entity": "Team", "relationName": "entityTeam", "layoutRelationshipsDisabled": true}
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc"
+    },
+    "indexes": {
+        "createdAt": {"columns": ["createdAt", "deleted"]},
+        "name": {"columns": ["lastName", "firstName"]},
+        "status": {"columns": ["status", "deleted"]},
+        "cardNumber": {"columns": ["cardNumber"], "unique": true},
+        "clinic": {"columns": ["clinicId"]},
+        "vip": {"columns": ["vip"]}
+    }
+}

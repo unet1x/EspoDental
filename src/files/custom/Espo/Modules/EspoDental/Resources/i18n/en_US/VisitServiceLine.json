@@ -1,0 +1,22 @@
+{
+    "labels": {"Create VisitServiceLine": "Add Service Line"},
+    "fields": {
+        "name": "Name",
+        "visit": "Visit",
+        "service": "Service",
+        "doctor": "Doctor",
+        "teethNumbers": "Teeth (comma)",
+        "quantity": "Qty",
+        "unitPrice": "Unit price",
+        "discount": "Discount %",
+        "amount": "Amount",
+        "vatRate": "VAT %",
+        "vatAmount": "VAT",
+        "notes": "Notes"
+    },
+    "links": {"visit": "Visit", "service": "Service"},
+    "tooltips": {
+        "teethNumbers": "FDI tooth numbers, comma-separated, e.g. 16,26",
+        "discount": "Discount percent (0..100)"
+    }
+}

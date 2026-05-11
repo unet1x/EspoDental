@@ -1,0 +1,81 @@
+{
+    "labels": {
+        "Create Invoice": "Создать счёт",
+        "Overview": "Основное",
+        "Amounts": "Суммы",
+        "Other": "Прочее",
+        "Issue": "Выставить",
+        "Storno": "Сторно",
+        "Accept Payment": "Принять оплату",
+        "Print PDF": "Печать PDF",
+        "Invoice": "Счёт",
+        "Patient": "Пациент",
+        "Service": "Услуга",
+        "Teeth": "Зубы",
+        "Qty": "Кол-во",
+        "Unit": "Цена",
+        "Disc": "Скидка",
+        "Amount": "Сумма",
+        "Subtotal": "Подытог",
+        "Discount": "Скидка",
+        "VAT": "НДС",
+        "Total": "Итого",
+        "Paid": "Оплачено",
+        "Balance": "Остаток",
+        "Issued at": "Выставлено"
+    },
+    "fields": {
+        "number": "Номер",
+        "name": "Название",
+        "patient": "Пациент",
+        "clinic": "Клиника",
+        "visit": "Приём",
+        "status": "Статус",
+        "issuedAt": "Дата выставления",
+        "dueDate": "Срок оплаты",
+        "currency": "Валюта",
+        "subtotal": "Подытог",
+        "discountAmount": "Сумма скидок",
+        "vatAmount": "НДС",
+        "totalAmount": "Итого",
+        "paidAmount": "Оплачено",
+        "balance": "Остаток",
+        "notes": "Заметки",
+        "stornoOf": "Сторно для"
+    },
+    "options": {
+        "status": {
+            "draft": "Черновик",
+            "issued": "Выставлен",
+            "partial_paid": "Частично оплачен",
+            "paid": "Оплачен",
+            "storno": "Сторно",
+            "cancelled": "Отменён"
+        }
+    },
+    "links": {
+        "patient": "Пациент",
+        "clinic": "Клиника",
+        "visit": "Приём",
+        "lines": "Позиции",
+        "payments": "Платежи",
+        "stornoOf": "Сторно для"
+    },
+    "boolFilters": {
+        "onlyOpen": "Только открытые",
+        "onlyOverdue": "Только просроченные"
+    },
+    "messages": {
+        "Only draft can be issued": "Выставить можно только черновик",
+        "Confirm issue invoice": "Выставить счёт?",
+        "Invoice issued": "Счёт выставлен",
+        "Cannot storno": "Этот счёт нельзя сторнировать",
+        "Storno reason": "Причина сторно",
+        "Invoice storno-ed": "Сторно создано",
+        "Invoice not payable": "Этот счёт нельзя оплатить",
+        "Payment amount": "Сумма платежа",
+        "Payment method (cash/card/bank_transfer/online/terminal/other)": "Метод платежа (cash/card/bank_transfer/online/terminal/other)",
+        "Payment accepted": "Платёж принят",
+        "PDF build failed": "Не удалось сформировать PDF"
+    }
+}

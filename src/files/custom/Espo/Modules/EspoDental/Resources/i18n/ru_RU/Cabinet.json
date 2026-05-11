@@ -1,0 +1,18 @@
+{
+    "labels": {
+        "Create Cabinet": "Создать кабинет"
+    },
+    "fields": {
+        "name": "Название",
+        "code": "Код",
+        "clinic": "Клиника",
+        "color": "Цвет",
+        "equipment": "Оборудование",
+        "order": "Порядок",
+        "isActive": "Активен",
+        "description": "Описание"
+    },
+    "links": {
+        "clinic": "Клиника"
+    }
+}

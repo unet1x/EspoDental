@@ -1,0 +1,63 @@
+{
+    "labels": {
+        "Create PreliminaryPatient": "Crear paciente preliminar",
+        "Convert to Patient": "Convertir a paciente",
+        "Overview": "General",
+        "Conversion": "Conversion",
+        "Other": "Otros"
+    },
+    "fields": {
+        "name": "Nombre completo",
+        "lastName": "Apellido",
+        "firstName": "Nombre",
+        "middleName": "Segundo nombre",
+        "gender": "Genero",
+        "phone": "Telefono",
+        "emailAddress": "Email",
+        "dateOfBirth": "Fecha de nacimiento",
+        "age": "Edad",
+        "status": "Estado",
+        "source": "Origen",
+        "clinic": "Clinica",
+        "convertedToPatient": "Paciente",
+        "convertedAt": "Convertido el",
+        "description": "Descripcion",
+        "assignedUser": "Asignado a",
+        "teams": "Equipos"
+    },
+    "options": {
+        "gender": {
+            "": "—",
+            "male": "Masculino",
+            "female": "Femenino",
+            "other": "Otro"
+        },
+        "status": {
+            "entered": "Registrado",
+            "booked": "Citado",
+            "processed": "Procesado",
+            "no_show": "No asistio"
+        },
+        "source": {
+            "": "—",
+            "walk_in": "Llegada espontanea",
+            "phone": "Telefono",
+            "online": "Reserva en linea",
+            "referral": "Referido",
+            "other": "Otro"
+        }
+    },
+    "links": {
+        "clinic": "Clinica",
+        "convertedToPatient": "Paciente"
+    },
+    "boolFilters": {
+        "onlyMy": "Solo mios"
+    },
+    "messages": {
+        "Convert to Patient confirm": "Todos los campos se copiaran a un nuevo paciente. El estado del preliminar pasara a \"Procesado\".",
+        "Issue questionnaire QR": "Emitir codigo QR para el cuestionario de salud (validez 24 horas)",
+        "Converted": "Convertido a paciente",
+        "Already converted": "Ya convertido"
+    }
+}

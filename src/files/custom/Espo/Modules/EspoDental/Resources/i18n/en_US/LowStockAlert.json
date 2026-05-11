@@ -1,0 +1,15 @@
+{
+    "labels": {"Create LowStockAlert": "Create Alert"},
+    "fields": {
+        "name": "Name", "material": "Material", "clinic": "Clinic",
+        "level": "Level", "currentStock": "Current stock",
+        "threshold": "Threshold", "status": "Status", "raisedAt": "Raised at",
+        "resolvedAt": "Resolved at", "acknowledgedBy": "Acknowledged by", "notes": "Notes"
+    },
+    "options": {
+        "level": {"low": "Low", "critical": "Critical", "out": "Out of stock"},
+        "status": {"open": "Open", "acknowledged": "Acknowledged", "resolved": "Resolved"}
+    },
+    "links": {"material": "Material", "clinic": "Clinic"},
+    "boolFilters": {"onlyOpen": "Only open"}
+}

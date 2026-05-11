@@ -1,0 +1,13 @@
+{
+    "espoDental": {
+        "label": "EspoDental",
+        "order": 50,
+        "itemList": [
+            {
+                "url": "#Admin/settings/EspoDental",
+                "label": "EspoDental Settings",
+                "iconClass": "fas fa-tooth"
+            }
+        ]
+    }
+}

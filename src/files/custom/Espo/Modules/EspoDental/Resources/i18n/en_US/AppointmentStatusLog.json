@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create AppointmentStatusLog": "Create Status Log"
+    },
+    "fields": {
+        "name": "Name",
+        "appointment": "Appointment",
+        "fromStatus": "From",
+        "toStatus": "To",
+        "changedAt": "Changed At",
+        "changedBy": "Changed By",
+        "durationInPrevious": "Seconds in previous"
+    },
+    "links": {
+        "appointment": "Appointment"
+    },
+    "tooltips": {
+        "durationInPrevious": "Number of seconds the appointment spent in the previous status"
+    }
+}

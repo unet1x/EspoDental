@@ -1,0 +1,127 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": false,
+            "readOnly": true,
+            "maxLength": 255
+        },
+        "parent": {
+            "type": "linkParent",
+            "required": true,
+            "entityList": ["Patient", "PreliminaryPatient"]
+        },
+        "doctor": {
+            "type": "link",
+            "required": true,
+            "view": "views/fields/user"
+        },
+        "assistant": {
+            "type": "link",
+            "view": "views/fields/user"
+        },
+        "cabinet": {
+            "type": "link",
+            "required": true
+        },
+        "clinic": {
+            "type": "link",
+            "required": true
+        },
+        "dateStart": {
+            "type": "datetime",
+            "required": true
+        },
+        "dateEnd": {
+            "type": "datetime",
+            "required": true,
+            "after": "dateStart"
+        },
+        "duration": {
+            "type": "duration",
+            "default": 1800,
+            "options": [900, 1800, 2700, 3600, 5400, 7200],
+            "start": "dateStart",
+            "end": "dateEnd"
+        },
+        "status": {
+            "type": "enum",
+            "options": ["planned", "rescheduled", "cancelled", "arrived", "in_progress", "finished", "no_show"],
+            "default": "planned",
+            "audited": true,
+            "style": {
+                "planned": "primary",
+                "rescheduled": "warning",
+                "cancelled": "muted",
+                "arrived": "info",
+                "in_progress": "info",
+                "finished": "success",
+                "no_show": "danger"
+            }
+        },
+        "source": {
+            "type": "enum",
+            "options": ["", "walk_in", "phone", "online", "portal", "referral", "other"],
+            "default": ""
+        },
+        "bookedBy": {
+            "type": "link",
+            "view": "views/fields/user"
+        },
+        "color": {
+            "type": "varchar",
+            "maxLength": 9,
+            "view": "views/fields/colorpicker"
+        },
+        "complaints": {
+            "type": "text"
+        },
+        "description": {
+            "type": "text"
+        },
+        "reminderSent": {
+            "type": "bool",
+            "default": false,
+            "readOnly": true
+        },
+        "visit": {
+            "type": "linkOne",
+            "readOnly": true
+        },
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "assignedUser": {"type": "link", "view": "views/fields/assigned-user"},
+        "teams": {"type": "linkMultiple", "view": "views/fields/teams"}
+    },
+    "links": {
+        "parent": {
+            "type": "belongsToParent",
+            "foreign": "appointments"
+        },
+        "doctor": {"type": "belongsTo", "entity": "User"},
+        "assistant": {"type": "belongsTo", "entity": "User"},
+        "cabinet": {"type": "belongsTo", "entity": "Cabinet"},
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "bookedBy": {"type": "belongsTo", "entity": "User"},
+        "visit": {"type": "hasOne", "entity": "Visit", "foreign": "appointment"},
+        "statusLogs": {"type": "hasMany", "entity": "AppointmentStatusLog", "foreign": "appointment"},
+        "notificationLogs": {"type": "hasMany", "entity": "NotificationLog", "foreign": "appointment"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"},
+        "assignedUser": {"type": "belongsTo", "entity": "User"},
+        "teams": {"type": "hasMany", "entity": "Team", "relationName": "entityTeam", "layoutRelationshipsDisabled": true}
+    },
+    "collection": {
+        "orderBy": "dateStart",
+        "order": "desc"
+    },
+    "indexes": {
+        "dateStart": {"columns": ["dateStart", "deleted"]},
+        "doctor_date": {"columns": ["doctorId", "dateStart", "dateEnd"]},
+        "cabinet_date": {"columns": ["cabinetId", "dateStart", "dateEnd"]},
+        "status": {"columns": ["status", "deleted"]},
+        "clinic": {"columns": ["clinicId"]}
+    }
+}

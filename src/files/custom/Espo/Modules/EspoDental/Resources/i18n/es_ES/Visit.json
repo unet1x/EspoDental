@@ -1,0 +1,46 @@
+{
+    "labels": {
+        "Create Visit": "Crear visita",
+        "Overview": "General",
+        "Clinical": "Clinica",
+        "Other": "Otros",
+        "Finish Visit": "Finalizar visita"
+    },
+    "fields": {
+        "name": "Nombre",
+        "appointment": "Cita",
+        "patient": "Paciente",
+        "doctor": "Doctor",
+        "assistant": "Asistente",
+        "cabinet": "Gabinete",
+        "clinic": "Clinica",
+        "status": "Estado",
+        "complaints": "Motivo",
+        "performed": "Realizado",
+        "recommendations": "Recomendaciones",
+        "startedAt": "Iniciado",
+        "finishedAt": "Finalizado",
+        "totalAmount": "Importe",
+        "assignedUser": "Asignado a",
+        "teams": "Equipos"
+    },
+    "options": {
+        "status": {
+            "in_progress": "En curso",
+            "finished": "Finalizada",
+            "cancelled": "Cancelada"
+        }
+    },
+    "links": {
+        "appointment": "Cita",
+        "patient": "Paciente",
+        "doctor": "Doctor",
+        "cabinet": "Gabinete",
+        "clinic": "Clinica"
+    },
+    "messages": {
+        "Only in-progress visits can be finished": "Solo se pueden finalizar visitas en curso",
+        "Confirm finish visit": "Finalizar la visita? Se generara una factura.",
+        "Visit finished": "Visita finalizada"
+    }
+}

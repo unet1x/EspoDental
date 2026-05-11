@@ -1,0 +1,45 @@
+{
+    "labels": {"Create Payment": "Принять платёж", "Refund": "Возврат"},
+    "fields": {
+        "number": "Номер",
+        "name": "Название",
+        "patient": "Пациент",
+        "clinic": "Клиника",
+        "invoice": "Счёт",
+        "method": "Способ",
+        "amount": "Сумма",
+        "currency": "Валюта",
+        "status": "Статус",
+        "direction": "Направление",
+        "paidAt": "Дата",
+        "receivedBy": "Принял",
+        "refundOf": "Возврат для",
+        "notes": "Заметки"
+    },
+    "options": {
+        "method": {
+            "cash": "Наличные",
+            "card": "Карта",
+            "bank_transfer": "Банковский перевод",
+            "online": "Онлайн",
+            "terminal": "Терминал",
+            "other": "Другое"
+        },
+        "status": {
+            "pending": "Ожидает",
+            "completed": "Завершён",
+            "cancelled": "Отменён",
+            "refunded": "Возвращён"
+        },
+        "direction": {"in": "Приход", "out": "Расход"}
+    },
+    "links": {"patient": "Пациент", "invoice": "Счёт"},
+    "boolFilters": {"onlyMy": "Только мои", "today": "Сегодня"},
+    "messages": {
+        "Cannot refund this payment": "Этот платёж нельзя вернуть",
+        "Refund amount": "Сумма возврата",
+        "Refund reason": "Причина возврата",
+        "Refund created": "Возврат создан"
+    },
+    "tooltips": {"direction": "Приход — клиника получает; Расход — возврат пациенту"}
+}

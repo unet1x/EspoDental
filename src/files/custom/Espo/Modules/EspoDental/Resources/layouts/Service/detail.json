@@ -1,0 +1,18 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [{"name": "name"}, {"name": "code"}],
+            [{"name": "category"}, {"name": "isActive"}],
+            [{"name": "price"}, {"name": "vatRate"}],
+            [{"name": "duration"}, {"name": "perTooth"}],
+            [{"name": "color"}, {"name": "icd10"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "description", "fullWidth": true}],
+            [{"name": "createdAt"}, {"name": "modifiedAt"}]
+        ]
+    }
+]

@@ -1,0 +1,19 @@
+{
+    "labels": {"Create InvoiceLine": "Добавить позицию"},
+    "fields": {
+        "name": "Название",
+        "invoice": "Счёт",
+        "service": "Услуга",
+        "doctor": "Врач",
+        "teethNumbers": "Зубы",
+        "quantity": "Кол-во",
+        "unitPrice": "Цена за ед.",
+        "discount": "Скидка %",
+        "amount": "Сумма",
+        "vatRate": "НДС %",
+        "vatAmount": "НДС",
+        "sourceVisitServiceLine": "Источник",
+        "notes": "Комментарий"
+    },
+    "links": {"invoice": "Счёт", "service": "Услуга"}
+}

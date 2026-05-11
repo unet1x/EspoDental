@@ -1,0 +1,63 @@
+{
+    "labels": {
+        "Create PreliminaryPatient": "Создать предв. пациента",
+        "Convert to Patient": "Преобразовать в пациента",
+        "Overview": "Основное",
+        "Conversion": "Конвертация",
+        "Other": "Прочее"
+    },
+    "fields": {
+        "name": "ФИО",
+        "lastName": "Фамилия",
+        "firstName": "Имя",
+        "middleName": "Отчество",
+        "gender": "Пол",
+        "phone": "Телефон",
+        "emailAddress": "Email",
+        "dateOfBirth": "Дата рождения",
+        "age": "Возраст",
+        "status": "Статус",
+        "source": "Источник",
+        "clinic": "Клиника",
+        "convertedToPatient": "Пациент",
+        "convertedAt": "Дата конвертации",
+        "description": "Описание",
+        "assignedUser": "Ответственный",
+        "teams": "Команды"
+    },
+    "options": {
+        "gender": {
+            "": "—",
+            "male": "Мужской",
+            "female": "Женский",
+            "other": "Третий"
+        },
+        "status": {
+            "entered": "Заведен",
+            "booked": "Записан",
+            "processed": "Обработан",
+            "no_show": "Не явился"
+        },
+        "source": {
+            "": "—",
+            "walk_in": "Самообращение",
+            "phone": "Звонок",
+            "online": "Онлайн-запись",
+            "referral": "Рекомендация",
+            "other": "Другое"
+        }
+    },
+    "links": {
+        "clinic": "Клиника",
+        "convertedToPatient": "Пациент"
+    },
+    "boolFilters": {
+        "onlyMy": "Только мои"
+    },
+    "messages": {
+        "Convert to Patient confirm": "Все данные будут перенесены в карту пациента. После конвертации статус будет «Обработан».",
+        "Issue questionnaire QR": "Сразу выдать QR-код для анкеты здоровья (срок 24 часа)",
+        "Converted": "Преобразовано в пациента",
+        "Already converted": "Уже преобразовано"
+    }
+}

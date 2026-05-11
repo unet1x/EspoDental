@@ -1,0 +1,9 @@
+[
+    {"name": "name"},
+    {"name": "service"},
+    {"name": "teethNumbers"},
+    {"name": "quantity"},
+    {"name": "unitPrice"},
+    {"name": "discount"},
+    {"name": "amount"}
+]
