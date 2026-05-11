@@ -70,12 +70,20 @@ final class Phase15MetadataTest extends TestCase
         $this->assertStringContainsString('rebuild.php', $code);
     }
 
-    public function testManifestVersionIsCurrent(): void
+    public function testManifestVersionIsSemver(): void
     {
         $manifest = json_decode(
             (string) file_get_contents(self::ROOT . '/src/manifest.json'),
             true
         );
-        $this->assertSame('0.15.0', $manifest['version']);
+        $this->assertMatchesRegularExpression(
+            '/^\d+\.\d+\.\d+$/',
+            $manifest['version']
+        );
+        $this->assertGreaterThanOrEqual(
+            0,
+            version_compare($manifest['version'], '0.15.0'),
+            'version must be >= 0.15.0'
+        );
     }
 }

@@ -2,6 +2,38 @@
 
 > Latest first. Versions follow SemVer with leading `0.` until 1.0.
 
+## 0.16.0 — Staging stack + nightly backup/restore pipeline
+
+- New compose stack `deploy/staging/docker-compose.yml` brings up a second
+  EspoCRM instance on the same Synology (ports 8090/8091, isolated network
+  and volumes, prominent "STAGING" banner via
+  `ESPOCRM_CONFIG_NOTIFICATIONS_FOOTER`).
+- New scripts in `deploy/scripts/`:
+  - `lib/common.sh` — logging with pipeline-id, `load_env`, `require_env`.
+  - `lib/alert.sh` — `alert_telegram` (Bot API) + `alert_email`
+    (curl-SMTP, no extra packages on DSM).
+  - `backup-prod.sh` — `mariadb-dump --single-transaction --quick --routines
+    --triggers --events` of prod, gzip, optional `tar` of uploads, retention
+    pruning (default 14 days), `db-latest.sql.gz` symlink.
+  - `restore-to-staging.sh` — stop staging web tier → drop/recreate DB →
+    `gunzip | mariadb` → `rsync` uploads → restart → `rebuild.php` →
+    sanity check (HTTP 200 + `SELECT COUNT(*) FROM patient` prod vs staging).
+  - `nightly.sh` — orchestrator. Retries the backup once on failure. Sends
+    differentiated Telegram + email alerts depending on which step broke
+    (`Backup FAILED twice`, `Restore to staging FAILED`,
+    `Staging sanity check FAILED`). Writes a single log per run keyed by
+    `pipeline_id`.
+- `deploy/.env.example` extended with `ALERT_TELEGRAM_BOT_TOKEN`,
+  `ALERT_TELEGRAM_CHAT_ID`, `ALERT_EMAIL_TO/FROM`, `ALERT_SMTP_URL`,
+  `STAGING_*`, `LOG_DIR`, `PATIENT_TABLE_NAME`.
+- `docs/admin-guide.md` — new section 9 "Staging environment + nightly
+  pipeline" with directory layout, first-time setup, cron schedule,
+  promotion workflow (`git pull` only — no automation across hosts),
+  rollback recipe.
+- `Phase16MetadataTest`: file presence + executable bit + structural
+  content checks for compose, scripts, alerts and orchestrator.
+- **Tests:** ~186 / ~2010 assertions.
+
 ## 0.15.0 — Console seeder + GitHub Release workflow
 
 - Refactored `AfterInstall.php` — extracted seeding logic into

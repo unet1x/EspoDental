@@ -167,23 +167,33 @@ team that contains **all** clinic teams (Espo teams are sets, not trees).
 
 ## 5. Backup / Резервное копирование
 
-The script [`deploy/backup.sh`](../deploy/backup.sh) does a 3-step backup:
+The recommended backup pipeline now lives in [`deploy/scripts/`](../deploy/scripts/):
 
-1. `mysqldump` of the EspoCRM database.
-2. `tar` of `/var/www/html/data` (uploads + config).
-3. Rotation: deletes archives older than `BACKUP_RETENTION_DAYS`.
+| Script | Purpose |
+| --- | --- |
+| `backup-prod.sh`        | mysqldump + gzip + retention pruning (default 14 days) |
+| `restore-to-staging.sh` | drops staging DB, imports the latest dump, rsyncs uploads, runs sanity check |
+| `nightly.sh`            | orchestrator (cron entrypoint), retries the backup once on failure, sends Telegram + email alerts |
+| `lib/common.sh`         | logging helpers, pipeline-id, `load_env` |
+| `lib/alert.sh`          | `alert_telegram` (Bot API), `alert_email` (curl-SMTP) |
 
-Schedule it via DSM Task Scheduler (daily, 02:00) and point `BACKUP_DIR` at a
-volume that is included in your **Hyper Backup** plan.
+The legacy single-file `deploy/backup.sh` is left in place for backwards
+compatibility but **`nightly.sh` is now the recommended cron entry**.
 
-Cкрипт [`deploy/backup.sh`](../deploy/backup.sh):
+See **section 9** for the full staging + nightly workflow.
 
-1. `mysqldump` БД EspoCRM.
-2. `tar` каталога `/var/www/html/data` (загрузки + конфиг).
-3. Удаление архивов старше `BACKUP_RETENTION_DAYS`.
+Пайплайн бэкапов теперь живёт в [`deploy/scripts/`](../deploy/scripts/):
 
-Запускать через **DSM → Планировщик задач** (ежедневно в 02:00), `BACKUP_DIR`
-направить на том, попадающий в **Hyper Backup**.
+| Скрипт | Назначение |
+| --- | --- |
+| `backup-prod.sh`        | mariadb-dump + gzip + ротация (по умолчанию 14 дней) |
+| `restore-to-staging.sh` | роняет БД staging, импортирует свежий дамп, rsync загрузок, sanity-check |
+| `nightly.sh`            | оркестратор (точка входа для cron), повторяет бэкап при сбое, шлёт Telegram + email |
+| `lib/common.sh`         | логирование, pipeline-id, `load_env` |
+| `lib/alert.sh`          | `alert_telegram`, `alert_email` |
+
+Старый одиночный `deploy/backup.sh` оставлен для совместимости, но
+**`nightly.sh` — рекомендуемая cron-задача**. Полная схема — в **разделе 9**.
 
 ---
 
@@ -245,3 +255,246 @@ Cкрипт [`deploy/backup.sh`](../deploy/backup.sh):
 - [ ] Off-site бэкап (Hyper Backup).
 - [ ] 2FA для всех админов и докторов.
 - [ ] Обновление образа EspoCRM не реже раза в квартал.
+
+---
+
+## 9. Staging environment + nightly pipeline / Staging-стенд и ночной конвейер
+
+### 9.1 Why two stacks / Зачем два стека
+
+EspoDental ships with a second compose file
+[`deploy/staging/docker-compose.yml`](../deploy/staging/docker-compose.yml)
+that brings up an **identical** EspoCRM stack on the same Synology, on
+different ports (`8090/8091`). Purpose:
+
+- **Test upgrades** of the EspoDental module before they hit prod.
+- **Rehearse restores** — staging is rebuilt every night from the latest prod
+  dump, so a failed restore on staging means the prod backup is invalid and
+  alerts fire immediately.
+- **Crash dummy** for risky operations (cabinet renaming, scheduled-job
+  changes, role tweaks) before applying them to live patients.
+
+Staging holds **real patient data** (no sanitization) and must therefore be
+treated as production-sensitive: limit access to the same person who has
+prod admin rights (single-admin model).
+
+EspoDental поставляется со вторым compose-файлом
+[`deploy/staging/docker-compose.yml`](../deploy/staging/docker-compose.yml) —
+он поднимает идентичный стек EspoCRM на том же Synology, но на других портах
+(`8090/8091`). Назначение:
+
+- **Репетиция обновлений** модуля до раскатки на прод.
+- **Репетиция бэкапа** — staging пересобирается каждую ночь из свежего
+  дампа прода; провал восстановления = плохой бэкап = алерт.
+- **Песочница** для рискованных операций.
+
+В staging лежат **реальные ПДн** (без обезличивания), поэтому доступ
+ограничен тем же админом, что и к проду.
+
+### 9.2 Directory layout / Раскладка по дискам
+
+```
+/volume1/docker/espodental/             ← prod compose + .env
+/volume1/docker/espodental-staging/     ← staging compose + .env
+/volume1/docker/espodental-staging/bd/  ← staging MariaDB data
+
+/volume1/espomodule-prod/               ← module sources for PROD (git clone)
+/volume1/espomodule-staging/            ← module sources for STAGING (git clone)
+
+/volume2/espodental/data/               ← prod EspoCRM 'data' (incl. upload/)
+/volume2/espodental-staging/data/       ← staging EspoCRM 'data'
+/volume2/espodental/backups/            ← gzipped dumps + tar archives
+/volume2/espodental/logs/               ← nightly.sh logs
+```
+
+The **two separate git clones** are critical: prod and staging carry
+different commits during testing, so a `git pull` in one does not affect
+the other.
+
+Два независимых git-клона критически важны: prod и staging держат разные
+коммиты во время тестирования, и `git pull` в одном не трогает другой.
+
+### 9.3 First-time staging setup / Первая настройка staging
+
+```bash
+# 1. Create host dirs and fix ownership
+sudo mkdir -p /volume1/docker/espodental-staging/bd \
+              /volume2/espodental-staging/data
+sudo chown -R 999:999 /volume1/docker/espodental-staging/bd
+sudo chown -R 33:33   /volume2/espodental-staging/data
+
+# 2. Clone module sources for staging (separate from prod!)
+sudo git clone https://github.com/<you>/EspoDental.git \
+    /volume1/espomodule-staging
+sudo chown -R 33:33 /volume1/espomodule-staging
+
+# 3. Drop compose + env into place
+sudo cp deploy/staging/docker-compose.yml /volume1/docker/espodental-staging/
+sudo cp deploy/staging/.env.example       /volume1/docker/espodental-staging/.env
+sudo nano /volume1/docker/espodental-staging/.env   # set strong passwords
+
+# 4. Bring it up empty (will be overwritten by tonight's restore)
+cd /volume1/docker/espodental-staging
+sudo docker compose up -d
+```
+
+Once the stack is up, the first nightly run (or a manual
+`bash deploy/scripts/restore-to-staging.sh`) will replace the empty schema
+with a copy of prod.
+
+### 9.4 Cron schedule / Расписание cron
+
+In DSM **Control Panel → Task Scheduler** add a *user-defined script*:
+
+| Field | Value |
+| --- | --- |
+| Run as | `root` (or a user with Docker socket access) |
+| Schedule | Daily, 02:00 |
+| Command | `bash /volume1/espomodule-prod/deploy/scripts/nightly.sh` |
+| On error | (Mail tab) — already covered by `alert_email`, no DSM mail needed |
+
+The script writes a self-contained log to `/volume2/espodental/logs/nightly-*.log`.
+
+В DSM **Панель управления → Планировщик задач** добавь *скрипт пользователя*:
+
+| Поле | Значение |
+| --- | --- |
+| Выполнять от имени | `root` |
+| Расписание | Ежедневно, 02:00 |
+| Команда | `bash /volume1/espomodule-prod/deploy/scripts/nightly.sh` |
+
+Лог пишется в `/volume2/espodental/logs/nightly-*.log`.
+
+### 9.5 What the pipeline does each night / Что делает конвейер каждую ночь
+
+1. `backup-prod.sh` → `mariadb-dump --single-transaction --quick --routines
+   --triggers --events` of the prod DB, gzip into
+   `db-YYYYMMDD-HHMMSS.sql.gz`. Optional `tar` of `data/upload`. Updates
+   `db-latest.sql.gz` and `files-latest.tar.gz` symlinks. Prunes dumps older
+   than `BACKUP_RETENTION_DAYS=14`.
+2. If step 1 failed — wait 60 s, retry **once**.
+3. If step 1 failed twice — Telegram + email alert *"Backup FAILED twice"*,
+   pipeline aborts with exit 1.
+4. `restore-to-staging.sh` → stop staging web tier, `DROP DATABASE` + recreate,
+   `gunzip | mariadb`, `rsync` uploads, restart staging, `rebuild.php`.
+5. **Sanity check**: poll `STAGING_HEALTH_URL` until HTTP 200 (up to
+   `STAGING_HEALTH_TIMEOUT_SEC=180`), then compare `SELECT COUNT(*) FROM
+   patient` on prod and staging — they must be **equal**.
+6. On sanity-check failure → Telegram + email *"Staging sanity check FAILED"*
+   with explicit recommended action (re-run backup manually). Exit 3.
+7. On other restore failure → Telegram + email *"Restore to staging FAILED"*.
+   Exit 2.
+
+Все шаги протоколируются с единым `pipeline_id` (формат `YYYYMMDDTHHMMSS-PID`),
+который попадает в каждую строку лога и в текст алерта.
+
+### 9.6 Promotion workflow / Раскатка изменений со staging на prod
+
+The supported flow is **git-pull-only** — staging is the rehearsal, prod
+gets the same commits **after** staging has been verified by hand.
+
+```bash
+# === 1. Promote a tag/branch to STAGING ===
+cd /volume1/espomodule-staging
+sudo git fetch --tags
+sudo git checkout v0.17.0          # or 'main' for trunk
+
+cd /volume1/docker/espodental-staging
+sudo docker compose exec espocrm php rebuild.php
+sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+
+# Open https://staging-dental.example.com/ → smoke-test as admin:
+#   - dashboard loads
+#   - create/edit a test appointment
+#   - check the resource calendar
+#   - run an invoice through, mark it paid
+#   - verify reports render
+
+# === 2. If anything is off — stay on staging, fix, retest ===
+# === 3. Once staging is green — promote IDENTICAL ref to PROD ===
+
+cd /volume1/espomodule-prod
+sudo git fetch --tags
+sudo git checkout v0.17.0          # same ref as staging
+
+cd /volume1/docker/espodental
+sudo docker compose exec espocrm php rebuild.php
+sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+```
+
+The next nightly run will reset staging back to a *fresh prod copy*, so any
+manual tweaks made directly inside staging during smoke-testing are
+intentionally **lost**.
+
+Поддерживаемый сценарий — **только git-pull**: staging — это репетиция,
+после ручной приёмки прод получает те же коммиты.
+
+```bash
+# === 1. Раскатываем тег/ветку в STAGING ===
+cd /volume1/espomodule-staging
+sudo git fetch --tags
+sudo git checkout v0.17.0
+
+cd /volume1/docker/espodental-staging
+sudo docker compose exec espocrm php rebuild.php
+sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+
+# Открыть https://staging-dental.example.com/ и пройти приёмку:
+#   - дашборд грузится
+#   - создать/изменить тестовую запись
+#   - проверить календарь кабинетов
+#   - провести инвойс, отметить оплату
+#   - убедиться, что отчёты строятся
+
+# === 2. Если что-то не так — остаёмся на staging, чиним, перетестируем ===
+# === 3. Когда staging зелёный — катим ТУ ЖЕ ревизию на PROD ===
+
+cd /volume1/espomodule-prod
+sudo git fetch --tags
+sudo git checkout v0.17.0
+
+cd /volume1/docker/espodental
+sudo docker compose exec espocrm php rebuild.php
+sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+```
+
+Следующий ночной прогон сбросит staging до свежей копии прода — все ручные
+правки, сделанные в staging во время приёмки, **сознательно теряются**.
+
+### 9.7 Rollback / Откат
+
+If a promotion turns out to be bad on prod:
+
+```bash
+cd /volume1/espomodule-prod
+sudo git checkout v0.16.0          # previous tag
+
+cd /volume1/docker/espodental
+sudo docker compose exec espocrm php rebuild.php
+sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+```
+
+If schema changes were applied that the previous tag does not understand —
+restore the latest pre-upgrade dump manually:
+
+```bash
+ls /volume2/espodental/backups/db-*.sql.gz | tail -2
+# pick the older one
+DUMP=/volume2/espodental/backups/db-20260510-020013.sql.gz
+sudo gunzip -c "${DUMP}" | sudo docker compose exec -T mariadb \
+    mariadb -uroot -p${MARIADB_ROOT_PASSWORD} ${ESPOCRM_DATABASE_NAME}
+```
+
+Если апдейт сломал прод:
+
+```bash
+cd /volume1/espomodule-prod
+sudo git checkout v0.16.0
+
+cd /volume1/docker/espodental
+sudo docker compose exec espocrm php rebuild.php
+sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+```
+
+Если изменения схемы несовместимы с откатываемым тегом — восстанови
+предыдущий дамп вручную (см. EN-блок выше).

@@ -139,11 +139,31 @@ A Docker-Compose smoke test that boots MariaDB + EspoCRM + this module is at
 [`deploy/smoke/`](deploy/smoke/). Run `bash deploy/smoke/smoke.sh` to verify
 the module loads with a fresh stack.
 
+### Staging + nightly pipeline
+
+EspoDental ships a second Compose stack
+[`deploy/staging/docker-compose.yml`](deploy/staging/docker-compose.yml) that
+hosts a **staging clone** on the same Synology (ports 8090/8091). A cron-driven
+pipeline at [`deploy/scripts/nightly.sh`](deploy/scripts/nightly.sh):
+
+1. `backup-prod.sh` — `mariadb-dump` of prod, gzip, 14-day retention.
+2. `restore-to-staging.sh` — recreates staging DB from the latest dump,
+   rsyncs uploads, runs a sanity check (HTTP 200 + matching `patient`
+   row count between prod and staging).
+3. On failure → **Telegram + email** alerts with differentiated messages
+   per stage. Backups are retried once on transient failure.
+
+Promotion is **git-only**: after staging passes the smoke test, `git pull`
+the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
+`espo-dental-seed-roles`. Full procedure in
+[`docs/admin-guide.md` §9](docs/admin-guide.md).
+
 ### Documentation
 
-- [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup, multi-clinic setup
+- [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
+  multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
-- [docs/release-notes.md](docs/release-notes.md) — version history (phases 0–14)
+- [docs/release-notes.md](docs/release-notes.md) — version history (phases 0–16)
 
 ### License
 
@@ -240,9 +260,29 @@ bash bin/build         # build/EspoDental-X.Y.Z.zip
 | EspoDental Administrator | стойка регистрации + касса, без правок клинической истории |
 | EspoDental Stock Manager | только склад и материалы |
 
+### Staging + ночной конвейер
+
+EspoDental поставляется со вторым compose-стеком
+[`deploy/staging/docker-compose.yml`](deploy/staging/docker-compose.yml) —
+зеркало прод-стенда на том же Synology (порты 8090/8091). Через cron
+запускается [`deploy/scripts/nightly.sh`](deploy/scripts/nightly.sh):
+
+1. `backup-prod.sh` — `mariadb-dump` прода + gzip + retention 14 дней.
+2. `restore-to-staging.sh` — пересоздаёт БД staging из свежего дампа,
+   синхронизирует загрузки, делает sanity-check (HTTP 200 + равенство
+   `COUNT(patient)` на проде и в staging).
+3. При сбое — алерты в **Telegram + email**, разные сообщения по этапам;
+   бэкап повторяется один раз на транзиентной ошибке.
+
+Раскатка строго через **git**: после ручной приёмки на staging — `git pull`
+того же тега в `/volume1/espomodule-prod`, затем `rebuild.php` +
+`espo-dental-seed-roles`. Подробный сценарий — в
+[`docs/admin-guide.md`, раздел 9](docs/admin-guide.md).
+
 ### Документация
 
-- [docs/admin-guide.md](docs/admin-guide.md) — установка, обновление, бэкап, мульти-клиника
+- [docs/admin-guide.md](docs/admin-guide.md) — установка, обновление,
+  бэкап, мульти-клиника, staging + ночной конвейер (раздел 9)
 - [docs/user-guide.md](docs/user-guide.md) — повседневные сценарии: регистратура, доктор, менеджер
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
