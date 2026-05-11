@@ -1,0 +1,15 @@
+{
+    "labels": {"Create SalaryBonus": "Create Salary Bonus"},
+    "fields": {
+        "name": "Name", "user": "Employee",
+        "kind": "Kind", "amount": "Amount", "currency": "Currency",
+        "reason": "Reason", "dateApplied": "Date Applied",
+        "status": "Status", "includedInEntry": "Included in entry"
+    },
+    "options": {
+        "kind": {"bonus": "Bonus", "allowance": "Allowance", "penalty": "Penalty"},
+        "status": {"pending": "Pending", "included": "Included", "cancelled": "Cancelled"}
+    },
+    "links": {"user": "Employee", "includedInEntry": "Salary Entry"},
+    "boolFilters": {"pendingOnly": "Pending only"}
+}

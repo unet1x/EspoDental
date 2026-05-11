@@ -1,0 +1,15 @@
+{
+    "labels": {"Create SalaryBonus": "Crear bonificacion"},
+    "fields": {
+        "name": "Nombre", "user": "Empleado",
+        "kind": "Tipo", "amount": "Importe", "currency": "Moneda",
+        "reason": "Motivo", "dateApplied": "Fecha aplicada",
+        "status": "Estado", "includedInEntry": "Incluida en nomina"
+    },
+    "options": {
+        "kind": {"bonus": "Bono", "allowance": "Asignacion", "penalty": "Penalizacion"},
+        "status": {"pending": "Pendiente", "included": "Incluida", "cancelled": "Cancelada"}
+    },
+    "links": {"user": "Empleado", "includedInEntry": "Nomina"},
+    "boolFilters": {"pendingOnly": "Solo pendientes"}
+}

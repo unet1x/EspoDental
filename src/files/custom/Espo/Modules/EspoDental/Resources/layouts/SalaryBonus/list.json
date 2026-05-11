@@ -1,0 +1,8 @@
+[
+    {"name": "dateApplied"},
+    {"name": "user"},
+    {"name": "kind"},
+    {"name": "amount"},
+    {"name": "status"},
+    {"name": "name"}
+]

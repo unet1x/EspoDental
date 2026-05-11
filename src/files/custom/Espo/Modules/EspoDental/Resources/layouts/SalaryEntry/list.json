@@ -1,0 +1,11 @@
+[
+    {"name": "name"},
+    {"name": "user"},
+    {"name": "periodFrom"},
+    {"name": "periodTo"},
+    {"name": "baseAmount"},
+    {"name": "revenueAmount"},
+    {"name": "bonusAmount"},
+    {"name": "totalAmount"},
+    {"name": "status"}
+]

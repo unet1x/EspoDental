@@ -1,0 +1,10 @@
+[
+    {"name": "name"},
+    {"name": "user"},
+    {"name": "clinic"},
+    {"name": "roleType"},
+    {"name": "rateType"},
+    {"name": "baseRate"},
+    {"name": "revenuePercent"},
+    {"name": "isActive"}
+]

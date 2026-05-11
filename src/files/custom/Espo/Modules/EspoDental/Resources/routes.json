@@ -22,5 +22,25 @@
         "route": "/EspoDental/Report/lowStockSummary",
         "method": "get",
         "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Report", "action": "lowStockSummary"}
+    },
+    {
+        "route": "/EspoDental/SalaryEntry/build",
+        "method": "post",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "build"}
+    },
+    {
+        "route": "/EspoDental/SalaryEntry/approve",
+        "method": "post",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "approve"}
+    },
+    {
+        "route": "/EspoDental/SalaryEntry/pay",
+        "method": "post",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "pay"}
+    },
+    {
+        "route": "/EspoDental/SalaryEntry/cancel",
+        "method": "post",
+        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "cancel"}
     }
 ]

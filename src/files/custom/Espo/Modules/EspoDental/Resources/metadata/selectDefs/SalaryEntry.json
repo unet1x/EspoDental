@@ -1,0 +1,7 @@
+{
+    "boolFilterClassNameMap": {
+        "thisMonth": "Espo\\Modules\\EspoDental\\Classes\\Select\\SalaryEntry\\BoolFilters\\ThisMonth",
+        "draftOnly": "Espo\\Modules\\EspoDental\\Classes\\Select\\SalaryEntry\\BoolFilters\\DraftOnly",
+        "paidOnly": "Espo\\Modules\\EspoDental\\Classes\\Select\\SalaryEntry\\BoolFilters\\PaidOnly"
+    }
+}

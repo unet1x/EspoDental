@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 200, "trim": true},
+        "user": {"type": "link", "required": true},
+        "clinic": {"type": "link"},
+        "roleType": {
+            "type": "enum",
+            "options": ["doctor", "assistant", "administrator", "stock_manager", "manager", "other"],
+            "default": "doctor",
+            "required": true
+        },
+        "rateType": {
+            "type": "enum",
+            "options": ["fixed_monthly", "hourly", "per_visit", "none"],
+            "default": "fixed_monthly"
+        },
+        "baseRate": {"type": "currency", "default": 0},
+        "currency": {"type": "varchar", "maxLength": 8, "default": "RUB"},
+        "revenuePercent": {"type": "float", "min": 0, "max": 100, "default": 0},
+        "assistantPercent": {"type": "float", "min": 0, "max": 100, "default": 0},
+        "dateStart": {"type": "date", "required": true},
+        "dateEnd": {"type": "date"},
+        "isActive": {"type": "bool", "default": true},
+        "notes": {"type": "text"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "user": {"type": "belongsTo", "entity": "User"},
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "entries": {"type": "hasMany", "entity": "SalaryEntry", "foreign": "profile"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "dateStart", "order": "desc"},
+    "indexes": {"user_active": {"columns": ["userId", "isActive"]}}
+}

@@ -1,0 +1,23 @@
+{
+    "labels": {
+        "Create SalaryEntry": "Создать начисление",
+        "Build": "Пересчитать", "Approve": "Утвердить", "Pay": "Выплатить", "Cancel": "Отменить",
+        "Built": "Пересчитано", "Approved": "Утверждено", "Paid": "Выплачено", "Cancelled": "Отменено",
+        "Overview": "Основное", "Amounts": "Суммы", "Workflow": "Рабочий процесс"
+    },
+    "fields": {
+        "name": "Название", "user": "Сотрудник", "clinic": "Клиника", "profile": "Профиль",
+        "periodFrom": "Период с", "periodTo": "Период по",
+        "baseAmount": "Оклад/часы", "revenueAmount": "% врача", "assistantAmount": "% ассистента",
+        "bonusAmount": "Бонусы", "deductionAmount": "Удержания", "totalAmount": "Итого",
+        "currency": "Валюта", "revenueBasis": "База выручки", "visitsCount": "Приёмов",
+        "hoursWorked": "Часов", "status": "Статус",
+        "approvedAt": "Утверждено", "approvedBy": "Утвердил",
+        "paidAt": "Выплачено", "paidPayment": "Платёж выплаты", "notes": "Заметки"
+    },
+    "options": {
+        "status": {"draft": "Черновик", "approved": "Утверждён", "paid": "Выплачен", "cancelled": "Отменён"}
+    },
+    "links": {"user": "Сотрудник", "clinic": "Клиника", "profile": "Профиль", "bonuses": "Бонусы", "paidPayment": "Платёж"},
+    "boolFilters": {"thisMonth": "В этом месяце", "draftOnly": "Только черновики", "paidOnly": "Только выплаченные"}
+}

@@ -1,0 +1,15 @@
+{
+    "labels": {"Create SalaryBonus": "Создать бонус/штраф"},
+    "fields": {
+        "name": "Название", "user": "Сотрудник",
+        "kind": "Тип", "amount": "Сумма", "currency": "Валюта",
+        "reason": "Причина", "dateApplied": "Дата применения",
+        "status": "Статус", "includedInEntry": "Включён в начисление"
+    },
+    "options": {
+        "kind": {"bonus": "Бонус", "allowance": "Надбавка", "penalty": "Штраф"},
+        "status": {"pending": "Ожидает", "included": "Включён", "cancelled": "Отменён"}
+    },
+    "links": {"user": "Сотрудник", "includedInEntry": "Начисление"},
+    "boolFilters": {"pendingOnly": "Только ожидающие"}
+}

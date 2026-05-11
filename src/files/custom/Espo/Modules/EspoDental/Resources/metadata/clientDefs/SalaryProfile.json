@@ -1,0 +1,6 @@
+{
+    "controller": "controllers/record",
+    "color": "#9467BD",
+    "iconClass": "fas fa-user-tag",
+    "boolFilterList": ["onlyActive"]
+}

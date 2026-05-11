@@ -1,0 +1,5 @@
+{
+    "boolFilterClassNameMap": {
+        "onlyActive": "Espo\\Modules\\EspoDental\\Classes\\Select\\SalaryProfile\\BoolFilters\\OnlyActive"
+    }
+}

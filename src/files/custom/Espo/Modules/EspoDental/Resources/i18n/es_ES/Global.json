@@ -22,7 +22,10 @@
         "StockMovement": "Movimiento de stock",
         "ServiceMaterial": "Norma de consumo",
         "LowStockAlert": "Alerta de stock bajo",
-        "NotificationLog": "Notificacion"
+        "NotificationLog": "Notificacion",
+        "SalaryProfile": "Perfil salarial",
+        "SalaryEntry": "Nomina",
+        "SalaryBonus": "Bonificacion"
     },
     "scopeNamesPlural": {
         "Clinic": "Clinicas",
@@ -47,7 +50,10 @@
         "StockMovement": "Movimientos de stock",
         "ServiceMaterial": "Normas de consumo",
         "LowStockAlert": "Alertas de stock bajo",
-        "NotificationLog": "Notificaciones"
+        "NotificationLog": "Notificaciones",
+        "SalaryProfile": "Perfiles salariales",
+        "SalaryEntry": "Nominas",
+        "SalaryBonus": "Bonificaciones"
     },
     "labels": {
         "EspoDental": "Odontologia"
@@ -60,7 +66,8 @@
         "OpenInvoices": "Facturas abiertas",
         "LowStockMaterials": "Stock bajo",
         "RecentVisits": "Visitas recientes",
-        "MonthlyRevenue": "Ingresos mensuales"
+        "MonthlyRevenue": "Ingresos mensuales",
+        "PayrollThisMonth": "Nomina del mes"
     },
     "boolFilters": {
         "today": "Hoy",
@@ -73,6 +80,9 @@
         "onlyActive": "Solo activos",
         "lowStock": "Stock bajo",
         "criticalStock": "Critico",
-        "onlyFailed": "Solo fallidas"
+        "onlyFailed": "Solo fallidas",
+        "draftOnly": "Solo borradores",
+        "paidOnly": "Solo pagadas",
+        "pendingOnly": "Solo pendientes"
     }
 }

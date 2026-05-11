@@ -1,0 +1,7 @@
+[{"rows": [
+    [{"name": "name"}, {"name": "user"}],
+    [{"name": "kind"}, {"name": "status"}],
+    [{"name": "amount"}, {"name": "currency"}],
+    [{"name": "dateApplied"}, {"name": "includedInEntry"}],
+    [{"name": "reason", "fullWidth": true}]
+]}]

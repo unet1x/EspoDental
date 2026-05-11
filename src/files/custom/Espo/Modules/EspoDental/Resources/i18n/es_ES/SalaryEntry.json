@@ -1,0 +1,23 @@
+{
+    "labels": {
+        "Create SalaryEntry": "Crear nomina",
+        "Build": "Calcular", "Approve": "Aprobar", "Pay": "Pagar", "Cancel": "Cancelar",
+        "Built": "Calculada", "Approved": "Aprobada", "Paid": "Pagada", "Cancelled": "Cancelada",
+        "Overview": "General", "Amounts": "Montos", "Workflow": "Flujo"
+    },
+    "fields": {
+        "name": "Nombre", "user": "Empleado", "clinic": "Clinica", "profile": "Perfil",
+        "periodFrom": "Periodo desde", "periodTo": "Periodo hasta",
+        "baseAmount": "Base/Horas", "revenueAmount": "% Doctor", "assistantAmount": "% Asistente",
+        "bonusAmount": "Bonificaciones", "deductionAmount": "Deducciones", "totalAmount": "Total",
+        "currency": "Moneda", "revenueBasis": "Base de ingresos", "visitsCount": "Visitas",
+        "hoursWorked": "Horas", "status": "Estado",
+        "approvedAt": "Aprobada el", "approvedBy": "Aprobada por",
+        "paidAt": "Pagada el", "paidPayment": "Pago de salida", "notes": "Notas"
+    },
+    "options": {
+        "status": {"draft": "Borrador", "approved": "Aprobada", "paid": "Pagada", "cancelled": "Cancelada"}
+    },
+    "links": {"user": "Empleado", "clinic": "Clinica", "profile": "Perfil", "bonuses": "Bonificaciones", "paidPayment": "Pago"},
+    "boolFilters": {"thisMonth": "Este mes", "draftOnly": "Solo borradores", "paidOnly": "Solo pagadas"}
+}

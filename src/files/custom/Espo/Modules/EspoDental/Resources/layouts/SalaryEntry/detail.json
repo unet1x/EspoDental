@@ -1,0 +1,20 @@
+[
+    {"label": "Overview", "rows": [
+        [{"name": "name"}, {"name": "status"}],
+        [{"name": "user"}, {"name": "clinic"}],
+        [{"name": "profile"}, {"name": "currency"}],
+        [{"name": "periodFrom"}, {"name": "periodTo"}]
+    ]},
+    {"label": "Amounts", "rows": [
+        [{"name": "baseAmount"}, {"name": "hoursWorked"}],
+        [{"name": "revenueAmount"}, {"name": "revenueBasis"}],
+        [{"name": "assistantAmount"}, {"name": "visitsCount"}],
+        [{"name": "bonusAmount"}, {"name": "deductionAmount"}],
+        [{"name": "totalAmount"}, false]
+    ]},
+    {"label": "Workflow", "rows": [
+        [{"name": "approvedAt"}, {"name": "approvedBy"}],
+        [{"name": "paidAt"}, {"name": "paidPayment"}],
+        [{"name": "notes", "fullWidth": true}]
+    ]}
+]

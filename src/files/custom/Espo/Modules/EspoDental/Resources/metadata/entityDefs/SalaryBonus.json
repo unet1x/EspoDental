@@ -1,0 +1,34 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 200, "trim": true},
+        "user": {"type": "link", "required": true},
+        "kind": {
+            "type": "enum",
+            "options": ["bonus", "allowance", "penalty"],
+            "default": "bonus",
+            "style": {"bonus": "success", "allowance": "info", "penalty": "danger"}
+        },
+        "amount": {"type": "currency", "required": true, "default": 0},
+        "currency": {"type": "varchar", "maxLength": 8, "default": "RUB"},
+        "reason": {"type": "text"},
+        "dateApplied": {"type": "date", "required": true},
+        "status": {
+            "type": "enum",
+            "options": ["pending", "included", "cancelled"],
+            "default": "pending"
+        },
+        "includedInEntry": {"type": "link", "readOnly": true},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "user": {"type": "belongsTo", "entity": "User"},
+        "includedInEntry": {"type": "belongsTo", "entity": "SalaryEntry", "foreign": "bonuses"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "dateApplied", "order": "desc"},
+    "indexes": {"user_date": {"columns": ["userId", "dateApplied", "status"]}}
+}

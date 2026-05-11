@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/payroll-this-month",
+    "aclScope": "SalaryEntry",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Payroll This Month"},
+            "displayRecords": {"type": "int", "default": 8, "min": 1, "max": 30}
+        }
+    }
+}

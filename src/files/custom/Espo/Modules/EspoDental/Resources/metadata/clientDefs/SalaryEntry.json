@@ -1,0 +1,40 @@
+{
+    "controller": "controllers/record",
+    "color": "#8C564B",
+    "iconClass": "fas fa-money-check-alt",
+    "boolFilterList": ["thisMonth", "draftOnly", "paidOnly"],
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "build",
+                    "labelText": "Build",
+                    "style": "default",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/salary-entry/build"
+                },
+                {
+                    "name": "approve",
+                    "labelText": "Approve",
+                    "style": "primary",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/salary-entry/approve"
+                },
+                {
+                    "name": "pay",
+                    "labelText": "Pay",
+                    "style": "success",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/salary-entry/pay"
+                },
+                {
+                    "name": "cancel",
+                    "labelText": "Cancel",
+                    "style": "danger",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/salary-entry/cancel"
+                }
+            ]
+        }
+    }
+}

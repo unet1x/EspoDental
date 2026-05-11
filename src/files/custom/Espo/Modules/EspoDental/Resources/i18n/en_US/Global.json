@@ -22,7 +22,10 @@
         "StockMovement": "Stock Movement",
         "ServiceMaterial": "Service Material",
         "LowStockAlert": "Low Stock Alert",
-        "NotificationLog": "Notification"
+        "NotificationLog": "Notification",
+        "SalaryProfile": "Salary Profile",
+        "SalaryEntry": "Salary Entry",
+        "SalaryBonus": "Salary Bonus"
     },
     "scopeNamesPlural": {
         "Clinic": "Clinics",
@@ -47,7 +50,10 @@
         "StockMovement": "Stock Movements",
         "ServiceMaterial": "Service Materials",
         "LowStockAlert": "Low Stock Alerts",
-        "NotificationLog": "Notifications"
+        "NotificationLog": "Notifications",
+        "SalaryProfile": "Salary Profiles",
+        "SalaryEntry": "Salary Entries",
+        "SalaryBonus": "Salary Bonuses"
     },
     "labels": {
         "EspoDental": "Dental"
@@ -60,7 +66,8 @@
         "OpenInvoices": "Open Invoices",
         "LowStockMaterials": "Low Stock Materials",
         "RecentVisits": "Recent Visits",
-        "MonthlyRevenue": "Monthly Revenue"
+        "MonthlyRevenue": "Monthly Revenue",
+        "PayrollThisMonth": "Payroll This Month"
     },
     "boolFilters": {
         "today": "Today",
@@ -73,6 +80,9 @@
         "onlyActive": "Only Active",
         "lowStock": "Low Stock",
         "criticalStock": "Critical",
-        "onlyFailed": "Only Failed"
+        "onlyFailed": "Only Failed",
+        "draftOnly": "Drafts Only",
+        "paidOnly": "Paid Only",
+        "pendingOnly": "Pending Only"
     }
 }

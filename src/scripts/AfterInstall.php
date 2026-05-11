@@ -39,6 +39,9 @@ class AfterInstall
         'ServiceMaterial',
         'LowStockAlert',
         'NotificationLog',
+        'SalaryProfile',
+        'SalaryEntry',
+        'SalaryBonus',
     ];
 
     private const ROLES = [
@@ -66,6 +69,9 @@ class AfterInstall
                 'ServiceMaterial'      => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
                 'LowStockAlert'        => ['create' => 'no',  'read' => 'all',  'edit' => 'all',  'delete' => 'no',   'stream' => 'all'],
                 'NotificationLog'      => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
+                'SalaryProfile'        => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'all'],
+                'SalaryEntry'          => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'all'],
+                'SalaryBonus'          => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
             ],
         ],
         'EspoDental Doctor' => [
@@ -92,6 +98,9 @@ class AfterInstall
                 'ServiceMaterial'      => ['create' => 'no',  'read' => 'all',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'LowStockAlert'        => ['create' => 'no',  'read' => 'team', 'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'NotificationLog'      => ['create' => 'no',  'read' => 'team', 'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'SalaryProfile'        => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'SalaryEntry'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'own'],
+                'SalaryBonus'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
             ],
         ],
         'EspoDental Assistant' => [
@@ -118,6 +127,9 @@ class AfterInstall
                 'ServiceMaterial'      => ['create' => 'no',  'read' => 'all',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'LowStockAlert'        => ['create' => 'no',  'read' => 'no',   'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'NotificationLog'      => ['create' => 'no',  'read' => 'team', 'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'SalaryProfile'        => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'SalaryEntry'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'own'],
+                'SalaryBonus'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
             ],
         ],
         'EspoDental Administrator' => [
@@ -144,6 +156,9 @@ class AfterInstall
                 'ServiceMaterial'      => ['create' => 'no',  'read' => 'all',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'LowStockAlert'        => ['create' => 'no',  'read' => 'team', 'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
                 'NotificationLog'      => ['create' => 'yes', 'read' => 'team', 'edit' => 'team', 'delete' => 'no',   'stream' => 'no'],
+                'SalaryProfile'        => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'no',   'stream' => 'all'],
+                'SalaryEntry'          => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'no',   'stream' => 'all'],
+                'SalaryBonus'          => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
             ],
         ],
         'EspoDental Stock Manager' => [
@@ -170,6 +185,9 @@ class AfterInstall
                 'ServiceMaterial'      => ['create' => 'yes', 'read' => 'all',  'edit' => 'all',  'delete' => 'all',  'stream' => 'no'],
                 'LowStockAlert'        => ['create' => 'no',  'read' => 'all',  'edit' => 'all',  'delete' => 'no',   'stream' => 'all'],
                 'NotificationLog'      => ['create' => 'no',  'read' => 'no',   'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'SalaryProfile'        => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
+                'SalaryEntry'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'own'],
+                'SalaryBonus'          => ['create' => 'no',  'read' => 'own',  'edit' => 'no',   'delete' => 'no',   'stream' => 'no'],
             ],
         ],
     ];

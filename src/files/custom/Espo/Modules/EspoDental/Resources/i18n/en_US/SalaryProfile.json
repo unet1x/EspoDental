@@ -1,0 +1,24 @@
+{
+    "labels": {"Create SalaryProfile": "Create Salary Profile"},
+    "fields": {
+        "name": "Name", "user": "Employee", "clinic": "Clinic",
+        "roleType": "Role", "rateType": "Rate type", "baseRate": "Base rate",
+        "currency": "Currency", "revenuePercent": "Revenue %",
+        "assistantPercent": "Assistant %",
+        "dateStart": "Start", "dateEnd": "End",
+        "isActive": "Active", "notes": "Notes"
+    },
+    "options": {
+        "roleType": {
+            "doctor": "Doctor", "assistant": "Assistant",
+            "administrator": "Administrator", "stock_manager": "Stock Manager",
+            "manager": "Manager", "other": "Other"
+        },
+        "rateType": {
+            "fixed_monthly": "Fixed monthly", "hourly": "Hourly",
+            "per_visit": "Per visit", "none": "None"
+        }
+    },
+    "links": {"user": "Employee", "clinic": "Clinic", "entries": "Entries"},
+    "boolFilters": {"onlyActive": "Only Active"}
+}

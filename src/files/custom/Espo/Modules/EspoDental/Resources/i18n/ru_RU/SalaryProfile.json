@@ -1,0 +1,24 @@
+{
+    "labels": {"Create SalaryProfile": "Создать профиль ЗП"},
+    "fields": {
+        "name": "Название", "user": "Сотрудник", "clinic": "Клиника",
+        "roleType": "Роль", "rateType": "Тип ставки", "baseRate": "Ставка",
+        "currency": "Валюта", "revenuePercent": "% от выручки",
+        "assistantPercent": "% за ассистирование",
+        "dateStart": "С даты", "dateEnd": "По дату",
+        "isActive": "Активен", "notes": "Заметки"
+    },
+    "options": {
+        "roleType": {
+            "doctor": "Врач", "assistant": "Ассистент",
+            "administrator": "Администратор", "stock_manager": "Кладовщик",
+            "manager": "Управляющий", "other": "Прочее"
+        },
+        "rateType": {
+            "fixed_monthly": "Оклад месячный", "hourly": "Часовая",
+            "per_visit": "За приём", "none": "Без оклада"
+        }
+    },
+    "links": {"user": "Сотрудник", "clinic": "Клиника", "entries": "Начисления"},
+    "boolFilters": {"onlyActive": "Только активные"}
+}

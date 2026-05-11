@@ -1,0 +1,5 @@
+{
+    "boolFilterClassNameMap": {
+        "pendingOnly": "Espo\\Modules\\EspoDental\\Classes\\Select\\SalaryBonus\\BoolFilters\\PendingOnly"
+    }
+}

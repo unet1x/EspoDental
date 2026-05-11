@@ -22,7 +22,10 @@
         "StockMovement": "Складская операция",
         "ServiceMaterial": "Норма списания",
         "LowStockAlert": "Алерт остатка",
-        "NotificationLog": "Уведомление"
+        "NotificationLog": "Уведомление",
+        "SalaryProfile": "Профиль ЗП",
+        "SalaryEntry": "Начисление ЗП",
+        "SalaryBonus": "Бонус/штраф"
     },
     "scopeNamesPlural": {
         "Clinic": "Клиники",
@@ -47,7 +50,10 @@
         "StockMovement": "Складские операции",
         "ServiceMaterial": "Нормы списания",
         "LowStockAlert": "Алерты остатка",
-        "NotificationLog": "Уведомления"
+        "NotificationLog": "Уведомления",
+        "SalaryProfile": "Профили ЗП",
+        "SalaryEntry": "Начисления ЗП",
+        "SalaryBonus": "Бонусы/штрафы"
     },
     "labels": {
         "EspoDental": "Стоматология"
@@ -60,7 +66,8 @@
         "OpenInvoices": "Открытые счета",
         "LowStockMaterials": "Низкий остаток",
         "RecentVisits": "Недавние приёмы",
-        "MonthlyRevenue": "Выручка по месяцам"
+        "MonthlyRevenue": "Выручка по месяцам",
+        "PayrollThisMonth": "ЗП за месяц"
     },
     "boolFilters": {
         "today": "Сегодня",
@@ -73,6 +80,9 @@
         "onlyActive": "Только активные",
         "lowStock": "Низкий остаток",
         "criticalStock": "Критический",
-        "onlyFailed": "Только с ошибкой"
+        "onlyFailed": "Только с ошибкой",
+        "draftOnly": "Только черновики",
+        "paidOnly": "Только выплаченные",
+        "pendingOnly": "Только ожидающие"
     }
 }

@@ -1,0 +1,24 @@
+{
+    "labels": {"Create SalaryProfile": "Crear perfil salarial"},
+    "fields": {
+        "name": "Nombre", "user": "Empleado", "clinic": "Clinica",
+        "roleType": "Rol", "rateType": "Tipo de tarifa", "baseRate": "Tarifa base",
+        "currency": "Moneda", "revenuePercent": "% de ingresos",
+        "assistantPercent": "% asistente",
+        "dateStart": "Desde", "dateEnd": "Hasta",
+        "isActive": "Activo", "notes": "Notas"
+    },
+    "options": {
+        "roleType": {
+            "doctor": "Doctor", "assistant": "Asistente",
+            "administrator": "Administrador", "stock_manager": "Almacenero",
+            "manager": "Gerente", "other": "Otro"
+        },
+        "rateType": {
+            "fixed_monthly": "Fijo mensual", "hourly": "Por hora",
+            "per_visit": "Por visita", "none": "Ninguno"
+        }
+    },
+    "links": {"user": "Empleado", "clinic": "Clinica", "entries": "Nominas"},
+    "boolFilters": {"onlyActive": "Solo activos"}
+}

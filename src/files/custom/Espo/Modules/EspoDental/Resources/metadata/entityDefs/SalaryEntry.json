@@ -1,0 +1,56 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "user": {"type": "link", "required": true},
+        "clinic": {"type": "link"},
+        "profile": {"type": "link"},
+        "periodFrom": {"type": "date", "required": true},
+        "periodTo": {"type": "date", "required": true},
+        "status": {
+            "type": "enum",
+            "options": ["draft", "approved", "paid", "cancelled"],
+            "default": "draft",
+            "audited": true,
+            "style": {
+                "draft": "default",
+                "approved": "primary",
+                "paid": "success",
+                "cancelled": "muted"
+            }
+        },
+        "baseAmount": {"type": "currency", "default": 0},
+        "revenueAmount": {"type": "currency", "default": 0},
+        "assistantAmount": {"type": "currency", "default": 0},
+        "bonusAmount": {"type": "currency", "default": 0},
+        "deductionAmount": {"type": "currency", "default": 0},
+        "totalAmount": {"type": "currency", "default": 0, "readOnly": true},
+        "currency": {"type": "varchar", "maxLength": 8, "default": "RUB"},
+        "revenueBasis": {"type": "currency", "default": 0, "readOnly": true},
+        "visitsCount": {"type": "int", "default": 0, "readOnly": true},
+        "hoursWorked": {"type": "float", "default": 0},
+        "notes": {"type": "text"},
+        "approvedAt": {"type": "datetime", "readOnly": true},
+        "approvedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "paidAt": {"type": "datetime", "readOnly": true},
+        "paidPayment": {"type": "link", "readOnly": true},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "user": {"type": "belongsTo", "entity": "User"},
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "profile": {"type": "belongsTo", "entity": "SalaryProfile", "foreign": "entries"},
+        "approvedBy": {"type": "belongsTo", "entity": "User"},
+        "paidPayment": {"type": "belongsTo", "entity": "Payment"},
+        "bonuses": {"type": "hasMany", "entity": "SalaryBonus", "foreign": "includedInEntry"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "periodFrom", "order": "desc"},
+    "indexes": {
+        "user_period": {"columns": ["userId", "periodFrom"]},
+        "status": {"columns": ["status"]}
+    }
+}

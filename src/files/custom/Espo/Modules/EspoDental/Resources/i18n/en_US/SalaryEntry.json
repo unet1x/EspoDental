@@ -1,0 +1,23 @@
+{
+    "labels": {
+        "Create SalaryEntry": "Create Salary Entry",
+        "Build": "Build", "Approve": "Approve", "Pay": "Pay", "Cancel": "Cancel",
+        "Built": "Built", "Approved": "Approved", "Paid": "Paid", "Cancelled": "Cancelled",
+        "Overview": "Overview", "Amounts": "Amounts", "Workflow": "Workflow"
+    },
+    "fields": {
+        "name": "Name", "user": "Employee", "clinic": "Clinic", "profile": "Profile",
+        "periodFrom": "Period from", "periodTo": "Period to",
+        "baseAmount": "Base/Hours", "revenueAmount": "Doctor %", "assistantAmount": "Assistant %",
+        "bonusAmount": "Bonuses", "deductionAmount": "Deductions", "totalAmount": "Total",
+        "currency": "Currency", "revenueBasis": "Revenue basis", "visitsCount": "Visits",
+        "hoursWorked": "Hours", "status": "Status",
+        "approvedAt": "Approved at", "approvedBy": "Approved by",
+        "paidAt": "Paid at", "paidPayment": "Payout payment", "notes": "Notes"
+    },
+    "options": {
+        "status": {"draft": "Draft", "approved": "Approved", "paid": "Paid", "cancelled": "Cancelled"}
+    },
+    "links": {"user": "Employee", "clinic": "Clinic", "profile": "Profile", "bonuses": "Bonuses", "paidPayment": "Payment"},
+    "boolFilters": {"thisMonth": "This month", "draftOnly": "Drafts only", "paidOnly": "Paid only"}
+}
