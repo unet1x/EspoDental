@@ -44,8 +44,8 @@ x-espo-common-env: &espo-common-env
 
 x-espo-common-volumes: &espo-common-volumes
   - /volume2/espodental-staging/data:/var/www/html/data
-  - /volume1/espomodule-staging/src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental
-  - /volume1/espomodule-staging/src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental
+  - ${MODULE_HOST_PATH:-/volume1/espomodule-staging}/src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental
+  - ${MODULE_HOST_PATH:-/volume1/espomodule-staging}/src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental
 
 services:
   mariadb:

@@ -152,4 +152,60 @@ final class Phase16MetadataTest extends TestCase
         );
         $this->assertSame('0.16.0', $manifest['version']);
     }
+
+    public function testModuleHostPathIsEnvDriven(): void
+    {
+        $prod = (string) file_get_contents(self::ROOT . '/deploy/docker-compose.yml');
+        $this->assertStringContainsString(
+            '${MODULE_HOST_PATH:-/volume1/espomodule}',
+            $prod,
+            'prod compose should reference MODULE_HOST_PATH with backwards-compatible default'
+        );
+
+        $staging = (string) file_get_contents(self::ROOT . '/deploy/staging/docker-compose.yml');
+        $this->assertStringContainsString(
+            '${MODULE_HOST_PATH:-/volume1/espomodule-staging}',
+            $staging,
+            'staging compose should reference MODULE_HOST_PATH'
+        );
+
+        $envExample = (string) file_get_contents(self::ROOT . '/deploy/.env.example');
+        $this->assertStringContainsString(
+            'MODULE_HOST_PATH=/volume1/espomodule-prod',
+            $envExample
+        );
+    }
+
+    public function testSynologyInstallGuideExists(): void
+    {
+        $path = self::ROOT . '/docs/install-synology.md';
+        $this->assertFileExists($path);
+        $body = (string) file_get_contents($path);
+        foreach (
+            ['Container Manager', 'Reverse Proxy', 'espo-dental-seed-roles',
+                'nightly.sh', 'Telegram', 'staging', 'MODULE_HOST_PATH',
+                '/volume1/espomodule-prod', '/volume1/espomodule-staging',
+                'Финальная проверка', 'специального технического образования',
+                'BotFather', 'Let\'s Encrypt'] as $needle
+        ) {
+            $this->assertStringContainsString(
+                $needle,
+                $body,
+                "install-synology.md must mention '${needle}'"
+            );
+        }
+        $partsHeadings = preg_match_all('/^## Часть \d+/m', $body);
+        $this->assertGreaterThanOrEqual(
+            11,
+            $partsHeadings,
+            'guide should have at least 11 numbered Часть sections'
+        );
+    }
+
+    public function testReadmeLinksToInstallGuide(): void
+    {
+        $body = (string) file_get_contents(self::ROOT . '/README.md');
+        $this->assertStringContainsString('docs/install-synology.md', $body);
+        $this->assertStringContainsString('non-technical clinic administrators', $body);
+    }
 }

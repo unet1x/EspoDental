@@ -6,12 +6,15 @@
 # Required host directories (create them once, set proper ownership):
 #   /volume1/docker/espodental/bd        - MariaDB data
 #   /volume2/espodental/data             - EspoCRM 'data' (uploads, config, logs, cache)
-#   /volume1/espomodule                  - EspoDental module sources (git clone)
+#   ${MODULE_HOST_PATH}                  - EspoDental module sources (git clone)
+#                                          Defaults to /volume1/espomodule for backwards
+#                                          compatibility; new installs use
+#                                          /volume1/espomodule-prod.
 #
 # Ownership (DSM SSH):
 #   sudo chown -R 999:999 /volume1/docker/espodental/bd
 #   sudo chown -R 33:33   /volume2/espodental/data
-#   sudo chown -R 33:33   /volume1/espomodule
+#   sudo chown -R 33:33   ${MODULE_HOST_PATH}
 # (33 = www-data inside the espocrm image, 999 = mysql inside the mariadb image)
 
 name: espodental
@@ -40,8 +43,8 @@ x-espo-common-env: &espo-common-env
 
 x-espo-common-volumes: &espo-common-volumes
   - /volume2/espodental/data:/var/www/html/data
-  - /volume1/espomodule/src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental
-  - /volume1/espomodule/src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental
+  - ${MODULE_HOST_PATH:-/volume1/espomodule}/src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental
+  - ${MODULE_HOST_PATH:-/volume1/espomodule}/src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental
 
 services:
   mariadb:

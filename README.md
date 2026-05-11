@@ -160,6 +160,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
 
 ### Documentation
 
+- **[docs/install-synology.md](docs/install-synology.md)** — clean Synology
+  install, step-by-step, written for non-technical clinic administrators (RU)
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -281,6 +283,9 @@ EspoDental поставляется со вторым compose-стеком
 
 ### Документация
 
+- **[docs/install-synology.md](docs/install-synology.md)** — пошаговая
+  установка на Synology с нуля для администратора клиники без
+  специального технического образования
 - [docs/admin-guide.md](docs/admin-guide.md) — установка, обновление,
   бэкап, мульти-клиника, staging + ночной конвейер (раздел 9)
 - [docs/user-guide.md](docs/user-guide.md) — повседневные сценарии: регистратура, доктор, менеджер
