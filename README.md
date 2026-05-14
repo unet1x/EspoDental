@@ -162,6 +162,11 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
 
 - **[docs/install-synology.md](docs/install-synology.md)** — clean Synology
   install, step-by-step, written for non-technical clinic administrators (RU)
+- [docs/product-spec.md](docs/product-spec.md) — product specification and hard workflow invariants
+- [docs/current-state.md](docs/current-state.md) — verified implementation state and known gaps
+- [docs/roadmap.md](docs/roadmap.md) — vertical-slice implementation plan
+- [docs/acceptance-checklist.md](docs/acceptance-checklist.md) — end-to-end acceptance checks
+- [docs/dev-runbook.md](docs/dev-runbook.md) — commands for local development and verification
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
