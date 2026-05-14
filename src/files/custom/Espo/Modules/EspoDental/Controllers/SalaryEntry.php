@@ -5,21 +5,15 @@ declare(strict_types=1);
 namespace Espo\Modules\EspoDental\Controllers;
 
 use Espo\Core\Api\Request;
+use Espo\Core\Controllers\Record;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Entities\User;
 use Espo\Modules\EspoDental\Entities\Payment;
 use Espo\Modules\EspoDental\Services\SalaryService;
 use stdClass;
 
-class SalaryEntry
+class SalaryEntry extends Record
 {
-    public function __construct(
-        private readonly SalaryService $salaryService,
-        private readonly User $user
-    ) {
-    }
-
     /**
      * @return stdClass
      */
@@ -34,7 +28,10 @@ class SalaryEntry
         if ($userId === '' || $periodFrom === '' || $periodTo === '') {
             throw new BadRequest('userId, periodFrom and periodTo are required');
         }
-        $entry = $this->salaryService->buildEntry($userId, $periodFrom, $periodTo, $profileId);
+        /** @var SalaryService $salaryService */
+        $salaryService = $this->injectableFactory->create(SalaryService::class);
+
+        $entry = $salaryService->buildEntry($userId, $periodFrom, $periodTo, $profileId);
         return (object) ['id' => $entry->getId(), 'total' => $entry->getTotalAmount()];
     }
 
@@ -45,7 +42,10 @@ class SalaryEntry
         if ($id === '') {
             throw new BadRequest('id required');
         }
-        $entry = $this->salaryService->approveEntry($id, $this->user);
+        /** @var SalaryService $salaryService */
+        $salaryService = $this->injectableFactory->create(SalaryService::class);
+
+        $entry = $salaryService->approveEntry($id, $this->user);
         return (object) ['id' => $entry->getId(), 'status' => $entry->getStatus()];
     }
 
@@ -58,7 +58,10 @@ class SalaryEntry
         if ($id === '') {
             throw new BadRequest('id required');
         }
-        $entry = $this->salaryService->payEntry($id, $method);
+        /** @var SalaryService $salaryService */
+        $salaryService = $this->injectableFactory->create(SalaryService::class);
+
+        $entry = $salaryService->payEntry($id, $method);
         return (object) [
             'id' => $entry->getId(),
             'status' => $entry->getStatus(),
@@ -73,7 +76,10 @@ class SalaryEntry
         if ($id === '') {
             throw new BadRequest('id required');
         }
-        $entry = $this->salaryService->cancelEntry($id);
+        /** @var SalaryService $salaryService */
+        $salaryService = $this->injectableFactory->create(SalaryService::class);
+
+        $entry = $salaryService->cancelEntry($id);
         return (object) ['id' => $entry->getId(), 'status' => $entry->getStatus()];
     }
 

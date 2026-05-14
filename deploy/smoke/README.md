@@ -1,7 +1,7 @@
 # EspoDental smoke test
 
 Boots a disposable MariaDB + EspoCRM 9.2.7 stack with the module sources
-mounted as read-only volumes, waits for the EspoCRM installer page to
+mounted into the EspoCRM container, waits for the EspoCRM installer page to
 return HTTP 200 and verifies that the module entry-points are visible
 inside the container.
 

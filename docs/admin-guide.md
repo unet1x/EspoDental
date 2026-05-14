@@ -57,14 +57,15 @@ make build
 ### 2.3 What `AfterInstall.php` does
 
 When you install the module via **Administration → Extensions**, the bundled
-`AfterInstall.php` runs automatically and does **three** things:
+`AfterInstall.php` runs automatically and prepares a ready-to-work workspace:
 
 - Creates 5 teams (`EspoDental Doctors`, `EspoDental Assistants`, …).
 - Creates 5 ACL roles (`EspoDental Manager`, `Doctor`, `Assistant`,
   `Administrator`, `Stock Manager`) with the full permission matrix across
   the 29 module scopes.
-- Creates 8 starter service categories (Therapy, Surgery, Orthopedics,
-  Orthodontics, Hygiene, Diagnostics, Implantology, Pediatric).
+- Creates starter clinic data: one clinic, 5 cabinets, service categories,
+  price-list services, material categories, starter stock, scheduled jobs,
+  dashboard and menu layout.
 
 The operation is **idempotent** — re-running it on existing installs is safe
 and skips records that already exist.
@@ -73,10 +74,12 @@ For **Docker volume-mount installs** the Extensions UI flow is not used.
 Run the same seeder from CLI:
 
 ```bash
-docker compose exec espocrm php command.php espo-dental-seed-roles
+docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
 The CLI command writes a summary of how many records were created.
+`espo-dental-bootstrap` is the preferred alias; `espo-dental-seed-roles`
+is kept for backwards compatibility.
 
 ### 2.1 Установка на Synology DSM
 
@@ -105,8 +108,9 @@ The CLI command writes a summary of how many records were created.
 - Создаёт 5 команд (`EspoDental Doctors`, `EspoDental Assistants`, …).
 - Создаёт 5 ролей (`EspoDental Manager / Doctor / Assistant / Administrator /
   Stock Manager`) с полной матрицей прав по 29 scope-ам модуля.
-- Создаёт 8 стартовых категорий услуг (Therapy, Surgery, Orthopedics,
-  Orthodontics, Hygiene, Diagnostics, Implantology, Pediatric).
+- Создаёт стартовое рабочее место: клинику, 5 кабинетов, категории услуг,
+  прайс, складские категории, начальные остатки, регламентные задания,
+  dashboard и порядок меню.
 
 Операция **идемпотентна** — повторный запуск безопасен и пропускает
 существующие записи.
@@ -115,10 +119,11 @@ The CLI command writes a summary of how many records were created.
 можно запустить тот же сидер из CLI:
 
 ```bash
-docker compose exec espocrm php command.php espo-dental-seed-roles
+docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
 Команда печатает короткую сводку: сколько записей было создано.
+Старая команда `espo-dental-seed-roles` оставлена как совместимый алиас.
 
 ---
 
@@ -401,7 +406,7 @@ sudo git checkout v0.17.0          # or 'main' for trunk
 
 cd /volume1/docker/espodental-staging
 sudo docker compose exec espocrm php rebuild.php
-sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+sudo docker compose exec espocrm php command.php espo-dental-bootstrap
 
 # Open https://staging-dental.example.com/ → smoke-test as admin:
 #   - dashboard loads
@@ -419,7 +424,7 @@ sudo git checkout v0.17.0          # same ref as staging
 
 cd /volume1/docker/espodental
 sudo docker compose exec espocrm php rebuild.php
-sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+sudo docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
 The next nightly run will reset staging back to a *fresh prod copy*, so any
@@ -437,7 +442,7 @@ sudo git checkout v0.17.0
 
 cd /volume1/docker/espodental-staging
 sudo docker compose exec espocrm php rebuild.php
-sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+sudo docker compose exec espocrm php command.php espo-dental-bootstrap
 
 # Открыть https://staging-dental.example.com/ и пройти приёмку:
 #   - дашборд грузится
@@ -455,7 +460,7 @@ sudo git checkout v0.17.0
 
 cd /volume1/docker/espodental
 sudo docker compose exec espocrm php rebuild.php
-sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+sudo docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
 Следующий ночной прогон сбросит staging до свежей копии прода — все ручные
@@ -471,7 +476,7 @@ sudo git checkout v0.16.0          # previous tag
 
 cd /volume1/docker/espodental
 sudo docker compose exec espocrm php rebuild.php
-sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+sudo docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
 If schema changes were applied that the previous tag does not understand —
@@ -493,7 +498,7 @@ sudo git checkout v0.16.0
 
 cd /volume1/docker/espodental
 sudo docker compose exec espocrm php rebuild.php
-sudo docker compose exec espocrm php command.php espo-dental-seed-roles
+sudo docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
 Если изменения схемы несовместимы с откатываемым тегом — восстанови

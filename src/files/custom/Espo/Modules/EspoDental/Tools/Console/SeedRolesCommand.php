@@ -8,31 +8,45 @@ use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
 use Espo\Core\ORM\EntityManager;
-use Espo\Modules\EspoDental\Tools\Installer\RoleSeeder;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Modules\EspoDental\Tools\Installer\WorkspaceSeeder;
 
 /**
- * CLI entry-point that seeds EspoDental teams, roles and starter service
- * categories. Use it for Docker volume-mount installs where the extension
- * installer flow is not used.
+ * CLI entry-point that seeds a ready-to-work EspoDental workspace. Use it for
+ * Docker volume-mount installs where the extension installer flow is not used.
  *
  * Run:
- *   php command.php espo-dental-seed-roles
+ *   php command.php espo-dental-bootstrap
  */
 class SeedRolesCommand implements Command
 {
-    public function __construct(private readonly EntityManager $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManager $entityManager,
+        private readonly ConfigWriter $configWriter
+    ) {
     }
 
     public function run(Params $params, IO $io): void
     {
-        $io->writeLine('Seeding EspoDental teams, roles, service categories...');
-        $result = (new RoleSeeder($this->entityManager))->seed();
+        $io->writeLine('Seeding EspoDental workspace...');
+        $result = (new WorkspaceSeeder($this->entityManager, $this->configWriter))->seed();
         $io->writeLine(sprintf(
-            'Done. Created %d team(s), %d role(s), %d service category(-ies).',
+            'Done. Created %d team(s), %d role(s), %d service category(-ies), %d clinic(s), %d cabinet(s), ' .
+            '%d material category(-ies), %d service(s), %d material(s), %d service material link(s), ' .
+            '%d stock movement(s), %d scheduled job(s), %d dashboard template(s). Settings updated: %s.',
             $result['teams'],
             $result['roles'],
-            $result['serviceCategories']
+            $result['serviceCategories'],
+            $result['clinics'],
+            $result['cabinets'],
+            $result['materialCategories'],
+            $result['services'],
+            $result['materials'],
+            $result['serviceMaterials'],
+            $result['stockMovements'],
+            $result['scheduledJobs'],
+            $result['dashboardTemplates'],
+            $result['settings'] > 0 ? 'yes' : 'no'
         ));
         $io->writeLine('Re-run is safe: the command is idempotent.');
     }

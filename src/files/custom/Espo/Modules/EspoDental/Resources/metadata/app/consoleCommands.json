@@ -1,5 +1,10 @@
 {
-    "espo-dental-seed-roles": {
-        "className": "Espo\\Modules\\EspoDental\\Tools\\Console\\SeedRolesCommand"
+    "espoDentalSeedRoles": {
+        "className": "Espo\\Modules\\EspoDental\\Tools\\Console\\SeedRolesCommand",
+        "listed": true
+    },
+    "espoDentalBootstrap": {
+        "className": "Espo\\Modules\\EspoDental\\Tools\\Console\\SeedRolesCommand",
+        "listed": true
     }
 }

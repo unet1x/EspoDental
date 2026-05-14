@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 use Espo\Core\Container;
 use Espo\Core\ORM\EntityManager;
-use Espo\Modules\EspoDental\Tools\Installer\RoleSeeder;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Modules\EspoDental\Tools\Installer\WorkspaceSeeder;
 
 class AfterInstall
 {
@@ -12,6 +13,8 @@ class AfterInstall
     {
         /** @var EntityManager $em */
         $em = $container->getByClass(EntityManager::class);
-        (new RoleSeeder($em))->seed();
+        /** @var ConfigWriter $configWriter */
+        $configWriter = $container->getByClass(ConfigWriter::class);
+        (new WorkspaceSeeder($em, $configWriter))->seed();
     }
 }

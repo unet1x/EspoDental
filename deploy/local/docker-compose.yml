@@ -1,0 +1,93 @@
+# Local EspoDental stack for development and smoke-checking on a workstation.
+# Run from the repository root:
+#   docker compose -f deploy/local/docker-compose.yml up -d
+
+name: espodental-local
+
+x-espo-common-env: &espo-common-env
+  ESPOCRM_DATABASE_PLATFORM: Mysql
+  ESPOCRM_DATABASE_HOST: mariadb
+  ESPOCRM_DATABASE_PORT: 3306
+  ESPOCRM_DATABASE_NAME: ${ESPOCRM_DATABASE_NAME:-espodental}
+  ESPOCRM_DATABASE_USER: ${ESPOCRM_DATABASE_USER:-espodental}
+  ESPOCRM_DATABASE_PASSWORD: ${ESPOCRM_DATABASE_PASSWORD:-espodental-db}
+  ESPOCRM_ADMIN_USERNAME: ${ESPOCRM_ADMIN_USERNAME:-admin}
+  ESPOCRM_ADMIN_PASSWORD: ${ESPOCRM_ADMIN_PASSWORD:-espodental-admin}
+  ESPOCRM_SITE_URL: ${ESPOCRM_SITE_URL:-http://localhost:18080}
+  ESPOCRM_CONFIG_USE_WEB_SOCKET: "true"
+  ESPOCRM_CONFIG_WEB_SOCKET_URL: ${ESPOCRM_WEBSOCKET_URL:-ws://localhost:18081}
+  ESPOCRM_CONFIG_WEB_SOCKET_ZERO_M_Q_SUBSCRIBER_DSN: tcp://espocrm-websocket:7777
+  ESPOCRM_CONFIG_WEB_SOCKET_ZERO_M_Q_SUBMISSION_DSN: tcp://espocrm-websocket:7777
+  ESPOCRM_CONFIG_DEFAULT_LANGUAGE: ${ESPOCRM_DEFAULT_LANGUAGE:-ru_RU}
+  ESPOCRM_CONFIG_TIMEZONE: ${TZ:-Europe/Madrid}
+  PHP_MAX_EXECUTION_TIME: ${PHP_MAX_EXECUTION_TIME:-180}
+  PHP_MEMORY_LIMIT: ${PHP_MEMORY_LIMIT:-512M}
+  PHP_UPLOAD_MAX_FILE_SIZE: ${PHP_UPLOAD_MAX_FILE_SIZE:-64M}
+  PHP_POST_MAX_SIZE: ${PHP_POST_MAX_SIZE:-64M}
+  TZ: ${TZ:-Europe/Madrid}
+
+x-espo-common-volumes: &espo-common-volumes
+  - espocrm-app:/var/www/html
+  - espocrm-data:/var/www/html/data
+  - ../../src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental
+  - ../../src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental
+
+services:
+  mariadb:
+    image: mariadb:10.11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-espodental-root}
+      MARIADB_DATABASE: ${ESPOCRM_DATABASE_NAME:-espodental}
+      MARIADB_USER: ${ESPOCRM_DATABASE_USER:-espodental}
+      MARIADB_PASSWORD: ${ESPOCRM_DATABASE_PASSWORD:-espodental-db}
+      TZ: ${TZ:-Europe/Madrid}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    restart: unless-stopped
+
+  espocrm:
+    image: espocrm/espocrm:9.2.7
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      <<: *espo-common-env
+    volumes: *espo-common-volumes
+    ports:
+      - "${ESPOCRM_HTTP_PORT:-18080}:80"
+    restart: unless-stopped
+
+  espocrm-daemon:
+    image: espocrm/espocrm:9.2.7
+    depends_on:
+      espocrm:
+        condition: service_started
+    environment:
+      <<: *espo-common-env
+      ESPOCRM_CONFIG_CRON_DISABLED: "false"
+    volumes: *espo-common-volumes
+    entrypoint: docker-daemon.sh
+    restart: unless-stopped
+
+  espocrm-websocket:
+    image: espocrm/espocrm:9.2.7
+    depends_on:
+      espocrm:
+        condition: service_started
+    environment:
+      <<: *espo-common-env
+    volumes: *espo-common-volumes
+    entrypoint: docker-websocket.sh
+    ports:
+      - "${ESPOCRM_WS_PORT:-18081}:8080"
+    restart: unless-stopped
+
+volumes:
+  espocrm-app:
+  mariadb-data:
+  espocrm-data:

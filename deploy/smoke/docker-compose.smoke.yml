@@ -35,9 +35,9 @@ services:
       ESPOCRM_DATABASE_PASSWORD: smoke-secret
       ESPOCRM_ADMIN_USERNAME: admin
       ESPOCRM_ADMIN_PASSWORD: smoke-admin
-      ESPOCRM_SITE_URL: http://localhost:18080
+      ESPOCRM_SITE_URL: http://localhost:${SMOKE_PORT:-18080}
     volumes:
-      - ../../src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental:ro
-      - ../../src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental:ro
+      - ../../src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental
+      - ../../src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental
     ports:
-      - "18080:80"
+      - "${SMOKE_PORT:-18080}:80"

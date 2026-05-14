@@ -74,15 +74,15 @@ docker compose ps                                # wait until both healthy
 # 5. Finish EspoCRM installer in a browser: open http://<nas>:8080/
 #    Database / admin fields are pre-filled from .env, click Next.
 
-# 6. Register the module and seed teams + roles + service categories.
+# 6. Register the module and seed the ready-to-work dental workspace.
 docker compose exec espocrm php rebuild.php
-docker compose exec espocrm php command.php espo-dental-seed-roles
+docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
 The last command is idempotent — safe to re-run after every upgrade. It
 creates the five `EspoDental ...` teams, the five `EspoDental ...` roles
-with the full ACL matrix, and the eight starter service categories
-(Therapy, Surgery, Orthopedics, …).
+with the full ACL matrix, the starter clinic, five cabinets, service and
+material catalogs, scheduled jobs, and a default dental dashboard/menu.
 
 Assign the roles to users in **Administration → Users**, then move on to
 [docs/user-guide.md](docs/user-guide.md) for day-to-day workflows.
@@ -155,7 +155,7 @@ pipeline at [`deploy/scripts/nightly.sh`](deploy/scripts/nightly.sh):
 
 Promotion is **git-only**: after staging passes the smoke test, `git pull`
 the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
-`espo-dental-seed-roles`. Full procedure in
+`espo-dental-bootstrap`. Full procedure in
 [`docs/admin-guide.md` §9](docs/admin-guide.md).
 
 ### Documentation
@@ -224,14 +224,15 @@ docker compose ps                                # дождаться healthy
 # 5. Пройти установщик EspoCRM в браузере: http://<nas>:8080/
 #    Поля БД/админа подставлены из .env, жми Next.
 
-# 6. Зарегистрировать модуль и засеять команды, роли, категории услуг.
+# 6. Зарегистрировать модуль и подготовить рабочее место.
 docker compose exec espocrm php rebuild.php
-docker compose exec espocrm php command.php espo-dental-seed-roles
+docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
 Последняя команда идемпотентна — её можно перезапускать после каждого
 обновления. Она создаёт 5 команд `EspoDental ...`, 5 ролей с матрицей
-прав и 8 стартовых категорий услуг.
+прав, стартовую клинику, 5 кабинетов, прайс, складские справочники,
+регламентные задания и рабочий dashboard/menu для стоматологии.
 
 Назначь роли пользователям в **Администрирование → Пользователи** и
 переходи к [docs/user-guide.md](docs/user-guide.md).
@@ -278,7 +279,7 @@ EspoDental поставляется со вторым compose-стеком
 
 Раскатка строго через **git**: после ручной приёмки на staging — `git pull`
 того же тега в `/volume1/espomodule-prod`, затем `rebuild.php` +
-`espo-dental-seed-roles`. Подробный сценарий — в
+`espo-dental-bootstrap`. Подробный сценарий — в
 [`docs/admin-guide.md`, раздел 9](docs/admin-guide.md).
 
 ### Документация

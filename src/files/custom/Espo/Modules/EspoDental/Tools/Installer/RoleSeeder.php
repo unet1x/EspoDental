@@ -41,14 +41,26 @@ class RoleSeeder
 
     /** @var list<array{name: string, code: string, order: int, color: string}> */
     public const SERVICE_CATEGORIES = [
-        ['name' => 'Therapy',      'code' => 'THE', 'order' => 10, 'color' => '#1F77B4'],
-        ['name' => 'Surgery',      'code' => 'SUR', 'order' => 20, 'color' => '#D62728'],
-        ['name' => 'Orthopedics',  'code' => 'ORP', 'order' => 30, 'color' => '#FF7F0E'],
-        ['name' => 'Orthodontics', 'code' => 'ORD', 'order' => 40, 'color' => '#2CA02C'],
-        ['name' => 'Hygiene',      'code' => 'HYG', 'order' => 50, 'color' => '#17BECF'],
-        ['name' => 'Diagnostics',  'code' => 'DIA', 'order' => 60, 'color' => '#9467BD'],
-        ['name' => 'Implantology', 'code' => 'IMP', 'order' => 70, 'color' => '#8C564B'],
-        ['name' => 'Pediatric',    'code' => 'PED', 'order' => 80, 'color' => '#E377C2'],
+        ['name' => 'Терапия',              'code' => 'THE', 'order' => 10, 'color' => '#1F77B4'],
+        ['name' => 'Хирургия',             'code' => 'SUR', 'order' => 20, 'color' => '#D62728'],
+        ['name' => 'Ортопедия',            'code' => 'ORP', 'order' => 30, 'color' => '#FF7F0E'],
+        ['name' => 'Ортодонтия',           'code' => 'ORD', 'order' => 40, 'color' => '#2CA02C'],
+        ['name' => 'Гигиена',              'code' => 'HYG', 'order' => 50, 'color' => '#17BECF'],
+        ['name' => 'Диагностика',          'code' => 'DIA', 'order' => 60, 'color' => '#9467BD'],
+        ['name' => 'Имплантология',        'code' => 'IMP', 'order' => 70, 'color' => '#8C564B'],
+        ['name' => 'Детская стоматология', 'code' => 'PED', 'order' => 80, 'color' => '#E377C2'],
+    ];
+
+    /** @var array<string, string> */
+    private const LEGACY_SERVICE_CATEGORY_NAMES = [
+        'THE' => 'Therapy',
+        'SUR' => 'Surgery',
+        'ORP' => 'Orthopedics',
+        'ORD' => 'Orthodontics',
+        'HYG' => 'Hygiene',
+        'DIA' => 'Diagnostics',
+        'IMP' => 'Implantology',
+        'PED' => 'Pediatric',
     ];
 
     public function __construct(private readonly EntityManager $entityManager)
@@ -117,6 +129,14 @@ class RoleSeeder
                 ->where(['code' => $cfg['code']])
                 ->findOne();
             if ($existing) {
+                if (
+                    (string) $existing->get('name') === (self::LEGACY_SERVICE_CATEGORY_NAMES[$cfg['code']] ?? '')
+                ) {
+                    $existing->set('name', $cfg['name']);
+                    $existing->set('order', $cfg['order']);
+                    $existing->set('color', $cfg['color']);
+                    $this->entityManager->saveEntity($existing);
+                }
                 continue;
             }
             $cat = $this->entityManager->getRDBRepository('ServiceCategory')->getNew();

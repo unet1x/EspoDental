@@ -43,6 +43,7 @@ x-espo-common-env: &espo-common-env
   TZ: ${TZ}
 
 x-espo-common-volumes: &espo-common-volumes
+  - espocrm-staging-app:/var/www/html
   - /volume2/espodental-staging/data:/var/www/html/data
   - ${MODULE_HOST_PATH:-/volume1/espomodule-staging}/src/files/custom/Espo/Modules/EspoDental:/var/www/html/custom/Espo/Modules/EspoDental
   - ${MODULE_HOST_PATH:-/volume1/espomodule-staging}/src/files/client/custom/modules/espo-dental:/var/www/html/client/custom/modules/espo-dental
@@ -117,3 +118,6 @@ services:
 networks:
   espodental-staging:
     driver: bridge
+
+volumes:
+  espocrm-staging-app:

@@ -4,68 +4,68 @@
         "method": "post",
         "noAuth": true,
         "params": {
-            "controller": "Espo\\Modules\\EspoDental\\Controllers\\PublicHealthQuestionnaire",
+            "controller": "PublicHealthQuestionnaire",
             "action": "submit"
         }
     },
     {
         "route": "/EspoDental/Report/monthlyRevenue",
         "method": "get",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Report", "action": "monthlyRevenue"}
+        "params": {"controller": "Report", "action": "monthlyRevenue"}
     },
     {
         "route": "/EspoDental/Report/invoiceSummary",
         "method": "get",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Report", "action": "invoiceSummary"}
+        "params": {"controller": "Report", "action": "invoiceSummary"}
     },
     {
         "route": "/EspoDental/Report/lowStockSummary",
         "method": "get",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Report", "action": "lowStockSummary"}
+        "params": {"controller": "Report", "action": "lowStockSummary"}
     },
     {
         "route": "/EspoDental/SalaryEntry/build",
         "method": "post",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "build"}
+        "params": {"controller": "SalaryEntry", "action": "build"}
     },
     {
         "route": "/EspoDental/SalaryEntry/approve",
         "method": "post",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "approve"}
+        "params": {"controller": "SalaryEntry", "action": "approve"}
     },
     {
         "route": "/EspoDental/SalaryEntry/pay",
         "method": "post",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "pay"}
+        "params": {"controller": "SalaryEntry", "action": "pay"}
     },
     {
         "route": "/EspoDental/SalaryEntry/cancel",
         "method": "post",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\SalaryEntry", "action": "cancel"}
+        "params": {"controller": "SalaryEntry", "action": "cancel"}
     },
     {
         "route": "/EspoDental/Calendar/appointments",
         "method": "get",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Calendar", "action": "appointments"}
+        "params": {"controller": "Calendar", "action": "appointments"}
     },
     {
         "route": "/EspoDental/Calendar/move",
         "method": "post",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Calendar", "action": "move"}
+        "params": {"controller": "Calendar", "action": "move"}
     },
     {
         "route": "/EspoDental/Calendar/freeSlots",
         "method": "get",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\Calendar", "action": "freeSlots"}
+        "params": {"controller": "Calendar", "action": "freeSlots"}
     },
     {
         "route": "/EspoDental/OrthodonticCard/close",
         "method": "post",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\OrthodonticCard", "action": "close"}
+        "params": {"controller": "OrthodonticCard", "action": "close"}
     },
     {
         "route": "/EspoDental/OrthodonticCard/reopen",
         "method": "post",
-        "params": {"controller": "Espo\\Modules\\EspoDental\\Controllers\\OrthodonticCard", "action": "reopen"}
+        "params": {"controller": "OrthodonticCard", "action": "reopen"}
     }
 ]
