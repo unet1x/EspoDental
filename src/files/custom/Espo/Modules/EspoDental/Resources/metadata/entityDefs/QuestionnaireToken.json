@@ -11,8 +11,7 @@
             "maxLength": 64
         },
         "patient": {
-            "type": "link",
-            "required": true
+            "type": "link"
         },
         "preliminaryPatient": {
             "type": "link"
@@ -55,6 +54,7 @@
     "indexes": {
         "token": {"columns": ["token"], "unique": true},
         "patient": {"columns": ["patientId"]},
+        "preliminaryPatient": {"columns": ["preliminaryPatientId"]},
         "expires": {"columns": ["expiresAt", "isUsed"]}
     }
 }

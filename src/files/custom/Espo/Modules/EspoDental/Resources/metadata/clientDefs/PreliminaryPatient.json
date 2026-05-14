@@ -8,6 +8,14 @@
         "detail": {
             "buttons": [
                 {
+                    "name": "issueQuestionnaire",
+                    "labelText": "Health Questionnaire",
+                    "style": "default",
+                    "acl": "edit",
+                    "actionHandler": "espo-dental:handlers/preliminary-patient/issue-questionnaire",
+                    "hidden": false
+                },
+                {
                     "name": "convertToPatient",
                     "labelText": "Convert to Patient",
                     "style": "primary",

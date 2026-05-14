@@ -65,6 +65,7 @@
     },
     "messages": {
         "Convert lead first": "Primero convierta el paciente preliminar en paciente",
+        "Questionnaire required": "El paciente debe completar el cuestionario de salud antes de iniciar la visita",
         "Status not allowed for start": "La visita solo puede iniciarse desde Planificada / Reprogramada / Llegada",
         "Confirm start visit": "Iniciar la visita para esta cita?",
         "Visit started": "Visita iniciada"

@@ -1,5 +1,6 @@
 [
     {"name": "patient", "link": true},
+    {"name": "preliminaryPatient", "link": true},
     {"name": "filledAt"},
     {"name": "expiresAt"},
     {"name": "hasAlerts"},

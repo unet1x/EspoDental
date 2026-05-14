@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Espo\Modules\EspoDental\Tools;
 
 use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Modules\EspoDental\Entities\Patient;
+use Espo\ORM\Entity;
 
 class HealthQuestionnaireRenderer
 {
@@ -21,7 +21,7 @@ class HealthQuestionnaireRenderer
      *     language: string,
      *     token: string,
      *     schema: array<string, mixed>,
-     *     patient: ?Patient,
+     *     patient: ?Entity,
      *     error: ?string,
      *     submitUrl: string
      * } $vars

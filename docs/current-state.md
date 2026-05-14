@@ -31,6 +31,11 @@ The following checks were completed on 2026-05-14:
 - `EspoDental/Report/monthlyRevenue` responded with monthly data.
 - Local UI loaded with Russian EspoDental menu and dashboard.
 - Compose config validation passed for local, staging and production templates.
+- Phase 1 front-desk API flow passed on the local Docker stack:
+  `PreliminaryPatient` -> `Appointment` -> questionnaire token/QR -> public
+  questionnaire submit -> automatic `Patient` conversion -> appointment
+  re-parenting -> `Start Visit`.
+- Direct `POST /Patient` is blocked with `403` for normal API creation.
 
 PHPUnit was not run in the local container because composer/phpunit are not
 installed there.
@@ -90,14 +95,34 @@ Current module metadata contains:
 This is enough for a first usable workspace, but it is not a full accepted MIS
 workflow yet.
 
-## 5. Known Gaps Against Product Spec
+## 5. Phase 1 Front Desk Intake
+
+Implemented in branch `feature-front-desk-intake`:
+
+- `Patient` create button is disabled in client metadata.
+- `Patient` creation is guarded by a hook and allowed only from the module
+  conversion service.
+- `PreliminaryPatient` can issue a health-questionnaire QR/token before a
+  patient record exists.
+- `QuestionnaireToken` and `HealthQuestionnaire` can belong to a
+  `PreliminaryPatient` before conversion.
+- Public questionnaire submit stores the questionnaire and automatically
+  converts the preliminary patient.
+- Conversion copies personal fields, initializes patient balance to `0`,
+  links questionnaire to the new patient and marks questionnaire state.
+- Existing appointments linked to the preliminary patient are re-parented to
+  the new patient.
+- `Appointment` stores `bookedBy` automatically.
+- Booking a preliminary patient moves their status to `booked`.
+- Appointment conflict checks now include the patient/preliminary patient, not
+  only doctor and cabinet.
+- `Start Visit` requires a real `Patient` with completed, non-expired
+  questionnaire.
+
+## 6. Known Gaps Against Product Spec
 
 The following requirements still need implementation or explicit verification:
 
-- block normal direct `Patient` creation;
-- implement/verify preliminary patient to patient conversion as the only normal
-  patient creation path;
-- create patient balance ledger automatically at conversion;
 - enforce "no visit without appointment";
 - enforce "no invoice without visit";
 - implement atomic finish visit action: status update, stock movements, invoice,
@@ -114,7 +139,7 @@ The following requirements still need implementation or explicit verification:
   manager;
 - define and implement MCP/LLM/WhatsApp integration layer.
 
-## 6. Development Rule
+## 7. Development Rule
 
 Future work should be implemented as connected vertical slices. Do not add
 isolated fields or screens unless they participate in the accepted patient flow

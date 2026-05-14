@@ -10,6 +10,7 @@
     "fields": {
         "name": "Name",
         "patient": "Patient",
+        "preliminaryPatient": "Lead Patient",
         "language": "Language",
         "items": "Answers",
         "alertItems": "Alerts",
@@ -31,7 +32,8 @@
         }
     },
     "links": {
-        "patient": "Patient"
+        "patient": "Patient",
+        "preliminaryPatient": "Lead Patient"
     },
     "tooltips": {
         "alertItems": "Items with positive answers that require doctor attention."

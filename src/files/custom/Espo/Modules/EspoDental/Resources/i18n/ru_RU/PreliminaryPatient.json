@@ -2,6 +2,8 @@
     "labels": {
         "Create PreliminaryPatient": "Создать предв. пациента",
         "Convert to Patient": "Преобразовать в пациента",
+        "Health Questionnaire": "Анкета здоровья",
+        "Show QR": "Показать QR",
         "Overview": "Основное",
         "Conversion": "Конвертация",
         "Other": "Прочее"
@@ -21,6 +23,8 @@
         "clinic": "Клиника",
         "convertedToPatient": "Пациент",
         "convertedAt": "Дата конвертации",
+        "questionnaireCompleted": "Анкета заполнена",
+        "lastQuestionnaireAt": "Дата анкеты",
         "description": "Описание",
         "assignedUser": "Ответственный",
         "teams": "Команды"
@@ -49,14 +53,18 @@
     },
     "links": {
         "clinic": "Клиника",
-        "convertedToPatient": "Пациент"
+        "convertedToPatient": "Пациент",
+        "healthQuestionnaires": "Анкеты здоровья",
+        "questionnaireTokens": "Токены анкет"
     },
     "boolFilters": {
         "onlyMy": "Только мои"
     },
     "messages": {
-        "Convert to Patient confirm": "Все данные будут перенесены в карту пациента. После конвертации статус будет «Обработан».",
-        "Issue questionnaire QR": "Сразу выдать QR-код для анкеты здоровья (срок 24 часа)",
+        "Convert to Patient confirm": "Пациент будет создан только если анкета здоровья уже заполнена. Все записи будут перенесены на новую карту пациента.",
+        "Issue questionnaire QR": "Выдать QR-код для анкеты здоровья (срок 24 часа)",
+        "Issue questionnaire confirm": "Покажите QR-код пациенту на планшете. После отправки анкеты предварительный пациент будет автоматически преобразован в пациента.",
+        "Questionnaire issued": "QR-код анкеты создан",
         "Converted": "Преобразовано в пациента",
         "Already converted": "Уже преобразовано"
     }

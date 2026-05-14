@@ -37,6 +37,10 @@
             [
                 {"name": "convertedToPatient"},
                 {"name": "convertedAt"}
+            ],
+            [
+                {"name": "questionnaireCompleted"},
+                {"name": "lastQuestionnaireAt"}
             ]
         ]
     },

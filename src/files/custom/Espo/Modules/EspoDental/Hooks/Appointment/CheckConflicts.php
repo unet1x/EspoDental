@@ -49,11 +49,15 @@ class CheckConflicts
 
         $doctorId = $entity->getDoctorId();
         $cabinetId = $entity->getCabinetId();
+        $parentType = $entity->getParentType();
+        $parentId = $entity->getParentId();
 
         $conflict = $this->findConflict(
             $entity->getId(),
             $doctorId,
             $cabinetId,
+            $parentType,
+            $parentId,
             $dateStart,
             $dateEnd
         );
@@ -63,6 +67,7 @@ class CheckConflicts
             $message = match ($by) {
                 'doctor' => 'Doctor is already booked at this time.',
                 'cabinet' => 'Cabinet is already booked at this time.',
+                'patient' => 'Patient is already booked at this time.',
                 default => 'Time slot conflict.',
             };
             throw new Conflict($message);
@@ -76,10 +81,12 @@ class CheckConflicts
         ?string $excludeId,
         ?string $doctorId,
         ?string $cabinetId,
+        ?string $parentType,
+        ?string $parentId,
         string $dateStart,
         string $dateEnd
     ): ?array {
-        if (!$doctorId && !$cabinetId) {
+        if (!$doctorId && !$cabinetId && (!$parentType || !$parentId)) {
             return null;
         }
 
@@ -89,6 +96,9 @@ class CheckConflicts
         }
         if ($cabinetId) {
             $or[] = ['cabinetId' => $cabinetId];
+        }
+        if ($parentType && $parentId) {
+            $or[] = ['parentType' => $parentType, 'parentId' => $parentId];
         }
 
         $where = [
@@ -113,7 +123,13 @@ class CheckConflicts
             return null;
         }
 
-        $by = ($doctorId && $existing->getDoctorId() === $doctorId) ? 'doctor' : 'cabinet';
+        if ($doctorId && $existing->getDoctorId() === $doctorId) {
+            $by = 'doctor';
+        } elseif ($cabinetId && $existing->getCabinetId() === $cabinetId) {
+            $by = 'cabinet';
+        } else {
+            $by = 'patient';
+        }
 
         return ['by' => $by, 'id' => (string) $existing->getId()];
     }

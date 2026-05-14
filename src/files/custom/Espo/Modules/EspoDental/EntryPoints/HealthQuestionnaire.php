@@ -10,6 +10,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Modules\EspoDental\Entities\Patient;
+use Espo\Modules\EspoDental\Entities\PreliminaryPatient;
 use Espo\Modules\EspoDental\Entities\QuestionnaireToken;
 use Espo\Modules\EspoDental\Services\HealthQuestionnaireService;
 use Espo\Modules\EspoDental\Tools\HealthQuestionnaireRenderer;
@@ -44,7 +45,17 @@ class HealthQuestionnaire
 
         $patient = null;
         if ($tokenEntity) {
-            $patient = $this->entityManager->getEntityById(Patient::ENTITY_TYPE, (string) $tokenEntity->getPatientId());
+            if ($tokenEntity->getPatientId()) {
+                $patient = $this->entityManager->getEntityById(
+                    Patient::ENTITY_TYPE,
+                    (string) $tokenEntity->getPatientId()
+                );
+            } elseif ($tokenEntity->getPreliminaryPatientId()) {
+                $patient = $this->entityManager->getEntityById(
+                    PreliminaryPatient::ENTITY_TYPE,
+                    (string) $tokenEntity->getPreliminaryPatientId()
+                );
+            }
         }
 
         $schema = $this->service->getSchema($language);

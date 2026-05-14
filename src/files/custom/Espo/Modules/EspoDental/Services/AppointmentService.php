@@ -35,6 +35,17 @@ class AppointmentService
             throw new BadRequest('Convert the lead patient first');
         }
 
+        /** @var Patient|null $patient */
+        $patient = $this->entityManager->getEntityById(Patient::ENTITY_TYPE, (string) $appointment->getParentId());
+
+        if (!$patient) {
+            throw new NotFound('Patient not found');
+        }
+
+        if (!$patient->get('lastQuestionnaireAt') || (bool) $patient->get('questionnaireExpired')) {
+            throw new Conflict('Health questionnaire must be completed before the visit can start');
+        }
+
         if (
             !in_array($appointment->getStatus(), [
             Appointment::STATUS_PLANNED,

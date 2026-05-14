@@ -17,15 +17,6 @@ define('espo-dental:handlers/preliminary-patient/convert-to-patient', ['action-h
                 this.view.listenToOnce(view, 'done', function (result) {
                     Espo.Ui.success(this.view.translate('Converted', 'messages', 'PreliminaryPatient'));
 
-                    if (result && result.tokenUrl) {
-                        this.view.createView('qrDialog', 'espo-dental:views/health-questionnaire/qr-modal', {
-                            url: result.tokenUrl,
-                            expiresAt: result.expiresAt
-                        }, function (qrView) {
-                            qrView.render();
-                        });
-                    }
-
                     if (result && result.patientId) {
                         this.view.getRouter().navigate('#Patient/view/' + result.patientId, {trigger: true});
                     } else {

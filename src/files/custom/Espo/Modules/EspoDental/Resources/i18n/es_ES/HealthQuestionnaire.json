@@ -10,6 +10,7 @@
     "fields": {
         "name": "Nombre",
         "patient": "Paciente",
+        "preliminaryPatient": "Paciente preliminar",
         "language": "Idioma",
         "items": "Respuestas",
         "alertItems": "Alertas",
@@ -31,7 +32,8 @@
         }
     },
     "links": {
-        "patient": "Paciente"
+        "patient": "Paciente",
+        "preliminaryPatient": "Paciente preliminar"
     },
     "tooltips": {
         "alertItems": "Respuestas positivas que requieren atencion del medico."

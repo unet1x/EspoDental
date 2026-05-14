@@ -80,6 +80,16 @@
             "type": "datetime",
             "readOnly": true
         },
+        "questionnaireCompleted": {
+            "type": "bool",
+            "readOnly": true,
+            "default": false,
+            "tooltip": true
+        },
+        "lastQuestionnaireAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "description": {
             "type": "text"
         },
@@ -93,6 +103,8 @@
     "links": {
         "clinic": {"type": "belongsTo", "entity": "Clinic", "foreign": "preliminaryPatients"},
         "convertedToPatient": {"type": "hasOne", "entity": "Patient", "foreign": "convertedFromPreliminary"},
+        "healthQuestionnaires": {"type": "hasMany", "entity": "HealthQuestionnaire", "foreign": "preliminaryPatient"},
+        "questionnaireTokens": {"type": "hasMany", "entity": "QuestionnaireToken", "foreign": "preliminaryPatient"},
         "appointments": {"type": "hasChildren", "entity": "Appointment", "foreign": "parent"},
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"},
@@ -107,6 +119,7 @@
         "createdAt": {"columns": ["createdAt", "deleted"]},
         "lastName": {"columns": ["lastName", "firstName"]},
         "status": {"columns": ["status", "deleted"]},
+        "questionnaireCompleted": {"columns": ["questionnaireCompleted", "deleted"]},
         "clinic": {"columns": ["clinicId"]}
     }
 }

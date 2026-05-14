@@ -4,6 +4,9 @@
         "rows": [
             [
                 {"name": "patient"},
+                {"name": "preliminaryPatient"}
+            ],
+            [
                 {"name": "language"}
             ],
             [

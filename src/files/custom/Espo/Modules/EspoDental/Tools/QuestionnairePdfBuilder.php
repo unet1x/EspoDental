@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Espo\Modules\EspoDental\Tools;
 
-use Espo\Core\FileStorage\AttachmentFileStorage;
+use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\ORM\EntityManager;
 use Espo\Entities\Attachment;
 use Espo\Modules\EspoDental\Entities\HealthQuestionnaire;
@@ -16,7 +16,7 @@ class QuestionnairePdfBuilder
     public function __construct(
         private readonly EntityManager $entityManager,
         private readonly QuestionnaireSchemaProvider $schemaProvider,
-        private readonly AttachmentFileStorage $attachmentFileStorage
+        private readonly FileStorageManager $fileStorageManager
     ) {
     }
 
@@ -118,9 +118,7 @@ class QuestionnairePdfBuilder
     private function renderSignature(TCPDF $pdf, Attachment $attachment, string $language): void
     {
         try {
-            $contents = $this->attachmentFileStorage->read(
-                new \Espo\Core\FileStorage\Manager\Data($attachment)
-            );
+            $contents = $this->fileStorageManager->getContents($attachment);
         } catch (\Throwable) {
             $contents = null;
         }

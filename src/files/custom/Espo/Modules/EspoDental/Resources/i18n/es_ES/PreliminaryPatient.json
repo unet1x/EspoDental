@@ -2,6 +2,8 @@
     "labels": {
         "Create PreliminaryPatient": "Crear paciente preliminar",
         "Convert to Patient": "Convertir a paciente",
+        "Health Questionnaire": "Cuestionario de salud",
+        "Show QR": "Mostrar QR",
         "Overview": "General",
         "Conversion": "Conversion",
         "Other": "Otros"
@@ -21,6 +23,8 @@
         "clinic": "Clinica",
         "convertedToPatient": "Paciente",
         "convertedAt": "Convertido el",
+        "questionnaireCompleted": "Cuestionario completado",
+        "lastQuestionnaireAt": "Cuestionario completado el",
         "description": "Descripcion",
         "assignedUser": "Asignado a",
         "teams": "Equipos"
@@ -49,14 +53,18 @@
     },
     "links": {
         "clinic": "Clinica",
-        "convertedToPatient": "Paciente"
+        "convertedToPatient": "Paciente",
+        "healthQuestionnaires": "Cuestionarios de salud",
+        "questionnaireTokens": "Tokens de cuestionario"
     },
     "boolFilters": {
         "onlyMy": "Solo mios"
     },
     "messages": {
-        "Convert to Patient confirm": "Todos los campos se copiaran a un nuevo paciente. El estado del preliminar pasara a \"Procesado\".",
+        "Convert to Patient confirm": "El paciente se creara solo si el cuestionario de salud ya esta completado. Todas las citas se moveran a la nueva ficha.",
         "Issue questionnaire QR": "Emitir codigo QR para el cuestionario de salud (validez 24 horas)",
+        "Issue questionnaire confirm": "Muestre el codigo QR al paciente en una tableta. Despues del envio, el paciente preliminar se convertira automaticamente.",
+        "Questionnaire issued": "QR del cuestionario creado",
         "Converted": "Convertido a paciente",
         "Already converted": "Ya convertido"
     }

@@ -65,6 +65,7 @@
     },
     "messages": {
         "Convert lead first": "Convert the lead patient to a Patient before starting the visit",
+        "Questionnaire required": "The patient must complete the health questionnaire before the visit can start",
         "Status not allowed for start": "Visit can be started only from Planned / Rescheduled / Arrived",
         "Confirm start visit": "Start the visit for this appointment?",
         "Visit started": "Visit started"

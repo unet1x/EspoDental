@@ -1,5 +1,6 @@
 {
     "controller": "controllers/record",
+    "createDisabled": true,
     "boolFilterList": ["onlyMy", "vip", "restrictions"],
     "color": "#17BECF",
     "iconClass": "fas fa-user-injured",

@@ -2,6 +2,8 @@
     "labels": {
         "Create PreliminaryPatient": "Create Lead Patient",
         "Convert to Patient": "Convert to Patient",
+        "Health Questionnaire": "Health Questionnaire",
+        "Show QR": "Show QR",
         "Overview": "Overview",
         "Conversion": "Conversion",
         "Other": "Other"
@@ -21,6 +23,8 @@
         "clinic": "Clinic",
         "convertedToPatient": "Patient",
         "convertedAt": "Converted At",
+        "questionnaireCompleted": "Questionnaire Completed",
+        "lastQuestionnaireAt": "Questionnaire Filled At",
         "description": "Description",
         "assignedUser": "Assigned User",
         "teams": "Teams"
@@ -49,14 +53,18 @@
     },
     "links": {
         "clinic": "Clinic",
-        "convertedToPatient": "Patient"
+        "convertedToPatient": "Patient",
+        "healthQuestionnaires": "Health Questionnaires",
+        "questionnaireTokens": "Questionnaire Tokens"
     },
     "boolFilters": {
         "onlyMy": "Only my"
     },
     "messages": {
-        "Convert to Patient confirm": "All fields will be copied into a new Patient. Source status will become \"Processed\".",
-        "Issue questionnaire QR": "Issue a QR code for the health questionnaire right now (valid for 24 hours)",
+        "Convert to Patient confirm": "A Patient will be created only if the health questionnaire is already completed. All appointments will be moved to the new patient card.",
+        "Issue questionnaire QR": "Issue health questionnaire QR code (valid for 24 hours)",
+        "Issue questionnaire confirm": "Show the QR code to the patient on a tablet. After submission, the lead patient will be converted to a patient automatically.",
+        "Questionnaire issued": "Questionnaire QR created",
         "Converted": "Converted to Patient",
         "Already converted": "Already converted"
     }

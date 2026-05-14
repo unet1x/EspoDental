@@ -21,6 +21,11 @@ class QuestionnaireToken extends Entity
         return $this->get('patientId');
     }
 
+    public function getPreliminaryPatientId(): ?string
+    {
+        return $this->get('preliminaryPatientId');
+    }
+
     public function getLanguage(): string
     {
         return (string) ($this->get('language') ?? 'ru_RU');

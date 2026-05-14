@@ -6,8 +6,10 @@
             "maxLength": 200
         },
         "patient": {
-            "type": "link",
-            "required": true
+            "type": "link"
+        },
+        "preliminaryPatient": {
+            "type": "link"
         },
         "language": {
             "type": "enum",
@@ -71,6 +73,7 @@
     },
     "links": {
         "patient": {"type": "belongsTo", "entity": "Patient"},
+        "preliminaryPatient": {"type": "belongsTo", "entity": "PreliminaryPatient", "foreign": "healthQuestionnaires"},
         "signatureAttachment": {"type": "belongsTo", "entity": "Attachment"},
         "pdfFile": {"type": "belongsTo", "entity": "Attachment"},
         "tokens": {"type": "hasMany", "entity": "QuestionnaireToken", "foreign": "questionnaire"},
@@ -84,6 +87,7 @@
     },
     "indexes": {
         "patient_filled": {"columns": ["patientId", "filledAt"]},
+        "preliminary_filled": {"columns": ["preliminaryPatientId", "filledAt"]},
         "expires": {"columns": ["expiresAt"]}
     }
 }

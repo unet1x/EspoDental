@@ -15,7 +15,7 @@ class PublicHealthQuestionnaire
     }
 
     /**
-     * @return array{ok: true, questionnaireId: string, hasAlerts: bool}
+     * @return array{ok: true, questionnaireId: string, patientId: ?string, converted: bool, hasAlerts: bool}
      */
     public function postActionSubmit(Request $request): array
     {
@@ -42,6 +42,8 @@ class PublicHealthQuestionnaire
         return [
             'ok' => true,
             'questionnaireId' => (string) $questionnaire->getId(),
+            'patientId' => $questionnaire->getPatientId(),
+            'converted' => $questionnaire->getPatientId() !== null,
             'hasAlerts' => $questionnaire->hasAlerts(),
         ];
     }
@@ -61,7 +63,6 @@ class PublicHealthQuestionnaire
             return substr($real, 0, 64);
         }
 
-        $serverParams = $request->getServerParams();
-        return substr((string) ($serverParams['REMOTE_ADDR'] ?? ''), 0, 64);
+        return substr((string) ($request->getServerParam('REMOTE_ADDR') ?? ''), 0, 64);
     }
 }
