@@ -10,6 +10,14 @@
         "detail": ["createdAt", "createdBy"],
         "detailSmall": ["createdAt", "createdBy"]
     },
+    "relationshipPanels": {
+        "appointments": {
+            "create": false,
+            "select": false,
+            "createDisabled": true,
+            "selectDisabled": true
+        }
+    },
     "menu": {
         "detail": {
             "buttons": [

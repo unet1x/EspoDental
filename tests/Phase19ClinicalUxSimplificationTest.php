@@ -106,6 +106,8 @@ final class Phase19ClinicalUxSimplificationTest extends TestCase
         $this->assertStringContainsString('parentType', $appointmentClient);
         $this->assertStringContainsString('parentId', $appointmentClient);
         $this->assertStringContainsString('hideNativeDateTimeControl', $appointmentClient);
+        $this->assertStringContainsString('getDurationSecondsFromField', $appointmentClient);
+        $this->assertStringContainsString('bindDurationFieldWatcher', $appointmentClient);
         $this->assertStringContainsString('applyDefaultClinic', $defaultClinicClient);
         $this->assertStringContainsString('espoDentalDefaultClinicId', $defaultClinicClient);
         $this->assertStringContainsString("Espo.Ajax.getRequest('Clinic'", $defaultClinicClient);
@@ -116,6 +118,19 @@ final class Phase19ClinicalUxSimplificationTest extends TestCase
         $patientClient = $this->readJson(self::MODULE_ROOT . '/Resources/metadata/clientDefs/Patient.json');
         $buttons = $patientClient['menu']['detail']['buttons'];
         $bookButton = null;
+
+        $patientRelationships = $this->readJson(
+            self::MODULE_ROOT . '/Resources/layouts/Patient/relationships.json'
+        );
+        $appointmentsPanel = $patientRelationships[0];
+
+        $this->assertSame('appointments', $appointmentsPanel['name']);
+        $this->assertTrue($appointmentsPanel['createDisabled']);
+        $this->assertTrue($appointmentsPanel['selectDisabled']);
+        $this->assertFalse($patientClient['relationshipPanels']['appointments']['create']);
+        $this->assertFalse($patientClient['relationshipPanels']['appointments']['select']);
+        $this->assertTrue($patientClient['relationshipPanels']['appointments']['createDisabled']);
+        $this->assertTrue($patientClient['relationshipPanels']['appointments']['selectDisabled']);
 
         foreach ($buttons as $button) {
             if (($button['name'] ?? null) === 'bookAppointment') {

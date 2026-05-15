@@ -217,10 +217,14 @@ not manual booking choices.
 Patient cards should expose a clear header action `Записать на прием`; users
 should not have to find the small relationship-panel plus button for the normal
 booking flow. This action must open the short booking modal with the patient
-already linked and without a generic full-form button.
+already linked and without a generic full-form button. The patient appointment
+relationship panel should be read/list oriented for booking; it must not expose
+a competing create/select plus-button workflow.
 After doctor, cabinet, date and duration are known, the start-time control
 should offer free slots from the resource calendar as a date plus free-time
 dropdown, without a separate technical action button or manual datetime field.
+The offered slot end time must reflect the selected duration immediately, not
+fall back to the default 30-minute duration.
 Free-slot suggestions and save-time validation must use the same resource
 rules: the cabinet must be free, the doctor must not be booked in any other
 cabinet/clinic, and the patient/preliminary patient must not have an overlapping

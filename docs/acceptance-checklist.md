@@ -34,8 +34,12 @@ Checklist:
   preliminary patient already has an overlapping appointment.
 - Confirm the patient detail header has `Записать на прием` and opens the short
   appointment modal with the patient prelinked.
+- Confirm the patient `Записи` relationship panel does not show a plus/create
+  flow for booking.
 - Confirm the booking modal does not show `Расширенная форма`, assistant,
   manual start datetime, assigned user or teams.
+- Confirm changing appointment duration to 1h/1.5h/2h changes the free-slot end
+  time accordingly.
 - Confirm conflicting doctor/cabinet/patient slot is rejected.
 - Launch health questionnaire QR/token.
 - Submit questionnaire on tablet/mobile-size viewport.

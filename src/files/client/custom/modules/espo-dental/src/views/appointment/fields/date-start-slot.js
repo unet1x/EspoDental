@@ -29,6 +29,7 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
             this.hideNativeDateTimeControl();
             this.renderSlotPicker();
             this.bindSlotPicker();
+            this.bindDurationFieldWatcher();
             this.scheduleSlotLoad();
         },
 
@@ -73,6 +74,28 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
 
                 self.applySlot(self.slotList[index]);
             });
+        },
+
+        bindDurationFieldWatcher: function () {
+            var durationView = this.getDurationFieldView();
+
+            if (!durationView || !durationView.$duration || !durationView.$duration.length) {
+                if (!this.durationWatcherRetry) {
+                    this.durationWatcherRetry = true;
+                    setTimeout(function () {
+                        this.durationWatcherRetry = false;
+                        this.bindDurationFieldWatcher();
+                    }.bind(this), 300);
+                }
+
+                return;
+            }
+
+            durationView.$duration
+                .off('change.espoDentalSlots')
+                .on('change.espoDentalSlots', function () {
+                    this.scheduleSlotLoad();
+                }.bind(this));
         },
 
         scheduleSlotLoad: function () {
@@ -236,12 +259,65 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
         },
 
         getDurationMinutes: function () {
-            var seconds = parseInt(this.model.get('duration') || 1800, 10);
+            var seconds = this.getDurationSecondsFromField();
+
+            if (!seconds) {
+                seconds = this.getDurationSecondsFromDates();
+            }
+
+            if (!seconds) {
+                seconds = parseInt(this.model.get('duration') || 0, 10);
+            }
+
+            if (!seconds) {
+                seconds = parseInt(this.model.getFieldParam('duration', 'default') || 1800, 10);
+            }
+
             if (isNaN(seconds) || seconds <= 0) {
                 seconds = 1800;
             }
 
             return Math.max(15, Math.round(seconds / 60));
+        },
+
+        getDurationSecondsFromField: function () {
+            var durationView = this.getDurationFieldView();
+
+            if (durationView && durationView.$duration && durationView.$duration.length) {
+                var value = parseInt(durationView.$duration.val(), 10);
+                if (!isNaN(value) && value > 0) {
+                    return value;
+                }
+            }
+
+            if (durationView && typeof durationView.seconds === 'number' && durationView.seconds > 0) {
+                return durationView.seconds;
+            }
+
+            return 0;
+        },
+
+        getDurationSecondsFromDates: function () {
+            var start = this.model.get(this.name);
+            var end = this.model.get('dateEnd');
+
+            if (!start || !end) {
+                return 0;
+            }
+
+            var seconds = moment.utc(end).unix() - moment.utc(start).unix();
+
+            return seconds > 0 ? seconds : 0;
+        },
+
+        getDurationFieldView: function () {
+            var parentView = this.getParentView ? this.getParentView() : null;
+
+            if (!parentView || typeof parentView.getView !== 'function') {
+                return null;
+            }
+
+            return parentView.getView('duration') || null;
         },
 
         getSlotDate: function () {

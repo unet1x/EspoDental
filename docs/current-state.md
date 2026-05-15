@@ -167,6 +167,9 @@ Implemented in branch `feature-front-desk-intake`:
 - Patient detail has a primary `Записать на прием` action in the header. It
   opens the short appointment modal, prelinks the patient as
   `Appointment.parent`, and disables the generic full-form escape hatch.
+- The patient `appointments` relationship panel no longer exposes create/select
+  actions. Operational booking should go through the header action, avoiding
+  the ambiguous small plus button.
 - `Appointment.clinic` is prefilled in the booking UI from the EspoDental
   default clinic setting, or from the first available clinic when the setting
   is empty.
@@ -176,6 +179,10 @@ Implemented in branch `feature-front-desk-intake`:
   `EspoDental/Calendar/freeSlots` and lets reception pick only a free time from
   the dropdown. Existing appointment edits exclude the current appointment from
   the occupied intervals so its own slot does not block rescheduling.
+- The slot picker reads the live value from EspoCRM's duration field because
+  the standard duration field does not persist its selected seconds into
+  `Appointment.duration` until save. Free-slot end times therefore follow the
+  selected 15m/30m/45m/1h/1.5h/2h duration immediately.
 - Free-slot search builds occupancy independently for cabinet, doctor and
   patient. A slot is not offered if the selected doctor is already booked in
   another cabinet, or if the selected patient/preliminary patient already has

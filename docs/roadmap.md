@@ -80,6 +80,9 @@ Deliverables:
   instead of manual end time, default clinic, no source/ownership noise;
 - patient card header action for `Записать на прием`, opening the short booking
   modal with the patient prelinked and no full-form escape hatch;
+- patient appointment relationship panel does not expose a competing plus
+  create flow;
+- free-slot dropdown reflects the selected duration immediately;
 - appointment display name derived from date/time and status;
 - `in_progress` and `finished` appointment statuses controlled by the visit
   workflow, not by manual selection;

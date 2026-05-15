@@ -37,6 +37,10 @@
   assistant selector, and the clinic link is prefilled from the module default.
 - Patient detail now has a primary `Записать на прием` action that opens the
   short appointment modal with the patient prelinked and no "Full Form" button.
+- The patient appointment relationship panel create/select plus flow is hidden;
+  booking is routed through the explicit header action.
+- Appointment free-slot labels now use the live selected duration instead of
+  always showing 30-minute intervals.
 - Free-slot search now matches the server conflict rules for doctor and patient
   occupancy: a doctor already booked in another cabinet no longer appears as
   available for the same time.

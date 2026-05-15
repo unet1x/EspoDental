@@ -1,5 +1,9 @@
 [
-    "appointments",
+    {
+        "name": "appointments",
+        "createDisabled": true,
+        "selectDisabled": true
+    },
     "visits",
     "toothChartSnapshots",
     "photos",
