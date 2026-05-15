@@ -1,0 +1,10 @@
+[
+    {
+        "rows": [
+            [{"name": "stage"}, {"name": "category"}],
+            [{"name": "image", "fullWidth": true}],
+            [{"name": "tooth"}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

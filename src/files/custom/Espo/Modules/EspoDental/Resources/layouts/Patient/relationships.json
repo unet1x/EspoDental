@@ -6,6 +6,5 @@
     "invoices",
     "payments",
     "notificationLogs",
-    "healthQuestionnaires",
-    "questionnaireTokens"
+    "healthQuestionnaires"
 ]

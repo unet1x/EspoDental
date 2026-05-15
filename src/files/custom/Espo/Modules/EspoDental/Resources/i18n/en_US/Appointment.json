@@ -4,7 +4,9 @@
         "Overview": "Overview",
         "Booking": "Booking",
         "Other": "Other",
-        "Start Visit": "Start Visit"
+        "Start Visit": "Start Visit",
+        "Find Free Slots": "Free slots",
+        "Select free slot": "Select a free time"
     },
     "fields": {
         "name": "Name",
@@ -13,16 +15,16 @@
         "assistant": "Assistant",
         "cabinet": "Cabinet",
         "clinic": "Clinic",
-        "dateStart": "Start",
+        "dateStart": "Date and time",
         "dateEnd": "End",
         "duration": "Duration",
         "status": "Status",
-        "source": "Source",
         "bookedBy": "Booked By",
         "color": "Color",
         "complaints": "Complaints",
         "description": "Description",
         "reminderSent": "Reminder Sent",
+        "confirmed": "Confirmed",
         "visit": "Visit",
         "statusLogs": "Status Logs",
         "assignedUser": "Assigned User",
@@ -37,15 +39,6 @@
             "in_progress": "In progress",
             "finished": "Finished",
             "no_show": "No show"
-        },
-        "source": {
-            "": "—",
-            "walk_in": "Walk-in",
-            "phone": "Phone Call",
-            "online": "Online Booking",
-            "portal": "Patient Portal",
-            "referral": "Referral",
-            "other": "Other"
         }
     },
     "links": {
@@ -68,7 +61,10 @@
         "Questionnaire required": "The patient must complete the health questionnaire before the visit can start",
         "Status not allowed for start": "Visit can be started only from Planned / Rescheduled / Arrived",
         "Confirm start visit": "Start the visit for this appointment?",
-        "Visit started": "Visit started"
+        "Visit started": "Visit started",
+        "Select doctor and cabinet first": "Select doctor and cabinet first",
+        "No free slots found": "No free slots for the selected date",
+        "Free slot search failed": "Could not load free slots"
     },
     "tooltips": {
         "duration": "Duration of the appointment",

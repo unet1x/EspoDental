@@ -3,7 +3,12 @@
         "Create ToothChartSnapshot": "Crear odontograma",
         "Tooth": "Diente",
         "Note": "Nota",
-        "Edit Tooth": "Editar diente"
+        "Edit Tooth": "Editar diente",
+        "surface_o": "Oclusal / Incisal",
+        "surface_m": "Mesial",
+        "surface_d": "Distal",
+        "surface_b": "Bucal / Vestibular",
+        "surface_l": "Lingual / Palatina"
     },
     "fields": {
         "name": "Nombre",

@@ -19,44 +19,11 @@
                 {"name": "age"}
             ],
             [
-                {"name": "status"},
-                {"name": "source"}
-            ],
-            [
-                {"name": "clinic"},
-                {"name": "assignedUser"}
+                {"name": "source"},
+                {"name": "clinic"}
             ],
             [
                 {"name": "description", "fullWidth": true}
-            ]
-        ]
-    },
-    {
-        "label": "Conversion",
-        "rows": [
-            [
-                {"name": "convertedToPatient"},
-                {"name": "convertedAt"}
-            ],
-            [
-                {"name": "questionnaireCompleted"},
-                {"name": "lastQuestionnaireAt"}
-            ]
-        ]
-    },
-    {
-        "label": "Other",
-        "rows": [
-            [
-                {"name": "teams"}
-            ],
-            [
-                {"name": "createdAt"},
-                {"name": "modifiedAt"}
-            ],
-            [
-                {"name": "createdBy"},
-                {"name": "modifiedBy"}
             ]
         ]
     }

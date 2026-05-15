@@ -26,17 +26,18 @@ class RecalculateAmount
             return;
         }
 
-        if ($entity->isNew() && !$entity->get('unitPrice') && $entity->get('serviceId')) {
+        $service = null;
+        if ($entity->get('serviceId')) {
             /** @var Service|null $service */
             $service = $this->entityManager->getEntityById(Service::ENTITY_TYPE, $entity->get('serviceId'));
+            $serviceChanged = $entity->get('serviceId') !== $entity->getFetched('serviceId');
             if ($service) {
                 $entity->set('unitPrice', $service->getPrice());
-                if (!$entity->get('vatRate')) {
-                    $entity->set('vatRate', $service->getVatRate());
-                }
-                if (!$entity->get('name')) {
-                    $entity->set('name', (string) $service->get('name'));
-                }
+                $entity->set('unitPriceCurrency', (string) ($service->get('priceCurrency') ?: 'RUB'));
+                $entity->set('vatRate', $service->getVatRate());
+            }
+            if ($service && ($serviceChanged || !$entity->get('name'))) {
+                $entity->set('name', (string) $service->get('name'));
             }
         }
 
@@ -51,5 +52,13 @@ class RecalculateAmount
 
         $entity->set('amount', round($afterDiscount, 2));
         $entity->set('vatAmount', round($vat, 2));
+        $currency = (string) ($entity->get('unitPriceCurrency') ?: 'RUB');
+        $entity->set('amountCurrency', $currency);
+        $entity->set('vatAmountCurrency', $currency);
+        if ($currency === 'RUB') {
+            $entity->set('unitPriceConverted', $unit);
+            $entity->set('amountConverted', round($afterDiscount, 2));
+            $entity->set('vatAmountConverted', round($vat, 2));
+        }
     }
 }

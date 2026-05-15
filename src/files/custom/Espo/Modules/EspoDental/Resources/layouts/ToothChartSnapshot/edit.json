@@ -1,0 +1,10 @@
+[
+    {
+        "rows": [
+            [{"name": "patient"}, {"name": "visit"}],
+            [{"name": "doctor"}, {"name": "recordedAt"}],
+            [{"name": "dentitionType"}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

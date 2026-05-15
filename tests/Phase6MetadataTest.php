@@ -59,10 +59,8 @@ final class Phase6MetadataTest extends TestCase
     public function testPaymentEnums(): void
     {
         $def = $this->readJson(self::MODULE_ROOT . '/Resources/metadata/entityDefs/Payment.json');
-        $this->assertSame(
-            ['cash', 'card', 'bank_transfer', 'online', 'terminal', 'other'],
-            $def['fields']['method']['options']
-        );
+        $this->assertSame('varchar', $def['fields']['method']['type']);
+        $this->assertTrue($def['fields']['method']['tooltip']);
         $this->assertSame(
             ['pending', 'completed', 'cancelled', 'refunded'],
             $def['fields']['status']['options']
@@ -97,6 +95,10 @@ final class Phase6MetadataTest extends TestCase
         $this->assertFileExists(self::MODULE_ROOT . '/Tools/InvoiceCalculator.php');
         $this->assertFileExists(self::MODULE_ROOT . '/Tools/InvoicePdfBuilder.php');
         $this->assertFileExists(self::MODULE_ROOT . '/Tools/PatientBalanceCalculator.php');
+
+        $balanceCalculator = (string) file_get_contents(self::MODULE_ROOT . '/Tools/PatientBalanceCalculator.php');
+        $this->assertStringContainsString('positive balance = prepaid credit', $balanceCalculator);
+        $this->assertStringContainsString('$unallocatedCredit - $openInvoiceBalance', $balanceCalculator);
     }
 
     public function testServicesAndControllersExist(): void
@@ -119,11 +121,27 @@ final class Phase6MetadataTest extends TestCase
     public function testClientHandlersExist(): void
     {
         $root = __DIR__ . '/../src/files/client/custom/modules/espo-dental/src/handlers';
+        $clientRoot = __DIR__ . '/../src/files/client/custom/modules/espo-dental/src';
+        $patientDef = $this->readJson(self::MODULE_ROOT . '/Resources/metadata/entityDefs/Patient.json');
+
         $this->assertFileExists($root . '/invoice/issue.js');
         $this->assertFileExists($root . '/invoice/storno.js');
         $this->assertFileExists($root . '/invoice/accept-payment.js');
         $this->assertFileExists($root . '/invoice/print-pdf.js');
         $this->assertFileExists($root . '/payment/refund.js');
+        $this->assertFileExists($clientRoot . '/views/patient/fields/balance.js');
+        $this->assertSame(
+            'espo-dental:views/patient/fields/balance',
+            $patientDef['fields']['balance']['view']
+        );
+
+        $acceptPayment = (string) file_get_contents($root . '/invoice/accept-payment.js');
+        $this->assertStringContainsString('<select class="form-control" name="method">', $acceptPayment);
+        $this->assertStringContainsString('espoDentalPaymentMethods', $acceptPayment);
+        $this->assertStringNotContainsString(
+            'Payment method (cash/card/bank_transfer/online/terminal/other)',
+            $acceptPayment
+        );
     }
 
     public function testEntityPhpClassesExist(): void
@@ -183,6 +201,10 @@ final class Phase6MetadataTest extends TestCase
         $this->assertStringContainsString('DIRECTION_IN', $code);
         $this->assertStringContainsString('DIRECTION_OUT', $code);
         $this->assertStringContainsString('STATUS_COMPLETED', $code);
+        $this->assertStringContainsString('METHOD_LIST', $code);
+
+        $service = (string) file_get_contents(self::MODULE_ROOT . '/Services/PaymentService.php');
+        $this->assertStringContainsString('espoDentalPaymentMethods', $service);
     }
 
     public function testVisitServiceDependsOnInvoiceService(): void

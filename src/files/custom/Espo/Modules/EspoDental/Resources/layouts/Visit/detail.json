@@ -4,14 +4,10 @@
         "rows": [
             [
                 {"name": "patient"},
-                {"name": "status"}
+                {"name": "doctor"}
             ],
             [
-                {"name": "doctor"},
-                {"name": "assistant"}
-            ],
-            [
-                {"name": "appointment"},
+                {"name": "assistant"},
                 {"name": "cabinet"}
             ],
             [
@@ -35,19 +31,11 @@
         ]
     },
     {
-        "label": "Other",
+        "label": "Totals",
         "rows": [
             [
                 {"name": "totalAmount"},
                 {"name": "clinic"}
-            ],
-            [
-                {"name": "assignedUser"},
-                {"name": "teams"}
-            ],
-            [
-                {"name": "createdAt"},
-                {"name": "modifiedAt"}
             ]
         ]
     }

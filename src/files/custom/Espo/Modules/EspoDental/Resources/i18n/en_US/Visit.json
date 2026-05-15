@@ -3,8 +3,9 @@
         "Create Visit": "Create Visit",
         "Overview": "Overview",
         "Clinical": "Clinical",
-        "Other": "Other",
-        "Finish Visit": "Finish Visit"
+        "Totals": "Totals",
+        "Finish Visit": "Finish Visit",
+        "Tooth Chart": "Tooth Chart"
     },
     "fields": {
         "name": "Name",
@@ -36,11 +37,16 @@
         "patient": "Patient",
         "doctor": "Doctor",
         "cabinet": "Cabinet",
-        "clinic": "Clinic"
+        "clinic": "Clinic",
+        "serviceLines": "Visit Services",
+        "materialLines": "Material Consumption",
+        "photos": "Photos",
+        "toothChartSnapshots": "Tooth Charts",
+        "invoices": "Invoices"
     },
     "messages": {
         "Only in-progress visits can be finished": "Only in-progress visits can be finished",
-        "Confirm finish visit": "Finish the visit? An invoice will be generated.",
+        "Confirm finish visit": "Finish the visit? An invoice will be generated, and service and material lines will become read-only.",
         "Visit finished": "Visit finished"
     }
 }

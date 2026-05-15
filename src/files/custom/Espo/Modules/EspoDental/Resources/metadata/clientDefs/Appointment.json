@@ -3,16 +3,26 @@
     "color": "#1F77B4",
     "iconClass": "fas fa-calendar-day",
     "kanbanViewMode": true,
+    "modalViews": {
+        "edit": "espo-dental:views/appointment/modals/edit"
+    },
     "boolFilterList": ["onlyMy", "myDoctor", "today", "upcoming"],
+    "defaultSidePanelFieldLists": {
+        "detail": ["createdAt", "modifiedAt"],
+        "detailSmall": ["createdAt", "modifiedAt"],
+        "edit": ["createdAt", "modifiedAt"],
+        "editSmall": ["createdAt", "modifiedAt"]
+    },
     "menu": {
         "detail": {
             "buttons": [
                 {
                     "name": "startVisit",
-                    "labelText": "Start Visit",
+                    "label": "Start Visit",
                     "style": "primary",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/appointment/start-visit",
+                    "handler": "espo-dental:handlers/appointment/start-visit",
+                    "actionFunction": "actionStartVisit",
                     "hidden": false
                 }
             ]

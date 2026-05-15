@@ -6,10 +6,11 @@
         "clinic": {"type": "link", "required": true},
         "invoice": {"type": "link"},
         "method": {
-            "type": "enum",
-            "options": ["cash", "card", "bank_transfer", "online", "terminal", "other"],
+            "type": "varchar",
+            "maxLength": 64,
             "default": "cash",
-            "required": true
+            "required": true,
+            "tooltip": true
         },
         "amount": {"type": "currency", "required": true, "default": "0.00"},
         "currency": {"type": "varchar", "maxLength": 8, "default": "RUB"},

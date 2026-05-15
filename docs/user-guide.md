@@ -9,20 +9,28 @@
 ### 1.1 Pre-registering a patient (anonymous link)
 
 1. Open **Preliminary Patient**, click **+ Create**.
-2. Fill in name, phone, e-mail.
-3. Save → "Send questionnaire" — copies a public URL with `QuestionnaireToken`.
-4. Patient opens the link, fills the **Health Questionnaire** in the browser.
-5. When they arrive, click **Convert** on the preliminary patient — it becomes
-   a full `Patient` linked to the same questionnaire.
+2. Fill in name and phone. The clinic is filled automatically when the default
+   clinic is configured or when there is only one active clinic.
+3. Save and book the preliminary patient into an appointment.
+4. When the patient arrives, click **Convert to Patient**.
+5. The system opens the health-questionnaire QR/token flow. The patient scans
+   it on a tablet, answers every yes/no item, signs and submits.
+6. After successful submission, the preliminary patient is converted into a
+   full `Patient`, the source preliminary record is hidden from the normal
+   list, and the appointment can be started.
 
 ### 1.1 Предварительная регистрация (анонимная ссылка)
 
-1. Открыть **Preliminary Patient → Создать**.
-2. Имя, телефон, e-mail.
-3. Кнопка "Отправить анкету" — копирует публичный URL c `QuestionnaireToken`.
-4. Пациент проходит **Health Questionnaire** в браузере.
-5. По приходу — кнопка **Convert** превращает запись в полноценного `Patient`,
-   анкета остаётся связанной.
+1. Открыть **Предварительные пациенты → Создать**.
+2. Заполнить имя и телефон. Клиника подставляется автоматически, если задана
+   клиника по умолчанию или если активная клиника только одна.
+3. Сохранить и записать предварительного пациента на приём.
+4. Когда пациент пришёл, нажать **Преобразовать в пациента**.
+5. Система откроет QR/token-флоу анкеты здоровья. Пациент сканирует QR на
+   планшете, отвечает на все вопросы Да/Нет, ставит подпись и отправляет.
+6. После успешной отправки предварительный пациент становится полноценным
+   `Patient`, исходная предварительная запись скрывается из обычного списка,
+   а приём можно начинать.
 
 ### 1.2 Booking an appointment
 
@@ -92,15 +100,22 @@ read-only and serve as history.
 ### 2.3 Visit & invoice
 
 1. Open the appointment → **Start Visit** → fill `VisitServiceLine` items
-   (services + materials).
-2. Click **Finish Visit** — auto-creates an `Invoice` in `draft` state.
-3. The cashier confirms the invoice → `Payment` records (cash / card).
-4. Visit goes into the patient timeline; salary entries pick it up next month.
+   from the service catalog.
+2. Material norms are copied into **Visit Material Lines**. Review or adjust
+   actual consumption before finishing the visit.
+3. Click **Finish Visit** — stock write-off uses the prepared material lines
+   and an `Invoice` is created in `draft` state.
+4. The cashier confirms the invoice → `Payment` records (cash / card).
+5. Visit goes into the patient timeline; salary entries pick it up next month.
 
-1. Открыть приём → **Начать визит** → строки `VisitServiceLine`.
-2. **Завершить визит** — создаётся `Invoice` в статусе `draft`.
-3. Кассир подтверждает счёт → `Payment`.
-4. Визит уходит в историю; ЗП-начисления подхватят его в конце месяца.
+1. Открыть запись → **Начать приём** → добавить строки услуг
+   `VisitServiceLine` из каталога.
+2. Нормы материалов копируются в **Расход материалов**. До завершения приёма
+   можно проверить или поправить фактический расход.
+3. **Завершить приём** — списание склада берёт подготовленные строки расхода,
+   создаётся `Invoice` в статусе `draft`.
+4. Кассир подтверждает счёт → `Payment`.
+5. Визит уходит в историю; ЗП-начисления подхватят его в конце месяца.
 
 ---
 

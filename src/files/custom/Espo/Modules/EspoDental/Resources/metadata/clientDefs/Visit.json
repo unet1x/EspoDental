@@ -1,17 +1,27 @@
 {
     "controller": "controllers/record",
+    "createDisabled": true,
     "color": "#D62728",
     "iconClass": "fas fa-stethoscope",
     "kanbanViewMode": false,
+    "recordViews": {
+        "detail": "espo-dental:views/visit/record/detail"
+    },
+    "defaultSidePanelFieldLists": {
+        "detail": ["createdAt", "modifiedAt"],
+        "detailSmall": ["createdAt", "modifiedAt"]
+    },
     "menu": {
         "detail": {
             "buttons": [
                 {
                     "name": "finishVisit",
-                    "labelText": "Finish Visit",
+                    "label": "Finish Visit",
                     "style": "primary",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/visit/finish-visit",
+                    "handler": "espo-dental:handlers/visit/finish-visit",
+                    "actionFunction": "actionFinishVisit",
+                    "checkVisibilityFunction": "isFinishVisitAvailable",
                     "hidden": false
                 }
             ]

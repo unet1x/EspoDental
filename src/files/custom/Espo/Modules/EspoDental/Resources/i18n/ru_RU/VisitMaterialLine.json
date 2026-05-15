@@ -1,0 +1,23 @@
+{
+    "labels": {"Create VisitMaterialLine": "Добавить расход материала"},
+    "fields": {
+        "name": "Название",
+        "visit": "Приём",
+        "visitServiceLine": "Позиция приёма",
+        "service": "Услуга",
+        "material": "Материал",
+        "plannedQuantity": "Плановый расход",
+        "quantity": "Фактический расход",
+        "unit": "Ед.",
+        "unitPrice": "Цена ед.",
+        "totalCost": "Себестоимость",
+        "isAutoCreated": "Создано по норме",
+        "notes": "Комментарий"
+    },
+    "links": {
+        "visit": "Приём",
+        "visitServiceLine": "Позиция приёма",
+        "service": "Услуга",
+        "material": "Материал"
+    }
+}

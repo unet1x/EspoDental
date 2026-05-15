@@ -1,27 +1,27 @@
 {
     "controller": "controllers/record",
+    "removeDisabled": true,
     "boolFilterList": ["onlyMy"],
     "color": "#FF7F0E",
     "iconClass": "fas fa-user-clock",
     "kanbanViewMode": true,
+    "defaultSidePanelFieldLists": {
+        "detail": ["createdAt", "modifiedAt"],
+        "detailSmall": ["createdAt", "modifiedAt"],
+        "edit": ["createdAt", "modifiedAt"],
+        "editSmall": ["createdAt", "modifiedAt"]
+    },
     "menu": {
         "detail": {
             "buttons": [
                 {
-                    "name": "issueQuestionnaire",
-                    "labelText": "Health Questionnaire",
-                    "style": "default",
-                    "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/preliminary-patient/issue-questionnaire",
-                    "hidden": false
-                },
-                {
                     "name": "convertToPatient",
-                    "labelText": "Convert to Patient",
+                    "label": "Convert to Patient",
                     "style": "primary",
                     "acl": "edit",
                     "aclScope": "Patient",
-                    "actionHandler": "espo-dental:handlers/preliminary-patient/convert-to-patient",
+                    "handler": "espo-dental:handlers/preliminary-patient/issue-questionnaire",
+                    "actionFunction": "actionIssueQuestionnaire",
                     "hidden": false
                 }
             ]

@@ -23,6 +23,7 @@
             "bank_transfer": "Transferencia",
             "online": "Online",
             "terminal": "Terminal",
+            "crypto": "Criptomoneda",
             "other": "Otro"
         },
         "status": {
@@ -41,5 +42,8 @@
         "Refund reason": "Motivo del reembolso",
         "Refund created": "Reembolso creado"
     },
-    "tooltips": {"direction": "Entrada — la clinica recibe; Salida — reembolso al paciente"}
+    "tooltips": {
+        "method": "La lista de metodos de pago la edita un administrador en los ajustes de EspoDental.",
+        "direction": "Entrada — la clinica recibe; Salida — reembolso al paciente"
+    }
 }

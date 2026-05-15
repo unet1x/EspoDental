@@ -1,5 +1,8 @@
 {
     "controller": "controllers/record",
     "color": "#FF7F0E",
-    "iconClass": "fas fa-tooth"
+    "iconClass": "fas fa-tooth",
+    "recordViews": {
+        "edit": "espo-dental:views/visit-service-line/record/edit"
+    }
 }

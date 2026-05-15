@@ -1,13 +1,49 @@
 {
     "controller": "controllers/record",
     "createDisabled": true,
+    "removeDisabled": true,
     "boolFilterList": ["onlyMy", "vip", "restrictions"],
     "color": "#17BECF",
     "iconClass": "fas fa-user-injured",
     "kanbanViewMode": false,
+    "defaultSidePanelFieldLists": {
+        "detail": ["createdAt", "createdBy"],
+        "detailSmall": ["createdAt", "createdBy"]
+    },
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "bookAppointment",
+                    "label": "Book Appointment",
+                    "style": "primary",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/patient/book-appointment",
+                    "actionFunction": "actionBookAppointment",
+                    "checkVisibilityFunction": "isBookAppointmentAvailable"
+                },
+                {
+                    "name": "issueQuestionnaire",
+                    "label": "Health Questionnaire",
+                    "style": "warning",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/patient/issue-questionnaire",
+                    "actionFunction": "actionIssueQuestionnaire",
+                    "checkVisibilityFunction": "isIssueQuestionnaireAvailable"
+                }
+            ]
+        }
+    },
     "dynamicLogic": {
         "fields": {
             "parentLastName": {
+                "visible": {
+                    "conditionGroup": [
+                        {"type": "isTrue", "attribute": "isChild"}
+                    ]
+                }
+            },
+            "parentPatient": {
                 "visible": {
                     "conditionGroup": [
                         {"type": "isTrue", "attribute": "isChild"}

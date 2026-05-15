@@ -26,15 +26,17 @@
         },
         "clinic": {
             "type": "link",
-            "required": true
+            "required": true,
+            "view": "espo-dental:views/appointment/fields/default-clinic"
         },
         "dateStart": {
             "type": "datetime",
-            "required": true
+            "required": true,
+            "view": "espo-dental:views/appointment/fields/date-start-slot"
         },
         "dateEnd": {
             "type": "datetime",
-            "required": true,
+            "required": false,
             "after": "dateStart"
         },
         "duration": {
@@ -59,11 +61,6 @@
                 "no_show": "danger"
             }
         },
-        "source": {
-            "type": "enum",
-            "options": ["", "walk_in", "phone", "online", "portal", "referral", "other"],
-            "default": ""
-        },
         "bookedBy": {
             "type": "link",
             "view": "views/fields/user"
@@ -83,6 +80,10 @@
             "type": "bool",
             "default": false,
             "readOnly": true
+        },
+        "confirmed": {
+            "type": "bool",
+            "default": false
         },
         "visit": {
             "type": "linkOne",

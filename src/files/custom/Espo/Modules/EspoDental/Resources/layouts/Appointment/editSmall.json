@@ -1,0 +1,25 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [
+                {"name": "doctor"},
+                {"name": "cabinet"}
+            ],
+            [
+                {"name": "dateStart"},
+                {"name": "duration"}
+            ],
+            [
+                {"name": "clinic"}
+            ],
+            [
+                {"name": "confirmed"},
+                {"name": "reminderSent"}
+            ],
+            [
+                {"name": "complaints", "fullWidth": true}
+            ]
+        ]
+    }
+]

@@ -7,10 +7,11 @@
             "buttons": [
                 {
                     "name": "printPdf",
-                    "labelText": "Print PDF",
+                    "label": "Print PDF",
                     "style": "default",
                     "acl": "read",
-                    "actionHandler": "espo-dental:handlers/health-questionnaire/print-pdf"
+                    "handler": "espo-dental:handlers/health-questionnaire/print-pdf",
+                    "actionFunction": "actionPrintPdf"
                 }
             ]
         }

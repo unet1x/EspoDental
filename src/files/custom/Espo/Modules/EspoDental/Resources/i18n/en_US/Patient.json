@@ -5,6 +5,7 @@
         "Contact": "Contact",
         "Family": "Family",
         "Notes": "Notes",
+        "Book Appointment": "Book Appointment",
         "Health Questionnaire": "Health Questionnaire",
         "Other": "Other"
     },
@@ -30,6 +31,7 @@
         "cardNumber": "Card #",
         "firstVisitDate": "First Visit Date",
         "isChild": "Child",
+        "parentPatient": "Parent Patient",
         "parentLastName": "Parent Last Name",
         "parentFirstName": "Parent First Name",
         "parentMiddleName": "Parent Middle Name",
@@ -38,6 +40,8 @@
         "balance": "Balance",
         "status": "Status",
         "clinic": "Clinic",
+        "parentPatient": "Parent Patient",
+        "childPatients": "Children",
         "convertedFromPreliminary": "From Lead Patient",
         "lastQuestionnaireAt": "Questionnaire Filled At",
         "questionnaireExpired": "Questionnaire Expired",
@@ -78,7 +82,15 @@
     },
     "links": {
         "clinic": "Clinic",
-        "convertedFromPreliminary": "From Lead Patient"
+        "convertedFromPreliminary": "From Lead Patient",
+        "appointments": "Appointments",
+        "visits": "Visits",
+        "toothChartSnapshots": "Tooth Chart",
+        "photos": "Photos",
+        "invoices": "Invoices",
+        "payments": "Payments",
+        "notificationLogs": "Notifications",
+        "healthQuestionnaires": "Health Questionnaires"
     },
     "boolFilters": {
         "onlyMy": "Only my",
@@ -91,5 +103,10 @@
         "balance": "Current balance: positive = prepayment, negative = debt.",
         "questionnaireExpired": "Health questionnaire is missing or older than 1 year — ask the patient to fill it again.",
         "questionnaireHasAlerts": "Questionnaire has flagged items that require doctor attention."
+    },
+    "messages": {
+        "Issue questionnaire confirm": "Show the QR code to the patient on the tablet. After submission, the new questionnaire will be saved in the patient card.",
+        "Questionnaire is up to date": "The health questionnaire is up to date",
+        "Appointment booked": "Patient booked for an appointment"
     }
 }

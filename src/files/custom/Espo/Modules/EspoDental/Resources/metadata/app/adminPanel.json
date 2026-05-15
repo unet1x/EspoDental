@@ -4,9 +4,10 @@
         "order": 50,
         "itemList": [
             {
-                "url": "#Admin/settings/EspoDental",
+                "url": "#Admin/espoDentalSettings",
                 "label": "EspoDental Settings",
-                "iconClass": "fas fa-tooth"
+                "iconClass": "fas fa-tooth",
+                "recordView": "espo-dental:views/admin/settings"
             }
         ]
     }

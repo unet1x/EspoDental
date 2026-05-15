@@ -5,16 +5,20 @@ declare(strict_types=1);
 namespace Espo\Modules\EspoDental\Services;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\Cabinet;
 
 class CalendarService
 {
-    public function __construct(private readonly EntityManager $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManager $entityManager,
+        private readonly Config $config
+    ) {
     }
 
     /**
@@ -127,7 +131,10 @@ class CalendarService
         int $workStartHour = 8,
         int $workEndHour = 21,
         int $stepMinutes = 15,
-        int $limit = 50
+        int $limit = 50,
+        ?string $excludeAppointmentId = null,
+        ?string $parentType = null,
+        ?string $parentId = null
     ): array {
         if ($durationMinutes <= 0) {
             throw new BadRequest('durationMinutes must be positive');
@@ -135,11 +142,15 @@ class CalendarService
         if ($workEndHour <= $workStartHour) {
             throw new BadRequest('workEndHour must be greater than workStartHour');
         }
-        $from = new DateTimeImmutable($dateFrom . ' 00:00:00');
-        $to = new DateTimeImmutable($dateTo . ' 23:59:59');
-        if ($to < $from) {
+        $timeZone = $this->getTimeZone();
+        $utc = new DateTimeZone('UTC');
+        $fromLocal = new DateTimeImmutable($dateFrom . ' 00:00:00', $timeZone);
+        $toLocal = new DateTimeImmutable($dateTo . ' 23:59:59', $timeZone);
+        if ($toLocal < $fromLocal) {
             throw new BadRequest('dateTo must be on/after dateFrom');
         }
+        $from = $fromLocal->setTimezone($utc);
+        $to = $toLocal->setTimezone($utc);
 
         $cabWhere = ['deleted' => false];
         if ($clinicId) {
@@ -161,15 +172,10 @@ class CalendarService
             'dateStart<' => $to->format('Y-m-d H:i:s'),
             'dateEnd>' => $from->format('Y-m-d H:i:s'),
         ];
-        if ($clinicId) {
-            $appWhere['clinicId'] = $clinicId;
-        }
-        if ($cabinetId) {
-            $appWhere['cabinetId'] = $cabinetId;
-        }
-        if ($doctorId) {
-            $appWhere['doctorId'] = $doctorId;
-        }
+
+        // Load all overlapping appointments for this date window. Cabinet
+        // occupancy is keyed by cabinet id below, while doctor and patient
+        // occupancy must stay global across cabinets and clinics.
         /** @var iterable<Appointment> $apps */
         $apps = $this->entityManager
             ->getRDBRepository(Appointment::ENTITY_TYPE)
@@ -178,9 +184,15 @@ class CalendarService
 
         $occByCabinet = [];
         $occByDoctor = [];
+        $occByPatient = [];
         foreach ($apps as $a) {
+            if ($excludeAppointmentId && $a->getId() === $excludeAppointmentId) {
+                continue;
+            }
+
             $cId = (string) $a->get('cabinetId');
             $dId = (string) $a->get('doctorId');
+            $pKey = $this->patientKey($a->getParentType(), $a->getParentId());
             $s = (int) strtotime((string) $a->getDateStart());
             $e = (int) strtotime((string) $a->getDateEnd());
             if ($cId !== '') {
@@ -189,20 +201,25 @@ class CalendarService
             if ($dId !== '') {
                 $occByDoctor[$dId][] = [$s, $e];
             }
+            if ($pKey !== null) {
+                $occByPatient[$pKey][] = [$s, $e];
+            }
         }
 
         $slots = [];
         $stepSec = $stepMinutes * 60;
         $durSec = $durationMinutes * 60;
-        $today = $from;
+        $today = $fromLocal;
+        $lastDay = new DateTimeImmutable($dateTo . ' 00:00:00', $timeZone);
         $now = time();
+        $requestedPatientKey = $this->patientKey($parentType, $parentId);
 
-        while ($today <= $to && count($slots) < $limit) {
+        while ($today <= $lastDay && count($slots) < $limit) {
             foreach ($cabinets as $c) {
                 $cId = $c->getId();
                 $cName = (string) $c->get('name');
-                $dayStartTs = $today->setTime($workStartHour, 0)->getTimestamp();
-                $dayEndTs = $today->setTime($workEndHour, 0)->getTimestamp();
+                $dayStartTs = $today->setTime($workStartHour, 0)->setTimezone($utc)->getTimestamp();
+                $dayEndTs = $today->setTime($workEndHour, 0)->setTimezone($utc)->getTimestamp();
                 for ($t = $dayStartTs; $t + $durSec <= $dayEndTs; $t += $stepSec) {
                     if ($t < $now) {
                         continue;
@@ -216,9 +233,15 @@ class CalendarService
                     ) {
                         continue;
                     }
+                    if (
+                        $requestedPatientKey
+                        && $this->overlapsAny($t, $t + $durSec, $occByPatient[$requestedPatientKey] ?? [])
+                    ) {
+                        continue;
+                    }
                     $slots[] = [
-                        'start' => date('Y-m-d H:i:s', $t),
-                        'end' => date('Y-m-d H:i:s', $t + $durSec),
+                        'start' => gmdate('Y-m-d H:i:s', $t),
+                        'end' => gmdate('Y-m-d H:i:s', $t + $durSec),
                         'cabinetId' => $cId,
                         'cabinetName' => $cName,
                         'doctorId' => $doctorId,
@@ -231,6 +254,26 @@ class CalendarService
             $today = $today->modify('+1 day');
         }
         return $slots;
+    }
+
+    private function patientKey(?string $parentType, ?string $parentId): ?string
+    {
+        if (!$parentType || !$parentId) {
+            return null;
+        }
+
+        return $parentType . ':' . $parentId;
+    }
+
+    private function getTimeZone(): DateTimeZone
+    {
+        $timeZone = (string) ($this->config->get('timeZone') ?: 'UTC');
+
+        try {
+            return new DateTimeZone($timeZone);
+        } catch (\Exception) {
+            return new DateTimeZone('UTC');
+        }
     }
 
     /**

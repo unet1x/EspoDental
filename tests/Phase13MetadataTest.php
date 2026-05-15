@@ -41,6 +41,12 @@ final class Phase13MetadataTest extends TestCase
         $this->assertStringContainsString('public function findFreeSlots', $code);
         $this->assertStringContainsString('Appointment::BLOCKING_STATUSES', $code);
         $this->assertStringContainsString('overlapsAny', $code);
+        $this->assertStringContainsString('excludeAppointmentId', $code);
+        $this->assertStringContainsString('patientKey', $code);
+        $this->assertStringContainsString('$occByPatient', $code);
+        $this->assertStringNotContainsString('$appWhere[\'cabinetId\']', $code);
+        $this->assertStringNotContainsString('$appWhere[\'doctorId\']', $code);
+        $this->assertStringContainsString('getTimeZone', $code);
     }
 
     public function testCalendarServiceGetDataAcceptsCabinetId(): void
@@ -58,6 +64,9 @@ final class Phase13MetadataTest extends TestCase
         $this->assertStringContainsString('getActionFreeSlots', $code);
         $this->assertStringContainsString('durationMinutes', $code);
         $this->assertStringContainsString('cabinetId', $code);
+        $this->assertStringContainsString('excludeAppointmentId', $code);
+        $this->assertStringContainsString('parentType', $code);
+        $this->assertStringContainsString('parentId', $code);
     }
 
     public function testDashletExposesWeekViewAndCabinetFilter(): void

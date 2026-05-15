@@ -5,6 +5,7 @@
         "Contact": "Контакты",
         "Family": "Семья",
         "Notes": "Заметки",
+        "Book Appointment": "Записать на прием",
         "Health Questionnaire": "Анкета здоровья",
         "Other": "Прочее"
     },
@@ -30,6 +31,7 @@
         "cardNumber": "№ карты",
         "firstVisitDate": "Дата первого приема",
         "isChild": "Ребенок",
+        "parentPatient": "Родитель-пациент",
         "parentLastName": "Фамилия родителя",
         "parentFirstName": "Имя родителя",
         "parentMiddleName": "Отчество родителя",
@@ -38,6 +40,8 @@
         "balance": "Баланс",
         "status": "Статус",
         "clinic": "Клиника",
+        "parentPatient": "Родитель-пациент",
+        "childPatients": "Дети",
         "convertedFromPreliminary": "Из предв. пациента",
         "lastQuestionnaireAt": "Анкета заполнена",
         "questionnaireExpired": "Анкета устарела",
@@ -78,7 +82,15 @@
     },
     "links": {
         "clinic": "Клиника",
-        "convertedFromPreliminary": "Из предв. пациента"
+        "convertedFromPreliminary": "Из предв. пациента",
+        "appointments": "Записи",
+        "visits": "Приемы",
+        "toothChartSnapshots": "Зубная формула",
+        "photos": "Фотографии",
+        "invoices": "Счета",
+        "payments": "Платежи",
+        "notificationLogs": "Уведомления",
+        "healthQuestionnaires": "Анкеты здоровья"
     },
     "boolFilters": {
         "onlyMy": "Только мои",
@@ -91,5 +103,10 @@
         "balance": "Текущий баланс: положительный — предоплата, отрицательный — долг",
         "questionnaireExpired": "Анкета здоровья отсутствует или старше 1 года — попросите перезаполнить",
         "questionnaireHasAlerts": "В анкете есть отмеченные пункты, требующие внимания врача"
+    },
+    "messages": {
+        "Issue questionnaire confirm": "Покажите QR-код пациенту на планшете. После отправки новая анкета будет сохранена в карточке пациента.",
+        "Questionnaire is up to date": "Анкета здоровья актуальна",
+        "Appointment booked": "Пациент записан на прием"
     }
 }

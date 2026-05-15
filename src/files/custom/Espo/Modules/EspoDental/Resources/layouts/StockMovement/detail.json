@@ -6,5 +6,6 @@
     [{"name": "performedAt"}, {"name": "performedBy"}],
     [{"name": "batch"}, {"name": "expiryDate"}],
     [{"name": "sourceVisit"}, {"name": "sourceVisitServiceLine"}],
+    [{"name": "sourceVisitMaterialLine"}, false],
     [{"name": "reason", "fullWidth": true}]
 ]}]

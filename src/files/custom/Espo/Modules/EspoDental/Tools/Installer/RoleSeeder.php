@@ -29,7 +29,7 @@ class RoleSeeder
         'Clinic', 'Cabinet',
         'PreliminaryPatient', 'Patient',
         'Appointment', 'AppointmentStatusLog',
-        'Visit', 'ServiceCategory', 'Service', 'VisitServiceLine',
+        'Visit', 'ServiceCategory', 'Service', 'VisitServiceLine', 'VisitMaterialLine',
         'ToothChartSnapshot', 'VisitPhoto',
         'Invoice', 'InvoiceLine', 'Payment',
         'MaterialCategory', 'Material', 'StockMovement', 'ServiceMaterial',
@@ -107,8 +107,26 @@ class RoleSeeder
                 ->where(['name' => $roleName])
                 ->findOne();
             if ($existing) {
+                $data = (array) $existing->get('data');
+                $changed = false;
+
+                foreach ($cfg['data'] as $scope => $row) {
+                    if (array_key_exists($scope, $data)) {
+                        continue;
+                    }
+
+                    $data[$scope] = $row;
+                    $changed = true;
+                }
+
+                if ($changed) {
+                    $existing->set('data', (object) $data);
+                    $this->entityManager->saveEntity($existing);
+                }
+
                 continue;
             }
+
             $role = $this->entityManager->getRDBRepository(Role::ENTITY_TYPE)->getNew();
             $role->set('name', $roleName);
             $role->set('description', $cfg['description']);
@@ -170,6 +188,7 @@ class RoleSeeder
         $manager['ServiceCategory']      = $row('yes', 'all', 'all', 'all', 'no');
         $manager['Service']              = $row('yes', 'all', 'all', 'all', 'no');
         $manager['VisitServiceLine']     = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['VisitMaterialLine']    = $row('yes', 'all', 'all', 'all', 'no');
         $manager['ToothChartSnapshot']   = $row('yes', 'all', 'all', 'all', 'no');
         $manager['VisitPhoto']           = $row('yes', 'all', 'all', 'all', 'no');
         $manager['InvoiceLine']          = $row('yes', 'all', 'all', 'all', 'no');
@@ -195,6 +214,7 @@ class RoleSeeder
             'ServiceCategory'      => $row('no', 'all', 'no', 'no', 'no'),
             'Service'              => $row('no', 'all', 'no', 'no', 'no'),
             'VisitServiceLine'     => $row('yes', 'team', 'own', 'own', 'no'),
+            'VisitMaterialLine'    => $row('yes', 'team', 'own', 'own', 'no'),
             'ToothChartSnapshot'   => $row('yes', 'team', 'own', 'no', 'no'),
             'VisitPhoto'           => $row('yes', 'team', 'own', 'own', 'no'),
             'Invoice'              => $row('no', 'team', 'no', 'no', 'team'),
@@ -227,6 +247,7 @@ class RoleSeeder
             'ServiceCategory'      => $row('no', 'all', 'no', 'no', 'no'),
             'Service'              => $row('no', 'all', 'no', 'no', 'no'),
             'VisitServiceLine'     => $row('no', 'team', 'no', 'no', 'no'),
+            'VisitMaterialLine'    => $row('yes', 'team', 'own', 'own', 'no'),
             'ToothChartSnapshot'   => $row('no', 'team', 'no', 'no', 'no'),
             'VisitPhoto'           => $row('yes', 'team', 'own', 'own', 'no'),
             'Invoice'              => $row('no', 'team', 'no', 'no', 'no'),
@@ -259,6 +280,7 @@ class RoleSeeder
             'ServiceCategory'      => $row('no', 'all', 'no', 'no', 'no'),
             'Service'              => $row('no', 'all', 'no', 'no', 'no'),
             'VisitServiceLine'     => $row('no', 'team', 'no', 'no', 'no'),
+            'VisitMaterialLine'    => $row('no', 'team', 'no', 'no', 'no'),
             'ToothChartSnapshot'   => $row('no', 'team', 'no', 'no', 'no'),
             'VisitPhoto'           => $row('no', 'team', 'no', 'no', 'no'),
             'Invoice'              => $row('yes', 'team', 'team', 'no', 'team'),
@@ -291,6 +313,7 @@ class RoleSeeder
             'ServiceCategory'      => $row('no', 'all', 'no', 'no', 'no'),
             'Service'              => $row('no', 'all', 'no', 'no', 'no'),
             'VisitServiceLine'     => $row('no', 'no', 'no', 'no', 'no'),
+            'VisitMaterialLine'    => $row('no', 'no', 'no', 'no', 'no'),
             'ToothChartSnapshot'   => $row('no', 'no', 'no', 'no', 'no'),
             'VisitPhoto'           => $row('no', 'no', 'no', 'no', 'no'),
             'Invoice'              => $row('no', 'no', 'no', 'no', 'no'),

@@ -6,7 +6,8 @@
         "unit": "Unit", "unitPrice": "Unit price", "totalCost": "Total cost",
         "performedAt": "Performed at", "performedBy": "Performed by", "batch": "Batch",
         "expiryDate": "Expiry", "reason": "Reason",
-        "sourceVisit": "Source visit", "sourceVisitServiceLine": "Source line"
+        "sourceVisit": "Source visit", "sourceVisitServiceLine": "Source line",
+        "sourceVisitMaterialLine": "Source material line"
     },
     "options": {
         "type": {

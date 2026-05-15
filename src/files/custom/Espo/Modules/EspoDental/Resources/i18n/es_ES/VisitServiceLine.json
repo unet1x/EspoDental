@@ -1,5 +1,11 @@
 {
-    "labels": {"Create VisitServiceLine": "Anadir linea"},
+    "labels": {
+        "Create VisitServiceLine": "Anadir linea",
+        "Service Catalog": "Catalogo de servicios",
+        "Select category": "Seleccione categoria",
+        "Select service": "Seleccione servicio",
+        "No services in category": "No hay servicios en la categoria"
+    },
     "fields": {
         "name": "Nombre",
         "visit": "Visita",
@@ -14,7 +20,7 @@
         "vatAmount": "IVA",
         "notes": "Notas"
     },
-    "links": {"visit": "Visita", "service": "Servicio"},
+    "links": {"visit": "Visita", "service": "Servicio", "materialLines": "Consumo de materiales"},
     "tooltips": {
         "teethNumbers": "Numeros FDI separados por coma, p.ej. 16,26",
         "discount": "Porcentaje de descuento (0..100)"

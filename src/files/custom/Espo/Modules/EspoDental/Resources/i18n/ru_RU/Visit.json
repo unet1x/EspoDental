@@ -3,8 +3,9 @@
         "Create Visit": "Создать приём",
         "Overview": "Основное",
         "Clinical": "Клиническое",
-        "Other": "Прочее",
-        "Finish Visit": "Завершить приём"
+        "Totals": "Итоги",
+        "Finish Visit": "Завершить приём",
+        "Tooth Chart": "Зубная формула"
     },
     "fields": {
         "name": "Название",
@@ -36,11 +37,16 @@
         "patient": "Пациент",
         "doctor": "Врач",
         "cabinet": "Кабинет",
-        "clinic": "Клиника"
+        "clinic": "Клиника",
+        "serviceLines": "Услуги приёма",
+        "materialLines": "Расход материалов",
+        "photos": "Фотографии",
+        "toothChartSnapshots": "Зубная формула",
+        "invoices": "Счета"
     },
     "messages": {
         "Only in-progress visits can be finished": "Завершить можно только приём в статусе «Идёт»",
-        "Confirm finish visit": "Завершить приём? Будет сформирован счёт.",
+        "Confirm finish visit": "Завершить приём? Будет сформирован счёт, а услуги и расход материалов станут недоступны для редактирования.",
         "Visit finished": "Приём завершён"
     }
 }

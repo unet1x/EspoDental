@@ -13,6 +13,29 @@ use Espo\Modules\EspoDental\Services\VisitService;
 class Visit extends Record
 {
     /**
+     * GET /Visit/action/toothChart?id=...
+     *
+     * @return array<string, mixed>
+     */
+    public function getActionToothChart(Request $request): array
+    {
+        $id = $request->getQueryParam('id');
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest('id is required');
+        }
+
+        if (!$this->getAcl()->checkScope('Visit', 'read')) {
+            throw new Forbidden();
+        }
+
+        /** @var VisitService $service */
+        $service = $this->injectableFactory->create(VisitService::class);
+
+        return $service->getToothChartData($id);
+    }
+
+    /**
      * POST /Visit/action/finishVisit
      *
      * @return array{visitId: string, total: float, lineCount: int, invoiceId: ?string}

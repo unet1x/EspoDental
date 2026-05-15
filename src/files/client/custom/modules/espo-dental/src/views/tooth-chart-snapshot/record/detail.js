@@ -5,8 +5,6 @@ define('espo-dental:views/tooth-chart-snapshot/record/detail', [
 
     return Dep.extend({
 
-        bottomView: 'views/record/bottom',
-
         setup: function () {
             Dep.prototype.setup.call(this);
             this.listenTo(this.model, 'sync', this.rerenderChart);
@@ -31,18 +29,30 @@ define('espo-dental:views/tooth-chart-snapshot/record/detail', [
             }
             var dentition = this.model.get('dentitionType') || 'adult';
             var teeth = this.model.get('teeth') || {};
-            var readOnly = this.mode !== 'edit';
+            var readOnly = this.type !== 'edit' && this.mode !== 'edit';
             Renderer.render(container, {
                 dentition: dentition,
                 teeth: teeth,
                 readOnly: readOnly,
+                conditions: this.getDentalSetting('espoDentalToothChartConditions'),
+                surfaces: this.getDentalSetting('espoDentalToothChartSurfaces'),
+                language: this.getDentalSetting('language'),
                 onChange: function (next) {
                     this.model.set('teeth', next);
                 }.bind(this),
-                translate: function (key, cat) {
-                    return this.translate(key, cat || 'options', 'ToothChartSnapshot');
+                translate: function (key, cat, scope) {
+                    return this.translate(key, cat || 'options', scope || 'ToothChartSnapshot');
                 }.bind(this)
             });
+        },
+
+        getDentalSetting: function (name) {
+            var config = typeof this.getConfig === 'function' ? this.getConfig() : null;
+            if (!config || typeof config.get !== 'function') {
+                return null;
+            }
+
+            return config.get(name);
         },
 
         injectContainer: function () {

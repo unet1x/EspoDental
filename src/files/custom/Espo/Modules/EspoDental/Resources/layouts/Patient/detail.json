@@ -27,8 +27,7 @@
                 {"name": "status"}
             ],
             [
-                {"name": "clinic"},
-                {"name": "assignedUser"}
+                {"name": "clinic"}
             ]
         ]
     },
@@ -58,6 +57,9 @@
             [
                 {"name": "isChild"},
                 {"name": "parentRelation"}
+            ],
+            [
+                {"name": "parentPatient"}
             ],
             [
                 {"name": "parentLastName"},
@@ -96,11 +98,7 @@
         "label": "Other",
         "rows": [
             [
-                {"name": "firstVisitDate"},
-                {"name": "convertedFromPreliminary"}
-            ],
-            [
-                {"name": "teams"}
+                {"name": "firstVisitDate"}
             ],
             [
                 {"name": "createdAt"},

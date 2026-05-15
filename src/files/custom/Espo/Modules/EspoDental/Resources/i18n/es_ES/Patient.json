@@ -5,6 +5,7 @@
         "Contact": "Contacto",
         "Family": "Familia",
         "Notes": "Notas",
+        "Book Appointment": "Reservar cita",
         "Health Questionnaire": "Cuestionario de salud",
         "Other": "Otros"
     },
@@ -30,6 +31,7 @@
         "cardNumber": "Numero de ficha",
         "firstVisitDate": "Primera visita",
         "isChild": "Nino",
+        "parentPatient": "Paciente padre/madre",
         "parentLastName": "Apellido del padre/madre",
         "parentFirstName": "Nombre del padre/madre",
         "parentMiddleName": "Segundo nombre del padre/madre",
@@ -38,6 +40,8 @@
         "balance": "Saldo",
         "status": "Estado",
         "clinic": "Clinica",
+        "parentPatient": "Paciente padre/madre",
+        "childPatients": "Hijos",
         "convertedFromPreliminary": "Desde paciente preliminar",
         "lastQuestionnaireAt": "Cuestionario completado el",
         "questionnaireExpired": "Cuestionario vencido",
@@ -78,7 +82,15 @@
     },
     "links": {
         "clinic": "Clinica",
-        "convertedFromPreliminary": "Desde paciente preliminar"
+        "convertedFromPreliminary": "Desde paciente preliminar",
+        "appointments": "Citas",
+        "visits": "Visitas",
+        "toothChartSnapshots": "Odontograma",
+        "photos": "Fotos",
+        "invoices": "Facturas",
+        "payments": "Pagos",
+        "notificationLogs": "Notificaciones",
+        "healthQuestionnaires": "Cuestionarios de salud"
     },
     "boolFilters": {
         "onlyMy": "Solo mios",
@@ -91,5 +103,10 @@
         "balance": "Saldo actual: positivo = adelanto, negativo = deuda.",
         "questionnaireExpired": "El cuestionario de salud falta o tiene mas de un ano, pida que se complete de nuevo.",
         "questionnaireHasAlerts": "El cuestionario tiene puntos marcados que requieren atencion del medico."
+    },
+    "messages": {
+        "Issue questionnaire confirm": "Muestre el codigo QR al paciente en la tableta. Al enviarlo, el nuevo cuestionario se guardara en la ficha del paciente.",
+        "Questionnaire is up to date": "El cuestionario de salud esta actualizado",
+        "Appointment booked": "Paciente reservado para una cita"
     }
 }

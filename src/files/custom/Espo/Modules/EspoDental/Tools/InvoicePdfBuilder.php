@@ -6,8 +6,8 @@ namespace Espo\Modules\EspoDental\Tools;
 
 use Espo\Core\Acl;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
-use Espo\Core\Language;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Language;
 use Espo\Entities\Attachment;
 use Espo\Modules\EspoDental\Entities\Clinic;
 use Espo\Modules\EspoDental\Entities\Invoice;

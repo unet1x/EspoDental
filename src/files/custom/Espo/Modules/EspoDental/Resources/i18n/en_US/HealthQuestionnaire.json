@@ -40,6 +40,7 @@
     },
     "messages": {
         "Show QR to patient": "Show the QR code to the patient — they will scan it with the tablet camera and fill the questionnaire.",
-        "Copied": "Copied"
+        "Copied": "Copied",
+        "PDF file is not available": "Questionnaire PDF file is not available yet"
     }
 }

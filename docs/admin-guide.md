@@ -132,7 +132,10 @@ docker compose exec espocrm php command.php espo-dental-bootstrap
 1. Create a record in **Clinic** for each branch.
 2. Create **Cabinets** linked to each clinic with `order` and `capacity`.
 3. Assign every staff **User** to a **Team** that maps to the clinic.
-4. Make sure `Patient`, `Appointment`, `Invoice`, `Material`, etc. have
+4. In **Administration → EspoDental Settings**, set **Default Clinic** when the
+   installation currently works as one clinic. Reception forms will use it
+   automatically.
+5. Make sure `Patient`, `Appointment`, `Invoice`, `Material`, etc. have
    `clinicId` filled — the resource calendar, low-stock alerts, monthly
    revenue dashlet filter by clinic.
 
@@ -142,12 +145,71 @@ team that contains **all** clinic teams (Espo teams are sets, not trees).
 1. Завести запись **Clinic** для каждого филиала.
 2. Создать **Cabinet** с привязкой к клинике и параметрами `order` / `capacity`.
 3. Назначить каждому пользователю **Team**, соответствующую его клинике.
-4. У всех сущностей (`Patient`, `Appointment`, `Invoice`, `Material`…) должно
+4. В **Администрирование → EspoDental Settings** выбрать
+   **Клиника по умолчанию**, если установка пока работает как одна клиника.
+   Формы регистратуры будут использовать её автоматически.
+5. У всех сущностей (`Patient`, `Appointment`, `Invoice`, `Material`…) должно
    быть заполнено `clinicId` — отчёты и календарь фильтруют по клинике.
 
 ---
 
-## 4. Telegram reminders / Уведомления через Telegram
+## 4. Health questionnaire schema / Схема анкеты здоровья
+
+Health questionnaire questions are stored in:
+
+```text
+src/files/custom/Espo/Modules/EspoDental/Resources/metadata/dental/questionnaireSchema.json
+```
+
+The schema contains groups and items. Current item types are:
+
+- `bool` — yes/no medical question. Visible bool items are required on submit.
+- `text` — free-text note. Text fields are optional unless a later schema rule
+  marks them required.
+
+Use `alert: true` on a bool item when a positive answer should raise a medical
+alert flag. Conditional groups, such as female-specific questions, use the
+`conditional.showIf.patientGender` rule.
+
+After changing the schema on a mounted Docker install, run:
+
+```bash
+docker compose -f deploy/local/docker-compose.yml exec -T espocrm php rebuild.php
+docker compose -f deploy/local/docker-compose.yml exec -T espocrm php command.php update-app-timestamp
+```
+
+Existing completed questionnaires are not rewritten automatically. The updated
+schema applies to newly issued questionnaire forms and generated output.
+
+Вопросы анкеты здоровья находятся в:
+
+```text
+src/files/custom/Espo/Modules/EspoDental/Resources/metadata/dental/questionnaireSchema.json
+```
+
+Схема состоит из групп и вопросов. Сейчас используются типы:
+
+- `bool` — вопрос Да/Нет. Все видимые bool-вопросы обязательны при отправке.
+- `text` — свободный текст. Пока текстовые поля необязательны, если отдельное
+  правило схемы позже не сделает их обязательными.
+
+`alert: true` означает, что положительный ответ должен поднимать медицинский
+флаг. Условные группы, например женские вопросы, используют правило
+`conditional.showIf.patientGender`.
+
+После изменения схемы в Docker/mount-установке нужно выполнить:
+
+```bash
+docker compose -f deploy/local/docker-compose.yml exec -T espocrm php rebuild.php
+docker compose -f deploy/local/docker-compose.yml exec -T espocrm php command.php update-app-timestamp
+```
+
+Уже заполненные анкеты автоматически не переписываются. Новая схема применяется
+к новым формам и новой генерации документов.
+
+---
+
+## 5. Telegram reminders / Уведомления через Telegram
 
 1. Create a bot in @BotFather, copy the token.
 2. Put it into `.env` as `TELEGROM_BOT_TOKEN` (the variable is read at runtime
@@ -170,7 +232,7 @@ team that contains **all** clinic teams (Espo teams are sets, not trees).
 
 ---
 
-## 5. Backup / Резервное копирование
+## 6. Backup / Резервное копирование
 
 The recommended backup pipeline now lives in [`deploy/scripts/`](../deploy/scripts/):
 
@@ -185,7 +247,7 @@ The recommended backup pipeline now lives in [`deploy/scripts/`](../deploy/scrip
 The legacy single-file `deploy/backup.sh` is left in place for backwards
 compatibility but **`nightly.sh` is now the recommended cron entry**.
 
-See **section 9** for the full staging + nightly workflow.
+See **section 10** for the full staging + nightly workflow.
 
 Пайплайн бэкапов теперь живёт в [`deploy/scripts/`](../deploy/scripts/):
 
@@ -198,13 +260,13 @@ See **section 9** for the full staging + nightly workflow.
 | `lib/alert.sh`          | `alert_telegram`, `alert_email` |
 
 Старый одиночный `deploy/backup.sh` оставлен для совместимости, но
-**`nightly.sh` — рекомендуемая cron-задача**. Полная схема — в **разделе 9**.
+**`nightly.sh` — рекомендуемая cron-задача**. Полная схема — в **разделе 10**.
 
 ---
 
-## 6. Upgrade / Обновление
+## 7. Upgrade / Обновление
 
-1. **Always back up first** (section 5).
+1. **Always back up first** (section 6).
 2. Pull the new sources: `cd /volume1/espomodule && git pull`.
 3. Rebuild the zip: `make build`.
 4. In Espo: **Administration → Extensions** → upload the new zip
@@ -214,7 +276,7 @@ See **section 9** for the full staging + nightly workflow.
 6. Bounce the daemon container so cron picks up new job definitions:
    `docker compose restart espocrm-daemon`.
 
-1. **Сначала бэкап** (п. 5).
+1. **Сначала бэкап** (п. 6).
 2. Обновить сорсы: `cd /volume1/espomodule && git pull`.
 3. Пересобрать zip: `make build`.
 4. В Espo: **Администрирование → Расширения** → загрузить новый zip.
@@ -223,7 +285,7 @@ See **section 9** for the full staging + nightly workflow.
 
 ---
 
-## 7. Troubleshooting / Решение проблем
+## 8. Troubleshooting / Решение проблем
 
 | Symptom | What to check |
 | --- | --- |
@@ -243,7 +305,7 @@ See **section 9** for the full staging + nightly workflow.
 
 ---
 
-## 8. Security checklist / Чек-лист безопасности
+## 9. Security checklist / Чек-лист безопасности
 
 - [ ] Strong `MARIADB_ROOT_PASSWORD` (16+ chars, mixed case).
 - [ ] HTTPS via DSM Reverse Proxy (Let's Encrypt).
@@ -263,9 +325,9 @@ See **section 9** for the full staging + nightly workflow.
 
 ---
 
-## 9. Staging environment + nightly pipeline / Staging-стенд и ночной конвейер
+## 10. Staging environment + nightly pipeline / Staging-стенд и ночной конвейер
 
-### 9.1 Why two stacks / Зачем два стека
+### 10.1 Why two stacks / Зачем два стека
 
 EspoDental ships with a second compose file
 [`deploy/staging/docker-compose.yml`](../deploy/staging/docker-compose.yml)
@@ -296,7 +358,7 @@ EspoDental поставляется со вторым compose-файлом
 В staging лежат **реальные ПДн** (без обезличивания), поэтому доступ
 ограничен тем же админом, что и к проду.
 
-### 9.2 Directory layout / Раскладка по дискам
+### 10.2 Directory layout / Раскладка по дискам
 
 ```
 /volume1/docker/espodental/             ← prod compose + .env
@@ -319,7 +381,7 @@ the other.
 Два независимых git-клона критически важны: prod и staging держат разные
 коммиты во время тестирования, и `git pull` в одном не трогает другой.
 
-### 9.3 First-time staging setup / Первая настройка staging
+### 10.3 First-time staging setup / Первая настройка staging
 
 ```bash
 # 1. Create host dirs and fix ownership
@@ -347,7 +409,7 @@ Once the stack is up, the first nightly run (or a manual
 `bash deploy/scripts/restore-to-staging.sh`) will replace the empty schema
 with a copy of prod.
 
-### 9.4 Cron schedule / Расписание cron
+### 10.4 Cron schedule / Расписание cron
 
 In DSM **Control Panel → Task Scheduler** add a *user-defined script*:
 
@@ -370,7 +432,7 @@ The script writes a self-contained log to `/volume2/espodental/logs/nightly-*.lo
 
 Лог пишется в `/volume2/espodental/logs/nightly-*.log`.
 
-### 9.5 What the pipeline does each night / Что делает конвейер каждую ночь
+### 10.5 What the pipeline does each night / Что делает конвейер каждую ночь
 
 1. `backup-prod.sh` → `mariadb-dump --single-transaction --quick --routines
    --triggers --events` of the prod DB, gzip into
@@ -393,7 +455,7 @@ The script writes a self-contained log to `/volume2/espodental/logs/nightly-*.lo
 Все шаги протоколируются с единым `pipeline_id` (формат `YYYYMMDDTHHMMSS-PID`),
 который попадает в каждую строку лога и в текст алерта.
 
-### 9.6 Promotion workflow / Раскатка изменений со staging на prod
+### 10.6 Promotion workflow / Раскатка изменений со staging на prod
 
 The supported flow is **git-pull-only** — staging is the rehearsal, prod
 gets the same commits **after** staging has been verified by hand.
@@ -466,7 +528,7 @@ sudo docker compose exec espocrm php command.php espo-dental-bootstrap
 Следующий ночной прогон сбросит staging до свежей копии прода — все ручные
 правки, сделанные в staging во время приёмки, **сознательно теряются**.
 
-### 9.7 Rollback / Откат
+### 10.7 Rollback / Откат
 
 If a promotion turns out to be bad on prod:
 

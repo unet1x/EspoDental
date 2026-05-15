@@ -39,6 +39,11 @@ class Patient extends Entity
         return $this->get('clinicId');
     }
 
+    public function getParentPatientId(): ?string
+    {
+        return $this->get('parentPatientId');
+    }
+
     public function getStatus(): ?string
     {
         return $this->get('status');

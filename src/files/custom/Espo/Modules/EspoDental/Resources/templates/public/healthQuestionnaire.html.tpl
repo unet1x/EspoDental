@@ -16,6 +16,8 @@ h1 { font-size: 22px; margin: 0 0 4px; }
 .group-title { font-size: 16px; font-weight: 600; margin: 0 0 10px; }
 .item { padding: 10px 0; border-bottom: 1px solid #eee; }
 .item:last-child { border-bottom: none; }
+.item.missing .label { color: #a32020; }
+.item.missing .choice { border-color: #e07777; background: #fff8f8; }
 .label { font-size: 15px; margin-bottom: 6px; display: block; }
 .choices { display: flex; gap: 8px; }
 .choice { flex: 1; padding: 12px; border: 1.5px solid #d0d0d0; border-radius: 10px; text-align: center; font-size: 15px; cursor: pointer; user-select: none; background: #fafafa; }
@@ -69,6 +71,7 @@ document.getElementById('sig-clear').textContent = s.clear;
 document.getElementById('hq-submit').textContent = s.submit;
 
 var answers = Object.create(null);
+var requiredBoolIds = [];
 
 var groupsEl = document.getElementById('groups');
 (schema.groups || []).forEach(function (group) {
@@ -87,12 +90,14 @@ var groupsEl = document.getElementById('groups');
     (group.items || []).forEach(function (item) {
         var wrap = document.createElement('div');
         wrap.className = 'item';
+        wrap.dataset.itemId = item.id;
         var label = document.createElement('span');
         label.className = 'label';
         label.textContent = item.label;
         wrap.appendChild(label);
 
         if (item.type === 'bool') {
+            requiredBoolIds.push(item.id);
             var row = document.createElement('div');
             row.className = 'choices';
             ['no', 'yes'].forEach(function (key) {
@@ -103,6 +108,7 @@ var groupsEl = document.getElementById('groups');
                 ch.onclick = function () {
                     row.querySelectorAll('.choice').forEach(function (c) { c.classList.remove('active'); });
                     ch.classList.add('active');
+                    wrap.classList.remove('missing');
                     answers[item.id] = key === 'yes';
                 };
                 row.appendChild(ch);
@@ -171,6 +177,19 @@ document.getElementById('sig-clear').onclick = function () {
 var submitBtn = document.getElementById('hq-submit');
 document.getElementById('hq-form').onsubmit = function (e) {
     e.preventDefault();
+    var missing = requiredBoolIds.filter(function (id) {
+        return !Object.prototype.hasOwnProperty.call(answers, id);
+    });
+    if (missing.length) {
+        missing.forEach(function (id) {
+            var el = document.querySelector('[data-item-id="' + id + '"]');
+            if (el) el.classList.add('missing');
+        });
+        var first = document.querySelector('.item.missing');
+        if (first && first.scrollIntoView) first.scrollIntoView({behavior: 'smooth', block: 'center'});
+        alert(s.allRequired);
+        return;
+    }
     if (!hasInk) { alert(s.signatureRequired); return; }
     submitBtn.disabled = true;
     submitBtn.textContent = s.submitting;

@@ -1,6 +1,6 @@
 [
     "serviceLines",
+    "materialLines",
     "photos",
-    "toothChartSnapshots",
-    "invoices"
+    "toothChartSnapshots"
 ]

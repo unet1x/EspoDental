@@ -16,15 +16,15 @@ class PatientBalanceCalculator
     }
 
     /**
-     * Convention: positive balance = patient owes the clinic.
-     * Negative balance = patient has prepaid credit.
+     * Convention: positive balance = prepaid credit.
+     * Negative balance = patient debt.
      */
     public function recalculate(Patient $patient): void
     {
         $openInvoiceBalance = $this->sumOpenInvoiceBalance($patient);
         $unallocatedCredit = $this->sumUnallocatedPayments($patient);
 
-        $balance = round($openInvoiceBalance - $unallocatedCredit, 2);
+        $balance = round($unallocatedCredit - $openInvoiceBalance, 2);
         $patient->set('balance', $balance);
     }
 

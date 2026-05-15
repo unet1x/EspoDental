@@ -39,6 +39,7 @@
         "category": {"type": "belongsTo", "entity": "MaterialCategory", "foreign": "materials"},
         "movements": {"type": "hasMany", "entity": "StockMovement", "foreign": "material"},
         "serviceMaterials": {"type": "hasMany", "entity": "ServiceMaterial", "foreign": "material"},
+        "visitMaterialLines": {"type": "hasMany", "entity": "VisitMaterialLine", "foreign": "material"},
         "alerts": {"type": "hasMany", "entity": "LowStockAlert", "foreign": "material"},
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"},

@@ -3,8 +3,9 @@
         "Create Visit": "Crear visita",
         "Overview": "General",
         "Clinical": "Clinica",
-        "Other": "Otros",
-        "Finish Visit": "Finalizar visita"
+        "Totals": "Totales",
+        "Finish Visit": "Finalizar visita",
+        "Tooth Chart": "Odontograma"
     },
     "fields": {
         "name": "Nombre",
@@ -36,11 +37,16 @@
         "patient": "Paciente",
         "doctor": "Doctor",
         "cabinet": "Gabinete",
-        "clinic": "Clinica"
+        "clinic": "Clinica",
+        "serviceLines": "Servicios de visita",
+        "materialLines": "Consumo de materiales",
+        "photos": "Fotos",
+        "toothChartSnapshots": "Odontogramas",
+        "invoices": "Facturas"
     },
     "messages": {
         "Only in-progress visits can be finished": "Solo se pueden finalizar visitas en curso",
-        "Confirm finish visit": "Finalizar la visita? Se generara una factura.",
+        "Confirm finish visit": "Finalizar la visita? Se generara una factura y los servicios y materiales quedaran solo lectura.",
         "Visit finished": "Visita finalizada"
     }
 }

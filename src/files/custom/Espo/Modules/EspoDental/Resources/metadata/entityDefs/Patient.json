@@ -111,6 +111,9 @@
             "type": "bool",
             "default": false
         },
+        "parentPatient": {
+            "type": "link"
+        },
         "parentLastName": {
             "type": "varchar",
             "maxLength": 100,
@@ -142,6 +145,7 @@
             "type": "currency",
             "readOnly": true,
             "default": "0.00",
+            "view": "espo-dental:views/patient/fields/balance",
             "tooltip": true
         },
         "status": {
@@ -190,6 +194,8 @@
     },
     "links": {
         "clinic": {"type": "belongsTo", "entity": "Clinic", "foreign": "patients"},
+        "parentPatient": {"type": "belongsTo", "entity": "Patient", "foreign": "childPatients"},
+        "childPatients": {"type": "hasMany", "entity": "Patient", "foreign": "parentPatient"},
         "convertedFromPreliminary": {"type": "belongsTo", "entity": "PreliminaryPatient", "foreign": "convertedToPatient"},
         "healthQuestionnaires": {"type": "hasMany", "entity": "HealthQuestionnaire", "foreign": "patient"},
         "questionnaireTokens": {"type": "hasMany", "entity": "QuestionnaireToken", "foreign": "patient"},
@@ -216,6 +222,7 @@
         "status": {"columns": ["status", "deleted"]},
         "cardNumber": {"columns": ["cardNumber"], "unique": true},
         "clinic": {"columns": ["clinicId"]},
-        "vip": {"columns": ["vip"]}
+        "vip": {"columns": ["vip"]},
+        "parentPatient": {"columns": ["parentPatientId"]}
     }
 }

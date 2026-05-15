@@ -1,5 +1,6 @@
 {
     "controller": "controllers/record",
+    "createDisabled": true,
     "color": "#BCBD22",
     "iconClass": "fas fa-file-invoice-dollar",
     "kanbanViewMode": true,
@@ -9,31 +10,35 @@
             "buttons": [
                 {
                     "name": "issue",
-                    "labelText": "Issue",
+                    "label": "Issue",
                     "style": "primary",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/invoice/issue"
+                    "handler": "espo-dental:handlers/invoice/issue",
+                    "actionFunction": "actionIssue"
                 },
                 {
                     "name": "acceptPayment",
-                    "labelText": "Accept Payment",
+                    "label": "Accept Payment",
                     "style": "primary",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/invoice/accept-payment"
+                    "handler": "espo-dental:handlers/invoice/accept-payment",
+                    "actionFunction": "actionAcceptPayment"
                 },
                 {
                     "name": "storno",
-                    "labelText": "Storno",
+                    "label": "Storno",
                     "style": "danger",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/invoice/storno"
+                    "handler": "espo-dental:handlers/invoice/storno",
+                    "actionFunction": "actionStorno"
                 },
                 {
                     "name": "printPdf",
-                    "labelText": "Print PDF",
+                    "label": "Print PDF",
                     "style": "default",
                     "acl": "read",
-                    "actionHandler": "espo-dental:handlers/invoice/print-pdf"
+                    "handler": "espo-dental:handlers/invoice/print-pdf",
+                    "actionFunction": "actionPrintPdf"
                 }
             ]
         }

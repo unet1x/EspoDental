@@ -1,0 +1,7 @@
+[
+    {"name": "material"},
+    {"name": "plannedQuantity"},
+    {"name": "quantity"},
+    {"name": "unit"},
+    {"name": "visitServiceLine"}
+]

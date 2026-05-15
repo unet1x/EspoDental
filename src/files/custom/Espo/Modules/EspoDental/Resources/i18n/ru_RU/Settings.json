@@ -1,5 +1,9 @@
 {
-    "labels": {"EspoDental": "EspoDental", "EspoDental Settings": "Настройки EspoDental"},
+    "labels": {
+        "EspoDental": "EspoDental",
+        "EspoDental Settings": "Настройки EspoDental",
+        "Dictionaries": "Справочники"
+    },
     "fields": {
         "espoDentalTelegramEnabled": "Telegram-уведомления включены",
         "espoDentalTelegramBotToken": "Telegram bot token",
@@ -7,11 +11,19 @@
         "espoDentalReminderHoursBefore": "Напоминание за (часов)",
         "espoDentalReminderSecondHoursBefore": "Доп. напоминание за (часов)",
         "espoDentalReminderWindowMinutes": "Окно срабатывания, мин",
-        "espoDentalDefaultCurrency": "Валюта по умолчанию"
+        "espoDentalDefaultCurrency": "Валюта по умолчанию",
+        "espoDentalDefaultClinic": "Клиника по умолчанию",
+        "espoDentalPaymentMethods": "Методы оплаты",
+        "espoDentalToothChartConditions": "Состояния зубной формулы",
+        "espoDentalToothChartSurfaces": "Поверхности зуба"
     },
     "tooltips": {
         "espoDentalReminderHoursBefore": "Время до приёма, когда отправляется первое напоминание",
         "espoDentalReminderSecondHoursBefore": "Второе напоминание (0 — выкл.)",
-        "espoDentalReminderWindowMinutes": "Допустимое расхождение от целевого момента"
+        "espoDentalReminderWindowMinutes": "Допустимое расхождение от целевого момента",
+        "espoDentalDefaultClinic": "Если выбрана, автоматически подставляется новым предварительным пациентам. Если не выбрана и активная клиника всего одна, она подставится автоматически.",
+        "espoDentalPaymentMethods": "JSON-массив объектов вида {\"id\":\"cash\",\"label\":\"Наличные\"}. Эти значения используются в выпадающем списке принятия оплаты.",
+        "espoDentalToothChartConditions": "JSON-массив объектов вида {\"id\":\"caries\",\"label\":\"Кариес\",\"color\":\"#c83e58\"}. Эти значения используются в редакторе поверхностей зуба.",
+        "espoDentalToothChartSurfaces": "JSON-массив объектов вида {\"key\":\"o\",\"label\":\"Окклюзионная\"}. Ключи o, m, d, b, l используются в структуре зубной формулы."
     }
 }

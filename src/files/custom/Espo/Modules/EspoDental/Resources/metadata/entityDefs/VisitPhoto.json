@@ -1,6 +1,6 @@
 {
     "fields": {
-        "name": {"type": "varchar", "required": true, "maxLength": 255},
+        "name": {"type": "varchar", "required": false, "readOnly": true, "maxLength": 255},
         "visit": {"type": "link", "required": true},
         "patient": {"type": "link"},
         "stage": {

@@ -40,6 +40,7 @@
     },
     "messages": {
         "Show QR to patient": "Muestre el codigo QR al paciente; lo escaneara con la camara de la tableta y completara el cuestionario.",
-        "Copied": "Copiado"
+        "Copied": "Copiado",
+        "PDF file is not available": "El PDF del cuestionario aun no esta disponible"
     }
 }

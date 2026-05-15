@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\HealthQuestionnaire;
@@ -29,7 +30,6 @@ class PreliminaryPatientConversion
         'emailAddressData',
         'dateOfBirth',
         'clinicId',
-        'assignedUserId',
         'description',
     ];
 
@@ -78,10 +78,22 @@ class PreliminaryPatientConversion
         $patient->set('status', 'active');
         $patient->set('balance', 0.0);
         $patient->set('convertedFromPreliminaryId', $prelim->getId());
+        if ($prelim->get('createdAt')) {
+            $patient->set('createdAt', $prelim->get('createdAt'));
+        }
         $patient->set('lastQuestionnaireAt', $questionnaire->get('filledAt'));
         $patient->set('questionnaireExpired', false);
         $patient->set('questionnaireHasAlerts', $questionnaire->hasAlerts());
-        $this->entityManager->saveEntity($patient, ['espodentalAllowPatientCreate' => true]);
+
+        $saveOptions = ['espodentalAllowPatientCreate' => true];
+        if ($prelim->get('createdById')) {
+            $saveOptions[SaveOption::CREATED_BY_ID] = $prelim->get('createdById');
+        }
+        if ($prelim->get('createdAt')) {
+            $saveOptions[SaveOption::IMPORT] = true;
+        }
+
+        $this->entityManager->saveEntity($patient, $saveOptions);
 
         $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
 
@@ -98,6 +110,7 @@ class PreliminaryPatientConversion
         $this->entityManager->saveEntity($prelim);
 
         $appointmentsUpdated = $this->reparentAppointments($prelim, $patient);
+        $this->entityManager->removeEntity($prelim, ['espodentalAllowPreliminaryPatientRemove' => true]);
 
         return [
             'patientId' => (string) $patient->getId(),

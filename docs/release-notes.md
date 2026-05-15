@@ -2,6 +2,71 @@
 
 > Latest first. Versions follow SemVer with leading `0.` until 1.0.
 
+## Unreleased — Front desk intake hardening
+
+- Direct normal-user `Patient` creation is blocked; patients are created from
+  `PreliminaryPatient` conversion or explicit migration/admin pathways.
+- Reception `PreliminaryPatient` layout is simplified: technical conversion
+  fields, assigned user, teams and questionnaire-token links are hidden.
+- `PreliminaryPatient.phone` is required; `status` defaults to `entered`.
+- EspoDental settings include default clinic selection. Preliminary patients
+  auto-fill clinic from that setting, or from the only active clinic.
+- Conversion now centers on the health questionnaire flow: the receptionist
+  starts conversion, the patient completes the QR/tablet form, and successful
+  submission creates the patient.
+- Converted preliminary patients are hidden from operational lists while the
+  patient retains the conversion source link for reporting.
+- Health questionnaire yes/no items are required, signature is required, and
+  generated PDFs use a compact two-column answer layout.
+- Direct visit and invoice creation are hidden in the UI and guarded by hooks;
+  visits must be started from appointments, invoices must be created from
+  visits.
+- New `VisitMaterialLine` entity stores prepared material consumption copied
+  from service norms. Stock write-off now uses these editable visit material
+  lines when present and records `sourceVisitMaterialLine` on movements.
+- Catalog navigation now exposes only `Каталог услуг` and `Материалы` in the
+  normal menu; services/materials are reached through category records.
+- Appointment quick booking is simplified around doctor/cabinet/start/duration,
+  hides source/end/ownership noise, defaults clinic, adds confirmation, and
+  blocks manual selection of visit-owned statuses.
+- Appointment start time now has a free-slot picker backed by
+  `EspoDental/Calendar/freeSlots`, so reception can choose an available time
+  after doctor, cabinet and duration are set.
+- The appointment create/edit form now shows a date plus free-time dropdown,
+  no separate "Free slots" button, no native start datetime fields, no manual
+  assistant selector, and the clinic link is prefilled from the module default.
+- Patient detail now has a primary `Записать на прием` action that opens the
+  short appointment modal with the patient prelinked and no "Full Form" button.
+- Free-slot search now matches the server conflict rules for doctor and patient
+  occupancy: a doctor already booked in another cabinet no longer appears as
+  available for the same time.
+- Personal doctor shifts are not implemented yet; they are documented as the
+  next schedule-availability slice so slots can be limited to first/second or
+  additional shifts.
+- Service-line price/currency/VAT always comes from the selected service;
+  material-line unit/cost always comes from the selected material.
+- Doctor-facing visit layouts hide service price/currency/VAT, material cost,
+  appointment/status, stream and invoice panels.
+- Visit start now creates a tooth-chart snapshot; visit detail renders the
+  tooth chart immediately with an edit link while the visit is in progress.
+- EspoDental admin settings now include editable dictionaries for payment
+  methods, tooth-chart conditions/colors and tooth-surface labels.
+- Visit photos get quick-add defaults for name, patient and recorded date.
+- Finished visits reject service/material line edits/removals with a server
+  conflict.
+- Bootstrap backfills old local/demo names for visit service/material lines,
+  `patient — date` visits and tooth-chart snapshots.
+- `Finish Visit` is now hidden for visits that are no longer in progress.
+- Visit detail layout is simplified for doctors by removing assigned-user and
+  team fields from the main form.
+- Fixed invoice PDF builder dependency injection by using
+  `Espo\Core\Utils\Language`.
+- Role bootstrap now patches missing ACL scope rows into existing EspoDental
+  roles, so new module scopes become available after bootstrap without
+  recreating roles.
+- Documentation now records the strict patient flow, future invariants,
+  questionnaire schema location and acceptance checks for the next phases.
+
 ## 0.16.0 — Staging stack + nightly backup/restore pipeline
 
 - New compose stack `deploy/staging/docker-compose.yml` brings up a second

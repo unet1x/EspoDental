@@ -8,10 +8,11 @@
             "buttons": [
                 {
                     "name": "refund",
-                    "labelText": "Refund",
+                    "label": "Refund",
                     "style": "danger",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/payment/refund"
+                    "handler": "espo-dental:handlers/payment/refund",
+                    "actionFunction": "actionRefund"
                 }
             ]
         }

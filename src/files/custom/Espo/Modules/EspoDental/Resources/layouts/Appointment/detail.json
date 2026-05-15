@@ -3,19 +3,18 @@
         "label": "Overview",
         "rows": [
             [
+                {"name": "doctor"},
+                {"name": "cabinet"}
+            ],
+            [
+                {"name": "dateStart"},
+                {"name": "duration"}
+            ],
+            [
                 {"name": "parent"},
                 {"name": "status"}
             ],
             [
-                {"name": "dateStart"},
-                {"name": "dateEnd"}
-            ],
-            [
-                {"name": "doctor"},
-                {"name": "assistant"}
-            ],
-            [
-                {"name": "cabinet"},
                 {"name": "clinic"}
             ],
             [
@@ -28,11 +27,11 @@
         "rows": [
             [
                 {"name": "bookedBy"},
-                {"name": "source"}
+                {"name": "confirmed"}
             ],
             [
-                {"name": "color"},
-                {"name": "reminderSent"}
+                {"name": "reminderSent"},
+                {"name": "color"}
             ]
         ]
     },
@@ -44,10 +43,6 @@
             ],
             [
                 {"name": "visit"}
-            ],
-            [
-                {"name": "assignedUser"},
-                {"name": "teams"}
             ],
             [
                 {"name": "createdAt"},

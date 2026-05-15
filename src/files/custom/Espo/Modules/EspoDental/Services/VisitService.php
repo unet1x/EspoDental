@@ -9,6 +9,8 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
 use Espo\Modules\EspoDental\Entities\Appointment;
+use Espo\Modules\EspoDental\Entities\Patient;
+use Espo\Modules\EspoDental\Entities\ToothChartSnapshot;
 use Espo\Modules\EspoDental\Entities\Visit;
 use Espo\Modules\EspoDental\Entities\VisitServiceLine;
 use Espo\Modules\EspoDental\Services\InvoiceService;
@@ -56,7 +58,10 @@ class VisitService
             );
             if ($appointment && $appointment->getStatus() === Appointment::STATUS_IN_PROGRESS) {
                 $appointment->set('status', Appointment::STATUS_FINISHED);
-                $this->entityManager->saveEntity($appointment, ['skipConflictCheck' => true]);
+                $this->entityManager->saveEntity($appointment, [
+                    'skipConflictCheck' => true,
+                    'espodentalAllowAppointmentSystemStatus' => true,
+                ]);
             }
         }
 
@@ -89,6 +94,72 @@ class VisitService
             $total += $line->getAmount();
         }
         return round($total, 2);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getToothChartData(string $visitId): array
+    {
+        /** @var Visit|null $visit */
+        $visit = $this->entityManager->getEntityById(Visit::ENTITY_TYPE, $visitId);
+
+        if (!$visit) {
+            throw new NotFound('Visit not found');
+        }
+
+        /** @var ToothChartSnapshot|null $snapshot */
+        $snapshot = $this->entityManager
+            ->getRDBRepository(ToothChartSnapshot::ENTITY_TYPE)
+            ->where(['visitId' => $visit->getId()])
+            ->order('recordedAt', 'DESC')
+            ->findOne();
+
+        if (!$snapshot) {
+            $snapshot = $this->createToothChartSnapshot($visit);
+        }
+
+        if (!$snapshot) {
+            return ['id' => null];
+        }
+
+        return [
+            'id' => $snapshot->getId(),
+            'dentitionType' => $snapshot->get('dentitionType'),
+            'teeth' => $snapshot->getTeeth(),
+            'recordedAt' => $snapshot->get('recordedAt'),
+        ];
+    }
+
+    private function createToothChartSnapshot(Visit $visit): ?ToothChartSnapshot
+    {
+        if (!$visit->getPatientId()) {
+            return null;
+        }
+
+        /** @var Patient|null $patient */
+        $patient = $this->entityManager->getEntityById(Patient::ENTITY_TYPE, $visit->getPatientId());
+
+        if (!$patient) {
+            return null;
+        }
+
+        /** @var ToothChartSnapshot $snapshot */
+        $snapshot = $this->entityManager->getNewEntity(ToothChartSnapshot::ENTITY_TYPE);
+        $snapshot->set('name', 'Зубная формула — ' . (string) $visit->get('name'));
+        $snapshot->set('patientId', $patient->getId());
+        $snapshot->set('visitId', $visit->getId());
+        $snapshot->set('doctorId', $visit->getDoctorId());
+        $snapshot->set(
+            'dentitionType',
+            $patient->isChild() ? ToothChartSnapshot::DENTITION_MIXED : ToothChartSnapshot::DENTITION_ADULT
+        );
+        $snapshot->set('teeth', (object) []);
+        $snapshot->set('recordedAt', (new DateTimeImmutable())->format('Y-m-d H:i:s'));
+
+        $this->entityManager->saveEntity($snapshot);
+
+        return $snapshot;
     }
 
     private function countLines(Visit $visit): int

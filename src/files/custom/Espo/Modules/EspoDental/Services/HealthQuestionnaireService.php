@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Espo\Modules\EspoDental\Services;
 
 use DateTimeImmutable;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Entities\Attachment;
 use Espo\Modules\EspoDental\Entities\HealthQuestionnaire;
@@ -28,6 +30,7 @@ class HealthQuestionnaireService
         private readonly QuestionnaireSchemaProvider $schemaProvider,
         private readonly QuestionnairePdfBuilder $pdfBuilder,
         private readonly FileManager $fileManager,
+        private readonly Config $config,
         private readonly PreliminaryPatientConversion $conversion
     ) {
     }
@@ -38,6 +41,41 @@ class HealthQuestionnaireService
     public function getSchema(string $language): array
     {
         return $this->schemaProvider->get($language);
+    }
+
+    /**
+     * @return array{tokenId: string, tokenUrl: string, expiresAt: string}
+     */
+    public function issuePatientQuestionnaireToken(string $patientId, ?string $language = null): array
+    {
+        /** @var Patient|null $patient */
+        $patient = $this->entityManager->getEntityById(Patient::ENTITY_TYPE, $patientId);
+
+        if (!$patient) {
+            throw new NotFound("Patient {$patientId} not found");
+        }
+
+        $tokenString = bin2hex(random_bytes(24));
+        $expiresAt = (new DateTimeImmutable())
+            ->modify('+24 hours')
+            ->format('Y-m-d H:i:s');
+
+        /** @var QuestionnaireToken $token */
+        $token = $this->entityManager->getNewEntity(QuestionnaireToken::ENTITY_TYPE);
+        $token->set('token', $tokenString);
+        $token->set('name', substr($tokenString, 0, 16));
+        $token->set('patientId', $patient->getId());
+        $token->set('language', $language ?: $this->resolveDefaultLanguage());
+        $token->set('expiresAt', $expiresAt);
+        $token->set('isUsed', false);
+
+        $this->entityManager->saveEntity($token);
+
+        return [
+            'tokenId' => (string) $token->getId(),
+            'tokenUrl' => $this->conversion->buildPublicUrl($tokenString),
+            'expiresAt' => $expiresAt,
+        ];
     }
 
     public function findValidToken(string $tokenString): QuestionnaireToken
@@ -91,6 +129,8 @@ class HealthQuestionnaireService
             throw new NotFound('Patient or preliminary patient not found for this token');
         }
 
+        $this->validateRequiredAnswers($items, $language, $patient ?: $prelim);
+
         $alertItems = $this->collectAlerts($items, $language);
         $filledAt = (new DateTimeImmutable())->format('Y-m-d H:i:s');
         $expiresAt = (new DateTimeImmutable())
@@ -124,16 +164,13 @@ class HealthQuestionnaireService
         $questionnaire->set('submittedUserAgent', substr((string) ($audit['userAgent'] ?? ''), 0, 512));
 
         $this->entityManager->saveEntity($questionnaire);
-
-        $pdf = $patient instanceof Patient
-            ? $this->pdfBuilder->build($questionnaire, $patient, $signatureAttachment)
-            : null;
-        if ($pdf) {
-            $questionnaire->set('pdfFileId', $pdf->getId());
-            $this->entityManager->saveEntity($questionnaire);
+        if ($signatureAttachment) {
+            $signatureAttachment->set('relatedId', $questionnaire->getId());
+            $this->entityManager->saveEntity($signatureAttachment);
         }
 
         if ($patient instanceof Patient) {
+            $this->buildPdf($questionnaire, $patient, $signatureAttachment);
             $this->markPatientUpToDate($patient, $filledAt, count($alertItems) > 0);
         }
 
@@ -144,6 +181,12 @@ class HealthQuestionnaireService
                 (string) $questionnaire->getId()
             );
             $questionnaire->set('patientId', $conversionResult['patientId']);
+
+            /** @var Patient|null $convertedPatient */
+            $convertedPatient = $this->entityManager->getEntityById(Patient::ENTITY_TYPE, $conversionResult['patientId']);
+            if ($convertedPatient instanceof Patient) {
+                $this->buildPdf($questionnaire, $convertedPatient, $signatureAttachment);
+            }
         }
 
         $token->set('isUsed', true);
@@ -155,6 +198,18 @@ class HealthQuestionnaireService
         $this->entityManager->saveEntity($token);
 
         return $questionnaire;
+    }
+
+    private function buildPdf(HealthQuestionnaire $questionnaire, Patient $patient, ?Attachment $signatureAttachment): void
+    {
+        $pdf = $this->pdfBuilder->build($questionnaire, $patient, $signatureAttachment);
+
+        if (!$pdf) {
+            return;
+        }
+
+        $questionnaire->set('pdfFileId', $pdf->getId());
+        $this->entityManager->saveEntity($questionnaire);
     }
 
     public function markPatientUpToDate(Patient $patient, string $filledAt, bool $hasAlerts): void
@@ -170,6 +225,58 @@ class HealthQuestionnaireService
         $prelim->set('questionnaireCompleted', true);
         $prelim->set('lastQuestionnaireAt', $filledAt);
         $this->entityManager->saveEntity($prelim);
+    }
+
+    /**
+     * @param array<string, mixed> $items
+     */
+    private function validateRequiredAnswers(array $items, string $language, ?Entity $subject): void
+    {
+        $missing = [];
+
+        foreach ($this->collectRequiredBoolItemIds($language, $subject) as $id) {
+            if (!array_key_exists($id, $items)) {
+                $missing[] = $id;
+            }
+        }
+
+        if ($missing === []) {
+            return;
+        }
+
+        throw new BadRequest('All questionnaire Yes/No items must be answered');
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function collectRequiredBoolItemIds(string $language, ?Entity $subject): array
+    {
+        $schema = $this->schemaProvider->get($language);
+        $patientGender = $subject ? (string) $subject->get('gender') : '';
+        $ids = [];
+
+        foreach ($schema['groups'] ?? [] as $group) {
+            $requiredGender = $group['conditional']['showIf']['patientGender'] ?? null;
+
+            if ($requiredGender && $requiredGender !== $patientGender) {
+                continue;
+            }
+
+            foreach ($group['items'] ?? [] as $item) {
+                if (($item['type'] ?? null) !== 'bool') {
+                    continue;
+                }
+
+                $id = (string) ($item['id'] ?? '');
+
+                if ($id !== '') {
+                    $ids[] = $id;
+                }
+            }
+        }
+
+        return $ids;
     }
 
     /**
@@ -237,5 +344,11 @@ class HealthQuestionnaireService
             : '';
         $date = substr($filledAt, 0, 10);
         return $patientName ? "{$patientName} — {$date}" : "Questionnaire {$date}";
+    }
+
+    private function resolveDefaultLanguage(): string
+    {
+        $lang = (string) $this->config->get('defaultLanguage', 'ru_RU');
+        return in_array($lang, ['ru_RU', 'en_US', 'es_ES'], true) ? $lang : 'ru_RU';
     }
 }

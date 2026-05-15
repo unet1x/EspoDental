@@ -7,6 +7,8 @@ namespace Espo\Modules\EspoDental\Tools\Installer;
 use DateTimeImmutable;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Modules\EspoDental\Entities\Patient;
+use Espo\Modules\EspoDental\Tools\PatientBalanceCalculator;
 use Espo\ORM\Entity;
 use stdClass;
 
@@ -104,7 +106,12 @@ class WorkspaceSeeder
             'serviceMaterials' => $this->ensureServiceMaterials(),
             'scheduledJobs' => $this->ensureScheduledJobs(),
             'dashboardTemplates' => $this->ensureDashboardTemplate(),
-            'settings' => $this->ensureSettings(),
+            'settings' => $this->ensureSettings($clinic),
+            'clinicalLineNames' => $this->ensureClinicalLineNames(),
+            'visitNames' => $this->ensureVisitNames(),
+            'toothChartNames' => $this->ensureToothChartNames(),
+            'childFlags' => $this->ensureChildFlags(),
+            'patientBalances' => $this->ensurePatientBalances(),
         ];
     }
 
@@ -372,7 +379,7 @@ class WorkspaceSeeder
         return 1;
     }
 
-    private function ensureSettings(): int
+    private function ensureSettings(Entity $clinic): int
     {
         if (!$this->configWriter) {
             return 0;
@@ -391,20 +398,15 @@ class WorkspaceSeeder
                 'Appointment',
                 'Visit',
                 'Invoice',
+                'Service',
                 'Material',
                 'OrthodonticCard',
             ],
             'tabList' => $this->tabList(),
             'quickCreateList' => [
                 'PreliminaryPatient',
-                'Patient',
                 'Appointment',
-                'Visit',
-                'Invoice',
                 'Payment',
-                'Service',
-                'Material',
-                'StockMovement',
                 'OrthodonticCard',
             ],
             'calendarEntityList' => ['Appointment', 'Meeting', 'Call', 'Task'],
@@ -412,6 +414,8 @@ class WorkspaceSeeder
             'dashboardLayout' => $this->dashboardLayout(),
             'dashletsOptions' => $this->dashletsOptions(),
             'espoDentalDefaultCurrency' => 'RUB',
+            'espoDentalDefaultClinicId' => $clinic->getId(),
+            'espoDentalDefaultClinicName' => $clinic->get('name'),
             'espoDentalReminderHoursBefore' => 24,
             'espoDentalReminderSecondHoursBefore' => 2,
             'espoDentalReminderWindowMinutes' => 20,
@@ -419,6 +423,197 @@ class WorkspaceSeeder
         $this->configWriter->save();
 
         return 1;
+    }
+
+    private function ensureClinicalLineNames(): int
+    {
+        $updated = 0;
+
+        $serviceLines = $this->entityManager
+            ->getRDBRepository('VisitServiceLine')
+            ->where(['deleted' => false])
+            ->find();
+
+        foreach ($serviceLines as $line) {
+            if ($line->get('name') || !$line->get('serviceId')) {
+                continue;
+            }
+
+            $service = $this->entityManager->getEntityById('Service', (string) $line->get('serviceId'));
+            if (!$service) {
+                continue;
+            }
+
+            $line->set('name', (string) $service->get('name'));
+            $this->entityManager->saveEntity($line, ['skipHooks' => true]);
+            $updated++;
+        }
+
+        $materialLines = $this->entityManager
+            ->getRDBRepository('VisitMaterialLine')
+            ->where(['deleted' => false])
+            ->find();
+
+        foreach ($materialLines as $line) {
+            if ($line->get('name') || !$line->get('materialId')) {
+                continue;
+            }
+
+            $material = $this->entityManager->getEntityById('Material', (string) $line->get('materialId'));
+            if (!$material) {
+                continue;
+            }
+
+            $line->set('name', (string) $material->get('name'));
+            $this->entityManager->saveEntity($line, ['skipHooks' => true]);
+            $updated++;
+        }
+
+        return $updated;
+    }
+
+    private function ensureVisitNames(): int
+    {
+        $updated = 0;
+        $visits = $this->entityManager
+            ->getRDBRepository('Visit')
+            ->where(['deleted' => false])
+            ->find();
+
+        foreach ($visits as $visit) {
+            $name = (string) $visit->get('name');
+            if ($name !== '' && !str_starts_with($name, 'patient')) {
+                continue;
+            }
+
+            if (!$visit->get('patientId')) {
+                continue;
+            }
+
+            $patient = $this->entityManager->getEntityById('Patient', (string) $visit->get('patientId'));
+            if (!$patient) {
+                continue;
+            }
+
+            $patientName = $this->buildPatientName($patient);
+            if ($patientName === '') {
+                continue;
+            }
+
+            $date = substr((string) ($visit->get('startedAt') ?: $visit->get('createdAt')), 0, 10);
+            $visit->set('name', $patientName . ($date !== '' ? ' — ' . $date : ''));
+            $this->entityManager->saveEntity($visit, ['skipHooks' => true]);
+            $updated++;
+        }
+
+        return $updated;
+    }
+
+    private function ensureToothChartNames(): int
+    {
+        $updated = 0;
+        $snapshots = $this->entityManager
+            ->getRDBRepository('ToothChartSnapshot')
+            ->where(['deleted' => false])
+            ->find();
+
+        foreach ($snapshots as $snapshot) {
+            $name = (string) $snapshot->get('name');
+            if ($name !== '' && !str_contains($name, 'patient')) {
+                continue;
+            }
+
+            if (!$snapshot->get('visitId')) {
+                continue;
+            }
+
+            $visit = $this->entityManager->getEntityById('Visit', (string) $snapshot->get('visitId'));
+            if (!$visit || !$visit->get('name')) {
+                continue;
+            }
+
+            $snapshot->set('name', 'Зубная формула — ' . (string) $visit->get('name'));
+            $this->entityManager->saveEntity($snapshot, ['skipHooks' => true]);
+            $updated++;
+        }
+
+        return $updated;
+    }
+
+    private function ensureChildFlags(): int
+    {
+        $updated = 0;
+        $today = new DateTimeImmutable('today');
+        $patients = $this->entityManager
+            ->getRDBRepository('Patient')
+            ->where(['deleted' => false])
+            ->find();
+
+        foreach ($patients as $patient) {
+            if ((bool) $patient->get('isChild')) {
+                continue;
+            }
+
+            $dateOfBirth = (string) ($patient->get('dateOfBirth') ?? '');
+            if ($dateOfBirth === '') {
+                continue;
+            }
+
+            try {
+                $birthDate = new DateTimeImmutable($dateOfBirth);
+            } catch (\Throwable) {
+                continue;
+            }
+
+            if ($birthDate > $today || $birthDate->diff($today)->y > 14) {
+                continue;
+            }
+
+            $patient->set('isChild', true);
+            $this->entityManager->saveEntity($patient, ['skipHooks' => true]);
+            $updated++;
+        }
+
+        return $updated;
+    }
+
+    private function ensurePatientBalances(): int
+    {
+        $updated = 0;
+        $calculator = new PatientBalanceCalculator($this->entityManager);
+        $patients = $this->entityManager
+            ->getRDBRepository(Patient::ENTITY_TYPE)
+            ->where(['deleted' => false])
+            ->find();
+
+        /** @var Patient $patient */
+        foreach ($patients as $patient) {
+            $previous = round((float) ($patient->get('balance') ?? 0.0), 2);
+            $calculator->recalculate($patient);
+            $next = round((float) ($patient->get('balance') ?? 0.0), 2);
+
+            if ($previous === $next) {
+                continue;
+            }
+
+            $this->entityManager->saveEntity($patient, ['skipHooks' => true]);
+            $updated++;
+        }
+
+        return $updated;
+    }
+
+    private function buildPatientName(Entity $patient): string
+    {
+        $parts = array_filter([
+            trim((string) $patient->get('lastName')),
+            trim((string) $patient->get('firstName')),
+            trim((string) $patient->get('middleName')),
+        ]);
+
+        $fullName = trim(implode(' ', $parts));
+
+        return $fullName !== '' ? $fullName : trim((string) $patient->get('name'));
     }
 
     /**
@@ -437,9 +632,7 @@ class WorkspaceSeeder
             'Invoice',
             'Payment',
             $this->divider('ed-catalogs', 'Прайс и склад'),
-            'Service',
             'ServiceCategory',
-            'Material',
             'MaterialCategory',
             'StockMovement',
             'LowStockAlert',

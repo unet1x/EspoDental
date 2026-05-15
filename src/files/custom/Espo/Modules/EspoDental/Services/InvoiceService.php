@@ -11,17 +11,20 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
 use Espo\Modules\EspoDental\Entities\Invoice;
 use Espo\Modules\EspoDental\Entities\InvoiceLine;
+use Espo\Modules\EspoDental\Entities\Patient;
 use Espo\Modules\EspoDental\Entities\Visit;
 use Espo\Modules\EspoDental\Entities\VisitServiceLine;
 use Espo\Modules\EspoDental\Tools\InvoiceCalculator;
 use Espo\Modules\EspoDental\Tools\InvoicePdfBuilder;
+use Espo\Modules\EspoDental\Tools\PatientBalanceCalculator;
 
 class InvoiceService
 {
     public function __construct(
         private readonly EntityManager $entityManager,
         private readonly InvoiceCalculator $calculator,
-        private readonly InvoicePdfBuilder $pdfBuilder
+        private readonly InvoicePdfBuilder $pdfBuilder,
+        private readonly PatientBalanceCalculator $patientBalanceCalculator
     ) {
     }
 
@@ -42,6 +45,7 @@ class InvoiceService
         if ($existing) {
             $this->calculator->recalculate($existing);
             $this->entityManager->saveEntity($existing, ['skipHooks' => true]);
+            $this->refreshPatientBalance($existing->getPatientId());
             return $existing;
         }
 
@@ -52,7 +56,7 @@ class InvoiceService
         $invoice->set('visitId', $visit->getId());
         $invoice->set('status', Invoice::STATUS_DRAFT);
         $invoice->set('issuedAt', (new DateTimeImmutable())->format('Y-m-d H:i:s'));
-        $this->entityManager->saveEntity($invoice);
+        $this->entityManager->saveEntity($invoice, ['espodentalAllowInvoiceCreate' => true]);
 
         /** @var iterable<VisitServiceLine> $sourceLines */
         $sourceLines = $this->entityManager
@@ -79,6 +83,7 @@ class InvoiceService
 
         $this->calculator->recalculate($invoice);
         $this->entityManager->saveEntity($invoice, ['skipHooks' => true]);
+        $this->refreshPatientBalance($invoice->getPatientId());
 
         return $invoice;
     }
@@ -106,6 +111,7 @@ class InvoiceService
             $invoice->set('issuedAt', (new DateTimeImmutable())->format('Y-m-d H:i:s'));
         }
         $this->entityManager->saveEntity($invoice);
+        $this->refreshPatientBalance($invoice->getPatientId());
 
         return [
             'invoiceId' => (string) $invoice->getId(),
@@ -148,10 +154,11 @@ class InvoiceService
         $storno->set('vatAmount', -$invoice->get('vatAmount'));
         $storno->set('totalAmount', -$invoice->getTotalAmount());
         $storno->set('balance', -$invoice->getBalance());
-        $this->entityManager->saveEntity($storno, ['skipHooks' => false]);
+        $this->entityManager->saveEntity($storno, ['espodentalAllowInvoiceCreate' => true]);
 
         $invoice->set('status', Invoice::STATUS_STORNO);
         $this->entityManager->saveEntity($invoice, ['skipHooks' => true]);
+        $this->refreshPatientBalance($invoice->getPatientId());
 
         return ['stornoInvoiceId' => (string) $storno->getId()];
     }
@@ -171,5 +178,21 @@ class InvoiceService
             'attachmentId' => (string) $attachment->getId(),
             'name' => (string) $attachment->get('name'),
         ];
+    }
+
+    private function refreshPatientBalance(?string $patientId): void
+    {
+        if (!$patientId) {
+            return;
+        }
+
+        /** @var Patient|null $patient */
+        $patient = $this->entityManager->getEntityById(Patient::ENTITY_TYPE, $patientId);
+        if (!$patient) {
+            return;
+        }
+
+        $this->patientBalanceCalculator->recalculate($patient);
+        $this->entityManager->saveEntity($patient, ['skipHooks' => true]);
     }
 }

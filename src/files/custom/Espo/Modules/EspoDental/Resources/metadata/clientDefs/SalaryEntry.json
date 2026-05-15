@@ -8,31 +8,35 @@
             "buttons": [
                 {
                     "name": "build",
-                    "labelText": "Build",
+                    "label": "Build",
                     "style": "default",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/salary-entry/build"
+                    "handler": "espo-dental:handlers/salary-entry/build",
+                    "actionFunction": "actionBuild"
                 },
                 {
                     "name": "approve",
-                    "labelText": "Approve",
+                    "label": "Approve",
                     "style": "primary",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/salary-entry/approve"
+                    "handler": "espo-dental:handlers/salary-entry/approve",
+                    "actionFunction": "actionApprove"
                 },
                 {
                     "name": "pay",
-                    "labelText": "Pay",
+                    "label": "Pay",
                     "style": "success",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/salary-entry/pay"
+                    "handler": "espo-dental:handlers/salary-entry/pay",
+                    "actionFunction": "actionPay"
                 },
                 {
                     "name": "cancel",
-                    "labelText": "Cancel",
+                    "label": "Cancel",
                     "style": "danger",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/salary-entry/cancel"
+                    "handler": "espo-dental:handlers/salary-entry/cancel",
+                    "actionFunction": "actionCancel"
                 }
             ]
         }

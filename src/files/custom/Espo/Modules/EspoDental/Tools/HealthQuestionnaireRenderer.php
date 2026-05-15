@@ -90,6 +90,7 @@ class HealthQuestionnaireRenderer
                 'submitting' => 'Сохранение...',
                 'signatureRequired' => 'Пожалуйста, поставьте подпись',
                 'submitFailed' => 'Не удалось отправить. Проверьте соединение и попробуйте снова.',
+                'allRequired' => 'Ответьте Да/Нет на все вопросы анкеты',
             ],
             'en_US' => [
                 'title' => 'Health Questionnaire',
@@ -105,6 +106,7 @@ class HealthQuestionnaireRenderer
                 'submitting' => 'Saving...',
                 'signatureRequired' => 'Please add your signature',
                 'submitFailed' => 'Failed to submit. Check the connection and try again.',
+                'allRequired' => 'Please answer Yes/No for every questionnaire item',
             ],
             'es_ES' => [
                 'title' => 'Cuestionario de salud',
@@ -120,6 +122,7 @@ class HealthQuestionnaireRenderer
                 'submitting' => 'Guardando...',
                 'signatureRequired' => 'Por favor agregue su firma',
                 'submitFailed' => 'No se pudo enviar. Revise la conexion y vuelva a intentar.',
+                'allRequired' => 'Responda Si/No en todos los puntos del cuestionario',
             ],
         ];
         return $dict[$language] ?? $dict['en_US'];

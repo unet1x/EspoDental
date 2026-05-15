@@ -11,6 +11,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\Patient;
+use Espo\Modules\EspoDental\Entities\ToothChartSnapshot;
 use Espo\Modules\EspoDental\Entities\Visit;
 
 class AppointmentService
@@ -63,7 +64,8 @@ class AppointmentService
 
         if ($existingVisit) {
             $appointment->set('status', Appointment::STATUS_IN_PROGRESS);
-            $this->entityManager->saveEntity($appointment);
+            $this->entityManager->saveEntity($appointment, ['espodentalAllowAppointmentSystemStatus' => true]);
+            $this->ensureToothChartSnapshot($existingVisit, $patient);
 
             return [
                 'visitId' => (string) $existingVisit->getId(),
@@ -84,12 +86,13 @@ class AppointmentService
         $visit->set('status', Visit::STATUS_IN_PROGRESS);
         $visit->set('complaints', $appointment->get('complaints'));
         $visit->set('startedAt', $now);
-        $visit->set('name', $this->buildVisitName($appointment));
+        $visit->set('name', $this->buildVisitName($appointment, $patient));
 
-        $this->entityManager->saveEntity($visit);
+        $this->entityManager->saveEntity($visit, ['espodentalAllowVisitCreate' => true]);
+        $this->ensureToothChartSnapshot($visit, $patient);
 
         $appointment->set('status', Appointment::STATUS_IN_PROGRESS);
-        $this->entityManager->saveEntity($appointment);
+        $this->entityManager->saveEntity($appointment, ['espodentalAllowAppointmentSystemStatus' => true]);
 
         return [
             'visitId' => (string) $visit->getId(),
@@ -97,10 +100,52 @@ class AppointmentService
         ];
     }
 
-    private function buildVisitName(Appointment $appointment): string
+    private function buildVisitName(Appointment $appointment, Patient $patient): string
     {
         $date = substr((string) $appointment->getDateStart(), 0, 10);
-        $parent = $appointment->get('parentName') ?: 'patient';
+        $parent = $this->buildPatientName($patient);
         return $parent . ' — ' . $date;
+    }
+
+    private function buildPatientName(Patient $patient): string
+    {
+        $parts = array_filter([
+            trim((string) $patient->get('lastName')),
+            trim((string) $patient->get('firstName')),
+            trim((string) $patient->get('middleName')),
+        ]);
+
+        $fullName = trim(implode(' ', $parts));
+
+        return $fullName !== '' ? $fullName : ((string) $patient->get('name') ?: 'Пациент');
+    }
+
+    private function ensureToothChartSnapshot(Visit $visit, Patient $patient): void
+    {
+        $existing = $this->entityManager
+            ->getRDBRepository(ToothChartSnapshot::ENTITY_TYPE)
+            ->where(['visitId' => $visit->getId()])
+            ->findOne();
+
+        if ($existing) {
+            return;
+        }
+
+        $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+
+        /** @var ToothChartSnapshot $snapshot */
+        $snapshot = $this->entityManager->getNewEntity(ToothChartSnapshot::ENTITY_TYPE);
+        $snapshot->set('name', 'Зубная формула — ' . (string) $visit->get('name'));
+        $snapshot->set('patientId', $patient->getId());
+        $snapshot->set('visitId', $visit->getId());
+        $snapshot->set('doctorId', $visit->getDoctorId());
+        $snapshot->set(
+            'dentitionType',
+            $patient->isChild() ? ToothChartSnapshot::DENTITION_MIXED : ToothChartSnapshot::DENTITION_ADULT
+        );
+        $snapshot->set('teeth', (object) []);
+        $snapshot->set('recordedAt', $now);
+
+        $this->entityManager->saveEntity($snapshot);
     }
 }

@@ -9,17 +9,19 @@
             "buttons": [
                 {
                     "name": "close",
-                    "labelText": "Close Card",
+                    "label": "Close Card",
                     "style": "primary",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/orthodontic-card/close"
+                    "handler": "espo-dental:handlers/orthodontic-card/close",
+                    "actionFunction": "actionClose"
                 },
                 {
                     "name": "reopen",
-                    "labelText": "Reopen Card",
+                    "label": "Reopen Card",
                     "style": "default",
                     "acl": "edit",
-                    "actionHandler": "espo-dental:handlers/orthodontic-card/reopen"
+                    "handler": "espo-dental:handlers/orthodontic-card/reopen",
+                    "actionFunction": "actionReopen"
                 }
             ]
         }

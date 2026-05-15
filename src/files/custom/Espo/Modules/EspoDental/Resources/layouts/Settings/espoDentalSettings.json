@@ -1,0 +1,42 @@
+[
+    {
+        "label": "General",
+        "rows": [
+            [
+                {"name": "espoDentalDefaultClinic"},
+                {"name": "espoDentalDefaultCurrency"}
+            ]
+        ]
+    },
+    {
+        "label": "Reminders",
+        "rows": [
+            [
+                {"name": "espoDentalReminderHoursBefore"},
+                {"name": "espoDentalReminderSecondHoursBefore"}
+            ],
+            [
+                {"name": "espoDentalReminderWindowMinutes"},
+                {"name": "espoDentalTelegramEnabled"}
+            ],
+            [
+                {"name": "espoDentalTelegramBotToken"},
+                {"name": "espoDentalTelegramApiBase"}
+            ]
+        ]
+    },
+    {
+        "label": "Dictionaries",
+        "rows": [
+            [
+                {"name": "espoDentalPaymentMethods"}
+            ],
+            [
+                {"name": "espoDentalToothChartConditions"}
+            ],
+            [
+                {"name": "espoDentalToothChartSurfaces"}
+            ]
+        ]
+    }
+]

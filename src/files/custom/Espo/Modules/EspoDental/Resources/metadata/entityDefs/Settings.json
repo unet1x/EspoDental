@@ -43,6 +43,59 @@
             "maxLength": 8,
             "default": "RUB",
             "tab": "EspoDental"
+        },
+        "espoDentalDefaultClinic": {
+            "type": "link",
+            "entity": "Clinic",
+            "tab": "EspoDental",
+            "tooltip": true
+        },
+        "espoDentalPaymentMethods": {
+            "type": "jsonArray",
+            "view": "espo-dental:views/settings/fields/json-array-text",
+            "tab": "EspoDental",
+            "tooltip": true,
+            "default": [
+                {"id": "cash", "label": "Наличные"},
+                {"id": "card", "label": "Банковская карта"},
+                {"id": "bank_transfer", "label": "Банковский перевод"},
+                {"id": "online", "label": "Онлайн"},
+                {"id": "terminal", "label": "Терминал"},
+                {"id": "crypto", "label": "Криптовалюта"},
+                {"id": "other", "label": "Другое"}
+            ]
+        },
+        "espoDentalToothChartConditions": {
+            "type": "jsonArray",
+            "view": "espo-dental:views/settings/fields/json-array-text",
+            "tab": "EspoDental",
+            "tooltip": true,
+            "default": [
+                {"id": "healthy", "label": "Здоров", "color": "#ffffff"},
+                {"id": "caries", "label": "Кариес", "color": "#c83e58"},
+                {"id": "filling", "label": "Пломба", "color": "#92a7b4"},
+                {"id": "root_canal", "label": "Корневой канал", "color": "#ffc533"},
+                {"id": "crown", "label": "Коронка", "color": "#91b400"},
+                {"id": "bridge", "label": "Мост", "color": "#a069c2"},
+                {"id": "veneer", "label": "Винир", "color": "#eecfb8"},
+                {"id": "implant", "label": "Имплант", "color": "#1885b3"},
+                {"id": "extracted", "label": "Удалён", "color": "#59606f"},
+                {"id": "missing", "label": "Отсутствует", "color": "#d8e3eb"},
+                {"id": "sealant", "label": "Герметик", "color": "#8a9b2f"}
+            ]
+        },
+        "espoDentalToothChartSurfaces": {
+            "type": "jsonArray",
+            "view": "espo-dental:views/settings/fields/json-array-text",
+            "tab": "EspoDental",
+            "tooltip": true,
+            "default": [
+                {"key": "o", "label": "Окклюзионная / режущий край"},
+                {"key": "m", "label": "Мезиальная"},
+                {"key": "d", "label": "Дистальная"},
+                {"key": "b", "label": "Вестибулярная / щечная"},
+                {"key": "l", "label": "Язычная / небная"}
+            ]
         }
     }
 }

@@ -23,6 +23,7 @@
             "bank_transfer": "Bank transfer",
             "online": "Online",
             "terminal": "Terminal",
+            "crypto": "Crypto",
             "other": "Other"
         },
         "status": {
@@ -41,5 +42,8 @@
         "Refund reason": "Refund reason",
         "Refund created": "Refund created"
     },
-    "tooltips": {"direction": "Inbound — clinic receives; Outbound — refund to the patient"}
+    "tooltips": {
+        "method": "The payment method list is edited by an administrator in EspoDental settings.",
+        "direction": "Inbound — clinic receives; Outbound — refund to the patient"
+    }
 }

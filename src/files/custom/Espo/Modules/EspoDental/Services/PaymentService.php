@@ -9,6 +9,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\Modules\EspoDental\Entities\Invoice;
 use Espo\Modules\EspoDental\Entities\Payment;
@@ -17,7 +18,8 @@ class PaymentService
 {
     public function __construct(
         private readonly EntityManager $entityManager,
-        private readonly User $user
+        private readonly User $user,
+        private readonly Config $config
     ) {
     }
 
@@ -60,7 +62,12 @@ class PaymentService
         $payment->set('clinicId', $clinicId);
         $payment->set('invoiceId', $data['invoiceId'] ?? null);
         $payment->set('amount', $amount);
-        $payment->set('method', $data['method'] ?? Payment::METHOD_CASH);
+        $method = (string) ($data['method'] ?? Payment::METHOD_CASH);
+        if (!in_array($method, $this->getAllowedMethods(), true)) {
+            throw new BadRequest('Invalid payment method');
+        }
+
+        $payment->set('method', $method);
         $payment->set('direction', Payment::DIRECTION_IN);
         $payment->set('status', Payment::STATUS_COMPLETED);
         $payment->set(
@@ -123,5 +130,46 @@ class PaymentService
         $this->entityManager->saveEntity($source);
 
         return ['refundPaymentId' => (string) $refund->getId()];
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getAllowedMethods(): array
+    {
+        $configured = $this->config->get('espoDentalPaymentMethods', []);
+        if (is_string($configured) && $configured !== '') {
+            $decoded = json_decode($configured, true);
+            $configured = is_array($decoded) ? $decoded : [];
+        }
+
+        $methods = [];
+        if (is_array($configured)) {
+            foreach ($configured as $item) {
+                $id = '';
+                if (is_string($item)) {
+                    $id = $item;
+                } elseif (is_array($item)) {
+                    $id = (string) ($item['id'] ?? $item['value'] ?? $item['name'] ?? '');
+                } elseif (is_object($item)) {
+                    $id = (string) ($item->id ?? $item->value ?? $item->name ?? '');
+                }
+
+                $id = trim($id);
+                if ($id !== '') {
+                    $methods[] = $id;
+                }
+            }
+        }
+
+        if ($methods === []) {
+            $methods = Payment::METHOD_LIST;
+        }
+
+        if (!in_array(Payment::METHOD_CASH, $methods, true)) {
+            array_unshift($methods, Payment::METHOD_CASH);
+        }
+
+        return array_values(array_unique($methods));
     }
 }

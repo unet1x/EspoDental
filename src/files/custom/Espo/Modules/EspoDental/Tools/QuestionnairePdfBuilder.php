@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Espo\Modules\EspoDental\Tools;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Espo\Core\FileStorage\Manager as FileStorageManager;
 use Espo\Core\ORM\EntityManager;
 use Espo\Entities\Attachment;
 use Espo\Modules\EspoDental\Entities\HealthQuestionnaire;
 use Espo\Modules\EspoDental\Entities\Patient;
-use TCPDF;
 
 class QuestionnairePdfBuilder
 {
@@ -25,78 +26,22 @@ class QuestionnairePdfBuilder
         Patient $patient,
         ?Attachment $signatureAttachment
     ): ?Attachment {
-        if (!class_exists(TCPDF::class)) {
+        if (!class_exists(Dompdf::class)) {
             return null;
         }
 
         $language = $questionnaire->getLanguage();
-        $schema = $this->schemaProvider->get($language);
-        $items = $questionnaire->getItems();
+        $options = new Options();
+        $options->setDefaultFont('DejaVu Sans');
+        $options->setIsRemoteEnabled(false);
+        $options->setIsHtml5ParserEnabled(true);
 
-        $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
-        $pdf->SetCreator('EspoDental');
-        $pdf->SetAuthor('EspoDental');
-        $pdf->SetTitle($this->t('Health Questionnaire', $language));
-        $pdf->SetMargins(15, 18, 15);
-        $pdf->setPrintHeader(false);
-        $pdf->setPrintFooter(false);
-        $pdf->AddPage();
+        $pdf = new Dompdf($options);
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->loadHtml($this->buildHtml($questionnaire, $patient, $signatureAttachment, $language), 'UTF-8');
+        $pdf->render();
 
-        $pdf->SetFont('dejavusans', 'B', 16);
-        $pdf->Cell(0, 10, $this->t('Health Questionnaire', $language), 0, 1, 'C');
-
-        $pdf->SetFont('dejavusans', '', 11);
-        $fullName = trim(
-            (string) $patient->get('lastName') . ' ' .
-            (string) $patient->get('firstName') . ' ' .
-            (string) $patient->get('middleName')
-        );
-        $pdf->Cell(
-            0,
-            6,
-            $this->t('Patient', $language) . ': ' . $fullName,
-            0,
-            1
-        );
-        $pdf->Cell(0, 6, $this->t('Filled at', $language) . ': ' . (string) $questionnaire->get('filledAt'), 0, 1);
-        $pdf->Ln(3);
-
-        foreach ($schema['groups'] as $group) {
-            $pdf->SetFont('dejavusans', 'B', 12);
-            $pdf->Cell(0, 7, (string) $group['label'], 0, 1);
-            $pdf->SetFont('dejavusans', '', 11);
-
-            foreach ($group['items'] as $item) {
-                $id = $item['id'];
-                $type = $item['type'];
-                $label = (string) $item['label'];
-                $value = $items[$id] ?? null;
-
-                if ($type === 'bool') {
-                    $checked = ($value === true || $value === 1 || $value === '1' || $value === 'true');
-                    $mark = $checked ? '[X]' : '[ ]';
-                    $isAlert = $checked && !empty($item['alert']);
-                    if ($isAlert) {
-                        $pdf->SetTextColor(180, 0, 0);
-                    }
-                    $pdf->MultiCell(0, 5.5, $mark . ' ' . $label, 0, 'L');
-                    if ($isAlert) {
-                        $pdf->SetTextColor(0, 0, 0);
-                    }
-                } elseif ($type === 'text') {
-                    $text = is_string($value) ? trim($value) : '';
-                    $pdf->MultiCell(0, 5.5, $label . ': ' . ($text !== '' ? $text : '—'), 0, 'L');
-                }
-            }
-
-            $pdf->Ln(2);
-        }
-
-        if ($signatureAttachment) {
-            $this->renderSignature($pdf, $signatureAttachment, $language);
-        }
-
-        $binary = $pdf->Output('questionnaire.pdf', 'S');
+        $binary = $pdf->output();
         if (!is_string($binary) || $binary === '') {
             return null;
         }
@@ -115,7 +60,121 @@ class QuestionnairePdfBuilder
         return $pdfAttachment;
     }
 
-    private function renderSignature(TCPDF $pdf, Attachment $attachment, string $language): void
+    private function buildHtml(
+        HealthQuestionnaire $questionnaire,
+        Patient $patient,
+        ?Attachment $signatureAttachment,
+        string $language
+    ): string {
+        $schema = $this->schemaProvider->get($language);
+        $items = $questionnaire->getItems();
+        $fullName = trim(
+            (string) $patient->get('lastName') . ' ' .
+            (string) $patient->get('firstName') . ' ' .
+            (string) $patient->get('middleName')
+        );
+
+        $html = '<!doctype html><html><head><meta charset="utf-8"><style>' .
+            'body{font-family:"DejaVu Sans",sans-serif;font-size:11px;color:#1f1f1f;}' .
+            'h1{font-size:20px;text-align:center;margin:0 0 14px;}' .
+            'h2{font-size:13px;margin:0 0 5px;border-bottom:1px solid #999;padding-bottom:2px;}' .
+            '.meta{margin-bottom:10px;}' .
+            '.answers{width:100%;border-collapse:collapse;margin-top:8px;}' .
+            '.answers td{width:50%;vertical-align:top;padding:0 8px 0 0;}' .
+            '.group{margin:0 0 10px;page-break-inside:avoid;}' .
+            '.item{margin:2px 0;line-height:1.25;border-bottom:1px dotted #ddd;padding-bottom:2px;}' .
+            '.answer{font-weight:bold;display:inline-block;min-width:24px;}' .
+            '.alert{color:#a00000;font-weight:bold;}' .
+            '.signature{margin-top:18px;}' .
+            '.signature img{width:260px;max-height:100px;border:1px solid #ccc;padding:8px;}' .
+            '</style></head><body>';
+
+        $html .= '<h1>' . $this->html($this->t('Health Questionnaire', $language)) . '</h1>';
+        $html .= '<div class="meta"><strong>' . $this->html($this->t('Patient', $language)) . ':</strong> ' .
+            $this->html($fullName) . '</div>';
+        $html .= '<div class="meta"><strong>' . $this->html($this->t('Filled at', $language)) . ':</strong> ' .
+            $this->html((string) $questionnaire->get('filledAt')) . '</div>';
+
+        $columns = $this->buildAnswerColumns($schema, $items, $language, (string) $patient->get('gender'));
+        $html .= '<table class="answers"><tr><td>' . $columns[0] . '</td><td>' . $columns[1] . '</td></tr></table>';
+
+        $signatureDataUri = $signatureAttachment ? $this->buildSignatureDataUri($signatureAttachment) : null;
+        if ($signatureDataUri) {
+            $html .= '<div class="signature"><strong>' . $this->html($this->t('Signature', $language)) .
+                ':</strong><br><img src="' . $this->html($signatureDataUri) . '" alt=""></div>';
+        }
+
+        return $html . '</body></html>';
+    }
+
+    /**
+     * @param array<string, mixed> $schema
+     * @param array<string, mixed> $items
+     * @return array{0: string, 1: string}
+     */
+    private function buildAnswerColumns(array $schema, array $items, string $language, string $patientGender): array
+    {
+        $blocks = [];
+        $totalItems = 0;
+
+        foreach ($schema['groups'] ?? [] as $group) {
+            $requiredGender = $group['conditional']['showIf']['patientGender'] ?? null;
+
+            if ($requiredGender && $requiredGender !== $patientGender) {
+                continue;
+            }
+
+            $blockItemCount = count($group['items'] ?? []);
+            $totalItems += $blockItemCount;
+            $block = '<div class="group"><h2>' . $this->html((string) ($group['label'] ?? '')) . '</h2>';
+
+            foreach ($group['items'] ?? [] as $item) {
+                $id = (string) ($item['id'] ?? '');
+                $type = (string) ($item['type'] ?? '');
+                $label = (string) ($item['label'] ?? $id);
+                $value = $items[$id] ?? null;
+
+                if ($type === 'bool') {
+                    $checked = ($value === true || $value === 1 || $value === '1' || $value === 'true');
+                    $class = $checked && !empty($item['alert']) ? ' class="item alert"' : ' class="item"';
+                    $block .= '<div' . $class . '><span class="answer">' .
+                        $this->html($checked ? $this->t('Yes', $language) : $this->t('No', $language)) .
+                        '</span> ' . $this->html($label) . '</div>';
+                    continue;
+                }
+
+                if ($type === 'text') {
+                    $text = is_string($value) ? trim($value) : '';
+                    $block .= '<div class="item"><strong>' . $this->html($label) . ':</strong> ' .
+                        $this->html($text !== '' ? $text : '—') . '</div>';
+                }
+            }
+
+            $blocks[] = [
+                'html' => $block . '</div>',
+                'count' => $blockItemCount,
+            ];
+        }
+
+        $left = '';
+        $right = '';
+        $leftCount = 0;
+        $half = (int) ceil($totalItems / 2);
+
+        foreach ($blocks as $block) {
+            if ($leftCount < $half) {
+                $left .= $block['html'];
+                $leftCount += $block['count'];
+                continue;
+            }
+
+            $right .= $block['html'];
+        }
+
+        return [$left, $right];
+    }
+
+    private function buildSignatureDataUri(Attachment $attachment): ?string
     {
         try {
             $contents = $this->fileStorageManager->getContents($attachment);
@@ -124,24 +183,17 @@ class QuestionnairePdfBuilder
         }
 
         if (!$contents) {
-            return;
+            return null;
         }
 
-        $pdf->Ln(6);
-        $pdf->SetFont('dejavusans', 'B', 11);
-        $pdf->Cell(0, 6, $this->t('Signature', $language) . ':', 0, 1);
+        $type = (string) ($attachment->get('type') ?: 'image/png');
 
-        $tmp = tempnam(sys_get_temp_dir(), 'espodental_sig_');
-        if ($tmp === false) {
-            return;
-        }
-        file_put_contents($tmp, $contents);
-        try {
-            $pdf->Image($tmp, 15, $pdf->GetY(), 80, 30, '', '', '', false, 300, '', false, false, 0);
-            $pdf->Ln(34);
-        } finally {
-            @unlink($tmp);
-        }
+        return 'data:' . $type . ';base64,' . base64_encode($contents);
+    }
+
+    private function html(string $value): string
+    {
+        return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
     }
 
     private function t(string $key, string $language): string
@@ -166,6 +218,16 @@ class QuestionnairePdfBuilder
                 'ru_RU' => 'Подпись',
                 'en_US' => 'Signature',
                 'es_ES' => 'Firma',
+            ],
+            'Yes' => [
+                'ru_RU' => 'Да',
+                'en_US' => 'Yes',
+                'es_ES' => 'Si',
+            ],
+            'No' => [
+                'ru_RU' => 'Нет',
+                'en_US' => 'No',
+                'es_ES' => 'No',
             ],
         ];
         return $dict[$key][$language] ?? $dict[$key]['en_US'] ?? $key;

@@ -24,6 +24,7 @@
         "performedBy": {"type": "link", "view": "views/fields/user"},
         "sourceVisit": {"type": "link"},
         "sourceVisitServiceLine": {"type": "link"},
+        "sourceVisitMaterialLine": {"type": "link"},
         "batch": {"type": "varchar", "maxLength": 64},
         "expiryDate": {"type": "date"},
         "reason": {"type": "text"},
@@ -38,6 +39,7 @@
         "performedBy": {"type": "belongsTo", "entity": "User"},
         "sourceVisit": {"type": "belongsTo", "entity": "Visit"},
         "sourceVisitServiceLine": {"type": "belongsTo", "entity": "VisitServiceLine"},
+        "sourceVisitMaterialLine": {"type": "belongsTo", "entity": "VisitMaterialLine"},
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"}
     },
@@ -45,6 +47,7 @@
     "indexes": {
         "material_performed": {"columns": ["materialId", "performedAt"]},
         "clinic_performed": {"columns": ["clinicId", "performedAt"]},
-        "type": {"columns": ["type"]}
+        "type": {"columns": ["type"]},
+        "source_visit_material_line": {"columns": ["sourceVisitMaterialLineId"]}
     }
 }

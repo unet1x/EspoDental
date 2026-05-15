@@ -1,5 +1,9 @@
 {
-    "labels": {"EspoDental": "EspoDental", "EspoDental Settings": "Ajustes de EspoDental"},
+    "labels": {
+        "EspoDental": "EspoDental",
+        "EspoDental Settings": "Ajustes de EspoDental",
+        "Dictionaries": "Diccionarios"
+    },
     "fields": {
         "espoDentalTelegramEnabled": "Recordatorios de Telegram activos",
         "espoDentalTelegramBotToken": "Token del bot de Telegram",
@@ -7,11 +11,19 @@
         "espoDentalReminderHoursBefore": "Horas antes del 1er recordatorio",
         "espoDentalReminderSecondHoursBefore": "Horas antes del 2do recordatorio",
         "espoDentalReminderWindowMinutes": "Ventana de disparo, min",
-        "espoDentalDefaultCurrency": "Moneda predeterminada"
+        "espoDentalDefaultCurrency": "Moneda predeterminada",
+        "espoDentalDefaultClinic": "Clinica predeterminada",
+        "espoDentalPaymentMethods": "Metodos de pago",
+        "espoDentalToothChartConditions": "Estados odontograma",
+        "espoDentalToothChartSurfaces": "Superficies dentales"
     },
     "tooltips": {
         "espoDentalReminderHoursBefore": "Horas antes de la cita del primer recordatorio",
         "espoDentalReminderSecondHoursBefore": "Segundo recordatorio (0 desactiva)",
-        "espoDentalReminderWindowMinutes": "Desviacion permitida del momento objetivo"
+        "espoDentalReminderWindowMinutes": "Desviacion permitida del momento objetivo",
+        "espoDentalDefaultClinic": "Si se define, se asigna automaticamente a nuevos pacientes preliminares. Si esta vacia y solo hay una clinica activa, se usara automaticamente.",
+        "espoDentalPaymentMethods": "Array JSON de objetos como {\"id\":\"cash\",\"label\":\"Efectivo\"}. Estos valores llenan la lista de metodos de pago.",
+        "espoDentalToothChartConditions": "Array JSON de objetos como {\"id\":\"caries\",\"label\":\"Caries\",\"color\":\"#c83e58\"}. Estos valores llenan las listas de estados de superficie.",
+        "espoDentalToothChartSurfaces": "Array JSON de objetos como {\"key\":\"o\",\"label\":\"Oclusal\"}. Las claves o, m, d, b, l se usan en los datos guardados del odontograma."
     }
 }

@@ -78,27 +78,29 @@ class ReminderService
     {
         $stats = ['sent' => 0, 'failed' => 0, 'skipped' => 0];
 
-        $parent = $this->loadParent($appointment);
-        if (!$parent) {
+        $appointmentParent = $this->loadParent($appointment);
+        if (!$appointmentParent) {
             return $stats;
         }
-        if ($parent instanceof Patient && !(bool) $parent->get('remindersEnabled', true)) {
+
+        $recipientSource = $this->resolveRecipientSource($appointmentParent);
+        if ($recipientSource instanceof Patient && !(bool) $recipientSource->get('remindersEnabled', true)) {
             $stats['skipped']++;
             return $stats;
         }
 
-        $preferred = (string) $parent->get('preferredChannel');
-        $channels = $this->resolveChannels($preferred, $parent);
+        $preferred = (string) $recipientSource->get('preferredChannel');
+        $channels = $this->resolveChannels($preferred, $recipientSource);
 
         $language = (string) ($this->config->get('language') ?: 'ru_RU');
-        $tpl = $this->template->build($appointment, $parent, $language);
+        $tpl = $this->template->build($appointment, $appointmentParent, $language);
 
         foreach ($channels as $channel => $recipient) {
             if ($this->alreadyLogged($appointment, $channel, $hoursBefore)) {
                 $stats['skipped']++;
                 continue;
             }
-            $log = $this->createLog($appointment, $parent, $channel, $recipient, $tpl);
+            $log = $this->createLog($appointment, $appointmentParent, $channel, $recipient, $tpl);
             $ok = false;
             $error = null;
             try {
@@ -136,6 +138,21 @@ class ReminderService
             return null;
         }
         return $this->entityManager->getEntityById($type, $id);
+    }
+
+    private function resolveRecipientSource(Entity $appointmentParent): Entity
+    {
+        if (!$appointmentParent instanceof Patient || !$appointmentParent->isChild()) {
+            return $appointmentParent;
+        }
+
+        $parentPatientId = $appointmentParent->getParentPatientId();
+        if (!$parentPatientId) {
+            return $appointmentParent;
+        }
+
+        $linkedParent = $this->entityManager->getEntityById(Patient::ENTITY_TYPE, $parentPatientId);
+        return $linkedParent instanceof Patient ? $linkedParent : $appointmentParent;
     }
 
     /**

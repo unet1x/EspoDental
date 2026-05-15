@@ -1,0 +1,23 @@
+{
+    "labels": {"Create VisitMaterialLine": "Agregar consumo de material"},
+    "fields": {
+        "name": "Nombre",
+        "visit": "Visita",
+        "visitServiceLine": "Linea de servicio",
+        "service": "Servicio",
+        "material": "Material",
+        "plannedQuantity": "Consumo planificado",
+        "quantity": "Consumo real",
+        "unit": "Unidad",
+        "unitPrice": "Precio unitario",
+        "totalCost": "Coste",
+        "isAutoCreated": "Creado por norma",
+        "notes": "Notas"
+    },
+    "links": {
+        "visit": "Visita",
+        "visitServiceLine": "Linea de servicio",
+        "service": "Servicio",
+        "material": "Material"
+    }
+}

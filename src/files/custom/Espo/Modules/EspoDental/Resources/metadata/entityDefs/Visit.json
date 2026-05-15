@@ -76,6 +76,7 @@
         "cabinet": {"type": "belongsTo", "entity": "Cabinet"},
         "clinic": {"type": "belongsTo", "entity": "Clinic"},
         "serviceLines": {"type": "hasMany", "entity": "VisitServiceLine", "foreign": "visit"},
+        "materialLines": {"type": "hasMany", "entity": "VisitMaterialLine", "foreign": "visit"},
         "photos": {"type": "hasMany", "entity": "VisitPhoto", "foreign": "visit"},
         "toothChartSnapshots": {"type": "hasMany", "entity": "ToothChartSnapshot", "foreign": "visit"},
         "invoices": {"type": "hasMany", "entity": "Invoice", "foreign": "visit"},

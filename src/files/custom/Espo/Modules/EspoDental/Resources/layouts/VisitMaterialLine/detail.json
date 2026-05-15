@@ -1,0 +1,10 @@
+[
+    {
+        "rows": [
+            [{"name": "material"}, {"name": "visitServiceLine"}],
+            [{"name": "plannedQuantity"}, {"name": "quantity"}],
+            [{"name": "unit"}, {"name": "isAutoCreated"}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

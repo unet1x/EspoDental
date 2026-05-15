@@ -65,13 +65,26 @@ final class Phase8MetadataTest extends TestCase
             'espoDentalReminderSecondHoursBefore',
             'espoDentalReminderWindowMinutes',
             'espoDentalDefaultCurrency',
+            'espoDentalPaymentMethods',
+            'espoDentalToothChartConditions',
+            'espoDentalToothChartSurfaces',
         ] as $field) {
             $this->assertArrayHasKey($field, $def['fields']);
         }
         $this->assertSame('password', $def['fields']['espoDentalTelegramBotToken']['type']);
+        $this->assertSame('jsonArray', $def['fields']['espoDentalPaymentMethods']['type']);
+        $this->assertSame('jsonArray', $def['fields']['espoDentalToothChartConditions']['type']);
+        $this->assertSame('jsonArray', $def['fields']['espoDentalToothChartSurfaces']['type']);
+        $this->assertSame(
+            'espo-dental:views/settings/fields/json-array-text',
+            $def['fields']['espoDentalPaymentMethods']['view']
+        );
 
         $appSettings = $this->readJson(self::MODULE_ROOT . '/Resources/metadata/app/settings.json');
         $this->assertTrue($appSettings['params']['espoDentalTelegramBotToken']['isSensitive']);
+        $this->assertArrayHasKey('espoDentalPaymentMethods', $appSettings['params']);
+        $this->assertArrayHasKey('espoDentalToothChartConditions', $appSettings['params']);
+        $this->assertArrayHasKey('espoDentalToothChartSurfaces', $appSettings['params']);
     }
 
     public function testAdminPanelRegistered(): void
@@ -124,6 +137,7 @@ final class Phase8MetadataTest extends TestCase
             $loc = $this->readJson(self::MODULE_ROOT . "/Resources/i18n/{$locale}/Settings.json");
             $this->assertArrayHasKey('espoDentalTelegramEnabled', $loc['fields']);
             $this->assertArrayHasKey('espoDentalReminderHoursBefore', $loc['fields']);
+            $this->assertArrayHasKey('espoDentalPaymentMethods', $loc['fields']);
         }
     }
 

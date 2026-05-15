@@ -20,6 +20,21 @@ class Payment extends Entity
 
     public const METHOD_CASH = 'cash';
     public const METHOD_CARD = 'card';
+    public const METHOD_BANK_TRANSFER = 'bank_transfer';
+    public const METHOD_ONLINE = 'online';
+    public const METHOD_TERMINAL = 'terminal';
+    public const METHOD_CRYPTO = 'crypto';
+    public const METHOD_OTHER = 'other';
+
+    public const METHOD_LIST = [
+        self::METHOD_CASH,
+        self::METHOD_CARD,
+        self::METHOD_BANK_TRANSFER,
+        self::METHOD_ONLINE,
+        self::METHOD_TERMINAL,
+        self::METHOD_CRYPTO,
+        self::METHOD_OTHER,
+    ];
 
     public function getAmount(): float
     {

@@ -21,6 +21,21 @@
         },
         "espoDentalDefaultCurrency": {
             "level": "global"
+        },
+        "espoDentalDefaultClinicId": {
+            "level": "global"
+        },
+        "espoDentalDefaultClinicName": {
+            "level": "global"
+        },
+        "espoDentalPaymentMethods": {
+            "level": "global"
+        },
+        "espoDentalToothChartConditions": {
+            "level": "global"
+        },
+        "espoDentalToothChartSurfaces": {
+            "level": "global"
         }
     }
 }

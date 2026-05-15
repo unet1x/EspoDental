@@ -1,0 +1,9 @@
+[
+    {
+        "rows": [
+            [{"name": "material"}, {"name": "quantity"}],
+            [{"name": "plannedQuantity"}, {"name": "unit"}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

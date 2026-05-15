@@ -1,5 +1,11 @@
 {
-    "labels": {"Create VisitServiceLine": "Добавить позицию"},
+    "labels": {
+        "Create VisitServiceLine": "Добавить позицию",
+        "Service Catalog": "Каталог услуг",
+        "Select category": "Выберите категорию",
+        "Select service": "Выберите услугу",
+        "No services in category": "В категории нет услуг"
+    },
     "fields": {
         "name": "Название",
         "visit": "Приём",
@@ -14,7 +20,7 @@
         "vatAmount": "НДС",
         "notes": "Комментарий"
     },
-    "links": {"visit": "Приём", "service": "Услуга"},
+    "links": {"visit": "Приём", "service": "Услуга", "materialLines": "Расход материалов"},
     "tooltips": {
         "teethNumbers": "FDI-номера через запятую, например: 16,26",
         "discount": "Процент скидки (0..100)"

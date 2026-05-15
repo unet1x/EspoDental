@@ -3,21 +3,22 @@ define('espo-dental:handlers/preliminary-patient/issue-questionnaire', ['action-
     return Dep.extend({
 
         actionIssueQuestionnaire: function () {
-            var model = this.view.model;
+            var view = this.view;
+            var model = view.model;
 
             if (model.get('convertedToPatientId')) {
-                Espo.Ui.warning(this.view.translate('Already converted', 'messages', 'PreliminaryPatient'));
+                Espo.Ui.warning(view.translate('Already converted', 'messages', 'PreliminaryPatient'));
                 return;
             }
 
-            this.view.createView('issueQuestionnaireDialog', 'espo-dental:views/preliminary-patient/modals/issue-questionnaire', {
+            view.createView('issueQuestionnaireDialog', 'espo-dental:views/preliminary-patient/modals/issue-questionnaire', {
                 model: model
-            }, function (view) {
-                view.render();
-                this.view.listenToOnce(view, 'done', function (result) {
-                    Espo.Ui.success(this.view.translate('Questionnaire issued', 'messages', 'PreliminaryPatient'));
+            }, function (modalView) {
+                modalView.render();
+                view.listenToOnce(modalView, 'done', function (result) {
+                    Espo.Ui.success(view.translate('Questionnaire issued', 'messages', 'PreliminaryPatient'));
 
-                    this.view.createView('qrDialog', 'espo-dental:views/health-questionnaire/qr-modal', {
+                    view.createView('qrDialog', 'espo-dental:views/health-questionnaire/qr-modal', {
                         url: result.tokenUrl,
                         expiresAt: result.expiresAt
                     }, function (qrView) {
@@ -25,8 +26,8 @@ define('espo-dental:handlers/preliminary-patient/issue-questionnaire', ['action-
                     });
 
                     model.fetch();
-                }, this);
-            }, this);
+                });
+            });
         }
     });
 });

@@ -1,5 +1,11 @@
 {
-    "labels": {"Create VisitServiceLine": "Add Service Line"},
+    "labels": {
+        "Create VisitServiceLine": "Add Service Line",
+        "Service Catalog": "Service Catalog",
+        "Select category": "Select category",
+        "Select service": "Select service",
+        "No services in category": "No services in category"
+    },
     "fields": {
         "name": "Name",
         "visit": "Visit",
@@ -14,7 +20,7 @@
         "vatAmount": "VAT",
         "notes": "Notes"
     },
-    "links": {"visit": "Visit", "service": "Service"},
+    "links": {"visit": "Visit", "service": "Service", "materialLines": "Material Consumption"},
     "tooltips": {
         "teethNumbers": "FDI tooth numbers, comma-separated, e.g. 16,26",
         "discount": "Discount percent (0..100)"

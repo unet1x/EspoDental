@@ -3,7 +3,12 @@
         "Create ToothChartSnapshot": "Create Tooth Chart",
         "Tooth": "Tooth",
         "Note": "Note",
-        "Edit Tooth": "Edit Tooth"
+        "Edit Tooth": "Edit Tooth",
+        "surface_o": "Occlusal / Incisal",
+        "surface_m": "Mesial",
+        "surface_d": "Distal",
+        "surface_b": "Buccal / Vestibular",
+        "surface_l": "Lingual / Palatal"
     },
     "fields": {
         "name": "Name",

@@ -6,7 +6,8 @@
         "unit": "Ед.", "unitPrice": "Цена", "totalCost": "Сумма",
         "performedAt": "Дата", "performedBy": "Кем", "batch": "Партия",
         "expiryDate": "Срок годности", "reason": "Причина",
-        "sourceVisit": "Источник: приём", "sourceVisitServiceLine": "Источник: позиция"
+        "sourceVisit": "Источник: приём", "sourceVisitServiceLine": "Источник: позиция",
+        "sourceVisitMaterialLine": "Источник: расход"
     },
     "options": {
         "type": {

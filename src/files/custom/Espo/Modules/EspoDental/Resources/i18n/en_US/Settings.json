@@ -1,5 +1,9 @@
 {
-    "labels": {"EspoDental": "EspoDental", "EspoDental Settings": "EspoDental Settings"},
+    "labels": {
+        "EspoDental": "EspoDental",
+        "EspoDental Settings": "EspoDental Settings",
+        "Dictionaries": "Dictionaries"
+    },
     "fields": {
         "espoDentalTelegramEnabled": "Telegram reminders enabled",
         "espoDentalTelegramBotToken": "Telegram bot token",
@@ -7,11 +11,19 @@
         "espoDentalReminderHoursBefore": "First reminder hours before",
         "espoDentalReminderSecondHoursBefore": "Second reminder hours before",
         "espoDentalReminderWindowMinutes": "Trigger window, minutes",
-        "espoDentalDefaultCurrency": "Default currency"
+        "espoDentalDefaultCurrency": "Default currency",
+        "espoDentalDefaultClinic": "Default clinic",
+        "espoDentalPaymentMethods": "Payment methods",
+        "espoDentalToothChartConditions": "Tooth chart conditions",
+        "espoDentalToothChartSurfaces": "Tooth surfaces"
     },
     "tooltips": {
         "espoDentalReminderHoursBefore": "Hours before the appointment when first reminder is sent",
         "espoDentalReminderSecondHoursBefore": "Second reminder (0 to disable)",
-        "espoDentalReminderWindowMinutes": "Allowed drift from the target moment"
+        "espoDentalReminderWindowMinutes": "Allowed drift from the target moment",
+        "espoDentalDefaultClinic": "If set, new preliminary patients get this clinic automatically. If empty and only one active clinic exists, it will be used automatically.",
+        "espoDentalPaymentMethods": "JSON array of objects like {\"id\":\"cash\",\"label\":\"Cash\"}. These values populate the payment method dropdown.",
+        "espoDentalToothChartConditions": "JSON array of objects like {\"id\":\"caries\",\"label\":\"Caries\",\"color\":\"#c83e58\"}. These values populate tooth surface condition dropdowns.",
+        "espoDentalToothChartSurfaces": "JSON array of objects like {\"key\":\"o\",\"label\":\"Occlusal\"}. Keys o, m, d, b, l are used in stored tooth-chart data."
     }
 }

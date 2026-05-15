@@ -4,7 +4,9 @@
         "Overview": "General",
         "Booking": "Reserva",
         "Other": "Otros",
-        "Start Visit": "Iniciar visita"
+        "Start Visit": "Iniciar visita",
+        "Find Free Slots": "Huecos libres",
+        "Select free slot": "Seleccione hora libre"
     },
     "fields": {
         "name": "Nombre",
@@ -13,16 +15,16 @@
         "assistant": "Asistente",
         "cabinet": "Gabinete",
         "clinic": "Clinica",
-        "dateStart": "Inicio",
+        "dateStart": "Fecha y hora",
         "dateEnd": "Fin",
         "duration": "Duracion",
         "status": "Estado",
-        "source": "Origen",
         "bookedBy": "Reservado por",
         "color": "Color",
         "complaints": "Motivo de consulta",
         "description": "Descripcion",
         "reminderSent": "Recordatorio enviado",
+        "confirmed": "Cita confirmada",
         "visit": "Visita",
         "statusLogs": "Historial de estado",
         "assignedUser": "Asignado a",
@@ -37,15 +39,6 @@
             "in_progress": "En curso",
             "finished": "Finalizada",
             "no_show": "No asistio"
-        },
-        "source": {
-            "": "—",
-            "walk_in": "Llegada espontanea",
-            "phone": "Telefono",
-            "online": "Reserva en linea",
-            "portal": "Portal del paciente",
-            "referral": "Referido",
-            "other": "Otro"
         }
     },
     "links": {
@@ -68,7 +61,10 @@
         "Questionnaire required": "El paciente debe completar el cuestionario de salud antes de iniciar la visita",
         "Status not allowed for start": "La visita solo puede iniciarse desde Planificada / Reprogramada / Llegada",
         "Confirm start visit": "Iniciar la visita para esta cita?",
-        "Visit started": "Visita iniciada"
+        "Visit started": "Visita iniciada",
+        "Select doctor and cabinet first": "Seleccione doctor y gabinete primero",
+        "No free slots found": "No hay huecos libres para la fecha seleccionada",
+        "Free slot search failed": "No se pudieron cargar los huecos libres"
     },
     "tooltips": {
         "duration": "Duracion de la cita",

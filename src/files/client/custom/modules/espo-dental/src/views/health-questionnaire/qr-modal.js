@@ -9,8 +9,8 @@ define('espo-dental:views/health-questionnaire/qr-modal', ['views/modal', 'espo-
                 '<a href="{{url}}" target="_blank" rel="noopener">{{url}}</a>' +
             '</div>' +
             '{{#if expiresAt}}<div class="text-muted small" style="margin-top:8px;text-align:center">' +
-                '{{translate "Expires at" category="labels" scope="QuestionnaireToken"}}: ' +
-                '{{datetime expiresAt}}' +
+                '{{translate "expiresAt" category="fields" scope="QuestionnaireToken"}}: ' +
+                '{{expiresAt}}' +
             '</div>{{/if}}',
 
         data: function () {
@@ -18,7 +18,7 @@ define('espo-dental:views/health-questionnaire/qr-modal', ['views/modal', 'espo-
         },
 
         setup: function () {
-            this.headerText = this.translate('Health Questionnaire', 'scopeNames');
+            this.headerText = this.translate('Health Questionnaire', 'labels', 'PreliminaryPatient');
             this.buttonList = [
                 {name: 'copy', label: this.translate('Copy URL', 'labels', 'HealthQuestionnaire')},
                 {name: 'cancel', label: 'Close'}
@@ -39,7 +39,7 @@ define('espo-dental:views/health-questionnaire/qr-modal', ['views/modal', 'espo-
             var url = this.options.url;
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(url).then(function () {
-                    Espo.Ui.success(this.translate('Copied'));
+                    Espo.Ui.success(this.translate('Copied', 'messages', 'HealthQuestionnaire'));
                 }.bind(this));
             } else {
                 window.prompt('Copy URL:', url);

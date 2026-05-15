@@ -54,6 +54,9 @@ class Calendar
         $clinicId = $request->getQueryParam('clinicId');
         $cabinetId = $request->getQueryParam('cabinetId');
         $doctorId = $request->getQueryParam('doctorId');
+        $parentType = $request->getQueryParam('parentType');
+        $parentId = $request->getQueryParam('parentId');
+        $excludeAppointmentId = $request->getQueryParam('excludeAppointmentId');
         $workStart = (int) ($request->getQueryParam('workStartHour') ?? 8);
         $workEnd = (int) ($request->getQueryParam('workEndHour') ?? 21);
         $step = (int) ($request->getQueryParam('stepMinutes') ?? 15);
@@ -71,7 +74,10 @@ class Calendar
             $workStart,
             $workEnd,
             $step,
-            $limit
+            $limit,
+            $excludeAppointmentId !== null && $excludeAppointmentId !== '' ? (string) $excludeAppointmentId : null,
+            $parentType !== null && $parentType !== '' ? (string) $parentType : null,
+            $parentId !== null && $parentId !== '' ? (string) $parentId : null
         );
         return ['slots' => $slots, 'count' => count($slots)];
     }

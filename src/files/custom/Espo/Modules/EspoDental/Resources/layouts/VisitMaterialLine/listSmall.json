@@ -1,0 +1,6 @@
+[
+    {"name": "material", "link": true},
+    {"name": "plannedQuantity"},
+    {"name": "quantity"},
+    {"name": "unit"}
+]

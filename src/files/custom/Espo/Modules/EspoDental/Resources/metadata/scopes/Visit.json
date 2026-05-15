@@ -3,7 +3,7 @@
     "module": "EspoDental",
     "object": true,
     "tab": true,
-    "stream": true,
+    "stream": false,
     "importable": false,
     "layouts": true,
     "kanbanViewMode": false,

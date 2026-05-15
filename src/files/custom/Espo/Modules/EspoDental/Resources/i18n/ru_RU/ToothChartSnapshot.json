@@ -3,7 +3,12 @@
         "Create ToothChartSnapshot": "Добавить зубную формулу",
         "Tooth": "Зуб",
         "Note": "Заметка",
-        "Edit Tooth": "Изменить зуб"
+        "Edit Tooth": "Изменить зуб",
+        "surface_o": "Окклюзионная / режущий край",
+        "surface_m": "Мезиальная",
+        "surface_d": "Дистальная",
+        "surface_b": "Вестибулярная / щечная",
+        "surface_l": "Язычная / небная"
     },
     "fields": {
         "name": "Название",
