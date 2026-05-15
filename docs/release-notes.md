@@ -41,6 +41,10 @@
   booking is routed through the explicit header action.
 - Appointment free-slot labels now use the live selected duration instead of
   always showing 30-minute intervals.
+- Free-slot labels and the patient booking success notification now use the
+  clinic-local time, while the saved appointment keeps UTC `dateStart/dateEnd`.
+- Appointment display names are now derived from clinic-local time instead of
+  raw UTC storage values.
 - Free-slot search now matches the server conflict rules for doctor and patient
   occupancy: a doctor already booked in another cabinet no longer appears as
   available for the same time.

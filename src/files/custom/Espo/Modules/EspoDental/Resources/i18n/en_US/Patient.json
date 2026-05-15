@@ -107,6 +107,7 @@
     "messages": {
         "Issue questionnaire confirm": "Show the QR code to the patient on the tablet. After submission, the new questionnaire will be saved in the patient card.",
         "Questionnaire is up to date": "The health questionnaire is up to date",
-        "Appointment booked": "Patient booked for an appointment"
+        "Appointment booked": "Patient booked for an appointment",
+        "Appointment booked for": "Patient booked for {time} (clinic local time)"
     }
 }

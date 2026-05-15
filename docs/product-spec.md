@@ -225,6 +225,9 @@ should offer free slots from the resource calendar as a date plus free-time
 dropdown, without a separate technical action button or manual datetime field.
 The offered slot end time must reflect the selected duration immediately, not
 fall back to the default 30-minute duration.
+Slots are stored as UTC datetimes, but all operational booking feedback must
+use the clinic timezone: slot labels, appointment display names and the success
+notification after patient booking must show the clinic-local time.
 Free-slot suggestions and save-time validation must use the same resource
 rules: the cabinet must be free, the doctor must not be booked in any other
 cabinet/clinic, and the patient/preliminary patient must not have an overlapping

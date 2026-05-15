@@ -107,6 +107,7 @@
     "messages": {
         "Issue questionnaire confirm": "Muestre el codigo QR al paciente en la tableta. Al enviarlo, el nuevo cuestionario se guardara en la ficha del paciente.",
         "Questionnaire is up to date": "El cuestionario de salud esta actualizado",
-        "Appointment booked": "Paciente reservado para una cita"
+        "Appointment booked": "Paciente reservado para una cita",
+        "Appointment booked for": "Paciente reservado para {time} (hora local de la clinica)"
     }
 }

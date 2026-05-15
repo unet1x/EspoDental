@@ -46,7 +46,10 @@ final class Phase13MetadataTest extends TestCase
         $this->assertStringContainsString('$occByPatient', $code);
         $this->assertStringNotContainsString('$appWhere[\'cabinetId\']', $code);
         $this->assertStringNotContainsString('$appWhere[\'doctorId\']', $code);
-        $this->assertStringContainsString('getTimeZone', $code);
+        $this->assertStringContainsString('localStart', $code);
+        $this->assertStringContainsString('localEnd', $code);
+        $this->assertStringContainsString('resolveTimeZone', $code);
+        $this->assertStringContainsString('Clinic::ENTITY_TYPE', $code);
     }
 
     public function testCalendarServiceGetDataAcceptsCabinetId(): void

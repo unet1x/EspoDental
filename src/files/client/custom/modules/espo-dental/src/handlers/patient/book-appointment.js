@@ -31,12 +31,24 @@ define('espo-dental:handlers/patient/book-appointment', [
                 attributes: attributes,
                 fullFormDisabled: true,
                 layoutName: 'detailSmall',
-                afterSave: function () {
-                    Espo.Ui.success(view.translate('Appointment booked', 'messages', 'Patient'));
+                afterSave: function (appointment) {
+                    Espo.Ui.success(this.composeBookedMessage(view, appointment));
                     patient.trigger('after:relate');
                     patient.fetch();
-                }
+                }.bind(this)
             });
+        },
+
+        composeBookedMessage: function (view, appointment) {
+            var clinicTime = appointment ? appointment.espoDentalSelectedSlotClinicTime || '' : '';
+
+            if (!clinicTime) {
+                return view.translate('Appointment booked', 'messages', 'Patient');
+            }
+
+            return view
+                .translate('Appointment booked for', 'messages', 'Patient')
+                .replace('{time}', clinicTime);
         },
 
         isBookAppointmentAvailable: function () {

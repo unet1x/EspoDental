@@ -6,6 +6,7 @@ namespace Espo\Modules\EspoDental\Hooks\Appointment;
 
 use DateInterval;
 use DateTimeImmutable;
+use DateTimeZone;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
@@ -151,7 +152,7 @@ class FrontDeskFlow
         $duration = $duration > 0 ? $duration : 1800;
 
         try {
-            $start = new DateTimeImmutable((string) $appointment->getDateStart());
+            $start = $this->createUtcDateTime((string) $appointment->getDateStart());
             $appointment->set('dateEnd', $start->add(new DateInterval('PT' . $duration . 'S'))->format('Y-m-d H:i:s'));
         } catch (\Exception) {
             return;
@@ -160,10 +161,66 @@ class FrontDeskFlow
 
     private function buildAppointmentName(Appointment $appointment): string
     {
-        $date = (string) $appointment->getDateStart();
-        $date = $date !== '' ? substr($date, 0, 16) : 'Без даты';
+        $date = $this->formatClinicDateTime($appointment);
 
         return $date . ' — ' . $this->translateStatus((string) $appointment->getStatus());
+    }
+
+    private function formatClinicDateTime(Appointment $appointment): string
+    {
+        $dateStart = (string) $appointment->getDateStart();
+
+        if ($dateStart === '') {
+            return 'Без даты';
+        }
+
+        try {
+            return $this
+                ->createUtcDateTime($dateStart)
+                ->setTimezone($this->resolveTimeZone($appointment->getClinicId()))
+                ->format('Y-m-d H:i');
+        } catch (\Exception) {
+            return substr($dateStart, 0, 16);
+        }
+    }
+
+    private function createUtcDateTime(string $value): DateTimeImmutable
+    {
+        $utc = new DateTimeZone('UTC');
+        $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $value, $utc);
+
+        if ($date instanceof DateTimeImmutable) {
+            return $date;
+        }
+
+        return new DateTimeImmutable($value, $utc);
+    }
+
+    private function resolveTimeZone(?string $clinicId = null): DateTimeZone
+    {
+        if ($clinicId) {
+            /** @var Clinic|null $clinic */
+            $clinic = $this->entityManager->getEntityById(Clinic::ENTITY_TYPE, $clinicId);
+
+            if ($clinic) {
+                $timeZone = (string) ($clinic->get('timezone') ?: '');
+
+                if ($timeZone !== '') {
+                    return $this->buildTimeZone($timeZone);
+                }
+            }
+        }
+
+        return $this->buildTimeZone((string) ($this->config->get('timeZone') ?: 'UTC'));
+    }
+
+    private function buildTimeZone(string $timeZone): DateTimeZone
+    {
+        try {
+            return new DateTimeZone($timeZone);
+        } catch (\Exception) {
+            return new DateTimeZone('UTC');
+        }
     }
 
     private function translateStatus(string $status): string

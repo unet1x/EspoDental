@@ -97,6 +97,8 @@ final class Phase19ClinicalUxSimplificationTest extends TestCase
 
         $this->assertStringContainsString('public static int $order = 1', $hook);
         $this->assertStringContainsString('applyDateEndFromDuration', $hook);
+        $this->assertStringContainsString('formatClinicDateTime', $hook);
+        $this->assertStringContainsString('resolveTimeZone', $hook);
         $this->assertStringContainsString('espoDentalDefaultClinicId', $hook);
         $this->assertStringContainsString('Appointment status is controlled by visit workflow', $hook);
         $this->assertStringContainsString('espodentalAllowAppointmentSystemStatus', $appointmentService);
@@ -108,6 +110,9 @@ final class Phase19ClinicalUxSimplificationTest extends TestCase
         $this->assertStringContainsString('hideNativeDateTimeControl', $appointmentClient);
         $this->assertStringContainsString('getDurationSecondsFromField', $appointmentClient);
         $this->assertStringContainsString('bindDurationFieldWatcher', $appointmentClient);
+        $this->assertStringContainsString('localStart', $appointmentClient);
+        $this->assertStringContainsString('espoDentalSelectedSlotClinicTime', $appointmentClient);
+        $this->assertStringContainsString('data[this.name] = this.selectedSlotStart', $appointmentClient);
         $this->assertStringContainsString('applyDefaultClinic', $defaultClinicClient);
         $this->assertStringContainsString('espoDentalDefaultClinicId', $defaultClinicClient);
         $this->assertStringContainsString("Espo.Ajax.getRequest('Clinic'", $defaultClinicClient);
@@ -151,6 +156,7 @@ final class Phase19ClinicalUxSimplificationTest extends TestCase
         $this->assertStringContainsString("parentType: 'Patient'", $handler);
         $this->assertStringContainsString('fullFormDisabled: true', $handler);
         $this->assertStringContainsString("link: 'parent'", $handler);
+        $this->assertStringContainsString('Appointment booked for', $handler);
     }
 
     public function testVisitIsClinicalWorkspaceNotCashdesk(): void

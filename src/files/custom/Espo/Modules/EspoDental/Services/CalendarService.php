@@ -12,6 +12,7 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\Cabinet;
+use Espo\Modules\EspoDental\Entities\Clinic;
 
 class CalendarService
 {
@@ -116,7 +117,7 @@ class CalendarService
      * Find free slots for a duration in working hours.
      *
      * @return list<array{
-     *     start: string, end: string,
+     *     start: string, end: string, localStart: string, localEnd: string, timezone: string,
      *     cabinetId: string, cabinetName: string,
      *     doctorId: ?string
      * }>
@@ -142,7 +143,7 @@ class CalendarService
         if ($workEndHour <= $workStartHour) {
             throw new BadRequest('workEndHour must be greater than workStartHour');
         }
-        $timeZone = $this->getTimeZone();
+        $timeZone = $this->resolveTimeZone($clinicId);
         $utc = new DateTimeZone('UTC');
         $fromLocal = new DateTimeImmutable($dateFrom . ' 00:00:00', $timeZone);
         $toLocal = new DateTimeImmutable($dateTo . ' 23:59:59', $timeZone);
@@ -239,9 +240,17 @@ class CalendarService
                     ) {
                         continue;
                     }
+                    $startUtc = (new DateTimeImmutable('@' . $t))->setTimezone($utc);
+                    $endUtc = (new DateTimeImmutable('@' . ($t + $durSec)))->setTimezone($utc);
+                    $startLocal = $startUtc->setTimezone($timeZone);
+                    $endLocal = $endUtc->setTimezone($timeZone);
+
                     $slots[] = [
-                        'start' => gmdate('Y-m-d H:i:s', $t),
-                        'end' => gmdate('Y-m-d H:i:s', $t + $durSec),
+                        'start' => $startUtc->format('Y-m-d H:i:s'),
+                        'end' => $endUtc->format('Y-m-d H:i:s'),
+                        'localStart' => $startLocal->format('Y-m-d H:i:s'),
+                        'localEnd' => $endLocal->format('Y-m-d H:i:s'),
+                        'timezone' => $timeZone->getName(),
                         'cabinetId' => $cId,
                         'cabinetName' => $cName,
                         'doctorId' => $doctorId,
@@ -265,10 +274,26 @@ class CalendarService
         return $parentType . ':' . $parentId;
     }
 
-    private function getTimeZone(): DateTimeZone
+    private function resolveTimeZone(?string $clinicId = null): DateTimeZone
     {
-        $timeZone = (string) ($this->config->get('timeZone') ?: 'UTC');
+        if ($clinicId) {
+            /** @var Clinic|null $clinic */
+            $clinic = $this->entityManager->getEntityById(Clinic::ENTITY_TYPE, $clinicId);
 
+            if ($clinic) {
+                $timeZone = (string) ($clinic->get('timezone') ?: '');
+
+                if ($timeZone !== '') {
+                    return $this->buildTimeZone($timeZone);
+                }
+            }
+        }
+
+        return $this->buildTimeZone((string) ($this->config->get('timeZone') ?: 'UTC'));
+    }
+
+    private function buildTimeZone(string $timeZone): DateTimeZone
+    {
         try {
             return new DateTimeZone($timeZone);
         } catch (\Exception) {

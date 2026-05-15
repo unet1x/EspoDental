@@ -40,6 +40,8 @@ Checklist:
   manual start datetime, assigned user or teams.
 - Confirm changing appointment duration to 1h/1.5h/2h changes the free-slot end
   time accordingly.
+- Confirm free-slot labels and the patient booking success notification show
+  clinic-local time, while the saved payload remains UTC.
 - Confirm conflicting doctor/cabinet/patient slot is rejected.
 - Launch health questionnaire QR/token.
 - Submit questionnaire on tablet/mobile-size viewport.

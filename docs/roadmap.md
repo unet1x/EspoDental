@@ -83,7 +83,9 @@ Deliverables:
 - patient appointment relationship panel does not expose a competing plus
   create flow;
 - free-slot dropdown reflects the selected duration immediately;
-- appointment display name derived from date/time and status;
+- free-slot labels, appointment display names and booking success notification
+  use clinic-local time while UTC is kept for storage;
+- appointment display name derived from clinic-local date/time and status;
 - `in_progress` and `finished` appointment statuses controlled by the visit
   workflow, not by manual selection;
 - free-slot suggestions use the same blocking rules as save-time validation:

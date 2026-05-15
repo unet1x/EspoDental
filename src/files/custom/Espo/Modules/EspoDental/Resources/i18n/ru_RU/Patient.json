@@ -107,6 +107,7 @@
     "messages": {
         "Issue questionnaire confirm": "Покажите QR-код пациенту на планшете. После отправки новая анкета будет сохранена в карточке пациента.",
         "Questionnaire is up to date": "Анкета здоровья актуальна",
-        "Appointment booked": "Пациент записан на прием"
+        "Appointment booked": "Пациент записан на прием",
+        "Appointment booked for": "Пациент записан на прием: {time} (местное время клиники)"
     }
 }

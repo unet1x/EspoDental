@@ -8,7 +8,11 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:doctorId change:cabinetId change:clinicId change:duration', function () {
+            this.listenTo(this.model, 'change:doctorId change:cabinetId change:clinicId change:duration', function (model, value, options) {
+                if (!options || !options.espoDentalApplyingSlot) {
+                    this.clearSelectedSlot();
+                }
+
                 this.scheduleSlotLoad();
             });
 
@@ -63,6 +67,7 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
             var $picker = this.$el.find('.espo-dental-slot-picker');
 
             $picker.find('[data-name="slotDate"]').on('change', function () {
+                self.clearSelectedSlot();
                 self.scheduleSlotLoad();
             });
 
@@ -94,6 +99,7 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
             durationView.$duration
                 .off('change.espoDentalSlots')
                 .on('change.espoDentalSlots', function () {
+                    this.clearSelectedSlot();
                     this.scheduleSlotLoad();
                 }.bind(this));
         },
@@ -221,6 +227,8 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
         applySlot: function (slot) {
             this.selectedSlotStart = slot.start;
             this.selectedSlotEnd = slot.end;
+            this.selectedSlotClinicTime = this.formatSlotDateTime(slot);
+            this.model.espoDentalSelectedSlotClinicTime = this.selectedSlotClinicTime;
             this.setDateTimeInputs(slot.start);
 
             var attrs = {};
@@ -233,8 +241,18 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
                 attrs.cabinetName = slot.cabinetName;
             }
 
-            this.model.set(attrs, {ui: true});
+            this.model.set(attrs, {ui: true, espoDentalApplyingSlot: true});
             this.trigger('change');
+        },
+
+        clearSelectedSlot: function () {
+            this.selectedSlotStart = null;
+            this.selectedSlotEnd = null;
+            this.selectedSlotClinicTime = null;
+
+            if (this.model) {
+                delete this.model.espoDentalSelectedSlotClinicTime;
+            }
         },
 
         setDateTimeInputs: function (value) {
@@ -251,7 +269,8 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
 
-            if (this.selectedSlotStart && data[this.name] === this.selectedSlotStart) {
+            if (this.selectedSlotStart) {
+                data[this.name] = this.selectedSlotStart;
                 data.dateEnd = this.selectedSlotEnd || null;
             }
 
@@ -359,8 +378,8 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
         },
 
         formatSlot: function (slot) {
-            var start = this.getDateTime().toDisplay(slot.start) || slot.start;
-            var end = this.getDateTime().toDisplay(slot.end) || slot.end;
+            var start = this.getSlotDisplayValue(slot, 'localStart', 'start');
+            var end = this.getSlotDisplayValue(slot, 'localEnd', 'end');
             var startTime = this.extractDisplayTime(start);
             var endTime = this.extractDisplayTime(end);
             var label = startTime + ' - ' + endTime;
@@ -372,7 +391,35 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
             return label;
         },
 
+        formatSlotDateTime: function (slot) {
+            return this.formatDisplayDateTime(
+                this.getSlotDisplayValue(slot, 'localStart', 'start')
+            );
+        },
+
+        getSlotDisplayValue: function (slot, localName, utcName) {
+            return slot[localName] || this.getDateTime().toDisplay(slot[utcName]) || slot[utcName];
+        },
+
+        formatDisplayDateTime: function (value) {
+            var parsed = moment(value, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm'], true);
+
+            if (parsed.isValid()) {
+                return parsed.format(
+                    this.getDateTime().getDateFormat() + ' ' + this.getDateTime().getTimeFormat()
+                );
+            }
+
+            return value;
+        },
+
         extractDisplayTime: function (value) {
+            var parsed = moment(value, ['YYYY-MM-DD HH:mm:ss', 'YYYY-MM-DD HH:mm'], true);
+
+            if (parsed.isValid()) {
+                return parsed.format(this.getDateTime().getTimeFormat());
+            }
+
             var pair = this.splitDatetime(value);
             return pair[1] || value;
         },
