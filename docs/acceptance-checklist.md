@@ -108,6 +108,8 @@ Checklist:
 - Confirm payment changes patient balance.
 - Print or generate invoice/act/receipt artifact.
 - Book next appointment from patient/visit/invoice context.
+- Confirm future appointments appear above past visits in the patient card
+  history panel.
 - Confirm visit, invoice, payment, photos and next appointment are visible in
   the patient card.
 

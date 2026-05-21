@@ -301,6 +301,11 @@ Implemented in branch `feature-front-desk-intake`:
   clinic, doctor, cabinet and visit note context where available. Invoice
   booking also loads the linked visit to recover doctor/cabinet context after
   payment.
+- Patient detail now has a `Patient History` panel backed by
+  `Patient/action/history`. The panel shows future appointment rows above past
+  visit rows, using clinic-local times and linking directly to the appointment
+  or visit records, so the receptionist can verify the next booking without
+  digging through separate relationship panels.
 - EspoDental admin settings expose editable module dictionaries for payment
   methods, tooth-chart condition options/colors and tooth-surface labels.
   These settings are admin-only via the EspoCRM admin settings page and are
@@ -382,6 +387,9 @@ Verification completed after this slice:
 - Structural PHPUnit coverage confirms `Visit` and `Invoice` expose
   `Book Next Appointment` actions, the handlers open the short contextual
   appointment modal, and RU / EN / ES labels are present.
+- Structural PHPUnit coverage confirms the patient history endpoint returns
+  future appointments before past visits, the patient detail view renders the
+  history panel, and RU / EN / ES labels are present.
 - Browser smoke on 2026-05-15 confirmed `Appointment.dateStart` renders a
   free-slot picker in edit mode, loads slots for the selected doctor/cabinet,
   respects the EspoCRM timezone for 08:00-21:00 display, and writes the chosen

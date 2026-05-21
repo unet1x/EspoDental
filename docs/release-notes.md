@@ -69,6 +69,8 @@
 - Visit and invoice detail views now expose `Book Next Appointment`, opening
   the same short contextual appointment modal as the patient card and carrying
   patient, clinic, doctor, cabinet and visit-note context where available.
+- Patient detail now includes a `Patient History` panel that lists future
+  appointments above past visits with clinic-local times and direct links.
 - Service-line price/currency/VAT always comes from the selected service;
   material-line unit/cost always comes from the selected material.
 - Doctor-facing visit layouts hide service price/currency/VAT, material cost,

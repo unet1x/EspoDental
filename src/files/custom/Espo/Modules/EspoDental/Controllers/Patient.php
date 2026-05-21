@@ -10,6 +10,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Modules\EspoDental\Services\HealthQuestionnaireService;
 use Espo\Modules\EspoDental\Services\PatientFileService;
+use Espo\Modules\EspoDental\Services\PatientHistoryService;
 
 class Patient extends Record
 {
@@ -42,6 +43,39 @@ class Patient extends Record
             $id,
             $this->getAcl()->checkScope('VisitPhoto', 'read'),
             $this->getAcl()->checkScope('HealthQuestionnaire', 'read'),
+            $limit
+        );
+    }
+
+    /**
+     * GET /Patient/action/history?id=...
+     *
+     * @return array{
+     *     patientId: string,
+     *     futureAppointments: list<array<string, mixed>>,
+     *     pastVisits: list<array<string, mixed>>
+     * }
+     */
+    public function getActionHistory(Request $request): array
+    {
+        $id = $request->getQueryParam('id');
+        $limit = (int) ($request->getQueryParam('limit') ?? 8);
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest('id is required');
+        }
+
+        if (!$this->getAcl()->checkScope('Patient', 'read')) {
+            throw new Forbidden();
+        }
+
+        /** @var PatientHistoryService $service */
+        $service = $this->injectableFactory->create(PatientHistoryService::class);
+
+        return $service->getPatientHistory(
+            $id,
+            $this->getAcl()->checkScope('Appointment', 'read'),
+            $this->getAcl()->checkScope('Visit', 'read'),
             $limit
         );
     }
