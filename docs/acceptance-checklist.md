@@ -4,6 +4,11 @@ Last updated: 2026-05-14
 
 Use this checklist before calling any vertical slice complete.
 
+Known regression notes from 2026-05-21 are documented in
+`docs/regression-handoff-2026-05-21.md`. Review that handoff before accepting
+calendar booking, appointment quick-create, visit finish, payment or appointment
+status behavior.
+
 ## 1. End-To-End Patient Flow
 
 Preconditions:

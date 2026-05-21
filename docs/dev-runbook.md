@@ -11,6 +11,8 @@ Before changing code, read:
 
 - `docs/product-spec.md`
 - `docs/current-state.md`
+- `docs/regression-handoff-2026-05-21.md` if working on front-desk, booking,
+  visit finish, payment or calendar regressions
 - `docs/roadmap.md`
 - `docs/acceptance-checklist.md`
 - `docs/dev-runbook.md`

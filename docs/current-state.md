@@ -6,6 +6,18 @@ This file is the handoff document for future development sessions. It describes
 what has been verified, what exists in metadata, and what still needs product
 acceptance.
 
+## 0. Regression Handoff Added 2026-05-21
+
+A focused regression handoff was added after reviewing the latest front-desk
+and booking changes:
+
+- `docs/regression-handoff-2026-05-21.md`
+
+Read it before starting new fixes. It records likely regressions in the
+resource-calendar timezone contract, global appointment quick-create,
+`finishVisit` atomicity/idempotency, server-side payment guards and appointment
+final-status naming.
+
 ## 1. Repository And Runtime
 
 - Repository root: `/Users/unet1x/Codex/EspoDental`.
