@@ -30,6 +30,19 @@ class VisitService
      */
     public function finishVisit(string $visitId): array
     {
+        /** @var array{visitId: string, total: float, lineCount: int, invoiceId: ?string} $result */
+        $result = $this->entityManager->getTransactionManager()->run(
+            fn (): array => $this->finishVisitInTransaction($visitId)
+        );
+
+        return $result;
+    }
+
+    /**
+     * @return array{visitId: string, total: float, lineCount: int, invoiceId: ?string}
+     */
+    private function finishVisitInTransaction(string $visitId): array
+    {
         /** @var Visit|null $visit */
         $visit = $this->entityManager->getEntityById(Visit::ENTITY_TYPE, $visitId);
 

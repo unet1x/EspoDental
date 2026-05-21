@@ -23,6 +23,14 @@
         ]
     },
     {
+        "label": "Answers",
+        "rows": [
+            [
+                {"name": "items", "fullWidth": true}
+            ]
+        ]
+    },
+    {
         "label": "Files",
         "rows": [
             [

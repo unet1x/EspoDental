@@ -19,7 +19,7 @@
         "items": {
             "type": "jsonObject",
             "readOnly": true,
-            "view": "espo-dental:views/fields/json-value"
+            "view": "espo-dental:views/health-questionnaire/fields/items-table"
         },
         "alertItems": {
             "type": "jsonArray",

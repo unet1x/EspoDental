@@ -44,6 +44,88 @@ class HealthQuestionnaireService
     }
 
     /**
+     * @return array{
+     *     questionnaireId: string,
+     *     language: string,
+     *     version: int,
+     *     groups: list<array{
+     *         id: string,
+     *         label: string,
+     *         answers: list<array{id: string, label: string, type: string, value: mixed, alert: bool}>
+     *     }>,
+     *     extraAnswers: list<array{id: string, label: string, type: string, value: mixed, alert: bool}>
+     * }
+     */
+    public function getAnswerTable(string $questionnaireId): array
+    {
+        /** @var HealthQuestionnaire|null $questionnaire */
+        $questionnaire = $this->entityManager->getEntityById(HealthQuestionnaire::ENTITY_TYPE, $questionnaireId);
+
+        if (!$questionnaire) {
+            throw new NotFound("Health questionnaire {$questionnaireId} not found");
+        }
+
+        $language = $questionnaire->getLanguage();
+        $schema = $this->schemaProvider->get($language);
+        $items = $questionnaire->getItems();
+        $usedIds = [];
+        $groups = [];
+
+        foreach ($schema['groups'] ?? [] as $group) {
+            $answers = [];
+
+            foreach ($group['items'] ?? [] as $item) {
+                $id = (string) ($item['id'] ?? '');
+                if ($id === '' || !array_key_exists($id, $items)) {
+                    continue;
+                }
+
+                $answers[] = [
+                    'id' => $id,
+                    'label' => (string) ($item['label'] ?? $id),
+                    'type' => (string) ($item['type'] ?? 'bool'),
+                    'value' => $items[$id],
+                    'alert' => (bool) ($item['alert'] ?? false),
+                ];
+                $usedIds[$id] = true;
+            }
+
+            if ($answers === []) {
+                continue;
+            }
+
+            $groups[] = [
+                'id' => (string) ($group['id'] ?? ''),
+                'label' => (string) ($group['label'] ?? ''),
+                'answers' => $answers,
+            ];
+        }
+
+        $extraAnswers = [];
+        foreach ($items as $id => $value) {
+            if (isset($usedIds[$id])) {
+                continue;
+            }
+
+            $extraAnswers[] = [
+                'id' => (string) $id,
+                'label' => (string) $id,
+                'type' => is_bool($value) ? 'bool' : 'text',
+                'value' => $value,
+                'alert' => false,
+            ];
+        }
+
+        return [
+            'questionnaireId' => (string) $questionnaire->getId(),
+            'language' => $language,
+            'version' => (int) ($schema['version'] ?? 1),
+            'groups' => $groups,
+            'extraAnswers' => $extraAnswers,
+        ];
+    }
+
+    /**
      * @return array{tokenId: string, tokenUrl: string, expiresAt: string}
      */
     public function issuePatientQuestionnaireToken(string $patientId, ?string $language = null): array

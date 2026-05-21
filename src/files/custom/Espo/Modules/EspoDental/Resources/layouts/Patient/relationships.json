@@ -6,9 +6,17 @@
     },
     "visits",
     "toothChartSnapshots",
-    "photos",
+    {
+        "name": "photos",
+        "createDisabled": true,
+        "selectDisabled": true
+    },
     "invoices",
     "payments",
     "notificationLogs",
-    "healthQuestionnaires"
+    {
+        "name": "healthQuestionnaires",
+        "createDisabled": true,
+        "selectDisabled": true
+    }
 ]

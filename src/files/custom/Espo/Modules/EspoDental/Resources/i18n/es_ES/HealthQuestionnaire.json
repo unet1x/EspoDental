@@ -2,6 +2,11 @@
     "labels": {
         "Create HealthQuestionnaire": "Crear cuestionario",
         "Overview": "General",
+        "Answers": "Respuestas",
+        "Question": "Pregunta",
+        "Answer": "Respuesta",
+        "Other Answers": "Otras respuestas",
+        "Requires attention": "Requiere atencion",
         "Files": "Archivos",
         "Audit": "Auditoria",
         "Print PDF": "Imprimir PDF",

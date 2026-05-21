@@ -7,6 +7,11 @@
         "Notes": "Notas",
         "Book Appointment": "Reservar cita",
         "Health Questionnaire": "Cuestionario de salud",
+        "Clinical Files": "Archivos clinicos",
+        "Recent Visit Photos": "Fotos de visitas",
+        "Questionnaire Files": "Archivos de cuestionarios",
+        "Alerts": "Alertas",
+        "Expired": "Caducado",
         "Other": "Otros"
     },
     "fields": {
@@ -107,6 +112,8 @@
     "messages": {
         "Issue questionnaire confirm": "Muestre el codigo QR al paciente en la tableta. Al enviarlo, el nuevo cuestionario se guardara en la ficha del paciente.",
         "Questionnaire is up to date": "El cuestionario de salud esta actualizado",
+        "Questionnaire expired warning": "El cuestionario de salud falta o esta vencido. Emita uno nuevo antes del tratamiento.",
+        "Questionnaire has alerts warning": "El cuestionario tiene alertas medicas que requieren atencion del doctor.",
         "Appointment booked": "Paciente reservado para una cita",
         "Appointment booked for": "Paciente reservado para {time} (hora local de la clinica)"
     }

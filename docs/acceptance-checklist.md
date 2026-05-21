@@ -1,6 +1,6 @@
 # EspoDental Acceptance Checklist
 
-Last updated: 2026-05-14
+Last updated: 2026-05-22
 
 Use this checklist before calling any vertical slice complete.
 
@@ -63,6 +63,10 @@ Checklist:
 - Confirm the form rejects submission when any visible yes/no item is
   unanswered.
 - Confirm signature is stored.
+- Confirm questionnaire detail shows grouped localized answers, not raw JSON.
+- Confirm a patient card with medical alert answers shows a visible warning.
+- Confirm an expired or missing questionnaire shows a visible patient-card
+  warning and the questionnaire action can be issued again.
 - Convert preliminary patient to `Patient`.
 - Confirm the converted preliminary patient is hidden from the normal
   preliminary patient list.
@@ -77,12 +81,26 @@ Checklist:
 - Confirm material norms are copied into `VisitMaterialLine` rows.
 - Adjust material consumption before finish.
 - Upload before/after visit photos.
+- Confirm the patient card clinical files panel shows visit photos with the
+  originating visit/date context.
+- Confirm the patient card exposes questionnaire PDF and signature links from
+  completed health questionnaires.
+- Confirm patient-card photo and questionnaire relationship panels are
+  read-oriented; photos are added from visits and questionnaires are issued
+  through the QR/token action.
 - Finish visit.
 - Confirm appointment status is `finished`.
 - Confirm stock write-off movements were created.
 - Confirm stock write-off movements point to the prepared visit material lines.
+- Confirm material current stock and stock level match the sum of stock
+  movements and cannot be edited directly through the API.
+- Confirm posted stock movements cannot be edited or deleted; corrections are
+  entered as new receipt/write-off/adjustment movements.
 - Confirm invoice and invoice lines were created.
 - Confirm patient balance changed according to invoice.
+- Confirm repeated finish does not duplicate invoice lines or stock movements.
+- Confirm finish-visit downstream failures roll back the final visit and
+  appointment statuses.
 - Register payment.
 - Confirm payment method is selected from the configured dropdown.
 - Confirm draft, paid, cancelled/storno and over-balance invoice payments are

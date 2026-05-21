@@ -1,6 +1,6 @@
 # EspoDental Product Specification / Техническое задание
 
-Last updated: 2026-05-15
+Last updated: 2026-05-22
 
 ## 1. Product Goal
 
@@ -187,10 +187,19 @@ Patient card tabs:
 - family;
 - CBCT/Orthanc links.
 
-The health questionnaire tab must show a readable table of answers, the date
-and version, alert flags, and generated files. Questionnaire PDF output must be
-compact enough for clinic printing; the current target layout is two answer
-columns plus signature.
+Files and photos in the patient card must be clinically contextual: visit
+photos show the originating visit/date and open the source `VisitPhoto`, while
+questionnaire files expose the generated PDF and stored signature from the
+source `HealthQuestionnaire`. Normal patient-card panels are read-oriented for
+these records; photos are added from visits and questionnaires are issued
+through the QR/token flow.
+
+The health questionnaire tab must show a readable table of answers grouped by
+the configured questionnaire schema, the date and version, alert flags, and
+generated files. The patient card must also show a visible warning when the
+latest questionnaire is expired or has medical alert answers. Questionnaire PDF
+output must be compact enough for clinic printing; the current target layout is
+two answer columns plus signature.
 
 ### Appointments
 
@@ -293,7 +302,8 @@ materials:
   consumption norms. Visit service selection must be category-first, not a flat
   list of every service.
 - `Materials` / `Материалы`: opens material categories. Materials live inside
-  categories and store unit, stock thresholds, current stock and reorder data.
+  categories and store unit, stock thresholds, derived current stock and reorder
+  data.
 
 Direct service/material entity tabs are hidden from the normal workspace; users
 navigate through categories as folders.
@@ -323,11 +333,14 @@ Material records include:
 - measurement unit;
 - sale/package unit;
 - supplier reorder URL;
-- current quantity;
+- current quantity derived from stock movements;
 - reorder threshold;
 - clinic where applicable.
 
 Low stock alerts go to the manager or head nurse role.
+Posted stock movements are not silently edited or deleted. Corrections are
+entered as additional receipt, write-off, return or adjustment movements so the
+stock history remains auditable.
 
 ## 6. Infrastructure Requirements
 

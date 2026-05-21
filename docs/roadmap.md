@@ -1,6 +1,6 @@
 # EspoDental Roadmap
 
-Last updated: 2026-05-15
+Last updated: 2026-05-22
 
 The roadmap follows vertical clinical/business slices. Each phase should end in
 a working UI flow, a CLI/API verification path, and updated documentation.
@@ -55,6 +55,8 @@ Deliverables:
 - signature capture as PNG;
 - questionnaire date/version;
 - tabular display inside patient card;
+- schema-driven answer table in the questionnaire record;
+- patient-card warning when the questionnaire is expired or has medical alerts;
 - compact two-column PDF print/save action;
 - 1-year expiry alert.
 
@@ -62,6 +64,8 @@ Acceptance:
 
 - receptionist can scan QR on a tablet and hand it to the patient;
 - submitted questionnaire is visible on the converted patient;
+- questionnaire answers are shown as localized grouped rows, not raw JSON;
+- patient card visibly warns about expired or medically flagged questionnaires;
 - PDF contains answers, date and signature.
 - questionnaire schema can be edited in
   `src/files/custom/Espo/Modules/EspoDental/Resources/metadata/dental/questionnaireSchema.json`
@@ -137,6 +141,8 @@ Deliverables:
 - atomic finish action;
 - appointment status `finished`;
 - stock write-off movements;
+- movement-derived material stock balances with immutable posted movements and
+  correction-by-new-movement workflow;
 - invoice and invoice lines;
 - patient balance ledger update;
 - read-only finished visit with privileged correction path;
@@ -218,6 +224,8 @@ Deliverables:
 - versioned tooth chart snapshots by visit/date;
 - admin-editable tooth-chart condition dictionary with colors;
 - admin-editable tooth-surface labels for the clinical editor;
+- patient-card clinical files panel that shows recent visit photos with
+  visit/date context plus questionnaire PDF/signature links;
 - family links;
 - CBCT/Orthanc links;
 - orthodontic card integration;
@@ -227,6 +235,7 @@ Acceptance:
 
 - doctor can see tooth chart history by date and source visit;
 - child patients show both adult and pediatric charts;
+- patient card shows visit photos and questionnaire files with source context;
 - parent-linked child appointment reminders use the linked parent's preferred
   communication method; manually entered parent data falls back to child card
   communication settings.

@@ -1,6 +1,8 @@
 [
+    {"name": "image"},
     {"name": "name", "link": true},
+    {"name": "visit", "link": true},
+    {"name": "recordedAt"},
     {"name": "stage"},
-    {"name": "category"},
-    {"name": "recordedAt"}
+    {"name": "category"}
 ]

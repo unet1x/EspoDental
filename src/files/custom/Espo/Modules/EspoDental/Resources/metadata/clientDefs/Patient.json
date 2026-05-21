@@ -6,12 +6,27 @@
     "color": "#17BECF",
     "iconClass": "fas fa-user-injured",
     "kanbanViewMode": false,
+    "recordViews": {
+        "detail": "espo-dental:views/patient/record/detail"
+    },
     "defaultSidePanelFieldLists": {
         "detail": ["createdAt", "createdBy"],
         "detailSmall": ["createdAt", "createdBy"]
     },
     "relationshipPanels": {
         "appointments": {
+            "create": false,
+            "select": false,
+            "createDisabled": true,
+            "selectDisabled": true
+        },
+        "photos": {
+            "create": false,
+            "select": false,
+            "createDisabled": true,
+            "selectDisabled": true
+        },
+        "healthQuestionnaires": {
             "create": false,
             "select": false,
             "createDisabled": true,

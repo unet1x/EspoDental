@@ -1,6 +1,6 @@
 # EspoDental Current State
 
-Last updated: 2026-05-21
+Last updated: 2026-05-22
 
 This file is the handoff document for future development sessions. It describes
 what has been verified, what exists in metadata, and what still needs product
@@ -20,8 +20,9 @@ The current `main` branch contains the handoff fixes:
 - resource-calendar drag/drop and resize submit local time plus timezone to the
   server for UTC persistence;
 - global `Appointment` quick-create is removed from the workspace seeder;
-- `finishVisit` runs invoice and stock work before final statuses and accepts
-  repeated calls for already-finished visits;
+- `finishVisit` runs invoice and stock work inside an EspoCRM database
+  transaction before final statuses and accepts repeated calls for
+  already-finished visits;
 - `PaymentService::accept` enforces invoice status, patient, clinic and
   over-balance guards server-side;
 - appointment final status is consistently `finished` in code, docs and grid
@@ -229,9 +230,22 @@ Implemented in branch `feature-front-desk-intake`:
 - `VisitMaterialLine` unit, unit price/currency and total cost always come from
   the selected `Material`. Doctor-facing layouts show material, planned
   quantity, actual quantity and unit, not cost fields.
+- `Material.currentStock` and `Material.stockLevel` are derived from
+  `StockMovement` rows. Direct server-side edits to these fields are rejected;
+  new materials start at zero/out until receipt or adjustment movements change
+  the derived balance.
+- Posted `StockMovement` records are immutable in normal flows. Managers and
+  stock managers can create correction movements, but role bootstrap now
+  force-patches existing EspoDental roles so stock movements are not edited or
+  deleted silently after posting.
 - `Finish Visit` button visibility is tied to `Visit.status = in_progress`;
   completed visits no longer show a misleading finish action after metadata
   refresh.
+- `VisitService::finishVisit` is wrapped in
+  `EntityManager::getTransactionManager()->run(...)`, so invoice creation,
+  stock write-off and final visit/appointment status changes commit or roll
+  back together. The downstream steps still run before statuses and remain
+  idempotent for repeated calls.
 - `Visit` detail layout is cleaned for the doctor workspace: status,
   appointment, assigned user, teams, stream and invoice relationship panels are
   removed from the main doctor view, while created/modified timestamps are kept
@@ -288,6 +302,19 @@ Implemented in branch `feature-front-desk-intake`:
 - The tooth chart renderer now stores and edits surface-level tooth state and
   renders adult/pediatric FDI charts with tooth silhouettes plus surface
   diagrams. Mixed dentition renders both adult and pediatric charts.
+- Patient detail now has a `Clinical Files` panel backed by
+  `Patient/action/files`. It shows recent `VisitPhoto` records with thumbnail,
+  originating visit/date context and source links, plus completed
+  `HealthQuestionnaire` PDF/signature download links. The standard patient
+  `photos` and `healthQuestionnaires` relationship panels are read-oriented;
+  photos should be added from visits and questionnaires should be issued
+  through the QR/token action.
+- `HealthQuestionnaire.items` now uses a schema-driven answer table backed by
+  `HealthQuestionnaire/action/answers`. The table groups localized question
+  labels from `questionnaireSchema.json`, renders Yes/No/text values and marks
+  positive alert answers.
+- Patient detail now shows a visible questionnaire warning banner when
+  `questionnaireExpired` or `questionnaireHasAlerts` is true.
 - `InvoicePdfBuilder` now uses the injectable EspoCRM
   `Espo\Core\Utils\Language` service; this fixes a `finishVisit` failure that
   appeared when `InvoiceService` was constructed.
@@ -303,7 +330,7 @@ Verification completed after this slice:
   passed.
 - PHP syntax checks passed for all module PHP files inside the local EspoCRM
   container.
-- JSON metadata parse passed for 331 JSON files.
+- JSON metadata parse passed for 351 JSON files.
 - Browser smoke checks confirmed preliminary patient creation, hidden technical
   fields, required phone, default clinic assignment, questionnaire required
   answers and successful conversion with PDF/signature records.
@@ -337,6 +364,12 @@ Verification completed after this slice:
   category-first service selection and hides the generic service link field.
 - Browser smoke on 2026-05-15 confirmed a mixed-dentition visit preview
   includes pediatric numbering such as `55` together with the adult chart.
+- API smoke confirmed `GET /Patient/action/files` returns recent visit photos
+  with `visitName`, `recordedAt` and `imageId`, plus questionnaire `pdfFile`
+  and `signatureAttachment` links for the selected patient.
+- Browser smoke confirmed the patient detail `Clinical Files` panel renders in
+  Russian with the visit photo thumbnail/context, Orthanc link and questionnaire
+  PDF/signature links.
 - API/browser smoke on 2026-05-15 confirmed existing patient debt recalculated
   from `+8050` to `-8000` after one recorded partial payment, and the payment
   dialog shows a dropdown with localized method labels.
@@ -358,25 +391,20 @@ Verification completed after this slice:
   returns `403` with reason `Preliminary patients cannot be manually removed`.
   The temporary smoke record was then marked deleted directly in the local
   development database.
+- API smoke on 2026-05-22 confirmed direct `PATCH Material.currentStock`
+  returns `409` and direct `PATCH StockMovement.quantity` on a posted movement
+  returns `409`.
 
 ## 6. Known Gaps Against Product Spec
 
 The following requirements still need implementation or explicit verification:
 
-- add a true database transaction around finish-visit downstream work if the
-  EspoCRM runtime exposes a stable transaction API. The current flow is
-  recovery-friendly and idempotent: invoice and stock work run before final
-  visit/appointment statuses, so a failed downstream step can be retried;
 - refine the visit service picker into a richer expandable category tree if the
   current two-select category-first picker is not ergonomic enough after user
   testing;
 - add inline quantity editing in visit material relationship panels where
   EspoCRM relationship panels support it;
-- make stock balance movement-based and correction-safe;
 - make invoice/payment correction workflows explicit;
-- polish patient-side health questionnaire tab and generated file visibility;
-- show questionnaire expiry alert after 1 year;
-- finish patient-card photo visibility with visit/date context;
 - polish patient tabs: tooth chart, history, questionnaire, files, financials,
   orthodontics, family, CBCT;
 - extend the first doctor/assistant shift slice with richer schedule management

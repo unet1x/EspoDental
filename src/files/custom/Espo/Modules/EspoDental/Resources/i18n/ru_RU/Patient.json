@@ -7,6 +7,11 @@
         "Notes": "Заметки",
         "Book Appointment": "Записать на прием",
         "Health Questionnaire": "Анкета здоровья",
+        "Clinical Files": "Клинические файлы",
+        "Recent Visit Photos": "Фотографии приемов",
+        "Questionnaire Files": "Файлы анкет",
+        "Alerts": "Алерты",
+        "Expired": "Устарела",
         "Other": "Прочее"
     },
     "fields": {
@@ -107,6 +112,8 @@
     "messages": {
         "Issue questionnaire confirm": "Покажите QR-код пациенту на планшете. После отправки новая анкета будет сохранена в карточке пациента.",
         "Questionnaire is up to date": "Анкета здоровья актуальна",
+        "Questionnaire expired warning": "Анкета здоровья отсутствует или устарела. Перед лечением нужно выдать новую анкету.",
+        "Questionnaire has alerts warning": "В анкете есть отмеченные медицинские пункты, требующие внимания врача.",
         "Appointment booked": "Пациент записан на прием",
         "Appointment booked for": "Пациент записан на прием: {time} (местное время клиники)"
     }

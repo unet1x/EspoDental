@@ -1,6 +1,8 @@
 [
+    {"name": "image"},
     {"name": "recordedAt"},
     {"name": "name", "link": true},
+    {"name": "visit", "link": true},
     {"name": "stage"},
     {"name": "category"},
     {"name": "tooth"},

@@ -7,6 +7,11 @@
         "Notes": "Notes",
         "Book Appointment": "Book Appointment",
         "Health Questionnaire": "Health Questionnaire",
+        "Clinical Files": "Clinical Files",
+        "Recent Visit Photos": "Recent Visit Photos",
+        "Questionnaire Files": "Questionnaire Files",
+        "Alerts": "Alerts",
+        "Expired": "Expired",
         "Other": "Other"
     },
     "fields": {
@@ -107,6 +112,8 @@
     "messages": {
         "Issue questionnaire confirm": "Show the QR code to the patient on the tablet. After submission, the new questionnaire will be saved in the patient card.",
         "Questionnaire is up to date": "The health questionnaire is up to date",
+        "Questionnaire expired warning": "Health questionnaire is missing or expired. Issue a new questionnaire before treatment.",
+        "Questionnaire has alerts warning": "The questionnaire has medical alert items that require doctor attention.",
         "Appointment booked": "Patient booked for an appointment",
         "Appointment booked for": "Patient booked for {time} (clinic local time)"
     }

@@ -1,0 +1,7 @@
+[
+    {"name": "filledAt"},
+    {"name": "hasAlerts"},
+    {"name": "isExpired"},
+    {"name": "pdfFile"},
+    {"name": "signatureAttachment"}
+]

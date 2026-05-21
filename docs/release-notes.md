@@ -72,14 +72,26 @@
   appointment/status, stream and invoice panels.
 - Visit start now creates a tooth-chart snapshot; visit detail renders the
   tooth chart immediately with an edit link while the visit is in progress.
+- Patient detail now includes a `Clinical Files` panel with recent visit photos
+  linked to their visit/date context and health-questionnaire PDF/signature
+  links. Patient-side photo and questionnaire relationship panels are
+  read-oriented so records stay attached to their clinical source workflows.
+- Health questionnaire detail now renders answers as localized, schema-driven
+  grouped rows instead of raw JSON, and flags alert answers in the table.
+- Patient detail now shows a visible warning banner when the questionnaire is
+  expired or contains medical alert answers.
 - EspoDental admin settings now include editable dictionaries for payment
   methods, tooth-chart conditions/colors and tooth-surface labels.
 - Visit photos get quick-add defaults for name, patient and recorded date.
 - Finished visits reject service/material line edits/removals with a server
   conflict.
-- Finishing a visit now runs invoice and stock work before final visit and
-  appointment statuses, and repeated finish calls reuse idempotent downstream
-  records instead of creating duplicates.
+- Material stock balance is now movement-based: `currentStock` and
+  `stockLevel` are guarded as derived fields, posted `StockMovement` records are
+  immutable in normal flows, and corrections are made by creating new movement
+  records.
+- Finishing a visit now runs invoice and stock work inside an EspoCRM database
+  transaction before final visit and appointment statuses, and repeated finish
+  calls reuse idempotent downstream records instead of creating duplicates.
 - Bootstrap backfills old local/demo names for visit service/material lines,
   `patient — date` visits and tooth-chart snapshots.
 - `Finish Visit` is now hidden for visits that are no longer in progress.

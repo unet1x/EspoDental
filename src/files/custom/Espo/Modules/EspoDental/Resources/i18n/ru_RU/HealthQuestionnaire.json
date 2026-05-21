@@ -2,6 +2,11 @@
     "labels": {
         "Create HealthQuestionnaire": "Создать анкету",
         "Overview": "Основное",
+        "Answers": "Ответы",
+        "Question": "Вопрос",
+        "Answer": "Ответ",
+        "Other Answers": "Прочие ответы",
+        "Requires attention": "Требует внимания",
         "Files": "Файлы",
         "Audit": "Аудит",
         "Print PDF": "Печать PDF",

@@ -39,6 +39,11 @@ class RoleSeeder
         'OrthoPhoto', 'CephalometricMeasurement',
     ];
 
+    /** @var list<string> */
+    private const FORCE_PATCH_SCOPES = [
+        'StockMovement',
+    ];
+
     /** @var list<array{name: string, code: string, order: int, color: string}> */
     public const SERVICE_CATEGORIES = [
         ['name' => 'Терапия',              'code' => 'THE', 'order' => 10, 'color' => '#1F77B4'],
@@ -111,7 +116,17 @@ class RoleSeeder
                 $changed = false;
 
                 foreach ($cfg['data'] as $scope => $row) {
-                    if (array_key_exists($scope, $data)) {
+                    if (
+                        array_key_exists($scope, $data) &&
+                        !in_array($scope, self::FORCE_PATCH_SCOPES, true)
+                    ) {
+                        continue;
+                    }
+
+                    if (
+                        array_key_exists($scope, $data) &&
+                        (array) $data[$scope] === $row
+                    ) {
                         continue;
                     }
 
@@ -171,7 +186,8 @@ class RoleSeeder
     /**
      * Pre-baked ACL matrices for the five EspoDental roles. Identical to the
      * legacy AfterInstall arrays so existing installs keep the same effective
-     * permissions on subsequent rebuilds.
+     * permissions on subsequent rebuilds, except force-patched hard invariants
+     * such as immutable stock movements.
      *
      * @return array<string, array{description: string, data: array<string, array<string, string>>}>
      */
@@ -195,7 +211,7 @@ class RoleSeeder
         $manager['VisitPhoto']           = $row('yes', 'all', 'all', 'all', 'no');
         $manager['InvoiceLine']          = $row('yes', 'all', 'all', 'all', 'no');
         $manager['MaterialCategory']     = $row('yes', 'all', 'all', 'all', 'no');
-        $manager['StockMovement']        = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['StockMovement']        = $row('yes', 'all', 'no', 'no', 'no');
         $manager['ServiceMaterial']      = $row('yes', 'all', 'all', 'all', 'no');
         $manager['LowStockAlert']        = $row('no', 'all', 'all', 'no', 'all');
         $manager['NotificationLog']      = $row('yes', 'all', 'all', 'all', 'no');
@@ -331,7 +347,7 @@ class RoleSeeder
             'Payment'              => $row('no', 'no', 'no', 'no', 'no'),
             'MaterialCategory'     => $row('yes', 'all', 'all', 'all', 'no'),
             'Material'             => $row('yes', 'all', 'all', 'all', 'all'),
-            'StockMovement'        => $row('yes', 'all', 'all', 'all', 'no'),
+            'StockMovement'        => $row('yes', 'all', 'no', 'no', 'no'),
             'ServiceMaterial'      => $row('yes', 'all', 'all', 'all', 'no'),
             'LowStockAlert'        => $row('no', 'all', 'all', 'no', 'all'),
             'NotificationLog'      => $row('no', 'no', 'no', 'no', 'no'),

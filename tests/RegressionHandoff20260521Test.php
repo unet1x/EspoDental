@@ -50,6 +50,8 @@ final class RegressionHandoff20260521Test extends TestCase
         $code = (string) file_get_contents(self::MODULE_ROOT . '/Services/VisitService.php');
 
         $this->assertStringContainsString('[Visit::STATUS_IN_PROGRESS, Visit::STATUS_FINISHED]', $code);
+        $this->assertStringContainsString('getTransactionManager()->run', $code);
+        $this->assertStringContainsString('finishVisitInTransaction', $code);
         $this->assertStringContainsString('markVisitFinished', $code);
         $this->assertStringContainsString('markAppointmentFinished', $code);
 

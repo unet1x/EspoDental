@@ -1,5 +1,6 @@
 {
     "controller": "controllers/record",
+    "removeDisabled": true,
     "color": "#A65628",
     "iconClass": "fas fa-truck-arrow-right",
     "boolFilterList": ["today", "thisMonth"]
