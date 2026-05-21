@@ -64,7 +64,8 @@
         "Visit started": "Visita iniciada",
         "Select doctor and cabinet first": "Seleccione doctor y gabinete primero",
         "No free slots found": "No hay huecos libres para la fecha seleccionada",
-        "Free slot search failed": "No se pudieron cargar los huecos libres"
+        "Free slot search failed": "No se pudieron cargar los huecos libres",
+        "Patient is required": "Se requiere un paciente para reservar una cita"
     },
     "tooltips": {
         "duration": "Duracion de la cita",

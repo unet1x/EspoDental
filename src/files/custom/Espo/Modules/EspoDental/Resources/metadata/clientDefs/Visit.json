@@ -23,6 +23,15 @@
                     "actionFunction": "actionFinishVisit",
                     "checkVisibilityFunction": "isFinishVisitAvailable",
                     "hidden": false
+                },
+                {
+                    "name": "bookNextAppointment",
+                    "label": "Book Next Appointment",
+                    "style": "default",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/visit/book-next-appointment",
+                    "actionFunction": "actionBookNextAppointment",
+                    "checkVisibilityFunction": "isBookNextAppointmentAvailable"
                 }
             ]
         }

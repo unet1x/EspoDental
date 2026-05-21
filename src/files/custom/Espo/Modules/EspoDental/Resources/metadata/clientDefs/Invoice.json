@@ -39,6 +39,15 @@
                     "acl": "read",
                     "handler": "espo-dental:handlers/invoice/print-pdf",
                     "actionFunction": "actionPrintPdf"
+                },
+                {
+                    "name": "bookNextAppointment",
+                    "label": "Book Next Appointment",
+                    "style": "default",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/invoice/book-next-appointment",
+                    "actionFunction": "actionBookNextAppointment",
+                    "checkVisibilityFunction": "isBookNextAppointmentAvailable"
                 }
             ]
         }

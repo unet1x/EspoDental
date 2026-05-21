@@ -64,7 +64,8 @@
         "Visit started": "Visit started",
         "Select doctor and cabinet first": "Select doctor and cabinet first",
         "No free slots found": "No free slots for the selected date",
-        "Free slot search failed": "Could not load free slots"
+        "Free slot search failed": "Could not load free slots",
+        "Patient is required": "A patient is required to book an appointment"
     },
     "tooltips": {
         "duration": "Duration of the appointment",

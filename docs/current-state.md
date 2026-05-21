@@ -295,6 +295,12 @@ Implemented in branch `feature-front-desk-intake`:
   assistant/cabinet pairing. The detail action `Generate Shifts` creates
   ordinary `DoctorShift` records in UTC, links them back to the template and
   skips already-generated matching shifts.
+- The next-appointment loop now has contextual booking entry points from
+  `Visit` and `Invoice` detail views in addition to the patient card action.
+  They open the same short appointment modal, prelink the patient, and carry
+  clinic, doctor, cabinet and visit note context where available. Invoice
+  booking also loads the linked visit to recover doctor/cabinet context after
+  payment.
 - EspoDental admin settings expose editable module dictionaries for payment
   methods, tooth-chart condition options/colors and tooth-surface labels.
   These settings are admin-only via the EspoCRM admin settings page and are
@@ -373,6 +379,9 @@ Verification completed after this slice:
 - API/browser smoke on 2026-05-15 confirmed existing patient debt recalculated
   from `+8050` to `-8000` after one recorded partial payment, and the payment
   dialog shows a dropdown with localized method labels.
+- Structural PHPUnit coverage confirms `Visit` and `Invoice` expose
+  `Book Next Appointment` actions, the handlers open the short contextual
+  appointment modal, and RU / EN / ES labels are present.
 - Browser smoke on 2026-05-15 confirmed `Appointment.dateStart` renders a
   free-slot picker in edit mode, loads slots for the selected doctor/cabinet,
   respects the EspoCRM timezone for 08:00-21:00 display, and writes the chosen
@@ -410,6 +419,9 @@ The following requirements still need implementation or explicit verification:
 - extend the first doctor/assistant shift slice with richer schedule management
   UI, multi-weekday templates, cabinet closure rules, and browser acceptance
   coverage on a real clinic day;
+- run a browser/API acceptance pass for the full
+  `payment -> next appointment` receptionist flow after the next local stack
+  rebuild;
 - verify pediatric/adult mixed chart behavior with a real child patient in the
   browser after the next patient-flow test run;
 - complete role-based workspaces for administrator, doctor, assistant and

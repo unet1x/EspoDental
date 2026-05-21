@@ -64,7 +64,8 @@
         "Visit started": "Приём начат",
         "Select doctor and cabinet first": "Сначала выберите врача и кабинет",
         "No free slots found": "Свободных слотов на выбранную дату нет",
-        "Free slot search failed": "Не удалось загрузить свободные слоты"
+        "Free slot search failed": "Не удалось загрузить свободные слоты",
+        "Patient is required": "Для записи на приём нужен пациент"
     },
     "tooltips": {
         "duration": "Длительность приёма",
