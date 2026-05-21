@@ -1,0 +1,26 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [
+                {"name": "doctor"},
+                {"name": "assistant"}
+            ],
+            [
+                {"name": "clinic"},
+                {"name": "cabinet"}
+            ],
+            [
+                {"name": "dateStart"},
+                {"name": "dateEnd"}
+            ],
+            [
+                {"name": "type"},
+                {"name": "status"}
+            ],
+            [
+                {"name": "description", "fullWidth": true}
+            ]
+        ]
+    }
+]

@@ -1,0 +1,35 @@
+{
+    "labels": {
+        "Create DoctorShift": "Crear turno de doctor",
+        "Overview": "Resumen"
+    },
+    "fields": {
+        "name": "Nombre",
+        "doctor": "Doctor",
+        "assistant": "Asistente",
+        "clinic": "Clinica",
+        "cabinet": "Gabinete",
+        "dateStart": "Inicio",
+        "dateEnd": "Fin",
+        "type": "Tipo",
+        "status": "Estado",
+        "description": "Descripcion"
+    },
+    "options": {
+        "type": {
+            "regular": "Turno regular",
+            "additional": "Turno adicional",
+            "closed": "Periodo cerrado"
+        },
+        "status": {
+            "active": "Activo",
+            "cancelled": "Cancelado"
+        }
+    },
+    "links": {
+        "doctor": "Doctor",
+        "assistant": "Asistente",
+        "clinic": "Clinica",
+        "cabinet": "Gabinete"
+    }
+}

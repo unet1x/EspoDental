@@ -48,6 +48,13 @@ Checklist:
 - Confirm free-slot labels and the patient booking success notification show
   clinic-local time, while the saved payload remains UTC.
 - Confirm conflicting doctor/cabinet/patient slot is rejected.
+- Create a doctor shift for the selected doctor and confirm free slots outside
+  that shift are not offered.
+- Add an additional doctor shift later the same day and confirm those slots
+  become available.
+- Add a closed shift period and confirm overlapping slots are blocked.
+- Confirm an assistant linked on the selected doctor shift is copied to the
+  saved appointment without exposing manual assistant selection in booking.
 - Launch health questionnaire QR/token.
 - Submit questionnaire on tablet/mobile-size viewport.
 - Confirm the form rejects submission when any visible yes/no item is

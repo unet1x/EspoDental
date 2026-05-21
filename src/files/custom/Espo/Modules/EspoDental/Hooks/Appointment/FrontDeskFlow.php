@@ -14,6 +14,7 @@ use Espo\Entities\User;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\Clinic;
 use Espo\Modules\EspoDental\Entities\PreliminaryPatient;
+use Espo\Modules\EspoDental\Tools\DoctorShiftAvailability;
 use Espo\ORM\Entity;
 
 class FrontDeskFlow
@@ -40,6 +41,7 @@ class FrontDeskFlow
         $this->applyDefaultStatus($entity);
         $this->applyDefaultClinic($entity);
         $this->applyDateEndFromDuration($entity);
+        $this->applyAssistantFromShift($entity);
         $entity->set('name', $this->buildAppointmentName($entity));
 
         if ($entity->isNew() && !$entity->get('bookedById')) {
@@ -159,6 +161,52 @@ class FrontDeskFlow
         }
     }
 
+    private function applyAssistantFromShift(Appointment $appointment): void
+    {
+        $doctorId = $appointment->getDoctorId();
+        $dateStart = (string) $appointment->getDateStart();
+        $dateEnd = (string) $appointment->getDateEnd();
+
+        if (!$doctorId || $dateStart === '' || $dateEnd === '') {
+            return;
+        }
+
+        $range = $this->appointmentLocalDayRange($appointment);
+        if ($range === null) {
+            return;
+        }
+
+        $shiftAvailability = new DoctorShiftAvailability($this->entityManager);
+        $schedule = $shiftAvailability->loadForRange(
+            $doctorId,
+            $range[0],
+            $range[1],
+            $appointment->getClinicId()
+        );
+
+        if (!$schedule['hasAvailability']) {
+            return;
+        }
+
+        try {
+            $startTs = $this->createUtcDateTime($dateStart)->getTimestamp();
+            $endTs = $this->createUtcDateTime($dateEnd)->getTimestamp();
+        } catch (\Exception) {
+            return;
+        }
+
+        $result = $shiftAvailability->evaluateSlot(
+            $schedule,
+            $startTs,
+            $endTs,
+            $appointment->getCabinetId()
+        );
+
+        if ($result['available']) {
+            $appointment->set('assistantId', $result['assistantId']);
+        }
+    }
+
     private function buildAppointmentName(Appointment $appointment): string
     {
         $date = $this->formatClinicDateTime($appointment);
@@ -194,6 +242,38 @@ class FrontDeskFlow
         }
 
         return new DateTimeImmutable($value, $utc);
+    }
+
+    /**
+     * @return ?array{string, string}
+     */
+    private function appointmentLocalDayRange(Appointment $appointment): ?array
+    {
+        $dateStart = (string) $appointment->getDateStart();
+        $dateEnd = (string) $appointment->getDateEnd();
+
+        if ($dateStart === '' || $dateEnd === '') {
+            return null;
+        }
+
+        try {
+            $utc = new DateTimeZone('UTC');
+            $timeZone = $this->resolveTimeZone($appointment->getClinicId());
+            $startLocal = $this->createUtcDateTime($dateStart)
+                ->setTimezone($timeZone)
+                ->setTime(0, 0);
+            $endLocal = $this->createUtcDateTime($dateEnd)
+                ->setTimezone($timeZone)
+                ->setTime(0, 0)
+                ->modify('+1 day');
+
+            return [
+                $startLocal->setTimezone($utc)->format('Y-m-d H:i:s'),
+                $endLocal->setTimezone($utc)->format('Y-m-d H:i:s'),
+            ];
+        } catch (\Exception) {
+            return null;
+        }
     }
 
     private function resolveTimeZone(?string $clinicId = null): DateTimeZone

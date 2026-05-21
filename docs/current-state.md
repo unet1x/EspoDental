@@ -1,22 +1,36 @@
 # EspoDental Current State
 
-Last updated: 2026-05-15
+Last updated: 2026-05-21
 
 This file is the handoff document for future development sessions. It describes
 what has been verified, what exists in metadata, and what still needs product
 acceptance.
 
-## 0. Regression Handoff Added 2026-05-21
+## 0. Regression Handoff Closed 2026-05-21
 
 A focused regression handoff was added after reviewing the latest front-desk
 and booking changes:
 
 - `docs/regression-handoff-2026-05-21.md`
 
-Read it before starting new fixes. It records likely regressions in the
-resource-calendar timezone contract, global appointment quick-create,
-`finishVisit` atomicity/idempotency, server-side payment guards and appointment
-final-status naming.
+The current `main` branch contains the handoff fixes:
+
+- resource-calendar appointment payloads include clinic-local display times and
+  timezone while preserving UTC storage fields;
+- resource-calendar drag/drop and resize submit local time plus timezone to the
+  server for UTC persistence;
+- global `Appointment` quick-create is removed from the workspace seeder;
+- `finishVisit` runs invoice and stock work before final statuses and accepts
+  repeated calls for already-finished visits;
+- `PaymentService::accept` enforces invoice status, patient, clinic and
+  over-balance guards server-side;
+- appointment final status is consistently `finished` in code, docs and grid
+  colors.
+
+`tests/RegressionHandoff20260521Test.php` locks these decisions with
+structural regression checks. Keep the handoff document for historical context
+before changing calendar booking, appointment quick-create, visit finish,
+payment or appointment status behavior again.
 
 ## 1. Repository And Runtime
 
@@ -254,6 +268,14 @@ Implemented in branch `feature-front-desk-intake`:
   paid, storno or cancelled invoices, patient/clinic mismatches and amounts
   above the invoice balance. Unlinked inbound payments remain the documented
   prepayment/credit path.
+- `DoctorShift` is introduced as the first schedule-availability model:
+  regular/additional shifts open doctor availability, closed shifts block time,
+  shifts can be scoped to a cabinet, and an optional assistant on the matching
+  shift is written to the appointment automatically. `freeSlots` now respects
+  active doctor shifts when a doctor is selected. Existing installs remain
+  migration-safe: if a doctor has no active regular/additional shifts configured
+  in the clinic, the previous global clinic work window is still used, while
+  closed shifts can still block exceptions.
 - EspoDental admin settings expose editable module dictionaries for payment
   methods, tooth-chart condition options/colors and tooth-surface labels.
   These settings are admin-only via the EspoCRM admin settings page and are
@@ -336,8 +358,10 @@ Verification completed after this slice:
 
 The following requirements still need implementation or explicit verification:
 
-- harden atomic finish visit action around prepared material lines, stock
-  movements, invoice creation and patient balance update;
+- add a true database transaction around finish-visit downstream work if the
+  EspoCRM runtime exposes a stable transaction API. The current flow is
+  recovery-friendly and idempotent: invoice and stock work run before final
+  visit/appointment statuses, so a failed downstream step can be retried;
 - refine the visit service picker into a richer expandable category tree if the
   current two-select category-first picker is not ergonomic enough after user
   testing;
@@ -350,11 +374,9 @@ The following requirements still need implementation or explicit verification:
 - finish patient-card photo visibility with visit/date context;
 - polish patient tabs: tooth chart, history, questionnaire, files, financials,
   orthodontics, family, CBCT;
-- implement doctor/assistant working shifts: appointment free slots currently
-  use the global clinic day window plus existing busy appointments, not
-  personal doctor shifts. Target behavior is to show slots only inside
-  approved doctor shifts, with "additional shift" records opening extra
-  availability and assistant assignment coming from the shift pairing;
+- extend the first doctor/assistant shift slice with recurring shift templates,
+  richer schedule management UI, cabinet closure rules, and browser acceptance
+  coverage on a real clinic day;
 - verify pediatric/adult mixed chart behavior with a real child patient in the
   browser after the next patient-flow test run;
 - complete role-based workspaces for administrator, doctor, assistant and

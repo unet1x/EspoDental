@@ -1,0 +1,35 @@
+{
+    "labels": {
+        "Create DoctorShift": "Создать смену врача",
+        "Overview": "Основное"
+    },
+    "fields": {
+        "name": "Название",
+        "doctor": "Врач",
+        "assistant": "Ассистент",
+        "clinic": "Клиника",
+        "cabinet": "Кабинет",
+        "dateStart": "Начало",
+        "dateEnd": "Окончание",
+        "type": "Тип",
+        "status": "Статус",
+        "description": "Описание"
+    },
+    "options": {
+        "type": {
+            "regular": "Основная смена",
+            "additional": "Дополнительная смена",
+            "closed": "Закрытый период"
+        },
+        "status": {
+            "active": "Активна",
+            "cancelled": "Отменена"
+        }
+    },
+    "links": {
+        "doctor": "Врач",
+        "assistant": "Ассистент",
+        "clinic": "Клиника",
+        "cabinet": "Кабинет"
+    }
+}

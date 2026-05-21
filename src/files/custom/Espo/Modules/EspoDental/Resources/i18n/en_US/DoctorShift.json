@@ -1,0 +1,35 @@
+{
+    "labels": {
+        "Create DoctorShift": "Create Doctor Shift",
+        "Overview": "Overview"
+    },
+    "fields": {
+        "name": "Name",
+        "doctor": "Doctor",
+        "assistant": "Assistant",
+        "clinic": "Clinic",
+        "cabinet": "Cabinet",
+        "dateStart": "Start",
+        "dateEnd": "End",
+        "type": "Type",
+        "status": "Status",
+        "description": "Description"
+    },
+    "options": {
+        "type": {
+            "regular": "Regular shift",
+            "additional": "Additional shift",
+            "closed": "Closed period"
+        },
+        "status": {
+            "active": "Active",
+            "cancelled": "Cancelled"
+        }
+    },
+    "links": {
+        "doctor": "Doctor",
+        "assistant": "Assistant",
+        "clinic": "Clinic",
+        "cabinet": "Cabinet"
+    }
+}

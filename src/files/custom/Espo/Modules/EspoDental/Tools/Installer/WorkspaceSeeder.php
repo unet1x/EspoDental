@@ -625,6 +625,7 @@ class WorkspaceSeeder
             'PreliminaryPatient',
             'Patient',
             'Appointment',
+            'DoctorShift',
             'Visit',
             'HealthQuestionnaire',
             $this->divider('ed-cashdesk', 'Касса'),

@@ -13,6 +13,7 @@ use Espo\Core\Utils\Config;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\Cabinet;
 use Espo\Modules\EspoDental\Entities\Clinic;
+use Espo\Modules\EspoDental\Tools\DoctorShiftAvailability;
 
 class CalendarService
 {
@@ -139,7 +140,7 @@ class CalendarService
      * @return list<array{
      *     start: string, end: string, localStart: string, localEnd: string, timezone: string,
      *     cabinetId: string, cabinetName: string,
-     *     doctorId: ?string
+     *     doctorId: ?string, assistantId: ?string
      * }>
      */
     public function findFreeSlots(
@@ -234,6 +235,15 @@ class CalendarService
         $lastDay = new DateTimeImmutable($dateTo . ' 00:00:00', $timeZone);
         $now = time();
         $requestedPatientKey = $this->patientKey($parentType, $parentId);
+        $shiftAvailability = new DoctorShiftAvailability($this->entityManager);
+        $doctorSchedule = $doctorId
+            ? $shiftAvailability->loadForRange(
+                $doctorId,
+                $from->format('Y-m-d H:i:s'),
+                $to->format('Y-m-d H:i:s'),
+                $clinicId
+            )
+            : null;
 
         while ($today <= $lastDay && count($slots) < $limit) {
             foreach ($cabinets as $c) {
@@ -253,6 +263,21 @@ class CalendarService
                         && $this->overlapsAny($t, $t + $durSec, $occByDoctor[$doctorId] ?? [])
                     ) {
                         continue;
+                    }
+                    $assistantId = null;
+                    if ($doctorSchedule !== null) {
+                        $shiftResult = $shiftAvailability->evaluateSlot(
+                            $doctorSchedule,
+                            $t,
+                            $t + $durSec,
+                            $cId
+                        );
+
+                        if (!$shiftResult['available']) {
+                            continue;
+                        }
+
+                        $assistantId = $shiftResult['assistantId'];
                     }
                     if (
                         $requestedPatientKey
@@ -274,6 +299,7 @@ class CalendarService
                         'cabinetId' => $cId,
                         'cabinetName' => $cName,
                         'doctorId' => $doctorId,
+                        'assistantId' => $assistantId,
                     ];
                     if (count($slots) >= $limit) {
                         break 2;

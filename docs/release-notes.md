@@ -45,12 +45,24 @@
   clinic-local time, while the saved appointment keeps UTC `dateStart/dateEnd`.
 - Appointment display names are now derived from clinic-local time instead of
   raw UTC storage values.
+- Resource calendar appointment payloads now include clinic-local start/end
+  values and timezone; drag/drop and resize send clinic-local values back to
+  the server, which persists UTC `dateStart/dateEnd`.
 - Free-slot search now matches the server conflict rules for doctor and patient
   occupancy: a doctor already booked in another cabinet no longer appears as
   available for the same time.
+- Global `Appointment` quick-create is removed from the default workspace; the
+  normal booking path is the contextual patient/preliminary-patient action.
 - Personal doctor shifts are not implemented yet; they are documented as the
   next schedule-availability slice so slots can be limited to first/second or
   additional shifts.
+- Added `DoctorShift` for the first schedule-availability slice: regular and
+  additional shifts open doctor availability, closed shifts block time,
+  cabinet-scoped shifts restrict matching cabinets, and the shift assistant is
+  copied to the appointment automatically.
+- `EspoDental/Calendar/freeSlots` now respects configured doctor shifts when a
+  doctor is selected. Doctors with no active regular/additional shifts
+  still fall back to the existing clinic work window for migration safety.
 - Service-line price/currency/VAT always comes from the selected service;
   material-line unit/cost always comes from the selected material.
 - Doctor-facing visit layouts hide service price/currency/VAT, material cost,
@@ -62,6 +74,9 @@
 - Visit photos get quick-add defaults for name, patient and recorded date.
 - Finished visits reject service/material line edits/removals with a server
   conflict.
+- Finishing a visit now runs invoice and stock work before final visit and
+  appointment statuses, and repeated finish calls reuse idempotent downstream
+  records instead of creating duplicates.
 - Bootstrap backfills old local/demo names for visit service/material lines,
   `patient — date` visits and tooth-chart snapshots.
 - `Finish Visit` is now hidden for visits that are no longer in progress.
@@ -74,6 +89,8 @@
   recreating roles.
 - Documentation now records the strict patient flow, future invariants,
   questionnaire schema location and acceptance checks for the next phases.
+- The 2026-05-21 regression handoff is covered by
+  `RegressionHandoff20260521Test`.
 
 ## 0.16.0 — Staging stack + nightly backup/restore pipeline
 
