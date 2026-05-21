@@ -60,13 +60,19 @@ class DoctorShiftAvailability
 
             $cabinetId = $this->normalizeId($shift->getCabinetId());
 
-            if ($shift->getType() === DoctorShift::TYPE_CLOSED) {
+            $type = $shift->getType();
+
+            if ($type === DoctorShift::TYPE_CLOSED) {
                 $closed[] = [
                     'start' => $start,
                     'end' => $end,
                     'cabinetId' => $cabinetId,
                 ];
 
+                continue;
+            }
+
+            if (!in_array($type, [DoctorShift::TYPE_REGULAR, DoctorShift::TYPE_ADDITIONAL], true)) {
                 continue;
             }
 
@@ -175,7 +181,7 @@ class DoctorShiftAvailability
             ->find();
 
         foreach ($shifts as $shift) {
-            if ($shift->getType() !== DoctorShift::TYPE_CLOSED) {
+            if (in_array($shift->getType(), [DoctorShift::TYPE_REGULAR, DoctorShift::TYPE_ADDITIONAL], true)) {
                 return true;
             }
         }

@@ -39,7 +39,11 @@ final class RegressionHandoff20260521Test extends TestCase
         $start = strpos($seeder, "'quickCreateList' => [");
 
         $this->assertIsInt($start);
-        $segment = substr($seeder, $start, 220);
+        $end = strpos($seeder, '],', $start);
+
+        $this->assertIsInt($end);
+
+        $segment = substr($seeder, $start, $end - $start);
 
         $this->assertStringContainsString("'PreliminaryPatient'", $segment);
         $this->assertStringNotContainsString("'Appointment'", $segment);

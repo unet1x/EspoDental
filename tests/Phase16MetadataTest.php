@@ -109,7 +109,7 @@ final class Phase16MetadataTest extends TestCase
                 'STAGING_COMPOSE_DIR', 'STAGING_HEALTH_URL',
                 'PATIENT_TABLE_NAME', 'LOG_DIR'] as $var
         ) {
-            $this->assertStringContainsString($var, $body, "missing env var: ${var}");
+            $this->assertStringContainsString($var, $body, "missing env var: {$var}");
         }
         $this->assertMatchesRegularExpression(
             '/BACKUP_RETENTION_DAYS\\s*=\\s*14\\b/',
@@ -191,7 +191,7 @@ final class Phase16MetadataTest extends TestCase
             $this->assertStringContainsString(
                 $needle,
                 $body,
-                "install-synology.md must mention '${needle}'"
+                "install-synology.md must mention '{$needle}'"
             );
         }
         $partsHeadings = preg_match_all('/^## Часть \d+/m', $body);

@@ -34,7 +34,8 @@ class SeedRolesCommand implements Command
             'Done. Created %d team(s), %d role(s), %d service category(-ies), %d clinic(s), %d cabinet(s), ' .
             '%d material category(-ies), %d service(s), %d material(s), %d service material link(s), ' .
             '%d stock movement(s), %d scheduled job(s), %d dashboard template(s). Settings updated: %s. ' .
-            'Backfilled %d clinical line name(s), %d visit name(s), %d tooth chart name(s), %d child flag(s), %d patient balance(s).',
+            'Backfilled %d clinical line name(s), %d visit name(s), %d tooth chart name(s), ' .
+            '%d child flag(s), %d patient balance(s).',
             $result['teams'],
             $result['roles'],
             $result['serviceCategories'],

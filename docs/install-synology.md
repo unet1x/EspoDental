@@ -320,6 +320,9 @@ sudo docker compose exec espocrm php rebuild.php
 sudo docker compose exec espocrm php command.php espo-dental-bootstrap
 ```
 
+В старых релизах эту часть выполняла более узкая команда
+`espo-dental-seed-roles`; сейчас её заменяет полный bootstrap.
+
 Должен напечатать:
 
 ```

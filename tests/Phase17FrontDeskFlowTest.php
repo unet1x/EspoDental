@@ -153,7 +153,7 @@ final class Phase17FrontDeskFlowTest extends TestCase
         $this->assertStringContainsString('espodentalAllowPatientCreate', $code);
         $this->assertStringContainsString('reparentAppointments', $code);
         $this->assertStringContainsString('questionnaireCompleted', $code);
-        $this->assertStringContainsString('removeEntity($prelim)', $code);
+        $this->assertStringContainsString('espodentalAllowPreliminaryPatientRemove', $code);
         $this->assertStringContainsString('createdById', $code);
     }
 

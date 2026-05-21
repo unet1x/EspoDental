@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Espo\Modules\EspoDental\Tools\Installer;
 
+// phpcs:disable Generic.Files.LineLength.TooLong
+
 use DateTimeImmutable;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config\ConfigWriter;

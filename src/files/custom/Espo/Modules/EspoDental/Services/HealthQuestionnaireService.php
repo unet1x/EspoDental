@@ -265,7 +265,10 @@ class HealthQuestionnaireService
             $questionnaire->set('patientId', $conversionResult['patientId']);
 
             /** @var Patient|null $convertedPatient */
-            $convertedPatient = $this->entityManager->getEntityById(Patient::ENTITY_TYPE, $conversionResult['patientId']);
+            $convertedPatient = $this->entityManager->getEntityById(
+                Patient::ENTITY_TYPE,
+                $conversionResult['patientId']
+            );
             if ($convertedPatient instanceof Patient) {
                 $this->buildPdf($questionnaire, $convertedPatient, $signatureAttachment);
             }
@@ -282,8 +285,11 @@ class HealthQuestionnaireService
         return $questionnaire;
     }
 
-    private function buildPdf(HealthQuestionnaire $questionnaire, Patient $patient, ?Attachment $signatureAttachment): void
-    {
+    private function buildPdf(
+        HealthQuestionnaire $questionnaire,
+        Patient $patient,
+        ?Attachment $signatureAttachment
+    ): void {
         $pdf = $this->pdfBuilder->build($questionnaire, $patient, $signatureAttachment);
 
         if (!$pdf) {
