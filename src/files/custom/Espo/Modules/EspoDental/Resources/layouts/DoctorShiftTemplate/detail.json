@@ -11,15 +11,20 @@
                 {"name": "cabinet"}
             ],
             [
+                {"name": "weekday"},
+                {"name": "type"}
+            ],
+            [
+                {"name": "timeStart"},
+                {"name": "timeEnd"}
+            ],
+            [
                 {"name": "dateStart"},
                 {"name": "dateEnd"}
             ],
             [
-                {"name": "type"},
-                {"name": "status"}
-            ],
-            [
-                {"name": "shiftTemplate"}
+                {"name": "status"},
+                {"name": "lastGeneratedAt"}
             ],
             [
                 {"name": "description", "fullWidth": true}

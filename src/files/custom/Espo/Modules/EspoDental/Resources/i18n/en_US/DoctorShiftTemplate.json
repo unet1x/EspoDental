@@ -1,0 +1,56 @@
+{
+    "labels": {
+        "Create DoctorShiftTemplate": "Create Shift Template",
+        "Overview": "Overview",
+        "Generate Shifts": "Generate Shifts",
+        "Generated": "Generated shifts"
+    },
+    "fields": {
+        "name": "Name",
+        "doctor": "Doctor",
+        "assistant": "Assistant",
+        "clinic": "Clinic",
+        "cabinet": "Cabinet",
+        "weekday": "Weekday",
+        "timeStart": "Start time",
+        "timeEnd": "End time",
+        "dateStart": "From",
+        "dateEnd": "To",
+        "type": "Shift type",
+        "status": "Status",
+        "lastGeneratedAt": "Last generated at",
+        "description": "Description",
+        "shifts": "Generated shifts"
+    },
+    "options": {
+        "weekday": {
+            "monday": "Monday",
+            "tuesday": "Tuesday",
+            "wednesday": "Wednesday",
+            "thursday": "Thursday",
+            "friday": "Friday",
+            "saturday": "Saturday",
+            "sunday": "Sunday"
+        },
+        "type": {
+            "regular": "Regular shift",
+            "additional": "Additional shift",
+            "closed": "Closed period"
+        },
+        "status": {
+            "active": "Active",
+            "paused": "Paused"
+        }
+    },
+    "links": {
+        "doctor": "Doctor",
+        "assistant": "Assistant",
+        "clinic": "Clinic",
+        "cabinet": "Cabinet",
+        "shifts": "Generated shifts"
+    },
+    "messages": {
+        "Confirm generate shifts": "Generate shifts for this template period?",
+        "Generate shifts failed": "Shift generation failed"
+    }
+}

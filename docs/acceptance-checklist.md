@@ -50,6 +50,9 @@ Checklist:
 - Confirm conflicting doctor/cabinet/patient slot is rejected.
 - Create a doctor shift for the selected doctor and confirm free slots outside
   that shift are not offered.
+- Create a shift template for a weekday/date range, run `Generate Shifts`, and
+  confirm matching `DoctorShift` records are created once and linked to the
+  template.
 - Add an additional doctor shift later the same day and confirm those slots
   become available.
 - Add a closed shift period and confirm overlapping slots are blocked.

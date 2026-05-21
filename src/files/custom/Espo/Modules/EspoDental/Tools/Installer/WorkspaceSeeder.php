@@ -625,6 +625,7 @@ class WorkspaceSeeder
             'PreliminaryPatient',
             'Patient',
             'Appointment',
+            'DoctorShiftTemplate',
             'DoctorShift',
             'Visit',
             'HealthQuestionnaire',

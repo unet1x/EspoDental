@@ -53,7 +53,10 @@ final class Phase20ScheduleAvailabilityTest extends TestCase
         $roleSeeder = (string) file_get_contents(self::MODULE_ROOT . '/Tools/Installer/RoleSeeder.php');
         $workspaceSeeder = (string) file_get_contents(self::MODULE_ROOT . '/Tools/Installer/WorkspaceSeeder.php');
 
-        $this->assertStringContainsString("'Appointment', 'DoctorShift', 'AppointmentStatusLog'", $roleSeeder);
+        $this->assertStringContainsString(
+            "'Appointment', 'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog'",
+            $roleSeeder
+        );
         $this->assertStringContainsString("\$manager['DoctorShift']", $roleSeeder);
         $this->assertStringContainsString("'DoctorShift'          => \$row('yes', 'all', 'all', 'no', 'no')", $roleSeeder);
         $this->assertStringContainsString("'DoctorShift'", $workspaceSeeder);

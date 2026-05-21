@@ -1,0 +1,56 @@
+{
+    "labels": {
+        "Create DoctorShiftTemplate": "Создать шаблон смен",
+        "Overview": "Основное",
+        "Generate Shifts": "Сгенерировать смены",
+        "Generated": "Смены созданы"
+    },
+    "fields": {
+        "name": "Название",
+        "doctor": "Врач",
+        "assistant": "Ассистент",
+        "clinic": "Клиника",
+        "cabinet": "Кабинет",
+        "weekday": "День недели",
+        "timeStart": "Начало",
+        "timeEnd": "Окончание",
+        "dateStart": "С даты",
+        "dateEnd": "По дату",
+        "type": "Тип смены",
+        "status": "Статус",
+        "lastGeneratedAt": "Последняя генерация",
+        "description": "Описание",
+        "shifts": "Созданные смены"
+    },
+    "options": {
+        "weekday": {
+            "monday": "Понедельник",
+            "tuesday": "Вторник",
+            "wednesday": "Среда",
+            "thursday": "Четверг",
+            "friday": "Пятница",
+            "saturday": "Суббота",
+            "sunday": "Воскресенье"
+        },
+        "type": {
+            "regular": "Основная смена",
+            "additional": "Дополнительная смена",
+            "closed": "Закрытый период"
+        },
+        "status": {
+            "active": "Активен",
+            "paused": "На паузе"
+        }
+    },
+    "links": {
+        "doctor": "Врач",
+        "assistant": "Ассистент",
+        "clinic": "Клиника",
+        "cabinet": "Кабинет",
+        "shifts": "Созданные смены"
+    },
+    "messages": {
+        "Confirm generate shifts": "Сгенерировать смены на период шаблона?",
+        "Generate shifts failed": "Не удалось сгенерировать смены"
+    }
+}

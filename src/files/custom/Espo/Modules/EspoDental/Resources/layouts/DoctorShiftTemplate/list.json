@@ -4,9 +4,11 @@
     {"name": "assistant"},
     {"name": "clinic"},
     {"name": "cabinet"},
+    {"name": "weekday"},
+    {"name": "timeStart"},
+    {"name": "timeEnd"},
     {"name": "dateStart"},
     {"name": "dateEnd"},
     {"name": "type"},
-    {"name": "status"},
-    {"name": "shiftTemplate"}
+    {"name": "status"}
 ]

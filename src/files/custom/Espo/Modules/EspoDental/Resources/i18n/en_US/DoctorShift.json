@@ -13,6 +13,7 @@
         "dateEnd": "End",
         "type": "Type",
         "status": "Status",
+        "shiftTemplate": "Shift Template",
         "description": "Description"
     },
     "options": {
@@ -30,6 +31,7 @@
         "doctor": "Doctor",
         "assistant": "Assistant",
         "clinic": "Clinic",
-        "cabinet": "Cabinet"
+        "cabinet": "Cabinet",
+        "shiftTemplate": "Shift Template"
     }
 }

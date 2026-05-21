@@ -276,6 +276,11 @@ Implemented in branch `feature-front-desk-intake`:
   migration-safe: if a doctor has no active regular/additional shifts configured
   in the clinic, the previous global clinic work window is still used, while
   closed shifts can still block exceptions.
+- `DoctorShiftTemplate` adds the first recurring schedule helper. A template
+  stores one weekday, local start/end time, date range, type and optional
+  assistant/cabinet pairing. The detail action `Generate Shifts` creates
+  ordinary `DoctorShift` records in UTC, links them back to the template and
+  skips already-generated matching shifts.
 - EspoDental admin settings expose editable module dictionaries for payment
   methods, tooth-chart condition options/colors and tooth-surface labels.
   These settings are admin-only via the EspoCRM admin settings page and are
@@ -374,8 +379,8 @@ The following requirements still need implementation or explicit verification:
 - finish patient-card photo visibility with visit/date context;
 - polish patient tabs: tooth chart, history, questionnaire, files, financials,
   orthodontics, family, CBCT;
-- extend the first doctor/assistant shift slice with recurring shift templates,
-  richer schedule management UI, cabinet closure rules, and browser acceptance
+- extend the first doctor/assistant shift slice with richer schedule management
+  UI, multi-weekday templates, cabinet closure rules, and browser acceptance
   coverage on a real clinic day;
 - verify pediatric/adult mixed chart behavior with a real child patient in the
   browser after the next patient-flow test run;

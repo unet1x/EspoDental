@@ -9,6 +9,7 @@ use DateTimeZone;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
+use Espo\Entities\User;
 use Espo\Modules\EspoDental\Entities\Clinic;
 use Espo\Modules\EspoDental\Entities\DoctorShift;
 use Espo\ORM\Entity;
@@ -64,7 +65,7 @@ class Defaults
 
     private function buildName(DoctorShift $shift): string
     {
-        $doctorName = trim((string) ($shift->get('doctorName') ?: 'Doctor'));
+        $doctorName = $this->resolveDoctorName($shift);
         $type = $this->translateType($shift->getType());
         $dateStart = (string) $shift->getDateStart();
 
@@ -81,6 +82,28 @@ class Defaults
         }
 
         return $doctorName . ' - ' . $date . ' - ' . $type;
+    }
+
+    private function resolveDoctorName(DoctorShift $shift): string
+    {
+        $doctorName = trim((string) ($shift->get('doctorName') ?: ''));
+
+        if ($doctorName !== '') {
+            return $doctorName;
+        }
+
+        $doctorId = $shift->getDoctorId();
+
+        if ($doctorId) {
+            /** @var User|null $doctor */
+            $doctor = $this->entityManager->getEntityById(User::ENTITY_TYPE, $doctorId);
+
+            if ($doctor && trim((string) $doctor->get('name')) !== '') {
+                return trim((string) $doctor->get('name'));
+            }
+        }
+
+        return 'Doctor';
     }
 
     private function translateType(string $type): string

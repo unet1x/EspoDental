@@ -1,0 +1,19 @@
+{
+    "controller": "controllers/record",
+    "color": "#17BECF",
+    "iconClass": "fas fa-calendar-plus",
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "generateShifts",
+                    "label": "Generate Shifts",
+                    "style": "primary",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/doctor-shift-template/generate",
+                    "actionFunction": "actionGenerate"
+                }
+            ]
+        }
+    }
+}

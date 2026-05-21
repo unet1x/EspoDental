@@ -186,6 +186,9 @@ Deliverables:
   free-slot suggestions for selected doctors, closed shifts block exceptions,
   cabinet-scoped shifts restrict cabinet matches, and assistants are inferred
   from the shift pairing on appointment save.
+- first recurring helper via `DoctorShiftTemplate`: one weekday plus local
+  time window/date range can generate ordinary linked `DoctorShift` records
+  idempotently.
 
 Acceptance:
 
@@ -193,7 +196,7 @@ Acceptance:
 - slots outside the doctor's active shift are not offered unless an additional
   shift exists.
 - assistant is inferred from the shift pairing where available.
-- recurring shift templates and a polished schedule-management workspace remain
+- multi-weekday templates and a polished schedule-management workspace remain
   follow-up work after the first explicit-shift slice.
 
 ## Phase 7 - Dental Clinical Depth

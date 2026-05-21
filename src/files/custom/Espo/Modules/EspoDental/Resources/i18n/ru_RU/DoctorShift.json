@@ -13,6 +13,7 @@
         "dateEnd": "Окончание",
         "type": "Тип",
         "status": "Статус",
+        "shiftTemplate": "Шаблон смен",
         "description": "Описание"
     },
     "options": {
@@ -30,6 +31,7 @@
         "doctor": "Врач",
         "assistant": "Ассистент",
         "clinic": "Клиника",
-        "cabinet": "Кабинет"
+        "cabinet": "Кабинет",
+        "shiftTemplate": "Шаблон смен"
     }
 }

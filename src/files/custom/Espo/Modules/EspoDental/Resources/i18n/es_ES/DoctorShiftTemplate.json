@@ -1,0 +1,56 @@
+{
+    "labels": {
+        "Create DoctorShiftTemplate": "Crear plantilla de turnos",
+        "Overview": "Resumen",
+        "Generate Shifts": "Generar turnos",
+        "Generated": "Turnos generados"
+    },
+    "fields": {
+        "name": "Nombre",
+        "doctor": "Doctor",
+        "assistant": "Asistente",
+        "clinic": "Clinica",
+        "cabinet": "Gabinete",
+        "weekday": "Dia de la semana",
+        "timeStart": "Inicio",
+        "timeEnd": "Fin",
+        "dateStart": "Desde",
+        "dateEnd": "Hasta",
+        "type": "Tipo de turno",
+        "status": "Estado",
+        "lastGeneratedAt": "Ultima generacion",
+        "description": "Descripcion",
+        "shifts": "Turnos generados"
+    },
+    "options": {
+        "weekday": {
+            "monday": "Lunes",
+            "tuesday": "Martes",
+            "wednesday": "Miercoles",
+            "thursday": "Jueves",
+            "friday": "Viernes",
+            "saturday": "Sabado",
+            "sunday": "Domingo"
+        },
+        "type": {
+            "regular": "Turno regular",
+            "additional": "Turno adicional",
+            "closed": "Periodo cerrado"
+        },
+        "status": {
+            "active": "Activo",
+            "paused": "Pausado"
+        }
+    },
+    "links": {
+        "doctor": "Doctor",
+        "assistant": "Asistente",
+        "clinic": "Clinica",
+        "cabinet": "Gabinete",
+        "shifts": "Turnos generados"
+    },
+    "messages": {
+        "Confirm generate shifts": "Generar turnos para el periodo de esta plantilla?",
+        "Generate shifts failed": "Error al generar turnos"
+    }
+}

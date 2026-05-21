@@ -63,6 +63,9 @@
 - `EspoDental/Calendar/freeSlots` now respects configured doctor shifts when a
   doctor is selected. Doctors with no active regular/additional shifts
   still fall back to the existing clinic work window for migration safety.
+- Added `DoctorShiftTemplate` with a `Generate Shifts` detail action. Each
+  template covers one weekday, local start/end time and date range, generating
+  linked `DoctorShift` records idempotently in UTC.
 - Service-line price/currency/VAT always comes from the selected service;
   material-line unit/cost always comes from the selected material.
 - Doctor-facing visit layouts hide service price/currency/VAT, material cost,

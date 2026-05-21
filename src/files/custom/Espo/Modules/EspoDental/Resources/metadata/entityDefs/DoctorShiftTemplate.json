@@ -21,12 +21,30 @@
         "cabinet": {
             "type": "link"
         },
+        "weekday": {
+            "type": "enum",
+            "required": true,
+            "options": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+            "default": "monday"
+        },
+        "timeStart": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 5,
+            "default": "08:00"
+        },
+        "timeEnd": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 5,
+            "default": "14:00"
+        },
         "dateStart": {
-            "type": "datetime",
+            "type": "date",
             "required": true
         },
         "dateEnd": {
-            "type": "datetime",
+            "type": "date",
             "required": true,
             "after": "dateStart"
         },
@@ -44,15 +62,15 @@
         "status": {
             "type": "enum",
             "required": true,
-            "options": ["active", "cancelled"],
+            "options": ["active", "paused"],
             "default": "active",
             "style": {
                 "active": "success",
-                "cancelled": "muted"
+                "paused": "muted"
             }
         },
-        "shiftTemplate": {
-            "type": "link",
+        "lastGeneratedAt": {
+            "type": "datetime",
             "readOnly": true
         },
         "description": {
@@ -68,7 +86,7 @@
         "assistant": {"type": "belongsTo", "entity": "User"},
         "clinic": {"type": "belongsTo", "entity": "Clinic"},
         "cabinet": {"type": "belongsTo", "entity": "Cabinet"},
-        "shiftTemplate": {"type": "belongsTo", "entity": "DoctorShiftTemplate", "foreign": "shifts"},
+        "shifts": {"type": "hasMany", "entity": "DoctorShift", "foreign": "shiftTemplate"},
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"}
     },
@@ -77,10 +95,7 @@
         "order": "desc"
     },
     "indexes": {
-        "doctor_date": {"columns": ["doctorId", "dateStart", "dateEnd"]},
-        "clinic_date": {"columns": ["clinicId", "dateStart"]},
-        "cabinet_date": {"columns": ["cabinetId", "dateStart"]},
-        "shift_template": {"columns": ["shiftTemplateId"]},
-        "status": {"columns": ["status", "deleted"]}
+        "doctor_weekday": {"columns": ["doctorId", "weekday", "status"]},
+        "clinic_status": {"columns": ["clinicId", "status"]}
     }
 }
