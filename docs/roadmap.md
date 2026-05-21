@@ -135,7 +135,7 @@ Goal: finishing the visit creates all downstream records consistently.
 Deliverables:
 
 - atomic finish action;
-- appointment status `completed`;
+- appointment status `finished`;
 - stock write-off movements;
 - invoice and invoice lines;
 - patient balance ledger update;

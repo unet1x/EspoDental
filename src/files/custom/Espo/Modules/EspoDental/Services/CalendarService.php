@@ -26,9 +26,11 @@ class CalendarService
      * @return array{
      *     date: string,
      *     view: string,
+     *     timezone: string,
      *     cabinets: list<array{id: string, name: string, clinicId: ?string, capacity: int}>,
      *     appointments: list<array{
      *         id: string, name: string, dateStart: string, dateEnd: string,
+     *         localStart: string, localEnd: string, timezone: string,
      *         cabinetId: ?string, doctorId: ?string, doctorName: ?string,
      *         parentName: ?string, status: string
      *     }>
@@ -40,11 +42,15 @@ class CalendarService
         string $view = 'day',
         ?string $cabinetId = null
     ): array {
-        $start = new DateTimeImmutable($date . ' 00:00:00');
-        $end = match ($view) {
-            'week' => $start->modify('+7 days'),
-            default => $start->modify('+1 day'),
+        $timeZone = $this->resolveTimeZone($clinicId);
+        $utc = new DateTimeZone('UTC');
+        $startLocal = new DateTimeImmutable($date . ' 00:00:00', $timeZone);
+        $endLocal = match ($view) {
+            'week' => $startLocal->modify('+7 days'),
+            default => $startLocal->modify('+1 day'),
         };
+        $startUtc = $startLocal->setTimezone($utc);
+        $endUtc = $endLocal->setTimezone($utc);
 
         $where = ['deleted' => false];
         if ($clinicId) {
@@ -73,8 +79,8 @@ class CalendarService
 
         $appointmentWhere = [
             'deleted' => false,
-            'dateStart>=' => $start->format('Y-m-d H:i:s'),
-            'dateStart<' => $end->format('Y-m-d H:i:s'),
+            'dateStart<' => $endUtc->format('Y-m-d H:i:s'),
+            'dateEnd>' => $startUtc->format('Y-m-d H:i:s'),
         ];
         if ($clinicId) {
             $appointmentWhere['clinicId'] = $clinicId;
@@ -92,11 +98,24 @@ class CalendarService
 
         $appData = [];
         foreach ($appointments as $a) {
+            $appointmentTimeZone = $this->resolveTimeZone((string) ($a->getClinicId() ?: $clinicId));
+            $appointmentStartUtc = $this->parseUtcDateTime((string) $a->getDateStart());
+            $appointmentEndUtc = $this->parseUtcDateTime((string) $a->getDateEnd());
+            $localStart = $appointmentStartUtc
+                ? $appointmentStartUtc->setTimezone($appointmentTimeZone)->format('Y-m-d H:i:s')
+                : '';
+            $localEnd = $appointmentEndUtc
+                ? $appointmentEndUtc->setTimezone($appointmentTimeZone)->format('Y-m-d H:i:s')
+                : '';
+
             $appData[] = [
                 'id' => $a->getId(),
                 'name' => (string) $a->get('name'),
                 'dateStart' => (string) $a->getDateStart(),
                 'dateEnd' => (string) $a->getDateEnd(),
+                'localStart' => $localStart,
+                'localEnd' => $localEnd,
+                'timezone' => $appointmentTimeZone->getName(),
                 'cabinetId' => $a->get('cabinetId'),
                 'doctorId' => $a->get('doctorId'),
                 'doctorName' => $a->get('doctorName'),
@@ -106,8 +125,9 @@ class CalendarService
         }
 
         return [
-            'date' => $start->format('Y-m-d'),
+            'date' => $startLocal->format('Y-m-d'),
             'view' => $view,
+            'timezone' => $timeZone->getName(),
             'cabinets' => $cabinetData,
             'appointments' => $appData,
         ];
@@ -316,28 +336,31 @@ class CalendarService
 
     public function moveAppointment(
         string $id,
-        string $dateStart,
-        string $dateEnd,
+        string $dateStart = '',
+        string $dateEnd = '',
         ?string $cabinetId = null,
-        ?string $doctorId = null
+        ?string $doctorId = null,
+        ?string $localStart = null,
+        ?string $localEnd = null,
+        ?string $timeZone = null
     ): Appointment {
-        if ($dateStart === '' || $dateEnd === '') {
-            throw new BadRequest('dateStart and dateEnd required');
-        }
-        try {
-            $startDt = new DateTimeImmutable($dateStart);
-            $endDt = new DateTimeImmutable($dateEnd);
-        } catch (\Exception $e) {
-            throw new BadRequest('Invalid datetime: ' . $e->getMessage());
-        }
-        if ($endDt <= $startDt) {
-            throw new BadRequest('dateEnd must be after dateStart');
-        }
-
         /** @var ?Appointment $appointment */
         $appointment = $this->entityManager->getEntityById(Appointment::ENTITY_TYPE, $id);
         if (!$appointment) {
             throw new NotFound('Appointment not found');
+        }
+
+        [$startDt, $endDt] = $this->resolveMoveDateTimes(
+            $appointment,
+            $dateStart,
+            $dateEnd,
+            $localStart,
+            $localEnd,
+            $timeZone
+        );
+
+        if ($endDt <= $startDt) {
+            throw new BadRequest('dateEnd must be after dateStart');
         }
 
         $appointment->set('dateStart', $startDt->format('Y-m-d H:i:s'));
@@ -350,5 +373,75 @@ class CalendarService
         }
         $this->entityManager->saveEntity($appointment);
         return $appointment;
+    }
+
+    /**
+     * @return array{DateTimeImmutable, DateTimeImmutable}
+     */
+    private function resolveMoveDateTimes(
+        Appointment $appointment,
+        string $dateStart,
+        string $dateEnd,
+        ?string $localStart,
+        ?string $localEnd,
+        ?string $timeZone
+    ): array {
+        $hasLocalStart = $localStart !== null && trim($localStart) !== '';
+        $hasLocalEnd = $localEnd !== null && trim($localEnd) !== '';
+
+        if ($hasLocalStart || $hasLocalEnd) {
+            if (!$hasLocalStart || !$hasLocalEnd) {
+                throw new BadRequest('localStart and localEnd required');
+            }
+
+            $zone = $timeZone !== null && trim($timeZone) !== ''
+                ? $this->buildTimeZone((string) $timeZone)
+                : $this->resolveTimeZone($appointment->getClinicId());
+
+            return [
+                $this->parseClinicLocalDateTime((string) $localStart, $zone),
+                $this->parseClinicLocalDateTime((string) $localEnd, $zone),
+            ];
+        }
+
+        if ($dateStart === '' || $dateEnd === '') {
+            throw new BadRequest('dateStart and dateEnd required');
+        }
+
+        return [
+            $this->parseRequiredUtcDateTime($dateStart),
+            $this->parseRequiredUtcDateTime($dateEnd),
+        ];
+    }
+
+    private function parseClinicLocalDateTime(string $value, DateTimeZone $timeZone): DateTimeImmutable
+    {
+        try {
+            return (new DateTimeImmutable($value, $timeZone))->setTimezone(new DateTimeZone('UTC'));
+        } catch (\Exception $e) {
+            throw new BadRequest('Invalid local datetime: ' . $e->getMessage());
+        }
+    }
+
+    private function parseRequiredUtcDateTime(string $value): DateTimeImmutable
+    {
+        try {
+            return (new DateTimeImmutable($value, new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('UTC'));
+        } catch (\Exception $e) {
+            throw new BadRequest('Invalid datetime: ' . $e->getMessage());
+        }
+    }
+
+    private function parseUtcDateTime(string $value): ?DateTimeImmutable
+    {
+        if ($value === '') {
+            return null;
+        }
+
+        try {
+            return (new DateTimeImmutable($value, new DateTimeZone('UTC')))->setTimezone(new DateTimeZone('UTC'));
+        } catch (\Exception) {
+            return null;
+        }
     }
 }

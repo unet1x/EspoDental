@@ -37,19 +37,47 @@ class VisitService
             throw new NotFound('Visit not found');
         }
 
-        if ($visit->getStatus() !== Visit::STATUS_IN_PROGRESS) {
+        if (!in_array($visit->getStatus(), [Visit::STATUS_IN_PROGRESS, Visit::STATUS_FINISHED], true)) {
             throw new Conflict('Visit is not in progress');
         }
 
         $total = $this->recalculateTotal($visit);
+        $lineCount = $this->countLines($visit);
 
+        $invoiceId = null;
+        if ($lineCount > 0) {
+            $invoice = $this->invoiceService->buildFromVisit($visit);
+            $invoiceId = (string) $invoice->getId();
+        }
+
+        $this->stockService->consumeForVisit($visit);
+
+        $this->markVisitFinished($visit, $total);
+        $this->markAppointmentFinished($visit);
+
+        return [
+            'visitId' => (string) $visit->getId(),
+            'total' => $total,
+            'lineCount' => $lineCount,
+            'invoiceId' => $invoiceId,
+        ];
+    }
+
+    private function markVisitFinished(Visit $visit, float $total): void
+    {
         $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
 
+        if (!$visit->get('finishedAt')) {
+            $visit->set('finishedAt', $now);
+        }
+
         $visit->set('status', Visit::STATUS_FINISHED);
-        $visit->set('finishedAt', $now);
         $visit->set('totalAmount', $total);
         $this->entityManager->saveEntity($visit);
+    }
 
+    private function markAppointmentFinished(Visit $visit): void
+    {
         if ($visit->getAppointmentId()) {
             /** @var Appointment|null $appointment */
             $appointment = $this->entityManager->getEntityById(
@@ -64,21 +92,6 @@ class VisitService
                 ]);
             }
         }
-
-        $invoiceId = null;
-        if ($this->countLines($visit) > 0) {
-            $invoice = $this->invoiceService->buildFromVisit($visit);
-            $invoiceId = (string) $invoice->getId();
-        }
-
-        $this->stockService->consumeForVisit($visit);
-
-        return [
-            'visitId' => (string) $visit->getId(),
-            'total' => $total,
-            'lineCount' => $this->countLines($visit),
-            'invoiceId' => $invoiceId,
-        ];
     }
 
     public function recalculateTotal(Visit $visit): float

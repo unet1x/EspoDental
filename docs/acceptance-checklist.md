@@ -68,13 +68,15 @@ Checklist:
 - Adjust material consumption before finish.
 - Upload before/after visit photos.
 - Finish visit.
-- Confirm appointment status is `completed`.
+- Confirm appointment status is `finished`.
 - Confirm stock write-off movements were created.
 - Confirm stock write-off movements point to the prepared visit material lines.
 - Confirm invoice and invoice lines were created.
 - Confirm patient balance changed according to invoice.
 - Register payment.
 - Confirm payment method is selected from the configured dropdown.
+- Confirm draft, paid, cancelled/storno and over-balance invoice payments are
+  rejected server-side.
 - Confirm payment changes patient balance.
 - Print or generate invoice/act/receipt artifact.
 - Book next appointment from patient/visit/invoice context.

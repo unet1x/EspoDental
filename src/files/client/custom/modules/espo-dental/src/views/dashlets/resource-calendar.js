@@ -91,14 +91,26 @@ define('espo-dental:views/dashlets/resource-calendar', [
                 });
         },
 
-        handleMove: function (id, dateStart, dateEnd, cabinetId) {
+        handleMove: function (id, change, dateEnd, cabinetId) {
+            if (typeof change === 'object') {
+                change.id = id;
+                this.persistAppointmentChange(change);
+                return;
+            }
+
             this.persistAppointmentChange({
-                id: id, dateStart: dateStart, dateEnd: dateEnd, cabinetId: cabinetId
+                id: id, dateStart: change, dateEnd: dateEnd, cabinetId: cabinetId
             });
         },
 
-        handleResize: function (id, dateStart, dateEnd) {
-            this.persistAppointmentChange({id: id, dateStart: dateStart, dateEnd: dateEnd});
+        handleResize: function (id, change, dateEnd) {
+            if (typeof change === 'object') {
+                change.id = id;
+                this.persistAppointmentChange(change);
+                return;
+            }
+
+            this.persistAppointmentChange({id: id, dateStart: change, dateEnd: dateEnd});
         },
 
         persistAppointmentChange: function (payload) {
@@ -111,10 +123,8 @@ define('espo-dental:views/dashlets/resource-calendar', [
                 });
         },
 
-        handleCellClick: function (cabinetId, isoStart) {
-            var url = '#Appointment/create?cabinetId=' + encodeURIComponent(cabinetId || '')
-                + '&dateStart=' + encodeURIComponent(isoStart);
-            this.getRouter().navigate(url, {trigger: true});
+        handleCellClick: function () {
+            Espo.Ui.warning('Open a patient card and use Book Appointment.');
         },
 
         handleAppointmentClick: function (id) {
@@ -143,7 +153,7 @@ define('espo-dental:views/dashlets/resource-calendar', [
                     return;
                 }
                 var msg = slots.slice(0, 10).map(function (s) {
-                    return s.start + ' / ' + s.cabinetName;
+                    return (s.localStart || s.start) + ' / ' + s.cabinetName;
                 }).join('\n');
                 Espo.Ui.info('Free slots:\n' + msg);
             }).catch(function () { Espo.Ui.error('Find slot failed'); });

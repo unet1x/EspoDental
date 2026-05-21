@@ -405,7 +405,6 @@ class WorkspaceSeeder
             'tabList' => $this->tabList(),
             'quickCreateList' => [
                 'PreliminaryPatient',
-                'Appointment',
                 'Payment',
                 'OrthodonticCard',
             ],

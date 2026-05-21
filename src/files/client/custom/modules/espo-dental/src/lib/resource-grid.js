@@ -6,6 +6,7 @@ define('espo-dental:lib/resource-grid', [], function () {
         confirmed: '#2CA02C',
         checked_in: '#FFBB22',
         in_progress: '#FF7F0E',
+        finished: '#7F7F7F',
         completed: '#7F7F7F',
         cancelled: '#D62728',
         no_show: '#A0522D'
@@ -27,6 +28,14 @@ define('espo-dental:lib/resource-grid', [], function () {
             parseInt(parts[3] || 0), parseInt(parts[4] || 0), parseInt(parts[5] || 0)
         );
     }
+    function localAt(date, minutes) {
+        return date + ' ' + pad(Math.floor(minutes / 60)) + ':' + pad(minutes % 60) + ':00';
+    }
+    function addMinutes(value, minutes) {
+        var d = parseIso(value);
+        if (!d) return value;
+        return fmt(new Date(d.getTime() + minutes * 60000));
+    }
 
     function ResourceGrid(host, payload, options) {
         this.host = host;
@@ -41,6 +50,7 @@ define('espo-dental:lib/resource-grid', [], function () {
         this.timeColumnWidth = 56;
         this.dayCount = (payload.view === 'week') ? 7 : 1;
         this.dayStart = parseIso((payload.date || ymd(new Date())) + ' 00:00:00');
+        this.timezone = payload.timezone || this.options.timezone || '';
     }
 
     ResourceGrid.prototype.dayList = function () {
@@ -168,8 +178,10 @@ define('espo-dental:lib/resource-grid', [], function () {
         }
         for (var ai = 0; ai < appointments.length; ai++) {
             var a = appointments[ai];
-            var startDt = parseIso(a.dateStart);
-            var endDt = parseIso(a.dateEnd);
+            var displayStart = a.localStart || a.dateStart;
+            var displayEnd = a.localEnd || a.dateEnd;
+            var startDt = parseIso(displayStart);
+            var endDt = parseIso(displayEnd);
             if (!startDt || !endDt) continue;
             var di = dayIdx[ymd(startDt)];
             var ci = cabIdx[a.cabinetId];
@@ -192,6 +204,9 @@ define('espo-dental:lib/resource-grid', [], function () {
             card.className = 'rc-appointment';
             card.setAttribute('data-id', a.id);
             card.setAttribute('data-duration', String(endMin - startMin));
+            card.setAttribute('data-start', displayStart);
+            card.setAttribute('data-end', displayEnd);
+            card.setAttribute('data-timezone', a.timezone || this.timezone || '');
             card.setAttribute('draggable', 'true');
             card.style.cssText = 'position:absolute;left:' + left + 'px;top:' + top + 'px;'
                 + 'width:' + w + 'px;height:' + height + 'px;background:' + bg + ';color:#fff;'
@@ -279,14 +294,13 @@ define('espo-dental:lib/resource-grid', [], function () {
                 var dayIdx = Math.floor(colIdx / (self.payload.cabinets.length));
                 var days = self.dayList();
                 var day = days[dayIdx] || days[0];
-                var startDt = new Date(day.getTime());
-                startDt.setHours(0, 0, 0, 0);
-                startDt.setMinutes(startMin);
-                startStr = fmt(startDt);
+                startStr = localAt(ymd(day), startMin);
             }
-            var startDt2 = parseIso(startStr);
-            var endDt2 = new Date(startDt2.getTime() + newDuration * 60000);
-            self.options.onResize && self.options.onResize(resizeData.id, startStr, fmt(endDt2));
+            self.options.onResize && self.options.onResize(resizeData.id, {
+                localStart: startStr,
+                localEnd: addMinutes(startStr, newDuration),
+                timezone: card.getAttribute('data-timezone') || self.timezone || ''
+            });
             resizeData = null;
         });
 
@@ -301,11 +315,15 @@ define('espo-dental:lib/resource-grid', [], function () {
                     var cabinetId = cell.getAttribute('data-cabinet-id');
                     var date = cell.getAttribute('data-date');
                     var startMinutes = self.startHour * 60 + row * self.rowMinutes;
-                    var startDt = new Date(date + 'T00:00:00');
-                    startDt.setMinutes(startMinutes);
-                    var endDt = new Date(startDt.getTime() + dragData.durationMinutes * 60000);
+                    var startStr = localAt(date, startMinutes);
                     self.options.onMove && self.options.onMove(
-                        dragData.id, fmt(startDt), fmt(endDt), cabinetId
+                        dragData.id,
+                        {
+                            localStart: startStr,
+                            localEnd: addMinutes(startStr, dragData.durationMinutes),
+                            timezone: self.timezone || '',
+                            cabinetId: cabinetId
+                        }
                     );
                     dragData = null;
                 });
@@ -314,9 +332,11 @@ define('espo-dental:lib/resource-grid', [], function () {
                     var cabinetId = cell.getAttribute('data-cabinet-id');
                     var date = cell.getAttribute('data-date');
                     var startMinutes = self.startHour * 60 + row * self.rowMinutes;
-                    var startDt = new Date(date + 'T00:00:00');
-                    startDt.setMinutes(startMinutes);
-                    self.options.onCellClick && self.options.onCellClick(cabinetId, fmt(startDt));
+                    self.options.onCellClick && self.options.onCellClick(
+                        cabinetId,
+                        localAt(date, startMinutes),
+                        self.timezone || ''
+                    );
                 });
             })(cells[j]);
         }

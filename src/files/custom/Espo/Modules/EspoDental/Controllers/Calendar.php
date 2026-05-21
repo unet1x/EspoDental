@@ -89,6 +89,9 @@ class Calendar
         $id = (string) ($data->id ?? '');
         $dateStart = (string) ($data->dateStart ?? '');
         $dateEnd = (string) ($data->dateEnd ?? '');
+        $localStart = isset($data->localStart) ? (string) $data->localStart : null;
+        $localEnd = isset($data->localEnd) ? (string) $data->localEnd : null;
+        $timeZone = isset($data->timezone) ? (string) $data->timezone : null;
         $cabinetId = isset($data->cabinetId) ? (string) $data->cabinetId : null;
         $doctorId = isset($data->doctorId) ? (string) $data->doctorId : null;
         if ($id === '') {
@@ -99,7 +102,10 @@ class Calendar
             $dateStart,
             $dateEnd,
             $cabinetId,
-            $doctorId
+            $doctorId,
+            $localStart,
+            $localEnd,
+            $timeZone
         );
         return (object) [
             'id' => $appointment->getId(),

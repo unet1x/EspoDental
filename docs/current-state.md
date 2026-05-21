@@ -250,6 +250,10 @@ Implemented in branch `feature-front-desk-intake`:
   is color-coded in the UI: green for positive credit and red for debt.
 - Invoice payment acceptance uses a modal form with amount input and a payment
   method dropdown instead of a free-text method prompt.
+- Server-side payment acceptance rejects invoice-linked payments for draft,
+  paid, storno or cancelled invoices, patient/clinic mismatches and amounts
+  above the invoice balance. Unlinked inbound payments remain the documented
+  prepayment/credit path.
 - EspoDental admin settings expose editable module dictionaries for payment
   methods, tooth-chart condition options/colors and tooth-surface labels.
   These settings are admin-only via the EspoCRM admin settings page and are

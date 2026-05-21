@@ -46,11 +46,16 @@ class PaymentService
         }
 
         $clinicId = $data['clinicId'] ?? null;
-        if (!$clinicId && !empty($data['invoiceId'])) {
+        $invoice = null;
+        if (!empty($data['invoiceId'])) {
+            /** @var Invoice|null $invoice */
             $invoice = $this->entityManager->getEntityById(Invoice::ENTITY_TYPE, (string) $data['invoiceId']);
-            if ($invoice) {
-                $clinicId = $invoice->get('clinicId');
+            if (!$invoice) {
+                throw new NotFound('Invoice not found');
             }
+
+            $this->assertInvoicePayable($invoice, (string) $data['patientId'], $clinicId, $amount);
+            $clinicId = $invoice->get('clinicId');
         }
         if (!$clinicId) {
             throw new BadRequest('clinicId is required');
@@ -84,6 +89,41 @@ class PaymentService
             'paymentId' => (string) $payment->getId(),
             'number' => (string) $payment->get('number'),
         ];
+    }
+
+    private function assertInvoicePayable(
+        Invoice $invoice,
+        string $patientId,
+        ?string $clinicId,
+        float $amount
+    ): void {
+        if (
+            in_array($invoice->getStatus(), [
+                Invoice::STATUS_DRAFT,
+                Invoice::STATUS_PAID,
+                Invoice::STATUS_STORNO,
+                Invoice::STATUS_CANCELLED,
+            ], true)
+        ) {
+            throw new Conflict('Invoice is not payable');
+        }
+
+        if ((string) $invoice->getPatientId() !== $patientId) {
+            throw new BadRequest('patientId does not match invoice');
+        }
+
+        $invoiceClinicId = (string) ($invoice->get('clinicId') ?? '');
+        if ($clinicId && $invoiceClinicId !== '' && $clinicId !== $invoiceClinicId) {
+            throw new BadRequest('clinicId does not match invoice');
+        }
+
+        $balance = round($invoice->getBalance(), 2);
+        if ($balance <= 0.0) {
+            throw new Conflict('Invoice has no payable balance');
+        }
+        if (round($amount, 2) > $balance) {
+            throw new BadRequest('Payment amount exceeds invoice balance');
+        }
     }
 
     /**

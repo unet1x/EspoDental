@@ -54,7 +54,7 @@ The primary flow is strict and connected end to end:
      finish, with audit trail;
    - before/after photos can be uploaded and linked to the visit.
 9. Finishing the visit performs one atomic clinical-financial operation:
-   - appointment status becomes `completed`;
+   - appointment status becomes `finished`;
    - stock write-off movements are created;
    - invoice and invoice lines are created;
    - patient balance is updated;
@@ -78,7 +78,7 @@ These rules are product requirements, not only UI preferences:
 - Direct patient import is allowed only through a dedicated migration/admin
   pathway with source, timestamp and operator recorded.
 - `Visit` must be started from an `Appointment`.
-- `Invoice` must be linked to a completed or finishing `Visit`.
+- `Invoice` must be linked to a finished or finishing `Visit`.
 - `InvoiceLine` must come from `VisitServiceLine` or a documented correction.
 - Stock balance changes must happen only through `StockMovement`.
 - Financial balance must be ledger-based. The displayed patient balance is a
@@ -304,6 +304,9 @@ Cash desk supports:
 
 - invoice issue;
 - payment by cash, card, bank transfer and optional crypto;
+- invoice-linked payments are allowed only for issued or partially paid invoices
+  and must not exceed the current invoice balance;
+- prepayments without an invoice are allowed as patient credit;
 - write-off;
 - reversal/storno;
 - complaint handling;
