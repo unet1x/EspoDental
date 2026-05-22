@@ -297,6 +297,10 @@ Implemented in branch `feature-front-desk-intake`:
   context read and assistant proposal creation. The contract deliberately does
   not expose direct payment, visit-finish, medical-note or invoice-cancel
   mutations.
+- Phase 9 Proxmox migration planning is documented in
+  `docs/proxmox-vm-migration.md`, including AOOSTAR WTR MAX topology, VM
+  directory layout, Synology backup, VM restore, verification, ongoing backup
+  retention and rollback.
 - Patient balance follows the product convention: positive value is patient
   prepayment/credit, negative value is patient debt. The patient balance field
   is color-coded in the UI: green for positive credit and red for debt.

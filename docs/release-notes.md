@@ -118,6 +118,9 @@
 - Added the first CRM-side MCP contract under `EspoDental/Integration`: tools
   discovery, bounded patient context read and proposal creation, with no direct
   clinical or financial mutation endpoints.
+- Added `docs/proxmox-vm-migration.md` with the AOOSTAR WTR MAX / Proxmox VM
+  topology, Synology backup, VM restore, verification, ongoing backup retention
+  and rollback procedure.
 - EspoDental admin settings now include editable dictionaries for payment
   methods, tooth-chart conditions/colors and tooth-surface labels.
 - Role workspace templates are now seeded for administrator, doctor,

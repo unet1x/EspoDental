@@ -189,3 +189,5 @@ Checklist:
 - Module source mount can be updated by git pull + rebuild.
 - Synology deployment notes are current.
 - Proxmox VM deployment notes are current before migration.
+- Proxmox VM restore runbook includes database dump, uploads restore, module
+  revision, rebuild/bootstrap, verification and rollback.
