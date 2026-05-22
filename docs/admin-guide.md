@@ -230,6 +230,49 @@ docker compose -f deploy/local/docker-compose.yml exec -T espocrm php command.ph
    `SendAppointmentReminders` (по умолчанию 1 раз в 15 минут) пишет результат
    в `NotificationLog`.
 
+### 5.1. WhatsApp reminders / Уведомления через WhatsApp
+
+WhatsApp reminders use the same `SendAppointmentReminders` job and
+`NotificationLog` audit rows as Telegram/email reminders. Configure the adapter
+in **Administration → Settings → EspoDental**:
+
+1. Set `espoDentalWhatsAppProvider`:
+   - `generic` for a clinic-owned proxy that accepts the EspoDental payload;
+   - `whatsapp-cloud` for a Meta Cloud API-compatible endpoint.
+2. Set `espoDentalWhatsAppApiBase`.
+   - For `generic`, use the proxy HTTPS endpoint.
+   - For `whatsapp-cloud`, use the full Graph messages endpoint ending in
+     `/{phone-number-id}/messages`.
+3. Set `espoDentalWhatsAppAccessToken`.
+4. Enable `espoDentalWhatsAppEnabled`.
+5. Store the patient's WhatsApp number in `Patient.whatsapp` or leave it empty
+   to fall back to `Patient.phone`.
+
+`generic` sends `to`, `type`, `text` and audit `context`. `whatsapp-cloud`
+sends the Meta-compatible text payload with `messaging_product=whatsapp`.
+Delivery success/failure and provider message ids are written back to
+`NotificationLog`.
+
+WhatsApp-напоминания используют ту же cron-задачу `SendAppointmentReminders` и
+аудит в `NotificationLog`, что Telegram/email. Настройка выполняется в
+**Администрирование → Настройки → EspoDental**:
+
+1. Укажите `espoDentalWhatsAppProvider`:
+   - `generic` для собственного proxy endpoint клиники;
+   - `whatsapp-cloud` для endpoint, совместимого с Meta Cloud API.
+2. Укажите `espoDentalWhatsAppApiBase`.
+   - Для `generic` это HTTPS endpoint proxy.
+   - Для `whatsapp-cloud` это полный Graph endpoint с окончанием
+     `/{phone-number-id}/messages`.
+3. Укажите `espoDentalWhatsAppAccessToken`.
+4. Включите `espoDentalWhatsAppEnabled`.
+5. Заполните `Patient.whatsapp` или оставьте пустым, чтобы использовать
+   `Patient.phone`.
+
+`generic` отправляет `to`, `type`, `text` и audit `context`. `whatsapp-cloud`
+отправляет text payload формата Meta с `messaging_product=whatsapp`. Статус,
+ошибка и внешний message id сохраняются в `NotificationLog`.
+
 ---
 
 ## 6. Backup / Резервное копирование

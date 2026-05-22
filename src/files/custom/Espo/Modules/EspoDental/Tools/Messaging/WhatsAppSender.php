@@ -44,13 +44,12 @@ class WhatsAppSender
 
         $base = rtrim((string) $this->config->get('espoDentalWhatsAppApiBase', ''), '/');
         $token = (string) $this->config->get('espoDentalWhatsAppAccessToken', '');
-
-        $payload = [
-            'to' => $recipient,
-            'type' => 'text',
-            'text' => ['body' => $text],
-            'context' => $context,
-        ];
+        $payload = (new WhatsAppMessagePayloadFactory())->buildTextPayload(
+            $this->getProviderName(),
+            $recipient,
+            $text,
+            $context
+        );
 
         $ch = curl_init($base);
         if ($ch === false) {

@@ -37,10 +37,19 @@ the EspoDental settings page:
 - `espoDentalWhatsAppApiBase`;
 - `espoDentalWhatsAppAccessToken`.
 
-The first implementation posts a JSON text-message payload to the configured
-HTTPS endpoint with a bearer token. A clinic can point it at a thin provider
-proxy, WhatsApp Cloud API wrapper, or another audited service without changing
-reminder workflow code.
+The adapter supports two outbound text-message payload contracts:
+
+- `generic` posts the original proxy payload with `to`, `type`, `text` and
+  EspoDental audit `context`;
+- `whatsapp-cloud`, `meta-cloud` or `facebook-cloud` posts a Meta WhatsApp
+  Cloud API text payload with `messaging_product=whatsapp`, `recipient_type`,
+  `to`, `type=text` and `text.body`.
+
+Both modes send the request to the configured HTTPS endpoint with a bearer
+token. For `whatsapp-cloud`, the endpoint must be the full Graph messages URL,
+ending in `/{phone-number-id}/messages`. This lets a clinic either point the
+module at a thin provider proxy or at a Meta-compatible Cloud API endpoint
+without changing reminder workflow code.
 
 ## 3. Reminder Flow
 

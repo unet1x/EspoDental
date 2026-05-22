@@ -288,6 +288,11 @@ Implemented in branch `feature-front-desk-intake`:
   email, Telegram and WhatsApp messages through `MessageDeliveryGateway`; the
   WhatsApp adapter is disabled until its system endpoint/token settings are
   configured.
+- The WhatsApp adapter now builds provider-specific WhatsApp payloads:
+  `generic` keeps the replaceable proxy contract with EspoDental audit context,
+  while `whatsapp-cloud`/`meta-cloud`/`facebook-cloud` uses the Meta Cloud API
+  text-message shape for a full Graph `/{phone-number-id}/messages` endpoint.
+  The live provider acceptance is still pending clinic credentials.
 - `AssistantActionProposal` is now the local LLM/MCP draft-and-review record.
   It stores source, action type, patient/appointment context, risk, payload and
   review status. High-risk or critical medical/financial actions force human
@@ -593,8 +598,8 @@ Verification completed after this slice:
 
 The following requirements still need implementation or explicit verification:
 
-- WhatsApp needs provider-specific browser or API acceptance once clinic
-  credentials exist.
+- WhatsApp live delivery still needs provider-specific browser or API
+  acceptance once clinic credentials exist.
 
 ## 7. Development Rule
 

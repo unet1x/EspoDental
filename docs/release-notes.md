@@ -120,6 +120,10 @@
   `NotificationLog` records direction/provider/external message id as the
   outbox audit row, and the WhatsApp adapter is configurable but disabled until
   endpoint/token settings are provided.
+- WhatsApp reminder delivery now has provider-specific payload contracts:
+  `generic` keeps the audited proxy payload, while `whatsapp-cloud`/`meta-cloud`
+  builds the Meta Cloud API text-message payload for a full Graph
+  `/{phone-number-id}/messages` endpoint.
 - Added `AssistantActionProposal` as the LLM/MCP draft-and-review workflow.
   High-risk and critical medical/financial proposals require approval and are
   blocked from `applied` status unless already approved.
