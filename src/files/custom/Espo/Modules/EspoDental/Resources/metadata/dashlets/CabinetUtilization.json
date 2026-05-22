@@ -1,0 +1,12 @@
+{
+    "view": "espo-dental:views/dashlets/cabinet-utilization",
+    "aclScope": "Appointment",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Cabinet Utilization"},
+            "displayRecords": {"type": "int", "default": 8, "min": 1, "max": 20},
+            "workStartHour": {"type": "int", "default": 8, "min": 0, "max": 23},
+            "workEndHour": {"type": "int", "default": 21, "min": 1, "max": 24}
+        }
+    }
+}

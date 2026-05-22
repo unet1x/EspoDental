@@ -29,6 +29,11 @@
         "params": {"controller": "Report", "action": "doctorProductivity"}
     },
     {
+        "route": "/EspoDental/Report/cabinetUtilization",
+        "method": "get",
+        "params": {"controller": "Report", "action": "cabinetUtilization"}
+    },
+    {
         "route": "/EspoDental/SalaryEntry/build",
         "method": "post",
         "params": {"controller": "SalaryEntry", "action": "build"}

@@ -172,6 +172,8 @@ Checklist:
 - Manager can view reports and financial summaries.
 - Manager can open the doctor productivity dashlet and compare finished visits,
   service-line count, gross amount and average visit amount by doctor.
+- Manager can open the cabinet utilization dashlet and compare appointment
+  count, occupied hours, available hours and utilization percent by cabinet.
 - Stock manager can manage materials and acknowledge low-stock alerts.
 - Confirm each EspoDental role or role-team user receives the matching
   dashboard template after bootstrap unless a user-specific dashboard template

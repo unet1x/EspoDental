@@ -146,6 +146,10 @@
   `EspoDental/Report/doctorProductivity` and as a manager dashboard dashlet,
   summarizing finished visits, service lines, gross amount and average visit
   amount by doctor for the current period.
+- Cabinet utilization report is available at
+  `EspoDental/Report/cabinetUtilization` and as a manager dashboard dashlet,
+  summarizing active-cabinet appointment count, occupied hours, available
+  hours and utilization percent for the selected period.
 - Visit photos get quick-add defaults for name, patient and recorded date.
 - Finished visits reject service/material line edits/removals with a server
   conflict.

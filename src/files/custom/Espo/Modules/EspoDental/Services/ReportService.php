@@ -6,6 +6,8 @@ namespace Espo\Modules\EspoDental\Services;
 
 use DateTimeImmutable;
 use Espo\Core\ORM\EntityManager;
+use Espo\Modules\EspoDental\Entities\Appointment;
+use Espo\Modules\EspoDental\Entities\Cabinet;
 use Espo\Modules\EspoDental\Entities\Invoice;
 use Espo\Modules\EspoDental\Entities\LowStockAlert;
 use Espo\Modules\EspoDental\Entities\Payment;
@@ -191,6 +193,145 @@ class ReportService
     }
 
     /**
+     * @return array{
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     workStartHour: int,
+     *     workEndHour: int,
+     *     rows: list<array{
+     *         cabinetId: string,
+     *         cabinetName: string,
+     *         clinicId: ?string,
+     *         appointmentCount: int,
+     *         finishedCount: int,
+     *         occupiedMinutes: int,
+     *         availableMinutes: int,
+     *         utilizationPercent: float
+     *     }>
+     * }
+     */
+    public function getCabinetUtilization(
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
+        int $workStartHour = 8,
+        int $workEndHour = 21,
+        ?string $clinicId = null,
+        int $limit = 20
+    ): array {
+        $period = $this->normalizePeriod($dateFrom, $dateTo);
+        [$workStartHour, $workEndHour] = $this->normalizeWorkHours($workStartHour, $workEndHour);
+        $limit = max(1, min(50, $limit));
+
+        $periodStart = $this->timestampOrNull($period['from']) ?? 0;
+        $periodEnd = $this->timestampOrNull($period['to']) ?? $periodStart;
+        $periodDays = $this->countPeriodDays($period['from'], $period['to']);
+        $availableMinutes = $periodDays * ($workEndHour - $workStartHour) * 60;
+
+        $cabinetWhere = [
+            'deleted' => false,
+            'isActive' => true,
+        ];
+
+        if ($clinicId !== null && trim($clinicId) !== '') {
+            $cabinetWhere['clinicId'] = trim($clinicId);
+        }
+
+        /** @var iterable<Cabinet> $cabinets */
+        $cabinets = $this->entityManager
+            ->getRDBRepository(Cabinet::ENTITY_TYPE)
+            ->where($cabinetWhere)
+            ->order('order', 'ASC')
+            ->find();
+
+        $rows = [];
+
+        foreach ($cabinets as $cabinet) {
+            $cabinetId = (string) $cabinet->getId();
+
+            if ($cabinetId === '') {
+                continue;
+            }
+
+            $rows[$cabinetId] = [
+                'cabinetId' => $cabinetId,
+                'cabinetName' => (string) ($cabinet->get('name') ?: $cabinetId),
+                'clinicId' => $cabinet->get('clinicId'),
+                'appointmentCount' => 0,
+                'finishedCount' => 0,
+                'occupiedMinutes' => 0,
+                'availableMinutes' => $availableMinutes,
+                'utilizationPercent' => 0.0,
+            ];
+        }
+
+        if ($rows !== []) {
+            $appointmentWhere = [
+                'deleted' => false,
+                'status' => array_merge(Appointment::BLOCKING_STATUSES, [Appointment::STATUS_FINISHED]),
+                'dateStart<' => $period['to'],
+                'dateEnd>' => $period['from'],
+            ];
+
+            if ($clinicId !== null && trim($clinicId) !== '') {
+                $appointmentWhere['clinicId'] = trim($clinicId);
+            }
+
+            /** @var iterable<Appointment> $appointments */
+            $appointments = $this->entityManager
+                ->getRDBRepository(Appointment::ENTITY_TYPE)
+                ->where($appointmentWhere)
+                ->find();
+
+            foreach ($appointments as $appointment) {
+                $cabinetId = (string) ($appointment->get('cabinetId') ?? '');
+
+                if ($cabinetId === '' || !isset($rows[$cabinetId])) {
+                    continue;
+                }
+
+                $occupiedMinutes = $this->appointmentOverlapMinutes(
+                    $appointment,
+                    $periodStart,
+                    $periodEnd,
+                    $workStartHour,
+                    $workEndHour
+                );
+
+                if ($occupiedMinutes <= 0) {
+                    continue;
+                }
+
+                $rows[$cabinetId]['appointmentCount']++;
+                $rows[$cabinetId]['occupiedMinutes'] += $occupiedMinutes;
+
+                if ($appointment->getStatus() === Appointment::STATUS_FINISHED) {
+                    $rows[$cabinetId]['finishedCount']++;
+                }
+            }
+        }
+
+        foreach ($rows as &$row) {
+            $row['utilizationPercent'] = $row['availableMinutes'] > 0
+                ? round($row['occupiedMinutes'] / $row['availableMinutes'] * 100, 1)
+                : 0.0;
+        }
+        unset($row);
+
+        usort($rows, static function (array $a, array $b): int {
+            return [$b['utilizationPercent'], $b['occupiedMinutes'], $a['cabinetName']]
+                <=> [$a['utilizationPercent'], $a['occupiedMinutes'], $b['cabinetName']];
+        });
+
+        return [
+            'dateFrom' => $period['from'],
+            'dateTo' => $period['to'],
+            'workStartHour' => $workStartHour,
+            'workEndHour' => $workEndHour,
+            'rows' => array_slice(array_values($rows), 0, $limit),
+        ];
+    }
+
+    /**
      * @param array<string, array{
      *     doctorId: string,
      *     doctorName: string,
@@ -232,9 +373,19 @@ class ReportService
         $defaultFrom = new DateTimeImmutable('first day of this month 00:00:00');
         $defaultTo = $defaultFrom->modify('+1 month');
 
+        $from = $this->normalizeDateTime($dateFrom, $defaultFrom, false);
+        $to = $this->normalizeDateTime($dateTo, $defaultTo, true);
+
+        $fromTs = $this->timestampOrNull($from);
+        $toTs = $this->timestampOrNull($to);
+
+        if ($fromTs !== null && $toTs !== null && $toTs <= $fromTs) {
+            $to = (new DateTimeImmutable($from))->modify('+1 day')->format('Y-m-d H:i:s');
+        }
+
         return [
-            'from' => $this->normalizeDateTime($dateFrom, $defaultFrom, false),
-            'to' => $this->normalizeDateTime($dateTo, $defaultTo, true),
+            'from' => $from,
+            'to' => $to,
         ];
     }
 
@@ -257,6 +408,116 @@ class ReportService
             return (new DateTimeImmutable($value))->format('Y-m-d H:i:s');
         } catch (\Exception) {
             return $fallback->format('Y-m-d H:i:s');
+        }
+    }
+
+    /**
+     * @return array{int, int}
+     */
+    private function normalizeWorkHours(int $workStartHour, int $workEndHour): array
+    {
+        $workStartHour = max(0, min(23, $workStartHour));
+        $workEndHour = max(1, min(24, $workEndHour));
+
+        if ($workEndHour <= $workStartHour) {
+            return [8, 21];
+        }
+
+        return [$workStartHour, $workEndHour];
+    }
+
+    private function countPeriodDays(string $from, string $to): int
+    {
+        try {
+            $fromDate = (new DateTimeImmutable($from))->setTime(0, 0, 0);
+            $toDate = (new DateTimeImmutable($to))->setTime(0, 0, 0);
+        } catch (\Exception) {
+            return 1;
+        }
+
+        $days = (int) $fromDate->diff($toDate)->days;
+
+        return max(1, $days);
+    }
+
+    private function appointmentOverlapMinutes(
+        Appointment $appointment,
+        int $periodStart,
+        int $periodEnd,
+        int $workStartHour,
+        int $workEndHour
+    ): int {
+        $start = $this->timestampOrNull((string) $appointment->getDateStart());
+        $end = $this->timestampOrNull((string) $appointment->getDateEnd());
+
+        if ($start === null) {
+            return 0;
+        }
+
+        if ($end === null || $end <= $start) {
+            $durationSeconds = (int) ($appointment->get('duration') ?? 0);
+
+            if ($durationSeconds <= 0) {
+                return 0;
+            }
+
+            $end = $start + $durationSeconds;
+        }
+
+        return $this->businessOverlapMinutes($start, $end, $periodStart, $periodEnd, $workStartHour, $workEndHour);
+    }
+
+    private function businessOverlapMinutes(
+        int $start,
+        int $end,
+        int $periodStart,
+        int $periodEnd,
+        int $workStartHour,
+        int $workEndHour
+    ): int {
+        $start = max($start, $periodStart);
+        $end = min($end, $periodEnd);
+
+        if ($end <= $start) {
+            return 0;
+        }
+
+        $minutes = 0;
+        $day = (new DateTimeImmutable('@' . $start))->setTime(0, 0, 0);
+        $lastDay = (new DateTimeImmutable('@' . $end))->setTime(0, 0, 0);
+
+        while ($day <= $lastDay) {
+            $windowStart = $day->setTime($workStartHour, 0, 0)->getTimestamp();
+            $windowEnd = $day->setTime($workEndHour, 0, 0)->getTimestamp();
+            $minutes += $this->overlapMinutes($start, $end, $windowStart, $windowEnd);
+            $day = $day->modify('+1 day');
+        }
+
+        return $minutes;
+    }
+
+    private function overlapMinutes(int $start, int $end, int $periodStart, int $periodEnd): int
+    {
+        $start = max($start, $periodStart);
+        $end = min($end, $periodEnd);
+
+        if ($end <= $start) {
+            return 0;
+        }
+
+        return (int) ceil(($end - $start) / 60);
+    }
+
+    private function timestampOrNull(string $value): ?int
+    {
+        if (trim($value) === '') {
+            return null;
+        }
+
+        try {
+            return (new DateTimeImmutable($value))->getTimestamp();
+        } catch (\Exception) {
+            return null;
         }
     }
 }

@@ -79,6 +79,39 @@ class Report
 
     /**
      * @throws Forbidden
+     * @return array{
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     workStartHour: int,
+     *     workEndHour: int,
+     *     rows: list<array{
+     *         cabinetId: string,
+     *         cabinetName: string,
+     *         clinicId: ?string,
+     *         appointmentCount: int,
+     *         finishedCount: int,
+     *         occupiedMinutes: int,
+     *         availableMinutes: int,
+     *         utilizationPercent: float
+     *     }>
+     * }
+     */
+    public function getActionCabinetUtilization(Request $request): array
+    {
+        $this->assertReportAccess();
+
+        return $this->reportService->getCabinetUtilization(
+            $request->getQueryParam('dateFrom'),
+            $request->getQueryParam('dateTo'),
+            (int) ($request->getQueryParam('workStartHour') ?? 8),
+            (int) ($request->getQueryParam('workEndHour') ?? 21),
+            $request->getQueryParam('clinicId'),
+            (int) ($request->getQueryParam('limit') ?? 20)
+        );
+    }
+
+    /**
+     * @throws Forbidden
      */
     private function assertReportAccess(): void
     {
