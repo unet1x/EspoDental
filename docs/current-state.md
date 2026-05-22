@@ -341,6 +341,11 @@ Implemented in branch `feature-front-desk-intake`:
   malocclusion context. The patient relationship layout also exposes
   `childPatients` and `orthodonticCards`; child links are read-oriented so
   parent assignment stays controlled by the child patient card.
+- Patient detail now has a `Tooth Chart History` panel backed by
+  `Patient/action/toothCharts`. It shows recent tooth-chart snapshots with
+  recorded date, dentition type, linked visit, doctor and annotated-teeth
+  count, giving the doctor a fast patient-level route into historical tooth
+  chart records.
 - `HealthQuestionnaire.items` now uses a schema-driven answer table backed by
   `HealthQuestionnaire/action/answers`. The table groups localized question
   labels from `questionnaireSchema.json`, renders Yes/No/text values and marks
@@ -447,6 +452,9 @@ Verification completed after this slice:
 - Structural PHPUnit coverage confirms the patient `Care Summary` endpoint and
   panel expose family links and orthodontic cards, and that patient
   relationship panels include child patients and orthodontic cards.
+- Structural PHPUnit coverage confirms the patient `Tooth Chart History`
+  endpoint and panel expose recent tooth-chart snapshots, source visits and
+  annotated-teeth counts.
 
 ## 6. Known Gaps Against Product Spec
 
@@ -460,8 +468,8 @@ The following requirements still need implementation or explicit verification:
 - browser/API verify the explicit invoice/payment correction workflow on a
   real local stack, including the `Refund invoice payments before storno`
   server-side guard;
-- polish patient tabs further: tooth chart, questionnaire, CBCT/Orthanc and
-  browser verification of the new family/orthodontics `Care Summary` panel;
+- polish patient tabs further: questionnaire, CBCT/Orthanc and browser
+  verification of the new `Care Summary` and `Tooth Chart History` panels;
 - extend the first doctor/assistant shift slice with richer schedule management
   UI, multi-weekday templates, cabinet closure rules, and browser acceptance
   coverage on a real clinic day;

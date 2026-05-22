@@ -90,6 +90,9 @@ Checklist:
   through the QR/token action.
 - Confirm the patient card Care Summary shows linked parent/manual guardian
   data, linked children and orthodontic cards with status/context.
+- Confirm the patient card Tooth Chart History shows recent tooth-chart
+  snapshots with source visit, doctor, dentition type and annotated-teeth
+  count.
 - Finish visit.
 - Confirm appointment status is `finished`.
 - Confirm stock write-off movements were created.

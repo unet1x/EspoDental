@@ -13,6 +13,7 @@ use Espo\Modules\EspoDental\Services\PatientCareSummaryService;
 use Espo\Modules\EspoDental\Services\PatientFileService;
 use Espo\Modules\EspoDental\Services\PatientFinancialService;
 use Espo\Modules\EspoDental\Services\PatientHistoryService;
+use Espo\Modules\EspoDental\Services\PatientToothChartService;
 
 class Patient extends Record
 {
@@ -146,6 +147,34 @@ class Patient extends Record
         return $service->getPatientCareSummary(
             $id,
             $this->getAcl()->checkScope('OrthodonticCard', 'read'),
+            $limit
+        );
+    }
+
+    /**
+     * GET /Patient/action/toothCharts?id=...
+     *
+     * @return array{patientId: string, toothCharts: list<array<string, mixed>>}
+     */
+    public function getActionToothCharts(Request $request): array
+    {
+        $id = $request->getQueryParam('id');
+        $limit = (int) ($request->getQueryParam('limit') ?? 8);
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest('id is required');
+        }
+
+        if (!$this->getAcl()->checkScope('Patient', 'read')) {
+            throw new Forbidden();
+        }
+
+        /** @var PatientToothChartService $service */
+        $service = $this->injectableFactory->create(PatientToothChartService::class);
+
+        return $service->getPatientToothCharts(
+            $id,
+            $this->getAcl()->checkScope('ToothChartSnapshot', 'read'),
             $limit
         );
     }

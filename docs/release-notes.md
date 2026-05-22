@@ -92,6 +92,8 @@
   manual guardian data, linked child patients and orthodontic cards. The
   standard patient relationship layout also exposes `childPatients` and
   `orthodonticCards`, with child links kept read-oriented.
+- Patient detail now includes a `Tooth Chart History` panel with recent tooth-chart snapshots,
+  source visit links, dentition type, doctor and annotated-teeth count.
 - Health questionnaire detail now renders answers as localized, schema-driven
   grouped rows instead of raw JSON, and flags alert answers in the table.
 - Patient detail now shows a visible warning banner when the questionnaire is

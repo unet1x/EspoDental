@@ -8,6 +8,7 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
                 this.renderPatientHistoryPanel();
                 this.renderPatientFinancialPanel();
                 this.renderCareSummaryPanel();
+                this.renderToothChartHistoryPanel();
                 this.renderClinicalFilesPanel();
             });
         },
@@ -18,6 +19,7 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             this.renderPatientHistoryPanel();
             this.renderPatientFinancialPanel();
             this.renderCareSummaryPanel();
+            this.renderToothChartHistoryPanel();
             this.renderClinicalFilesPanel();
         },
 
@@ -204,6 +206,74 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             return $panel;
         },
 
+        renderToothChartHistoryPanel: function () {
+            if (!this.model.id || !this.$el) {
+                return;
+            }
+
+            var $panel = this.ensureToothChartHistoryPanel();
+            var $body = $panel.find('[data-name="patient-tooth-chart-history-body"]');
+            var self = this;
+
+            $body.html('<span class="text-muted">' +
+                this.translate('Loading...', 'messages', 'Global') +
+                '</span>');
+
+            Espo.Ajax.getRequest('Patient/action/toothCharts', {
+                id: this.model.id,
+                limit: 8
+            }).then(function (data) {
+                self.renderToothChartHistoryContent($body, data || {});
+            }).catch(function () {
+                $body.html('<span class="text-danger">' +
+                    self.translate('Error') +
+                    '</span>');
+            });
+        },
+
+        ensureToothChartHistoryPanel: function () {
+            var $existing = this.$el.find('[data-name="patient-tooth-chart-history-panel"]');
+            if ($existing.length) {
+                return $existing;
+            }
+
+            var $panel = $('<div class="panel panel-default" data-name="patient-tooth-chart-history-panel">' +
+                '<div class="panel-heading">' +
+                    '<span class="panel-title">' +
+                        this.translate('Tooth Chart History', 'labels', 'Patient') +
+                    '</span>' +
+                '</div>' +
+                '<div class="panel-body" data-name="patient-tooth-chart-history-body"></div>' +
+            '</div>');
+
+            var $anchor = this.$el.find('[data-name="patient-care-summary-panel"]').first();
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('[data-name="patient-financials-panel"]').first();
+            }
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('[data-name="patient-history-panel"]').first();
+            }
+
+            if (!$anchor.length) {
+                var $questionnaireField = this.$el.find('[data-name="lastQuestionnaireAt"]').first();
+                $anchor = $questionnaireField.closest('.panel').first();
+            }
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('.panel').first();
+            }
+
+            if ($anchor.length) {
+                $panel.insertAfter($anchor);
+            } else {
+                this.$el.append($panel);
+            }
+
+            return $panel;
+        },
+
         renderPatientHistoryPanel: function () {
             if (!this.model.id || !this.$el) {
                 return;
@@ -280,7 +350,10 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
 
             var $financialPanel = this.$el.find('[data-name="patient-financials-panel"]').first();
             var $careSummaryPanel = this.$el.find('[data-name="patient-care-summary-panel"]').first();
-            if ($careSummaryPanel.length) {
+            var $toothChartPanel = this.$el.find('[data-name="patient-tooth-chart-history-panel"]').first();
+            if ($toothChartPanel.length) {
+                $anchor = $toothChartPanel;
+            } else if ($careSummaryPanel.length) {
                 $anchor = $careSummaryPanel;
             } else if ($financialPanel.length) {
                 $anchor = $financialPanel;
@@ -302,6 +375,62 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             }
 
             return $panel;
+        },
+
+        renderToothChartHistoryContent: function ($body, data) {
+            var toothCharts = Array.isArray(data.toothCharts) ? data.toothCharts : [];
+
+            $body.html(
+                '<h5 style="margin-top:0">' +
+                    this.translate('Recent Tooth Charts', 'labels', 'Patient') +
+                '</h5>' +
+                this.renderToothCharts(toothCharts)
+            );
+        },
+
+        renderToothCharts: function (toothCharts) {
+            if (!toothCharts.length) {
+                return this.emptyState();
+            }
+
+            var html = '<div class="table-responsive">' +
+                '<table class="table table-condensed table-bordered" style="margin-bottom:0">' +
+                '<tbody>';
+
+            toothCharts.forEach(function (snapshot) {
+                var title = snapshot.name || snapshot.recordedAt ||
+                    this.translate('ToothChartSnapshot', 'scopeNames', 'Global');
+                var dentition = this.translateOptionValue(
+                    snapshot.dentitionType || '',
+                    'dentitionType',
+                    'ToothChartSnapshot'
+                );
+                var teethCount = snapshot.teethCount == null ? '' :
+                    this.translate('Annotated Teeth', 'labels', 'Patient') + ': ' + snapshot.teethCount;
+                var meta = this.renderFamilyMeta([
+                    snapshot.recordedAt,
+                    dentition,
+                    snapshot.doctorName,
+                    teethCount
+                ]);
+                var visit = snapshot.visitId ?
+                    '<div class="small"><a href="#Visit/view/' + this.escapeAttribute(snapshot.visitId) + '">' +
+                        this.escapeHtml(snapshot.visitName || this.translate('Visit', 'scopeNames', 'Global')) +
+                    '</a></div>' :
+                    '';
+
+                html += '<tr><td>' +
+                    '<a href="#ToothChartSnapshot/view/' + this.escapeAttribute(snapshot.id) + '">' +
+                        this.escapeHtml(title) +
+                    '</a>' +
+                    meta +
+                    visit +
+                '</td></tr>';
+            }, this);
+
+            html += '</tbody></table></div>';
+
+            return html;
         },
 
         renderCareSummaryContent: function ($body, data) {
