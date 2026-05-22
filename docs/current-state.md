@@ -232,6 +232,10 @@ Implemented in branch `feature-front-desk-intake`:
 - `VisitMaterialLine` unit, unit price/currency and total cost always come from
   the selected `Material`. Doctor-facing layouts show material, planned
   quantity, actual quantity and unit, not cost fields.
+- `VisitMaterialLine.quantity` has a compact inline quantity editor in the
+  `Visit` material relationship panel while the parent visit is
+  `in_progress`; it PATCHes only the actual consumption and keeps finished
+  visits read-only through the existing server guard.
 - `Material.currentStock` and `Material.stockLevel` are derived from
   `StockMovement` rows. Direct server-side edits to these fields are rejected;
   new materials start at zero/out until receipt or adjustment movements change
@@ -485,13 +489,18 @@ Verification completed after this slice:
 - Structural PHPUnit coverage confirms the patient `CBCT / Orthanc` endpoint
   and panel expose visit and orthodontic imaging studies, source records,
   file links and Orthanc URL/UID context.
+- Structural PHPUnit coverage confirms the visit material relationship panel
+  uses the inline quantity editor, limits it to active visits with edit ACL and
+  saves actual consumption through a PATCH request.
+- Browser/API smoke on 2026-05-22 confirmed an active visit material panel
+  renders inline quantity inputs, saves an actual-consumption change through
+  the UI/API, and a finished visit renders the same panel read-only with no
+  inline editor. The temporary material quantity change was restored.
 
 ## 6. Known Gaps Against Product Spec
 
 The following requirements still need implementation or explicit verification:
 
-- add inline quantity editing in visit material relationship panels where
-  EspoCRM relationship panels support it;
 - browser/API verify the explicit invoice/payment correction workflow on a
   real local stack, including the `Refund invoice payments before storno`
   server-side guard;

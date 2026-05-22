@@ -81,6 +81,8 @@ Checklist:
   with service search and still writes the selected catalog service.
 - Confirm service price is copied to visit line.
 - Confirm material norms are copied into `VisitMaterialLine` rows.
+- Confirm the inline material quantity editor in the visit material panel saves
+  actual consumption during an active visit without opening the full form.
 - Adjust material consumption before finish.
 - Upload before/after visit photos.
 - Confirm the patient card clinical files panel shows visit photos with the

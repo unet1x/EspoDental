@@ -80,6 +80,9 @@
   `Refund invoice payments before storno` until linked payments are refunded.
 - Service-line price/currency/VAT always comes from the selected service;
   material-line unit/cost always comes from the selected material.
+- Visit material panels now expose an inline material quantity editor for
+  active visits, saving only actual consumption while keeping finished visits
+  protected by the server-side guard.
 - Visit service-line edit forms now use a searchable category tree instead of
   a two-select category/service picker.
 - Doctor-facing visit layouts hide service price/currency/VAT, material cost,

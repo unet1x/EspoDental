@@ -106,6 +106,9 @@ Deliverables:
   service price/currency;
 - copied material norms into `VisitMaterialLine` records with editable
   consumption before finish; doctors edit quantity, not material cost;
+- visit material relationship panel has an inline quantity editor for active
+  visits, so doctors can correct actual consumption without opening the full
+  material-line form;
 - auto-created tooth-chart snapshot when a visit starts, with an immediate
   visual preview on the visit page;
 - before/after visit photo upload;
@@ -125,12 +128,6 @@ Acceptance:
 - visit cannot start twice for the same appointment;
 - doctor can prepare all service/material lines before finish.
 - after finish, changing service/material lines returns a server conflict.
-
-Next UX refinements still planned in this phase:
-
-- refine the two-select category-first service picker into an expandable tree
-  if the clinical UX still feels slow in real use;
-- inline quantity editing in relationship panels where EspoCRM allows it.
 
 ## Phase 4 - Finish Visit, Invoice And Stock
 

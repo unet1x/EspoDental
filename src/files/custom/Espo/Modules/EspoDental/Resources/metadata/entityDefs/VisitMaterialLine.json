@@ -6,7 +6,13 @@
         "service": {"type": "link", "readOnly": true},
         "material": {"type": "link", "required": true},
         "plannedQuantity": {"type": "float", "readOnly": true, "default": 0, "min": 0},
-        "quantity": {"type": "float", "required": true, "default": 0, "min": 0},
+        "quantity": {
+            "type": "float",
+            "required": true,
+            "default": 0,
+            "min": 0,
+            "view": "espo-dental:views/visit-material-line/fields/quantity-inline"
+        },
         "unit": {"type": "varchar", "maxLength": 16, "readOnly": true},
         "unitPrice": {"type": "currency", "default": "0.00", "readOnly": true},
         "totalCost": {"type": "currency", "readOnly": true, "default": "0.00"},
