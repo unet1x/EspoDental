@@ -1,4 +1,4 @@
-define('espo-dental:views/dashlets/open-invoices', ['views/dashlets/record-list'], function (Dep) {
+define('espo-dental:views/dashlets/open-invoices', ['espo-dental:views/dashlets/record-list'], function (Dep) {
     return Dep.extend({
         name: 'OpenInvoices',
         scope: 'Invoice',

@@ -186,6 +186,13 @@
 - Role bootstrap now patches missing ACL scope rows into existing EspoDental
   roles, so new module scopes become available after bootstrap without
   recreating roles.
+- Default dashboard record-list dashlets now use a local compatibility bridge
+  for EspoCRM 9.2's `views/dashlets/abstract/record-list`, avoiding the missing
+  `views/dashlets/record-list` browser script on local builds.
+- Bool filters now use the EspoCRM 9.2 `Bool\Filter::apply` signature through
+  a shared raw-where bridge, avoiding dashboard 500 errors when list dashlets
+  apply saved filters such as today, low-stock, open invoices and active ortho
+  cards.
 - Documentation now records the strict patient flow, future invariants,
   questionnaire schema location and acceptance checks for the next phases.
 - The 2026-05-21 regression handoff is covered by

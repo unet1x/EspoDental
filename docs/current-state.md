@@ -423,6 +423,13 @@ Verification completed after this slice:
   answers and successful conversion with PDF/signature records.
 - Browser smoke checks confirmed direct create buttons are hidden for `Visit`
   and `Invoice` after rebuild/reload.
+- Local dashboard record-list dashlets now use the module
+  `espo-dental:views/dashlets/record-list` bridge over EspoCRM 9.2's
+  `views/dashlets/abstract/record-list`, so the default dashboard no longer
+  tries to load the removed `views/dashlets/record-list` alias.
+- Module bool filters now use the EspoCRM 9.2 `Bool\Filter::apply` signature
+  through a shared `RawBoolFilter` bridge, so dashboard list dashlets can use
+  saved bool filters without PHP fatal errors.
 - Browser smoke checks confirmed the EspoDental admin settings page renders the
   new dictionary editors, the payment modal shows configured payment methods,
   and visit detail still renders the configured tooth-chart legend.

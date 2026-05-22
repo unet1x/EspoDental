@@ -1,4 +1,4 @@
-define('espo-dental:views/dashlets/active-ortho-cases', ['views/dashlets/record-list'], function (Dep) {
+define('espo-dental:views/dashlets/active-ortho-cases', ['espo-dental:views/dashlets/record-list'], function (Dep) {
     return Dep.extend({
         name: 'ActiveOrthoCases',
         scope: 'OrthodonticCard',

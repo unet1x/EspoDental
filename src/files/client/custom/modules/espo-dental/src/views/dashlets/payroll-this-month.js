@@ -1,4 +1,4 @@
-define('espo-dental:views/dashlets/payroll-this-month', ['views/dashlets/record-list'], function (Dep) {
+define('espo-dental:views/dashlets/payroll-this-month', ['espo-dental:views/dashlets/record-list'], function (Dep) {
     return Dep.extend({
         name: 'PayrollThisMonth',
         scope: 'SalaryEntry',

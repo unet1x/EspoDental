@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Espo\Modules\EspoDental\Classes\Select\Appointment\BoolFilters;
 
-use Espo\Core\Select\Bool\Filter;
-use Espo\Entities\User;
+use Espo\Modules\EspoDental\Classes\Select\Common\UserAwareRawBoolFilter;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem;
 
-class MyDoctor implements Filter
+class MyDoctor extends UserAwareRawBoolFilter
 {
-    public function apply(User $user): ?WhereItem
+    protected function buildWhereItem(): WhereItem
     {
         return WhereClause::fromRaw([
-            'doctorId' => $user->getId(),
+            'doctorId' => $this->user->getId(),
         ]);
     }
 }

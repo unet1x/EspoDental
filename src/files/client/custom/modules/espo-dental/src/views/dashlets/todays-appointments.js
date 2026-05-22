@@ -1,4 +1,4 @@
-define('espo-dental:views/dashlets/todays-appointments', ['views/dashlets/record-list'], function (Dep) {
+define('espo-dental:views/dashlets/todays-appointments', ['espo-dental:views/dashlets/record-list'], function (Dep) {
     return Dep.extend({
         name: 'TodaysAppointments',
         scope: 'Appointment',

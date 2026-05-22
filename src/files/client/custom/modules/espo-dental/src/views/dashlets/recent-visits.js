@@ -1,4 +1,4 @@
-define('espo-dental:views/dashlets/recent-visits', ['views/dashlets/record-list'], function (Dep) {
+define('espo-dental:views/dashlets/recent-visits', ['espo-dental:views/dashlets/record-list'], function (Dep) {
     return Dep.extend({
         name: 'RecentVisits',
         scope: 'Visit',

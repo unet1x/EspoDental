@@ -1,4 +1,4 @@
-define('espo-dental:views/dashlets/low-stock-materials', ['views/dashlets/record-list'], function (Dep) {
+define('espo-dental:views/dashlets/low-stock-materials', ['espo-dental:views/dashlets/record-list'], function (Dep) {
     return Dep.extend({
         name: 'LowStockMaterials',
         scope: 'Material',

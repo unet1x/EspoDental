@@ -59,8 +59,11 @@ final class Phase9MetadataTest extends TestCase
                 $path = self::MODULE_ROOT . "/Classes/Select/{$entity}/BoolFilters/{$cls}.php";
                 $this->assertFileExists($path, "Missing filter class for $entity::$filter");
                 $code = (string) file_get_contents($path);
-                $this->assertStringContainsString('implements Filter', $code);
-                $this->assertStringContainsString('public function apply', $code);
+                $this->assertMatchesRegularExpression(
+                    '/extends (RawBoolFilter|UserAwareRawBoolFilter)/',
+                    $code
+                );
+                $this->assertStringContainsString('protected function buildWhereItem', $code);
             }
         }
     }
@@ -73,6 +76,15 @@ final class Phase9MetadataTest extends TestCase
         foreach (['today', 'thisWeek', 'thisMonth', 'between'] as $m) {
             $this->assertStringContainsString("public static function {$m}", $code);
         }
+    }
+
+    public function testRawBoolFilterBridgeExists(): void
+    {
+        $path = self::MODULE_ROOT . '/Classes/Select/Common/RawBoolFilter.php';
+        $this->assertFileExists($path);
+        $code = (string) file_get_contents($path);
+        $this->assertStringContainsString('implements Filter', $code);
+        $this->assertStringContainsString('OrGroupBuilder $orGroupBuilder', $code);
     }
 
     public function testDashletMetadataExists(): void
