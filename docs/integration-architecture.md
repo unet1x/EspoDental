@@ -104,3 +104,11 @@ The first MCP server should wrap the CRM-side routes documented in
 These routes are intentionally narrow. They expose tool discovery, bounded
 patient context and proposal creation only. They do not expose generic entity
 write access or direct clinical/financial mutations.
+
+## 7. Virtual Administrator
+
+The local LLM design is documented in
+`docs/virtual-administrator-design.md`. The virtual administrator is an
+operator assistant that reads bounded context, drafts messages and creates
+`AssistantActionProposal(source=llm)` records. It is not allowed to hold broad
+CRM write credentials or perform direct medical/financial mutations.

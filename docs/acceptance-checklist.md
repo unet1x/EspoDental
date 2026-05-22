@@ -151,6 +151,9 @@ Checklist:
   the provider returns one.
 - Bot/LLM proposals are stored in `AssistantActionProposal`; high-risk medical
   or financial proposals cannot become `applied` before a human-approved status.
+- Local LLM virtual administrator uses only the MCP/Integration contract,
+  creates `AssistantActionProposal(source=llm)` for state changes and refuses
+  direct payment, visit-finish, medical-note, invoice-cancel and delete actions.
 - Questionnaire older than 1 year shows a patient alert.
 - Questionnaire PDF contains answers in two columns and includes the stored
   signature.

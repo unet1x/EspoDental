@@ -121,6 +121,9 @@
 - Added `docs/proxmox-vm-migration.md` with the AOOSTAR WTR MAX / Proxmox VM
   topology, Synology backup, VM restore, verification, ongoing backup retention
   and rollback procedure.
+- Added `docs/virtual-administrator-design.md` for the local LLM assistant:
+  local deployment boundary, allowed MCP tools, blocked direct mutations,
+  approval workflow, prompt contract and acceptance criteria.
 - EspoDental admin settings now include editable dictionaries for payment
   methods, tooth-chart conditions/colors and tooth-surface labels.
 - Role workspace templates are now seeded for administrator, doctor,

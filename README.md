@@ -171,6 +171,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   delivery gateway, WhatsApp adapter and MCP/LLM guardrails
 - [docs/mcp-server-design.md](docs/mcp-server-design.md) — controlled MCP tool
   routes and assistant proposal contract
+- [docs/virtual-administrator-design.md](docs/virtual-administrator-design.md) —
+  local LLM assistant boundary, prompt contract and approval workflow
 - [docs/proxmox-vm-migration.md](docs/proxmox-vm-migration.md) — AOOSTAR WTR
   MAX / Proxmox VM migration and backup/restore runbook
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
