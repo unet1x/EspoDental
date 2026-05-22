@@ -115,6 +115,9 @@
 - Added `AssistantActionProposal` as the LLM/MCP draft-and-review workflow.
   High-risk and critical medical/financial proposals require approval and are
   blocked from `applied` status unless already approved.
+- Added the first CRM-side MCP contract under `EspoDental/Integration`: tools
+  discovery, bounded patient context read and proposal creation, with no direct
+  clinical or financial mutation endpoints.
 - EspoDental admin settings now include editable dictionaries for payment
   methods, tooth-chart conditions/colors and tooth-surface labels.
 - Role workspace templates are now seeded for administrator, doctor,

@@ -292,6 +292,11 @@ Implemented in branch `feature-front-desk-intake`:
   review status. High-risk or critical medical/financial actions force human
   approval and cannot be marked applied unless the previous status was
   `approved`.
+- The first CRM-side MCP contract is exposed through narrow authenticated
+  routes under `EspoDental/Integration`: tool discovery, bounded patient
+  context read and assistant proposal creation. The contract deliberately does
+  not expose direct payment, visit-finish, medical-note or invoice-cancel
+  mutations.
 - Patient balance follows the product convention: positive value is patient
   prepayment/credit, negative value is patient debt. The patient balance field
   is color-coded in the UI: green for positive credit and red for debt.
@@ -526,8 +531,7 @@ The following requirements still need implementation or explicit verification:
 - assign and browser-verify the role-specific dashboard templates for
   administrator, doctor, assistant, manager and stock users on a real local
   stack;
-- extend the Phase 9 integration boundary with concrete MCP tool endpoints;
-  WhatsApp also needs provider-specific browser or API acceptance once clinic
+- WhatsApp needs provider-specific browser or API acceptance once clinic
   credentials exist.
 
 ## 7. Development Rule

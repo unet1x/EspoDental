@@ -59,6 +59,21 @@
         "params": {"controller": "Calendar", "action": "freeSlots"}
     },
     {
+        "route": "/EspoDental/Integration/tools",
+        "method": "get",
+        "params": {"controller": "Integration", "action": "tools"}
+    },
+    {
+        "route": "/EspoDental/Integration/patientContext",
+        "method": "get",
+        "params": {"controller": "Integration", "action": "patientContext"}
+    },
+    {
+        "route": "/EspoDental/Integration/proposeAction",
+        "method": "post",
+        "params": {"controller": "Integration", "action": "proposeAction"}
+    },
+    {
         "route": "/EspoDental/OrthodonticCard/close",
         "method": "post",
         "params": {"controller": "OrthodonticCard", "action": "close"}

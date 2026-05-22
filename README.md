@@ -169,6 +169,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
 - [docs/dev-runbook.md](docs/dev-runbook.md) — commands for local development and verification
 - [docs/integration-architecture.md](docs/integration-architecture.md) — message
   delivery gateway, WhatsApp adapter and MCP/LLM guardrails
+- [docs/mcp-server-design.md](docs/mcp-server-design.md) — controlled MCP tool
+  routes and assistant proposal contract
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers

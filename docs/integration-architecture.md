@@ -91,3 +91,16 @@ The workflow is:
 This keeps the assistant useful for drafting and triage while preserving the
 hard product invariant that bots do not silently mutate critical clinical or
 financial state.
+
+## 6. CRM-Side MCP Contract
+
+The first MCP server should wrap the CRM-side routes documented in
+`docs/mcp-server-design.md`:
+
+- `GET /EspoDental/Integration/tools`;
+- `GET /EspoDental/Integration/patientContext`;
+- `POST /EspoDental/Integration/proposeAction`.
+
+These routes are intentionally narrow. They expose tool discovery, bounded
+patient context and proposal creation only. They do not expose generic entity
+write access or direct clinical/financial mutations.
