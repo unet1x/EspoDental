@@ -88,6 +88,8 @@ Checklist:
 - Confirm patient-card photo and questionnaire relationship panels are
   read-oriented; photos are added from visits and questionnaires are issued
   through the QR/token action.
+- Confirm the patient card Care Summary shows linked parent/manual guardian
+  data, linked children and orthodontic cards with status/context.
 - Finish visit.
 - Confirm appointment status is `finished`.
 - Confirm stock write-off movements were created.

@@ -334,6 +334,13 @@ Implemented in branch `feature-front-desk-intake`:
   `photos` and `healthQuestionnaires` relationship panels are read-oriented;
   photos should be added from visits and questionnaires should be issued
   through the QR/token action.
+- Patient detail now has a `Care Summary` panel backed by
+  `Patient/action/careSummary`. It shows family links from the optional linked
+  parent patient, manual guardian fields and linked child patients, plus recent
+  orthodontic cards with status, opening date, doctor, appliance and
+  malocclusion context. The patient relationship layout also exposes
+  `childPatients` and `orthodonticCards`; child links are read-oriented so
+  parent assignment stays controlled by the child patient card.
 - `HealthQuestionnaire.items` now uses a schema-driven answer table backed by
   `HealthQuestionnaire/action/answers`. The table groups localized question
   labels from `questionnaireSchema.json`, renders Yes/No/text values and marks
@@ -437,6 +444,9 @@ Verification completed after this slice:
   payment corrections do not mutate the source payment, cumulative refunds are
   capped and invoice storno requires linked invoice payments to be refunded
   first.
+- Structural PHPUnit coverage confirms the patient `Care Summary` endpoint and
+  panel expose family links and orthodontic cards, and that patient
+  relationship panels include child patients and orthodontic cards.
 
 ## 6. Known Gaps Against Product Spec
 
@@ -450,8 +460,8 @@ The following requirements still need implementation or explicit verification:
 - browser/API verify the explicit invoice/payment correction workflow on a
   real local stack, including the `Refund invoice payments before storno`
   server-side guard;
-- polish patient tabs: tooth chart, history, questionnaire, files, financials,
-  orthodontics, family, CBCT;
+- polish patient tabs further: tooth chart, questionnaire, CBCT/Orthanc and
+  browser verification of the new family/orthodontics `Care Summary` panel;
 - extend the first doctor/assistant shift slice with richer schedule management
   UI, multi-weekday templates, cabinet closure rules, and browser acceptance
   coverage on a real clinic day;

@@ -19,6 +19,11 @@
         "Clinical Files": "Clinical Files",
         "Recent Visit Photos": "Recent Visit Photos",
         "Questionnaire Files": "Questionnaire Files",
+        "Care Summary": "Care Summary",
+        "Family Links": "Family Links",
+        "Linked Parent": "Linked Parent",
+        "Manual Guardian": "Manual Guardian",
+        "Orthodontics": "Orthodontics",
         "Alerts": "Alerts",
         "Expired": "Expired",
         "Other": "Other"
@@ -104,7 +109,9 @@
         "invoices": "Invoices",
         "payments": "Payments",
         "notificationLogs": "Notifications",
-        "healthQuestionnaires": "Health Questionnaires"
+        "healthQuestionnaires": "Health Questionnaires",
+        "childPatients": "Children",
+        "orthodonticCards": "Orthodontic Cards"
     },
     "boolFilters": {
         "onlyMy": "Only my",

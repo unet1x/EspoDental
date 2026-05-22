@@ -31,6 +31,12 @@
             "select": false,
             "createDisabled": true,
             "selectDisabled": true
+        },
+        "childPatients": {
+            "create": false,
+            "select": false,
+            "createDisabled": true,
+            "selectDisabled": true
         }
     },
     "menu": {

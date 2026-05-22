@@ -7,6 +7,12 @@
     "visits",
     "toothChartSnapshots",
     {
+        "name": "childPatients",
+        "createDisabled": true,
+        "selectDisabled": true
+    },
+    "orthodonticCards",
+    {
         "name": "photos",
         "createDisabled": true,
         "selectDisabled": true

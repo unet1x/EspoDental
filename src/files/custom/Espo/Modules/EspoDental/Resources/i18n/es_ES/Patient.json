@@ -19,6 +19,11 @@
         "Clinical Files": "Archivos clinicos",
         "Recent Visit Photos": "Fotos de visitas",
         "Questionnaire Files": "Archivos de cuestionarios",
+        "Care Summary": "Resumen clinico",
+        "Family Links": "Vinculos familiares",
+        "Linked Parent": "Padre/madre vinculado",
+        "Manual Guardian": "Tutor manual",
+        "Orthodontics": "Ortodoncia",
         "Alerts": "Alertas",
         "Expired": "Caducado",
         "Other": "Otros"
@@ -104,7 +109,9 @@
         "invoices": "Facturas",
         "payments": "Pagos",
         "notificationLogs": "Notificaciones",
-        "healthQuestionnaires": "Cuestionarios de salud"
+        "healthQuestionnaires": "Cuestionarios de salud",
+        "childPatients": "Hijos",
+        "orthodonticCards": "Fichas de ortodoncia"
     },
     "boolFilters": {
         "onlyMy": "Solo mios",

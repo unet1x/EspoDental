@@ -7,6 +7,7 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             this.listenTo(this.model, 'sync', function () {
                 this.renderPatientHistoryPanel();
                 this.renderPatientFinancialPanel();
+                this.renderCareSummaryPanel();
                 this.renderClinicalFilesPanel();
             });
         },
@@ -16,6 +17,7 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             this.renderQuestionnaireAlert();
             this.renderPatientHistoryPanel();
             this.renderPatientFinancialPanel();
+            this.renderCareSummaryPanel();
             this.renderClinicalFilesPanel();
         },
 
@@ -138,6 +140,70 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             return $panel;
         },
 
+        renderCareSummaryPanel: function () {
+            if (!this.model.id || !this.$el) {
+                return;
+            }
+
+            var $panel = this.ensureCareSummaryPanel();
+            var $body = $panel.find('[data-name="patient-care-summary-body"]');
+            var self = this;
+
+            $body.html('<span class="text-muted">' +
+                this.translate('Loading...', 'messages', 'Global') +
+                '</span>');
+
+            Espo.Ajax.getRequest('Patient/action/careSummary', {
+                id: this.model.id,
+                limit: 8
+            }).then(function (data) {
+                self.renderCareSummaryContent($body, data || {});
+            }).catch(function () {
+                $body.html('<span class="text-danger">' +
+                    self.translate('Error') +
+                    '</span>');
+            });
+        },
+
+        ensureCareSummaryPanel: function () {
+            var $existing = this.$el.find('[data-name="patient-care-summary-panel"]');
+            if ($existing.length) {
+                return $existing;
+            }
+
+            var $panel = $('<div class="panel panel-default" data-name="patient-care-summary-panel">' +
+                '<div class="panel-heading">' +
+                    '<span class="panel-title">' +
+                        this.translate('Care Summary', 'labels', 'Patient') +
+                    '</span>' +
+                '</div>' +
+                '<div class="panel-body" data-name="patient-care-summary-body"></div>' +
+            '</div>');
+
+            var $anchor = this.$el.find('[data-name="patient-financials-panel"]').first();
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('[data-name="patient-history-panel"]').first();
+            }
+
+            if (!$anchor.length) {
+                var $questionnaireField = this.$el.find('[data-name="lastQuestionnaireAt"]').first();
+                $anchor = $questionnaireField.closest('.panel').first();
+            }
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('.panel').first();
+            }
+
+            if ($anchor.length) {
+                $panel.insertAfter($anchor);
+            } else {
+                this.$el.append($panel);
+            }
+
+            return $panel;
+        },
+
         renderPatientHistoryPanel: function () {
             if (!this.model.id || !this.$el) {
                 return;
@@ -213,7 +279,10 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             var $anchor = $questionnaireField.closest('.panel').first();
 
             var $financialPanel = this.$el.find('[data-name="patient-financials-panel"]').first();
-            if ($financialPanel.length) {
+            var $careSummaryPanel = this.$el.find('[data-name="patient-care-summary-panel"]').first();
+            if ($careSummaryPanel.length) {
+                $anchor = $careSummaryPanel;
+            } else if ($financialPanel.length) {
                 $anchor = $financialPanel;
             } else {
                 var $historyPanel = this.$el.find('[data-name="patient-history-panel"]').first();
@@ -233,6 +302,119 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             }
 
             return $panel;
+        },
+
+        renderCareSummaryContent: function ($body, data) {
+            var family = data.family || {};
+            var orthodonticCards = Array.isArray(data.orthodonticCards) ? data.orthodonticCards : [];
+
+            $body.html(
+                '<div class="row">' +
+                    '<div class="col-sm-6">' +
+                        '<h5 style="margin-top:0">' +
+                            this.translate('Family Links', 'labels', 'Patient') +
+                        '</h5>' +
+                        this.renderFamilyLinks(family) +
+                    '</div>' +
+                    '<div class="col-sm-6">' +
+                        '<h5 style="margin-top:0">' +
+                            this.translate('Orthodontics', 'labels', 'Patient') +
+                        '</h5>' +
+                        this.renderOrthodonticCards(orthodonticCards) +
+                    '</div>' +
+                '</div>'
+            );
+        },
+
+        renderFamilyLinks: function (family) {
+            var html = '';
+            var hasRows = false;
+
+            if (family.parentPatient) {
+                hasRows = true;
+                html += '<div style="margin-bottom:8px">' +
+                    '<div class="text-muted small">' +
+                        this.escapeHtml(this.translate('Linked Parent', 'labels', 'Patient')) +
+                    '</div>' +
+                    this.renderPatientLink(family.parentPatient) +
+                '</div>';
+            }
+
+            var manualGuardian = family.manualGuardian || {};
+            var guardianName = this.formatGuardianName(manualGuardian);
+            if (guardianName || manualGuardian.phone || manualGuardian.relation) {
+                hasRows = true;
+                html += '<div style="margin-bottom:8px">' +
+                    '<div class="text-muted small">' +
+                        this.escapeHtml(this.translate('Manual Guardian', 'labels', 'Patient')) +
+                    '</div>' +
+                    '<div>' + this.escapeHtml(guardianName || this.translate('No Data', 'labels', 'Global')) + '</div>' +
+                    this.renderFamilyMeta([
+                        this.translateOptionValue(manualGuardian.relation || '', 'parentRelation', 'Patient'),
+                        manualGuardian.phone
+                    ]) +
+                '</div>';
+            }
+
+            var children = Array.isArray(family.childPatients) ? family.childPatients : [];
+            if (children.length) {
+                hasRows = true;
+                html += '<div class="text-muted small">' +
+                    this.escapeHtml(this.translate('Children', 'fields', 'Patient')) +
+                '</div><ul class="list-unstyled" style="margin-bottom:0">';
+
+                children.forEach(function (child) {
+                    html += '<li style="margin-bottom:4px">' + this.renderPatientLink(child) +
+                        this.renderFamilyMeta([child.dateOfBirth, child.phone]) +
+                    '</li>';
+                }, this);
+
+                html += '</ul>';
+            }
+
+            return hasRows ? html : this.emptyState();
+        },
+
+        renderPatientLink: function (patient) {
+            if (!patient || !patient.id) {
+                return this.emptyState();
+            }
+
+            return '<a href="#Patient/view/' + this.escapeAttribute(patient.id) + '">' +
+                this.escapeHtml(patient.name || this.translate('Patient', 'scopeNames', 'Global')) +
+            '</a>';
+        },
+
+        renderOrthodonticCards: function (cards) {
+            if (!cards.length) {
+                return this.emptyState();
+            }
+
+            var html = '<div class="table-responsive">' +
+                '<table class="table table-condensed table-bordered" style="margin-bottom:0">' +
+                '<tbody>';
+
+            cards.forEach(function (card) {
+                var title = card.cardNumber || card.name || this.translate('OrthodonticCard', 'scopeNames', 'Global');
+                var meta = this.renderFamilyMeta([
+                    card.dateOpen,
+                    card.doctorName,
+                    this.translateOptionValue(card.apparatusType || '', 'apparatusType', 'OrthodonticCard'),
+                    this.translateOptionValue(card.malocclusionClass || '', 'malocclusionClass', 'OrthodonticCard')
+                ]);
+
+                html += '<tr><td>' +
+                    '<a href="#OrthodonticCard/view/' + this.escapeAttribute(card.id) + '">' +
+                        this.escapeHtml(title) +
+                    '</a>' +
+                    meta +
+                    this.renderStatusLabel(card.status, 'OrthodonticCard') +
+                '</td></tr>';
+            }, this);
+
+            html += '</tbody></table></div>';
+
+            return html;
         },
 
         renderPatientFinancialContent: function ($body, data) {
@@ -440,6 +622,28 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             html += '</tbody></table></div>';
 
             return html;
+        },
+
+        formatGuardianName: function (guardian) {
+            return [
+                guardian.lastName,
+                guardian.firstName,
+                guardian.middleName
+            ].filter(function (value) {
+                return value != null && value !== '';
+            }).join(' ');
+        },
+
+        renderFamilyMeta: function (values) {
+            var parts = values.filter(function (value) {
+                return value != null && value !== '' && value !== '—';
+            }).map(function (value) {
+                return this.escapeHtml(value);
+            }.bind(this));
+
+            return parts.length ?
+                '<div class="text-muted small">' + parts.join(' &middot; ') + '</div>' :
+                '';
         },
 
         renderHistoryMeta: function (values) {

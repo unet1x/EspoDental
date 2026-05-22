@@ -88,6 +88,10 @@
   linked to their visit/date context and health-questionnaire PDF/signature
   links. Patient-side photo and questionnaire relationship panels are
   read-oriented so records stay attached to their clinical source workflows.
+- Patient detail now includes a `Care Summary` panel with family links,
+  manual guardian data, linked child patients and orthodontic cards. The
+  standard patient relationship layout also exposes `childPatients` and
+  `orthodonticCards`, with child links kept read-oriented.
 - Health questionnaire detail now renders answers as localized, schema-driven
   grouped rows instead of raw JSON, and flags alert answers in the table.
 - Patient detail now shows a visible warning banner when the questionnaire is
