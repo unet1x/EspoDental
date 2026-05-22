@@ -85,6 +85,9 @@ Checklist:
   originating visit/date context.
 - Confirm the patient card exposes questionnaire PDF and signature links from
   completed health questionnaires.
+- Confirm the patient card Questionnaire Summary shows latest questionnaire
+  answers grouped by schema, questionnaire date/version, alert/expired flags
+  and generated PDF/signature files.
 - Confirm patient-card photo and questionnaire relationship panels are
   read-oriented; photos are added from visits and questionnaires are issued
   through the QR/token action.

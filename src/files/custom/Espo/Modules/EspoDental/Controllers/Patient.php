@@ -13,6 +13,7 @@ use Espo\Modules\EspoDental\Services\PatientCareSummaryService;
 use Espo\Modules\EspoDental\Services\PatientFileService;
 use Espo\Modules\EspoDental\Services\PatientFinancialService;
 use Espo\Modules\EspoDental\Services\PatientHistoryService;
+use Espo\Modules\EspoDental\Services\PatientQuestionnaireService;
 use Espo\Modules\EspoDental\Services\PatientToothChartService;
 
 class Patient extends Record
@@ -147,6 +148,38 @@ class Patient extends Record
         return $service->getPatientCareSummary(
             $id,
             $this->getAcl()->checkScope('OrthodonticCard', 'read'),
+            $limit
+        );
+    }
+
+    /**
+     * GET /Patient/action/questionnaireSummary?id=...
+     *
+     * @return array{
+     *     patientId: string,
+     *     latestQuestionnaire: array<string, mixed>|null,
+     *     recentQuestionnaires: list<array<string, mixed>>
+     * }
+     */
+    public function getActionQuestionnaireSummary(Request $request): array
+    {
+        $id = $request->getQueryParam('id');
+        $limit = (int) ($request->getQueryParam('limit') ?? 5);
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest('id is required');
+        }
+
+        if (!$this->getAcl()->checkScope('Patient', 'read')) {
+            throw new Forbidden();
+        }
+
+        /** @var PatientQuestionnaireService $service */
+        $service = $this->injectableFactory->create(PatientQuestionnaireService::class);
+
+        return $service->getPatientQuestionnaireSummary(
+            $id,
+            $this->getAcl()->checkScope('HealthQuestionnaire', 'read'),
             $limit
         );
     }

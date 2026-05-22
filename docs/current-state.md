@@ -334,6 +334,11 @@ Implemented in branch `feature-front-desk-intake`:
   `photos` and `healthQuestionnaires` relationship panels are read-oriented;
   photos should be added from visits and questionnaires should be issued
   through the QR/token action.
+- Patient detail now has a `Questionnaire Summary` panel backed by
+  `Patient/action/questionnaireSummary`. It shows the latest questionnaire
+  date, schema version, language, alert/expired flags, generated PDF/signature
+  files and localized answers grouped by `questionnaireSchema.json`, plus a
+  compact list of recent questionnaires.
 - Patient detail now has a `Care Summary` panel backed by
   `Patient/action/careSummary`. It shows family links from the optional linked
   parent patient, manual guardian fields and linked child patients, plus recent
@@ -438,6 +443,10 @@ Verification completed after this slice:
 - API smoke on 2026-05-15 confirmed free-slot search no longer returns a
   selected doctor/cabinet slot when the doctor is already booked in another
   cabinet at the same time.
+- Browser smoke on 2026-05-22 confirmed the patient detail `Questionnaire
+  Summary`, `Care Summary` and `Tooth Chart History` panels render in Russian
+  after rebuild/app-timestamp refresh. The questionnaire panel shows localized
+  grouped answers, date/version and generated PDF/signature links.
 - API smoke on 2026-05-15 confirmed manual `DELETE /PreliminaryPatient/{id}`
   returns `403` with reason `Preliminary patients cannot be manually removed`.
   The temporary smoke record was then marked deleted directly in the local
@@ -455,6 +464,9 @@ Verification completed after this slice:
 - Structural PHPUnit coverage confirms the patient `Tooth Chart History`
   endpoint and panel expose recent tooth-chart snapshots, source visits and
   annotated-teeth counts.
+- Structural PHPUnit coverage confirms the patient `Questionnaire Summary`
+  endpoint and panel expose latest questionnaire answers grouped by schema,
+  generated files, recent questionnaires and alert/expired flags.
 
 ## 6. Known Gaps Against Product Spec
 
@@ -468,8 +480,7 @@ The following requirements still need implementation or explicit verification:
 - browser/API verify the explicit invoice/payment correction workflow on a
   real local stack, including the `Refund invoice payments before storno`
   server-side guard;
-- polish patient tabs further: questionnaire, CBCT/Orthanc and browser
-  verification of the new `Care Summary` and `Tooth Chart History` panels;
+- polish patient tabs further: CBCT/Orthanc links;
 - extend the first doctor/assistant shift slice with richer schedule management
   UI, multi-weekday templates, cabinet closure rules, and browser acceptance
   coverage on a real clinic day;

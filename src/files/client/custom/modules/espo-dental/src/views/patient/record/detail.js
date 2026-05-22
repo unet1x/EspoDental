@@ -5,6 +5,7 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
         setup: function () {
             Dep.prototype.setup.call(this);
             this.listenTo(this.model, 'sync', function () {
+                this.renderQuestionnaireSummaryPanel();
                 this.renderPatientHistoryPanel();
                 this.renderPatientFinancialPanel();
                 this.renderCareSummaryPanel();
@@ -16,6 +17,7 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             this.renderQuestionnaireAlert();
+            this.renderQuestionnaireSummaryPanel();
             this.renderPatientHistoryPanel();
             this.renderPatientFinancialPanel();
             this.renderCareSummaryPanel();
@@ -55,6 +57,62 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             } else {
                 this.$el.prepend($alert);
             }
+        },
+
+        renderQuestionnaireSummaryPanel: function () {
+            if (!this.model.id || !this.$el) {
+                return;
+            }
+
+            var $panel = this.ensureQuestionnaireSummaryPanel();
+            var $body = $panel.find('[data-name="patient-questionnaire-summary-body"]');
+            var self = this;
+
+            $body.html('<span class="text-muted">' +
+                this.translate('Loading...', 'messages', 'Global') +
+                '</span>');
+
+            Espo.Ajax.getRequest('Patient/action/questionnaireSummary', {
+                id: this.model.id,
+                limit: 5
+            }).then(function (data) {
+                self.renderQuestionnaireSummaryContent($body, data || {});
+            }).catch(function () {
+                $body.html('<span class="text-danger">' +
+                    self.translate('Error') +
+                    '</span>');
+            });
+        },
+
+        ensureQuestionnaireSummaryPanel: function () {
+            var $existing = this.$el.find('[data-name="patient-questionnaire-summary-panel"]');
+            if ($existing.length) {
+                return $existing;
+            }
+
+            var $panel = $('<div class="panel panel-default" data-name="patient-questionnaire-summary-panel">' +
+                '<div class="panel-heading">' +
+                    '<span class="panel-title">' +
+                        this.translate('Questionnaire Summary', 'labels', 'Patient') +
+                    '</span>' +
+                '</div>' +
+                '<div class="panel-body" data-name="patient-questionnaire-summary-body"></div>' +
+            '</div>');
+
+            var $questionnaireField = this.$el.find('[data-name="lastQuestionnaireAt"]').first();
+            var $anchor = $questionnaireField.closest('.panel').first();
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('.panel').first();
+            }
+
+            if ($anchor.length) {
+                $panel.insertAfter($anchor);
+            } else {
+                this.$el.append($panel);
+            }
+
+            return $panel;
         },
 
         renderClinicalFilesPanel: function () {
@@ -314,8 +372,12 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
                 '<div class="panel-body" data-name="patient-history-body"></div>' +
             '</div>');
 
-            var $questionnaireField = this.$el.find('[data-name="lastQuestionnaireAt"]').first();
-            var $anchor = $questionnaireField.closest('.panel').first();
+            var $anchor = this.$el.find('[data-name="patient-questionnaire-summary-panel"]').first();
+
+            if (!$anchor.length) {
+                var $questionnaireField = this.$el.find('[data-name="lastQuestionnaireAt"]').first();
+                $anchor = $questionnaireField.closest('.panel').first();
+            }
 
             if (!$anchor.length) {
                 $anchor = this.$el.find('.panel').first();
@@ -375,6 +437,213 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             }
 
             return $panel;
+        },
+
+        renderQuestionnaireSummaryContent: function ($body, data) {
+            var latest = data.latestQuestionnaire || null;
+            var recent = Array.isArray(data.recentQuestionnaires) ? data.recentQuestionnaires : [];
+
+            if (!latest) {
+                $body.html(this.emptyState());
+                return;
+            }
+
+            $body.html(
+                this.renderQuestionnaireOverview(latest) +
+                '<div class="row">' +
+                    '<div class="col-sm-7">' +
+                        '<h5 style="margin-top:0">' +
+                            this.translate('Latest Answers', 'labels', 'Patient') +
+                        '</h5>' +
+                        this.renderQuestionnaireAnswerGroups(
+                            latest.answerGroups || [],
+                            latest.extraAnswers || []
+                        ) +
+                    '</div>' +
+                    '<div class="col-sm-5">' +
+                        '<h5 style="margin-top:0">' +
+                            this.translate('Recent Questionnaires', 'labels', 'Patient') +
+                        '</h5>' +
+                        this.renderQuestionnaireRows(recent) +
+                    '</div>' +
+                '</div>'
+            );
+        },
+
+        renderQuestionnaireOverview: function (questionnaire) {
+            var title = questionnaire.name ||
+                questionnaire.filledAt ||
+                this.translate('Health Questionnaire', 'labels', 'Patient');
+            var version = questionnaire.schemaVersion ?
+                this.translate('Questionnaire Version', 'labels', 'Patient') + ': ' + questionnaire.schemaVersion :
+                '';
+            var language = questionnaire.language ?
+                this.translateOptionValue(questionnaire.language, 'language', 'HealthQuestionnaire') :
+                '';
+            var flags = this.renderQuestionnaireFlags(questionnaire);
+
+            return '<div style="margin-bottom:12px">' +
+                '<a href="#HealthQuestionnaire/view/' + this.escapeAttribute(questionnaire.id) + '">' +
+                    this.escapeHtml(title) +
+                '</a>' +
+                this.renderFamilyMeta([
+                    questionnaire.filledAt,
+                    questionnaire.expiresAt,
+                    language,
+                    version
+                ]) +
+                this.renderQuestionnaireGeneratedFiles(questionnaire) +
+                (flags ? '<div style="margin-top:4px">' + flags + '</div>' : '') +
+            '</div>';
+        },
+
+        renderQuestionnaireRows: function (rows) {
+            if (!rows.length) {
+                return this.emptyState();
+            }
+
+            var html = '<div class="table-responsive">' +
+                '<table class="table table-condensed table-bordered" style="margin-bottom:0">' +
+                '<tbody>';
+
+            rows.forEach(function (row) {
+                var title = row.name || row.filledAt || this.translate('Health Questionnaire', 'labels', 'Patient');
+                var version = row.schemaVersion ?
+                    this.translate('Questionnaire Version', 'labels', 'Patient') + ': ' + row.schemaVersion :
+                    '';
+
+                html += '<tr><td>' +
+                    '<a href="#HealthQuestionnaire/view/' + this.escapeAttribute(row.id) + '">' +
+                        this.escapeHtml(title) +
+                    '</a>' +
+                    this.renderFamilyMeta([
+                        row.filledAt,
+                        row.expiresAt,
+                        version
+                    ]) +
+                    this.renderQuestionnaireGeneratedFiles(row) +
+                    this.renderQuestionnaireFlags(row) +
+                '</td></tr>';
+            }, this);
+
+            html += '</tbody></table></div>';
+
+            return html;
+        },
+
+        renderQuestionnaireGeneratedFiles: function (row) {
+            var links = [];
+
+            if (row.pdfFileId) {
+                links.push('<a href="?entryPoint=download&id=' + this.escapeAttribute(row.pdfFileId) +
+                    '" target="_blank">' +
+                    this.escapeHtml(row.pdfFileName || 'PDF') +
+                    '</a>');
+            }
+
+            if (row.signatureAttachmentId) {
+                links.push('<a href="?entryPoint=download&id=' + this.escapeAttribute(row.signatureAttachmentId) +
+                    '" target="_blank">' +
+                    this.escapeHtml(row.signatureAttachmentName || this.translate('Signature', 'fields', 'HealthQuestionnaire')) +
+                    '</a>');
+            }
+
+            return '<div class="small">' +
+                '<span class="text-muted">' + this.escapeHtml(this.translate('Files', 'labels', 'Patient')) + ': </span>' +
+                (links.length ? links.join(' &middot; ') : '<span class="text-muted">&mdash;</span>') +
+            '</div>';
+        },
+
+        renderQuestionnaireFlags: function (row) {
+            var flags = [];
+
+            if (row.hasAlerts) {
+                flags.push('<span class="label label-warning">' +
+                    this.translate('Alerts', 'labels', 'Patient') +
+                    '</span>');
+            }
+
+            if (row.isExpired) {
+                flags.push('<span class="label label-danger">' +
+                    this.translate('Expired', 'labels', 'Patient') +
+                    '</span>');
+            }
+
+            return flags.join(' ');
+        },
+
+        renderQuestionnaireAnswerGroups: function (groups, extraAnswers) {
+            groups = Array.isArray(groups) ? groups.slice() : [];
+            extraAnswers = Array.isArray(extraAnswers) ? extraAnswers : [];
+
+            if (extraAnswers.length) {
+                groups.push({
+                    id: 'extra',
+                    label: this.translate('Other', 'labels', 'Patient'),
+                    answers: extraAnswers
+                });
+            }
+
+            if (!groups.length) {
+                return this.emptyState();
+            }
+
+            var html = '';
+
+            groups.forEach(function (group) {
+                var answers = Array.isArray(group.answers) ? group.answers : [];
+                if (!answers.length) {
+                    return;
+                }
+
+                html += '<h5 style="margin-top:8px">' + this.escapeHtml(group.label || '') + '</h5>' +
+                    '<div class="table-responsive">' +
+                    '<table class="table table-condensed table-bordered">' +
+                    '<tbody>';
+
+                answers.forEach(function (answer) {
+                    var isFlagged = answer.activeAlert === true ||
+                        (answer.alert === true && this.isQuestionnairePositiveAnswer(answer.value));
+
+                    html += '<tr' + (isFlagged ? ' class="warning"' : '') + '>' +
+                        '<td>' +
+                            this.escapeHtml(answer.label || answer.id || '') +
+                            (isFlagged ? ' <span class="label label-warning">' +
+                                this.translate('Alerts', 'labels', 'Patient') +
+                                '</span>' : '') +
+                        '</td>' +
+                        '<td style="width:140px">' +
+                            this.formatQuestionnaireAnswerValue(answer.value, answer.type) +
+                        '</td>' +
+                    '</tr>';
+                }, this);
+
+                html += '</tbody></table></div>';
+            }, this);
+
+            return html || this.emptyState();
+        },
+
+        formatQuestionnaireAnswerValue: function (value, type) {
+            if (type === 'bool' || typeof value === 'boolean') {
+                return value ?
+                    this.translate('Yes', 'labels', 'Global') :
+                    this.translate('No', 'labels', 'Global');
+            }
+
+            if (value === null || value === undefined || value === '') {
+                return '<span class="text-muted">&mdash;</span>';
+            }
+
+            return this.escapeHtml(value);
+        },
+
+        isQuestionnairePositiveAnswer: function (value) {
+            return value === true ||
+                value === 1 ||
+                value === '1' ||
+                value === 'true' ||
+                value === 'yes';
         },
 
         renderToothChartHistoryContent: function ($body, data) {
