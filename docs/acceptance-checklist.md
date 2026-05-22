@@ -170,6 +170,8 @@ Checklist:
 - Doctor cannot post or reverse payments.
 - Assistant can add visit photos/material details where allowed.
 - Manager can view reports and financial summaries.
+- Manager can open the doctor productivity dashlet and compare finished visits,
+  service-line count, gross amount and average visit amount by doctor.
 - Stock manager can manage materials and acknowledge low-stock alerts.
 - Confirm each EspoDental role or role-team user receives the matching
   dashboard template after bootstrap unless a user-specific dashboard template

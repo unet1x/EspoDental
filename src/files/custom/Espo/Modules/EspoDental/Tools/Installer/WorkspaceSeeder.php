@@ -410,7 +410,18 @@ class WorkspaceSeeder
             ->findOne();
 
         if ($existing) {
-            return 0;
+            $layoutChanged = json_encode($existing->get('layout')) !== json_encode($layout);
+            $optionsChanged = json_encode($existing->get('dashletsOptions')) !== json_encode($dashletsOptions);
+
+            if (!$layoutChanged && !$optionsChanged) {
+                return 0;
+            }
+
+            $existing->set('layout', $layout);
+            $existing->set('dashletsOptions', $dashletsOptions);
+            $this->entityManager->saveEntity($existing);
+
+            return 1;
         }
 
         $template = $this->entityManager->getRDBRepository('DashboardTemplate')->getNew();
@@ -980,9 +991,10 @@ class WorkspaceSeeder
                 'layout' => [
                     $this->dashlet('ed-manager-revenue', 'MonthlyRevenue', 0, 0, 2, 5),
                     $this->dashlet('ed-manager-open-invoices', 'OpenInvoices', 2, 0, 2, 5),
-                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 5, 2, 4),
-                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 5, 2, 4),
-                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 9, 2, 4),
+                    $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 5, 4, 4),
+                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 9, 2, 4),
+                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 9, 2, 4),
+                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 13, 2, 4),
                 ],
             ],
         ];
@@ -993,6 +1005,7 @@ class WorkspaceSeeder
         $options = new stdClass();
         $options->{'ed-manager-revenue'} = (object) ['title' => 'Выручка по месяцам', 'monthsBack' => 12];
         $options->{'ed-manager-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 10];
+        $options->{'ed-manager-doctor-productivity'} = (object) ['title' => 'Продуктивность врачей', 'displayRecords' => 8];
         $options->{'ed-manager-payroll'} = (object) ['title' => 'ЗП за месяц', 'displayRecords' => 10];
         $options->{'ed-manager-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 10];
         $options->{'ed-manager-ortho-cases'} = (object) ['title' => 'Активная ортодонтия', 'displayRecords' => 8];

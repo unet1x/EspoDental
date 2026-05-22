@@ -53,6 +53,32 @@ class Report
 
     /**
      * @throws Forbidden
+     * @return array{
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     rows: list<array{
+     *         doctorId: string,
+     *         doctorName: string,
+     *         visitCount: int,
+     *         serviceLineCount: int,
+     *         grossAmount: float,
+     *         averageVisitAmount: float
+     *     }>
+     * }
+     */
+    public function getActionDoctorProductivity(Request $request): array
+    {
+        $this->assertReportAccess();
+
+        return $this->reportService->getDoctorProductivity(
+            $request->getQueryParam('dateFrom'),
+            $request->getQueryParam('dateTo'),
+            (int) ($request->getQueryParam('limit') ?? 10)
+        );
+    }
+
+    /**
+     * @throws Forbidden
      */
     private function assertReportAccess(): void
     {

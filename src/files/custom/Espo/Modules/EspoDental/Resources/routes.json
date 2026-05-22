@@ -24,6 +24,11 @@
         "params": {"controller": "Report", "action": "lowStockSummary"}
     },
     {
+        "route": "/EspoDental/Report/doctorProductivity",
+        "method": "get",
+        "params": {"controller": "Report", "action": "doctorProductivity"}
+    },
+    {
         "route": "/EspoDental/SalaryEntry/build",
         "method": "post",
         "params": {"controller": "SalaryEntry", "action": "build"}

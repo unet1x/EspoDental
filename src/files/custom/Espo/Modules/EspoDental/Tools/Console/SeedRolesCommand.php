@@ -33,7 +33,7 @@ class SeedRolesCommand implements Command
         $io->writeLine(sprintf(
             'Done. Created %d team(s), %d role(s), %d service category(-ies), %d clinic(s), %d cabinet(s), ' .
             '%d material category(-ies), %d service(s), %d material(s), %d service material link(s), ' .
-            '%d stock movement(s), %d scheduled job(s), %d dashboard template(s); ' .
+            '%d stock movement(s), %d scheduled job(s), prepared %d dashboard template(s); ' .
             'assigned %d dashboard template(s) to role user(s). Settings updated: %s. ' .
             'Backfilled %d clinical line name(s), %d visit name(s), %d tooth chart name(s), ' .
             '%d child flag(s), %d patient balance(s).',

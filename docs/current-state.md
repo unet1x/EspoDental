@@ -66,7 +66,7 @@ The following checks were completed on 2026-05-14:
 
 PHPUnit was not run in the local container because composer/phpunit are not
 installed there. Host-side `vendor/bin/phpunit` was run on 2026-05-22 with
-PHP 8.5.6 and passed: 318 tests, 3916 assertions.
+PHP 8.5.6 and passed: 322 tests, 3949 assertions.
 
 ## 3. Existing Entity Scopes
 
@@ -489,6 +489,12 @@ Verification completed after this slice:
   and a team-only doctor user received the doctor dashboard through the
   EspoDental Doctors team fallback. The temporary smoke users were deleted
   after verification.
+- Phase 10 management reporting has started with a doctor productivity report.
+  `GET /EspoDental/Report/doctorProductivity` returns finished-visit counts,
+  service-line counts, gross finished-visit amount and average amount per visit
+  by doctor for a bounded period. The manager dashboard template includes the
+  `DoctorProductivity` dashlet, and bootstrap now updates existing dashboard
+  templates when the seeded layout/options change.
 - Browser smoke on 2026-05-15 confirmed `Appointment.dateStart` renders a
   free-slot picker in edit mode, loads slots for the selected doctor/cabinet,
   respects the EspoCRM timezone for 08:00-21:00 display, and writes the chosen

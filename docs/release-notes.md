@@ -142,6 +142,10 @@
   users with EspoDental roles or matching role teams when the user has no
   existing dashboard template selection, so the focused workspaces are applied
   automatically after staff assignment.
+- Doctor productivity report is available at
+  `EspoDental/Report/doctorProductivity` and as a manager dashboard dashlet,
+  summarizing finished visits, service lines, gross amount and average visit
+  amount by doctor for the current period.
 - Visit photos get quick-add defaults for name, patient and recorded date.
 - Finished visits reject service/material line edits/removals with a server
   conflict.
