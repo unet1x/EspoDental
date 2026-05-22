@@ -106,6 +106,9 @@
   `orthodonticCards`, with child links kept read-oriented.
 - Patient detail now includes a `Tooth Chart History` panel with recent tooth-chart snapshots,
   source visit links, dentition type, doctor and annotated-teeth count.
+- Local browser acceptance on 2026-05-22 confirmed a real child patient renders
+  mixed dentition with both adult and pediatric tooth labels in the tooth-chart
+  snapshot UI.
 - Patient detail now includes a `CBCT / Orthanc` panel with visit and orthodontic imaging studies,
   source record links, file links and Orthanc URL/UID context.
 - Health questionnaire detail now renders answers as localized, schema-driven

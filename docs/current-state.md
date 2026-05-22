@@ -451,6 +451,11 @@ Verification completed after this slice:
   service rows, with the old category/service select controls removed.
 - Browser smoke on 2026-05-15 confirmed a mixed-dentition visit preview
   includes pediatric numbering such as `55` together with the adult chart.
+- Browser smoke on 2026-05-22 confirmed the same behavior with a real child
+  patient (`6a05deb4e6c69bd96`, birth date `2020-01-01`, age 6,
+  `isChild=true`). The patient detail UI shows `Ребенок`, the tooth-chart
+  history row is `Смешанный`, and the `ToothChartSnapshot` detail SVG contains
+  both adult labels (`18`, `48`) and pediatric labels (`55`, `85`).
 - API smoke confirmed `GET /Patient/action/files` returns recent visit photos
   with `visitName`, `recordedAt` and `imageId`, plus questionnaire `pdfFile`
   and `signatureAttachment` links for the selected patient.
@@ -551,8 +556,6 @@ Verification completed after this slice:
 
 The following requirements still need implementation or explicit verification:
 
-- verify pediatric/adult mixed chart behavior with a real child patient in the
-  browser after the next patient-flow test run;
 - assign and browser-verify the role-specific dashboard templates for
   administrator, doctor, assistant, manager and stock users on a real local
   stack;
