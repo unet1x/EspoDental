@@ -537,14 +537,20 @@ Verification completed after this slice:
   removed overlapping Monday slots from `freeSlots`; direct appointment save
   inside the cabinet closure returned `409 Cabinet is closed for this time.`;
   and the template detail UI rendered `Дни недели: Понедельник, Среда`.
+- API/browser smoke on 2026-05-22 confirmed the full
+  `payment -> next appointment` receptionist loop on the local stack:
+  `INV-2026-00003` was issued and paid with `PMT-2026-00006`, a free
+  clinic-local slot was selected for the same patient/doctor/cabinet context,
+  `Appointment 6a1051ecc7f620b1c` was created for `2026-06-04 08:00`
+  Europe/Moscow, `Patient/action/history` returned the future appointment above
+  the past visit, `Patient/action/financials` showed balance/open debt/credit
+  at zero, and the patient detail UI rendered the future appointment plus the
+  completed payment row.
 
 ## 6. Known Gaps Against Product Spec
 
 The following requirements still need implementation or explicit verification:
 
-- run a browser/API acceptance pass for the full
-  `payment -> next appointment` receptionist flow after the next local stack
-  rebuild;
 - verify pediatric/adult mixed chart behavior with a real child patient in the
   browser after the next patient-flow test run;
 - assign and browser-verify the role-specific dashboard templates for

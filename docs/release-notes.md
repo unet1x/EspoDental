@@ -68,6 +68,9 @@
 - Visit and invoice detail views now expose `Book Next Appointment`, opening
   the same short contextual appointment modal as the patient card and carrying
   patient, clinic, doctor, cabinet and visit-note context where available.
+- Local API/browser acceptance on 2026-05-22 confirmed the full
+  `payment -> next appointment` loop: a paid invoice, zero patient debt/credit,
+  and a future appointment shown above the completed visit in patient history.
 - Patient detail now includes a `Patient History` panel that lists future
   appointments above past visits with clinic-local times and direct links.
 - Patient detail now includes a `Financials` panel with current balance, open
