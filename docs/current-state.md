@@ -261,9 +261,11 @@ Implemented in branch `feature-front-desk-intake`:
   visit context.
 - `VisitPhoto` quick-add forms no longer show the recorded date field to the
   doctor; the hook sets current date/time automatically.
-- `VisitServiceLine` edit forms add a category-first service picker above the
-  hidden generic service link field. Selecting a service still writes the
-  normal `serviceId/serviceName` link and reuses existing price/material logic.
+- `VisitServiceLine` edit forms add an expandable service catalog tree above
+  the hidden generic service link field. Doctors can search by service/category
+  name or code, expand categories and select a service while the UI still
+  writes the normal `serviceId/serviceName` link and reuses existing
+  price/material logic.
 - `VisitServiceLine` and `VisitMaterialLine` hooks reject save/remove attempts
   after the parent visit is no longer `in_progress`.
 - `Patient` and `PreliminaryPatient` manual delete actions are hidden in
@@ -409,6 +411,11 @@ Verification completed after this slice:
   test mark was reset after verification.
 - Browser smoke on 2026-05-15 confirmed the visit service line edit form shows
   category-first service selection and hides the generic service link field.
+  Structural PHPUnit coverage now confirms that picker is an expandable service
+  catalog tree rather than a two-select control.
+- Browser smoke on 2026-05-22 confirmed the visit service-line create form
+  renders the expanded service catalog tree with search, category toggles and
+  service rows, with the old category/service select controls removed.
 - Browser smoke on 2026-05-15 confirmed a mixed-dentition visit preview
   includes pediatric numbering such as `55` together with the adult chart.
 - API smoke confirmed `GET /Patient/action/files` returns recent visit photos
@@ -483,9 +490,6 @@ Verification completed after this slice:
 
 The following requirements still need implementation or explicit verification:
 
-- refine the visit service picker into a richer expandable category tree if the
-  current two-select category-first picker is not ergonomic enough after user
-  testing;
 - add inline quantity editing in visit material relationship panels where
   EspoCRM relationship panels support it;
 - browser/API verify the explicit invoice/payment correction workflow on a

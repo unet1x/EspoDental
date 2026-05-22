@@ -77,6 +77,8 @@ Checklist:
 - Start visit from appointment.
 - Confirm visit cannot start from preliminary patient.
 - Add service line from catalog.
+- Confirm the visit service line form uses an expandable service catalog tree
+  with service search and still writes the selected catalog service.
 - Confirm service price is copied to visit line.
 - Confirm material norms are copied into `VisitMaterialLine` rows.
 - Adjust material consumption before finish.

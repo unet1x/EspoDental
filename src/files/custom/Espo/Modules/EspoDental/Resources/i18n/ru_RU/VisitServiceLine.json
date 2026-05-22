@@ -4,7 +4,9 @@
         "Service Catalog": "Каталог услуг",
         "Select category": "Выберите категорию",
         "Select service": "Выберите услугу",
-        "No services in category": "В категории нет услуг"
+        "No services in category": "В категории нет услуг",
+        "Search service": "Поиск услуги",
+        "No matching services": "Услуги не найдены"
     },
     "fields": {
         "name": "Название",

@@ -4,7 +4,9 @@
         "Service Catalog": "Service Catalog",
         "Select category": "Select category",
         "Select service": "Select service",
-        "No services in category": "No services in category"
+        "No services in category": "No services in category",
+        "Search service": "Search service",
+        "No matching services": "No matching services"
     },
     "fields": {
         "name": "Name",

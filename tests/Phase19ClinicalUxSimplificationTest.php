@@ -226,8 +226,9 @@ final class Phase19ClinicalUxSimplificationTest extends TestCase
             self::CLIENT_ROOT . '/src/views/visit-service-line/record/edit.js'
         );
         $this->assertStringContainsString('ServiceCategory', $serviceLineEditView);
-        $this->assertStringContainsString('serviceCategoryPicker', $serviceLineEditView);
-        $this->assertStringContainsString('servicePicker', $serviceLineEditView);
+        $this->assertStringContainsString('serviceCatalogTree', $serviceLineEditView);
+        $this->assertStringContainsString('serviceCategoryToggle', $serviceLineEditView);
+        $this->assertStringContainsString('serviceCatalogItem', $serviceLineEditView);
         $this->assertStringContainsString('maxSize: 200', $serviceLineEditView);
     }
 

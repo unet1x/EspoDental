@@ -4,7 +4,9 @@
         "Service Catalog": "Catalogo de servicios",
         "Select category": "Seleccione categoria",
         "Select service": "Seleccione servicio",
-        "No services in category": "No hay servicios en la categoria"
+        "No services in category": "No hay servicios en la categoria",
+        "Search service": "Buscar servicio",
+        "No matching services": "No se encontraron servicios"
     },
     "fields": {
         "name": "Nombre",

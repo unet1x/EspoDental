@@ -9,6 +9,8 @@ define('espo-dental:views/visit-service-line/record/edit', ['views/record/edit']
             this.catalogCategories = [];
             this.catalogServices = [];
             this.catalogServicesById = {};
+            this.catalogExpandedCategoryIds = {};
+            this.catalogFilter = '';
             this.listenTo(
                 this.model,
                 'change:serviceId change:quantity change:discount',
@@ -39,13 +41,14 @@ define('espo-dental:views/visit-service-line/record/edit', ['views/record/edit']
             var html =
                 '<div class="espo-dental-service-catalog-picker cell form-group" style="margin-bottom:12px">' +
                     '<label class="control-label">' + this.translate('Service Catalog', 'labels', 'VisitServiceLine') + '</label>' +
-                    '<div style="display:grid;grid-template-columns:minmax(160px,1fr) minmax(220px,2fr);gap:8px">' +
-                        '<select class="form-control input-sm" data-name="serviceCategoryPicker" disabled>' +
-                            '<option value="">' + this.translate('Loading...', 'labels', 'Global') + '</option>' +
-                        '</select>' +
-                        '<select class="form-control input-sm" data-name="servicePicker" disabled>' +
-                            '<option value="">' + this.translate('Select service', 'labels', 'VisitServiceLine') + '</option>' +
-                        '</select>' +
+                    '<input class="form-control input-sm" data-name="serviceCatalogSearch" disabled ' +
+                        'placeholder="' + this.escapeAttribute(this.translate('Search service', 'labels', 'VisitServiceLine')) + '" ' +
+                        'style="margin-bottom:8px">' +
+                    '<div class="espo-dental-service-catalog-tree" data-name="serviceCatalogTree" ' +
+                        'style="max-height:320px;overflow:auto;border:1px solid #ddd;border-radius:4px">' +
+                        '<div class="text-muted" style="padding:8px">' +
+                            this.translate('Loading...', 'labels', 'Global') +
+                        '</div>' +
                     '</div>' +
                 '</div>';
 
@@ -57,7 +60,8 @@ define('espo-dental:views/visit-service-line/record/edit', ['views/record/edit']
             }
 
             this.loadCatalog().then(function () {
-                this.populateCategoryPicker();
+                this.bindCatalogTreeEvents();
+                this.renderServiceCatalogTree();
             }.bind(this));
         },
 
@@ -94,6 +98,11 @@ define('espo-dental:views/visit-service-line/record/edit', ['views/record/edit']
                     this.catalogServicesById[service.id] = service;
                     this.serviceCache[service.id] = service;
                 }.bind(this));
+                this.catalogCategories.forEach(function (category) {
+                    if (this.catalogExpandedCategoryIds[category.id] === undefined) {
+                        this.catalogExpandedCategoryIds[category.id] = true;
+                    }
+                }, this);
                 this.catalogLoaded = true;
             }.bind(this));
 
@@ -116,69 +125,160 @@ define('espo-dental:views/visit-service-line/record/edit', ['views/record/edit']
             return [];
         },
 
-        populateCategoryPicker: function () {
-            var $category = this.$el.find('[data-name="serviceCategoryPicker"]');
-            var $service = this.$el.find('[data-name="servicePicker"]');
-            if (!$category.length || !$service.length) {
+        bindCatalogTreeEvents: function () {
+            var $picker = this.$el.find('.espo-dental-service-catalog-picker');
+            var $search = $picker.find('[data-name="serviceCatalogSearch"]');
+
+            $search.prop('disabled', false);
+            $search.off('input.espoDental').on('input.espoDental', function () {
+                this.catalogFilter = String($search.val() || '').toLowerCase();
+                this.renderServiceCatalogTree();
+            }.bind(this));
+        },
+
+        renderServiceCatalogTree: function () {
+            var $tree = this.$el.find('[data-name="serviceCatalogTree"]');
+            if (!$tree.length) {
                 return;
             }
 
             var selectedService = this.catalogServicesById[this.model.get('serviceId')];
             var selectedCategoryId = selectedService ? selectedService.categoryId : '';
+            var filter = this.catalogFilter || '';
+            var html = '';
+            var visibleCategories = 0;
 
-            var categoryOptions = '<option value="">' + this.translate('Select category', 'labels', 'VisitServiceLine') + '</option>';
             this.catalogCategories.forEach(function (category) {
-                var selected = category.id === selectedCategoryId ? ' selected' : '';
-                categoryOptions += '<option value="' + this.escapeAttribute(category.id) + '"' + selected + '>' +
-                    this.escapeHtml(category.name || '') +
-                    '</option>';
-            }.bind(this));
+                var services = this.catalogServices.filter(function (service) {
+                    return service.categoryId === category.id && this.matchesServiceFilter(service, category, filter);
+                }, this);
 
-            $category.html(categoryOptions).prop('disabled', false);
-            $category.off('change.espoDental').on('change.espoDental', function () {
-                this.model.set({
-                    serviceId: null,
-                    serviceName: null
-                });
-                this.populateServicePicker($category.val(), null);
-            }.bind(this));
+                if (filter && !services.length) {
+                    return;
+                }
 
-            $service.off('change.espoDental').on('change.espoDental', function () {
-                this.selectCatalogService($service.val());
-            }.bind(this));
+                visibleCategories++;
 
-            this.populateServicePicker(selectedCategoryId, selectedService ? selectedService.id : null);
+                var expanded = Boolean(this.catalogExpandedCategoryIds[category.id]) ||
+                    Boolean(filter) ||
+                    category.id === selectedCategoryId;
+                var color = category.color || '#ddd';
+                var count = services.length;
+
+                html += '<div class="espo-dental-service-category" style="border-left:4px solid ' +
+                    this.escapeAttribute(color) + '">' +
+                    '<button type="button" class="btn btn-link btn-sm btn-block text-left" ' +
+                        'data-name="serviceCategoryToggle" data-category-id="' + this.escapeAttribute(category.id) + '" ' +
+                        'style="text-align:left;text-decoration:none;padding:7px 8px;color:inherit">' +
+                        '<strong>' + this.escapeHtml(expanded ? '- ' : '+ ') +
+                            this.escapeHtml(category.name || '') +
+                        '</strong>' +
+                        '<span class="text-muted"> (' + count + ')</span>' +
+                    '</button>';
+
+                if (expanded) {
+                    html += this.renderServiceCatalogItems(services, selectedService ? selectedService.id : null);
+                }
+
+                html += '</div>';
+            }, this);
+
+            if (!visibleCategories) {
+                html = '<div class="text-muted" style="padding:8px">' +
+                    this.translate('No matching services', 'labels', 'VisitServiceLine') +
+                    '</div>';
+            }
+
+            $tree.html(html);
+            this.bindRenderedCatalogTreeEvents();
         },
 
-        populateServicePicker: function (categoryId, selectedServiceId) {
-            var $service = this.$el.find('[data-name="servicePicker"]');
-            if (!$service.length) {
+        bindRenderedCatalogTreeEvents: function () {
+            var tree = this.$el.find('[data-name="serviceCatalogTree"]').get(0);
+            if (!tree) {
                 return;
             }
 
-            if (!categoryId) {
-                $service.html('<option value="">' + this.translate('Select service', 'labels', 'VisitServiceLine') + '</option>')
-                    .prop('disabled', true);
-                return;
-            }
+            Array.prototype.forEach.call(
+                tree.querySelectorAll('[data-name="serviceCategoryToggle"]'),
+                function (button) {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        var categoryId = button.getAttribute('data-category-id');
+                        if (!categoryId) {
+                            return;
+                        }
 
-            var options = '<option value="">' + this.translate('Select service', 'labels', 'VisitServiceLine') + '</option>';
-            var services = this.catalogServices.filter(function (service) {
-                return service.categoryId === categoryId;
-            });
+                        this.catalogExpandedCategoryIds[categoryId] = !this.catalogExpandedCategoryIds[categoryId];
+                        this.renderServiceCatalogTree();
+                    }.bind(this));
+                }.bind(this)
+            );
 
+            Array.prototype.forEach.call(
+                tree.querySelectorAll('[data-name="serviceCatalogItem"]'),
+                function (button) {
+                    button.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        this.selectCatalogService(button.getAttribute('data-service-id'));
+                    }.bind(this));
+                }.bind(this)
+            );
+        },
+
+        renderServiceCatalogItems: function (services, selectedServiceId) {
             if (!services.length) {
-                options += '<option value="" disabled>' + this.translate('No services in category', 'labels', 'VisitServiceLine') + '</option>';
+                return '<div class="text-muted" style="padding:0 8px 8px 20px">' +
+                    this.translate('No services in category', 'labels', 'VisitServiceLine') +
+                    '</div>';
             }
+
+            var html = '<div class="list-group" style="margin:0 8px 8px 16px">';
 
             services.forEach(function (service) {
-                var selected = service.id === selectedServiceId ? ' selected' : '';
-                options += '<option value="' + this.escapeAttribute(service.id) + '"' + selected + '>' +
-                    this.escapeHtml(service.name || '') +
-                    '</option>';
+                var active = service.id === selectedServiceId;
+                html += '<button type="button" class="list-group-item' + (active ? ' active' : '') + '" ' +
+                    'data-name="serviceCatalogItem" data-service-id="' + this.escapeAttribute(service.id) + '" ' +
+                    'style="padding:7px 9px">' +
+                    '<div>' + this.escapeHtml(service.name || '') + '</div>' +
+                    this.renderServiceMeta(service) +
+                '</button>';
             }.bind(this));
 
-            $service.html(options).prop('disabled', false);
+            html += '</div>';
+
+            return html;
+        },
+
+        matchesServiceFilter: function (service, category, filter) {
+            if (!filter) {
+                return true;
+            }
+
+            return String(service.name || '').toLowerCase().indexOf(filter) !== -1 ||
+                String(service.code || '').toLowerCase().indexOf(filter) !== -1 ||
+                String(category.name || '').toLowerCase().indexOf(filter) !== -1;
+        },
+
+        renderServiceMeta: function (service) {
+            var parts = [];
+            var price = parseFloat(service.price);
+            var currency = service.priceCurrency || 'RUB';
+            var duration = parseInt(service.duration, 10) || 0;
+
+            if (!isNaN(price)) {
+                parts.push(price.toFixed(2) + ' ' + currency);
+            }
+            if (duration > 0) {
+                parts.push(duration + ' min');
+            }
+            if (service.code) {
+                parts.push(service.code);
+            }
+
+            return parts.length ?
+                '<div class="small text-muted">' + this.escapeHtml(parts.join(' / ')) + '</div>' :
+                '';
         },
 
         selectCatalogService: function (serviceId) {
@@ -191,6 +291,8 @@ define('espo-dental:views/visit-service-line/record/edit', ['views/record/edit']
                 serviceId: service.id,
                 serviceName: service.name
             });
+            this.catalogExpandedCategoryIds[service.categoryId] = true;
+            this.renderServiceCatalogTree();
             this.applyServicePrice(service);
         },
 
