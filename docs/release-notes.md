@@ -138,6 +138,10 @@
   assistant, manager and stock workflows. They keep the shared clinic dashboard
   as the default while giving each role a focused home screen with only
   relevant dashlets.
+- Bootstrap now assigns role-specific dashboard templates to active regular
+  users with EspoDental roles or matching role teams when the user has no
+  existing dashboard template selection, so the focused workspaces are applied
+  automatically after staff assignment.
 - Visit photos get quick-add defaults for name, patient and recorded date.
 - Finished visits reject service/material line edits/removals with a server
   conflict.

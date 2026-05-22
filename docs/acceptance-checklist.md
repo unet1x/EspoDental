@@ -171,6 +171,9 @@ Checklist:
 - Assistant can add visit photos/material details where allowed.
 - Manager can view reports and financial summaries.
 - Stock manager can manage materials and acknowledge low-stock alerts.
+- Confirm each EspoDental role or role-team user receives the matching
+  dashboard template after bootstrap unless a user-specific dashboard template
+  was already set.
 
 ## 4. Technical Checks
 

@@ -66,7 +66,7 @@ The following checks were completed on 2026-05-14:
 
 PHPUnit was not run in the local container because composer/phpunit are not
 installed there. Host-side `vendor/bin/phpunit` was run on 2026-05-22 with
-PHP 8.5.6 and passed: 315 tests, 3874 assertions.
+PHP 8.5.6 and passed: 318 tests, 3916 assertions.
 
 ## 3. Existing Entity Scopes
 
@@ -479,6 +479,16 @@ Verification completed after this slice:
   seeded for administrator, doctor, assistant, manager and stock workflows,
   and that doctor/assistant/stock dashboards do not expose finance widgets
   outside their ACL surface.
+- Role-specific dashboard templates are assigned by bootstrap to active regular
+  users who have an EspoDental role or matching EspoDental role-team and no
+  existing `dashboardTemplate` choice: manager, administrator, doctor,
+  assistant and stock users receive the matching focused workspace while
+  manually selected user templates are preserved.
+- API/bootstrap smoke on 2026-05-22 confirmed temporary administrator, doctor,
+  assistant, manager and stock users received the matching dashboard templates,
+  and a team-only doctor user received the doctor dashboard through the
+  EspoDental Doctors team fallback. The temporary smoke users were deleted
+  after verification.
 - Browser smoke on 2026-05-15 confirmed `Appointment.dateStart` renders a
   free-slot picker in edit mode, loads slots for the selected doctor/cabinet,
   respects the EspoCRM timezone for 08:00-21:00 display, and writes the chosen
@@ -556,9 +566,6 @@ Verification completed after this slice:
 
 The following requirements still need implementation or explicit verification:
 
-- assign and browser-verify the role-specific dashboard templates for
-  administrator, doctor, assistant, manager and stock users on a real local
-  stack;
 - WhatsApp needs provider-specific browser or API acceptance once clinic
   credentials exist.
 

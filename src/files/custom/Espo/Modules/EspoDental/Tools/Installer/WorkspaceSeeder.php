@@ -9,6 +9,10 @@ namespace Espo\Modules\EspoDental\Tools\Installer;
 use DateTimeImmutable;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Entities\DashboardTemplate;
+use Espo\Entities\Role;
+use Espo\Entities\Team;
+use Espo\Entities\User;
 use Espo\Modules\EspoDental\Entities\Patient;
 use Espo\Modules\EspoDental\Tools\PatientBalanceCalculator;
 use Espo\ORM\Entity;
@@ -83,6 +87,24 @@ class WorkspaceSeeder
         ['name' => 'EspoDental: контроль складских остатков', 'job' => 'EspoDentalCheckStockThresholds', 'scheduling' => '*/30 * * * *'],
     ];
 
+    /** @var array<string, string> */
+    private const ROLE_DASHBOARD_TEMPLATES = [
+        'EspoDental Manager' => 'EspoDental: менеджер',
+        'EspoDental Administrator' => 'EspoDental: администратор',
+        'EspoDental Doctor' => 'EspoDental: врач',
+        'EspoDental Assistant' => 'EspoDental: ассистент',
+        'EspoDental Stock Manager' => 'EspoDental: склад',
+    ];
+
+    /** @var array<string, string> */
+    private const TEAM_DASHBOARD_TEMPLATES = [
+        'EspoDental Managers' => 'EspoDental: менеджер',
+        'EspoDental Administrators' => 'EspoDental: администратор',
+        'EspoDental Doctors' => 'EspoDental: врач',
+        'EspoDental Assistants' => 'EspoDental: ассистент',
+        'EspoDental Stock Managers' => 'EspoDental: склад',
+    ];
+
     public function __construct(
         private readonly EntityManager $entityManager,
         private readonly ?ConfigWriter $configWriter = null
@@ -108,6 +130,7 @@ class WorkspaceSeeder
             'serviceMaterials' => $this->ensureServiceMaterials(),
             'scheduledJobs' => $this->ensureScheduledJobs(),
             'dashboardTemplates' => $this->ensureDashboardTemplates(),
+            'dashboardTemplateAssignments' => $this->ensureDashboardTemplateAssignments(),
             'settings' => $this->ensureSettings($clinic),
             'clinicalLineNames' => $this->ensureClinicalLineNames(),
             'visitNames' => $this->ensureVisitNames(),
@@ -442,6 +465,95 @@ class WorkspaceSeeder
         $this->configWriter->save();
 
         return 1;
+    }
+
+    private function ensureDashboardTemplateAssignments(): int
+    {
+        $templateByRoleId = $this->dashboardTemplateMap(Role::ENTITY_TYPE, self::ROLE_DASHBOARD_TEMPLATES);
+        $templateByTeamId = $this->dashboardTemplateMap(Team::ENTITY_TYPE, self::TEAM_DASHBOARD_TEMPLATES);
+
+        if ($templateByRoleId === [] && $templateByTeamId === []) {
+            return 0;
+        }
+
+        $updated = 0;
+        $users = $this->entityManager
+            ->getRDBRepository(User::ENTITY_TYPE)
+            ->where([
+                'deleted' => false,
+                'isActive' => true,
+                'type' => User::TYPE_REGULAR,
+            ])
+            ->find();
+
+        foreach ($users as $user) {
+            if ($user->get('dashboardTemplateId')) {
+                continue;
+            }
+
+            $template = $this->findDashboardTemplateForUser($user, User::LINK_ROLES, $templateByRoleId)
+                ?? $this->findDashboardTemplateForUser($user, User::LINK_TEAMS, $templateByTeamId);
+
+            if (!$template) {
+                continue;
+            }
+
+            $user->set('dashboardTemplateId', $template->getId());
+            $user->set('dashboardTemplateName', $template->get('name'));
+            $this->entityManager->saveEntity($user);
+            $updated++;
+        }
+
+        return $updated;
+    }
+
+    /**
+     * @param array<string, string> $templateByEntityName
+     * @return array<string, Entity>
+     */
+    private function dashboardTemplateMap(string $entityType, array $templateByEntityName): array
+    {
+        $map = [];
+
+        foreach ($templateByEntityName as $entityName => $templateName) {
+            $entity = $this->entityManager
+                ->getRDBRepository($entityType)
+                ->where(['name' => $entityName])
+                ->findOne();
+
+            if (!$entity) {
+                continue;
+            }
+
+            $template = $this->entityManager
+                ->getRDBRepository(DashboardTemplate::ENTITY_TYPE)
+                ->where(['name' => $templateName])
+                ->findOne();
+
+            if (!$template) {
+                continue;
+            }
+
+            $map[$entity->getId()] = $template;
+        }
+
+        return $map;
+    }
+
+    /**
+     * @param array<string, Entity> $templateByLinkId
+     */
+    private function findDashboardTemplateForUser(Entity $user, string $link, array $templateByLinkId): ?Entity
+    {
+        $userLinkIds = array_flip($user->getLinkMultipleIdList($link));
+
+        foreach ($templateByLinkId as $linkId => $template) {
+            if (array_key_exists($linkId, $userLinkIds)) {
+                return $template;
+            }
+        }
+
+        return null;
     }
 
     private function ensureClinicalLineNames(): int
