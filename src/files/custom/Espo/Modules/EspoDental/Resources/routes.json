@@ -39,6 +39,11 @@
         "params": {"controller": "Report", "action": "noShowCancellations"}
     },
     {
+        "route": "/EspoDental/Report/inventoryStatus",
+        "method": "get",
+        "params": {"controller": "Report", "action": "inventoryStatus"}
+    },
+    {
         "route": "/EspoDental/SalaryEntry/build",
         "method": "post",
         "params": {"controller": "SalaryEntry", "action": "build"}

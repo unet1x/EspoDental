@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/inventory-status",
+    "aclScope": "Material",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Inventory Status"},
+            "displayRecords": {"type": "int", "default": 8, "min": 1, "max": 20}
+        }
+    }
+}

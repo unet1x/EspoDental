@@ -994,9 +994,10 @@ class WorkspaceSeeder
                     $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 5, 4, 4),
                     $this->dashlet('ed-manager-cabinet-utilization', 'CabinetUtilization', 0, 9, 4, 4),
                     $this->dashlet('ed-manager-no-show-cancellations', 'NoShowCancellations', 0, 13, 4, 4),
-                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 17, 2, 4),
-                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 17, 2, 4),
-                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 21, 2, 4),
+                    $this->dashlet('ed-manager-inventory-status', 'InventoryStatus', 0, 17, 4, 4),
+                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 21, 2, 4),
+                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 21, 2, 4),
+                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 25, 2, 4),
                 ],
             ],
         ];
@@ -1018,6 +1019,10 @@ class WorkspaceSeeder
             'title' => 'Неявки и отмены',
             'displayRecords' => 8,
         ];
+        $options->{'ed-manager-inventory-status'} = (object) [
+            'title' => 'Состояние склада',
+            'displayRecords' => 8,
+        ];
         $options->{'ed-manager-payroll'} = (object) ['title' => 'ЗП за месяц', 'displayRecords' => 10];
         $options->{'ed-manager-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 10];
         $options->{'ed-manager-ortho-cases'} = (object) ['title' => 'Активная ортодонтия', 'displayRecords' => 8];
@@ -1035,6 +1040,7 @@ class WorkspaceSeeder
                 'name' => 'Склад',
                 'layout' => [
                     $this->dashlet('ed-stock-low-stock', 'LowStockMaterials', 0, 0, 2, 5),
+                    $this->dashlet('ed-stock-inventory-status', 'InventoryStatus', 0, 5, 4, 5),
                 ],
             ],
         ];
@@ -1043,7 +1049,15 @@ class WorkspaceSeeder
     private function stockDashletsOptions(): stdClass
     {
         $options = new stdClass();
-        $options->{'ed-stock-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 15, 'autorefreshInterval' => 1];
+        $options->{'ed-stock-low-stock'} = (object) [
+            'title' => 'Низкий остаток',
+            'displayRecords' => 15,
+            'autorefreshInterval' => 1,
+        ];
+        $options->{'ed-stock-inventory-status'} = (object) [
+            'title' => 'Состояние склада',
+            'displayRecords' => 12,
+        ];
 
         return $options;
     }

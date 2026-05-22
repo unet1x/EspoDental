@@ -88,6 +88,7 @@
         "DoctorProductivity": "Productividad de doctores",
         "CabinetUtilization": "Utilizacion de gabinetes",
         "NoShowCancellations": "No asistencias y cancelaciones",
+        "InventoryStatus": "Estado del inventario",
         "PayrollThisMonth": "Nomina del mes",
         "ResourceCalendar": "Calendario de recursos",
         "ActiveOrthoCases": "Casos ortodoncicos activos"

@@ -10,7 +10,9 @@ use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\Cabinet;
 use Espo\Modules\EspoDental\Entities\Invoice;
 use Espo\Modules\EspoDental\Entities\LowStockAlert;
+use Espo\Modules\EspoDental\Entities\Material;
 use Espo\Modules\EspoDental\Entities\Payment;
+use Espo\Modules\EspoDental\Entities\StockMovement;
 use Espo\Modules\EspoDental\Entities\Visit;
 use Espo\Modules\EspoDental\Entities\VisitServiceLine;
 
@@ -453,6 +455,182 @@ class ReportService
     }
 
     /**
+     * @return array{
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     summary: array{
+     *         materialCount: int,
+     *         lowStockCount: int,
+     *         criticalStockCount: int,
+     *         outStockCount: int,
+     *         inventoryValue: float,
+     *         inboundQuantity: float,
+     *         outboundQuantity: float,
+     *         netQuantity: float
+     *     },
+     *     rows: list<array{
+     *         materialId: string,
+     *         materialName: string,
+     *         categoryName: string,
+     *         unit: string,
+     *         stockLevel: string,
+     *         currentStock: float,
+     *         minStock: float,
+     *         criticalStock: float,
+     *         inventoryValue: float,
+     *         inboundQuantity: float,
+     *         outboundQuantity: float,
+     *         netQuantity: float
+     *     }>
+     * }
+     */
+    public function getInventoryStatus(
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
+        ?string $clinicId = null,
+        int $limit = 15
+    ): array {
+        $period = $this->normalizePeriod($dateFrom, $dateTo);
+        $clinicId = $this->normalizeOptionalId($clinicId);
+        $limit = max(1, min(50, $limit));
+
+        /** @var iterable<Material> $materials */
+        $materials = $this->entityManager
+            ->getRDBRepository(Material::ENTITY_TYPE)
+            ->where([
+                'deleted' => false,
+                'isActive' => true,
+            ])
+            ->order('name', 'ASC')
+            ->find();
+
+        $summary = [
+            'materialCount' => 0,
+            'lowStockCount' => 0,
+            'criticalStockCount' => 0,
+            'outStockCount' => 0,
+            'inventoryValue' => 0.0,
+            'inboundQuantity' => 0.0,
+            'outboundQuantity' => 0.0,
+            'netQuantity' => 0.0,
+        ];
+        $rows = [];
+
+        foreach ($materials as $material) {
+            $materialId = (string) $material->getId();
+
+            if ($materialId === '') {
+                continue;
+            }
+
+            $level = (string) ($material->get('stockLevel') ?: $material->computeLevel());
+            $currentStock = round((float) $material->get('currentStock'), 3);
+            $inventoryValue = round($currentStock * (float) ($material->get('price') ?? 0.0), 2);
+
+            $rows[$materialId] = [
+                'materialId' => $materialId,
+                'materialName' => (string) ($material->get('name') ?: $materialId),
+                'categoryName' => (string) ($material->get('categoryName') ?: ''),
+                'unit' => (string) ($material->get('unit') ?: ''),
+                'stockLevel' => $level,
+                'currentStock' => $currentStock,
+                'minStock' => round((float) ($material->get('minStock') ?? 0.0), 3),
+                'criticalStock' => round((float) ($material->get('criticalStock') ?? 0.0), 3),
+                'inventoryValue' => $inventoryValue,
+                'inboundQuantity' => 0.0,
+                'outboundQuantity' => 0.0,
+                'netQuantity' => 0.0,
+            ];
+
+            $summary['materialCount']++;
+            $summary['inventoryValue'] += $inventoryValue;
+
+            if ($level === Material::LEVEL_LOW) {
+                $summary['lowStockCount']++;
+            }
+
+            if ($level === Material::LEVEL_CRITICAL) {
+                $summary['criticalStockCount']++;
+            }
+
+            if ($level === Material::LEVEL_OUT) {
+                $summary['outStockCount']++;
+            }
+        }
+
+        if ($rows !== []) {
+            $movementWhere = [
+                'deleted' => false,
+                'performedAt>=' => $period['from'],
+                'performedAt<' => $period['to'],
+            ];
+
+            if ($clinicId !== null) {
+                $movementWhere['clinicId'] = $clinicId;
+            }
+
+            /** @var iterable<StockMovement> $movements */
+            $movements = $this->entityManager
+                ->getRDBRepository(StockMovement::ENTITY_TYPE)
+                ->where($movementWhere)
+                ->find();
+
+            foreach ($movements as $movement) {
+                $materialId = (string) ($movement->get('materialId') ?? '');
+
+                if ($materialId === '' || !isset($rows[$materialId])) {
+                    continue;
+                }
+
+                $quantity = round(abs($movement->getSignedQuantity()), 3);
+                $isOutbound = $movement->getSignedQuantity() < 0;
+
+                if ($isOutbound) {
+                    $rows[$materialId]['outboundQuantity'] += $quantity;
+                    $summary['outboundQuantity'] += $quantity;
+                } else {
+                    $rows[$materialId]['inboundQuantity'] += $quantity;
+                    $summary['inboundQuantity'] += $quantity;
+                }
+
+                $rows[$materialId]['netQuantity'] += $movement->getSignedQuantity();
+                $summary['netQuantity'] += $movement->getSignedQuantity();
+            }
+        }
+
+        foreach ($rows as &$row) {
+            $row['inboundQuantity'] = round($row['inboundQuantity'], 3);
+            $row['outboundQuantity'] = round($row['outboundQuantity'], 3);
+            $row['netQuantity'] = round($row['netQuantity'], 3);
+        }
+        unset($row);
+
+        $summary['inventoryValue'] = round($summary['inventoryValue'], 2);
+        $summary['inboundQuantity'] = round($summary['inboundQuantity'], 3);
+        $summary['outboundQuantity'] = round($summary['outboundQuantity'], 3);
+        $summary['netQuantity'] = round($summary['netQuantity'], 3);
+
+        usort($rows, function (array $a, array $b): int {
+            return [
+                $this->stockLevelRank($b['stockLevel']),
+                $b['outboundQuantity'],
+                $a['materialName'],
+            ] <=> [
+                $this->stockLevelRank($a['stockLevel']),
+                $a['outboundQuantity'],
+                $b['materialName'],
+            ];
+        });
+
+        return [
+            'dateFrom' => $period['from'],
+            'dateTo' => $period['to'],
+            'summary' => $summary,
+            'rows' => array_slice(array_values($rows), 0, $limit),
+        ];
+    }
+
+    /**
      * @param array<string, array{
      *     doctorId: string,
      *     doctorName: string,
@@ -682,5 +860,15 @@ class ReportService
         $value = trim((string) $value);
 
         return $value !== '' ? $value : null;
+    }
+
+    private function stockLevelRank(string $level): int
+    {
+        return match ($level) {
+            Material::LEVEL_OUT => 4,
+            Material::LEVEL_CRITICAL => 3,
+            Material::LEVEL_LOW => 2,
+            default => 1,
+        };
     }
 }

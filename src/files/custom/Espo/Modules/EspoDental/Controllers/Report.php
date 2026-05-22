@@ -151,6 +151,49 @@ class Report
 
     /**
      * @throws Forbidden
+     * @return array{
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     summary: array{
+     *         materialCount: int,
+     *         lowStockCount: int,
+     *         criticalStockCount: int,
+     *         outStockCount: int,
+     *         inventoryValue: float,
+     *         inboundQuantity: float,
+     *         outboundQuantity: float,
+     *         netQuantity: float
+     *     },
+     *     rows: list<array{
+     *         materialId: string,
+     *         materialName: string,
+     *         categoryName: string,
+     *         unit: string,
+     *         stockLevel: string,
+     *         currentStock: float,
+     *         minStock: float,
+     *         criticalStock: float,
+     *         inventoryValue: float,
+     *         inboundQuantity: float,
+     *         outboundQuantity: float,
+     *         netQuantity: float
+     *     }>
+     * }
+     */
+    public function getActionInventoryStatus(Request $request): array
+    {
+        $this->assertReportAccess();
+
+        return $this->reportService->getInventoryStatus(
+            $request->getQueryParam('dateFrom'),
+            $request->getQueryParam('dateTo'),
+            $request->getQueryParam('clinicId'),
+            (int) ($request->getQueryParam('limit') ?? 15)
+        );
+    }
+
+    /**
+     * @throws Forbidden
      */
     private function assertReportAccess(): void
     {

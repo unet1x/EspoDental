@@ -88,6 +88,7 @@
         "DoctorProductivity": "Doctor Productivity",
         "CabinetUtilization": "Cabinet Utilization",
         "NoShowCancellations": "No-show & Cancellations",
+        "InventoryStatus": "Inventory Status",
         "PayrollThisMonth": "Payroll This Month",
         "ResourceCalendar": "Resource Calendar",
         "ActiveOrthoCases": "Active Ortho Cases"

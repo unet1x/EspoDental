@@ -176,6 +176,8 @@ Checklist:
   count, occupied hours, available hours and utilization percent by cabinet.
 - Manager can open the no-show and cancellations dashlet and compare total
   appointments, no-shows, cancellations and issue percent by doctor.
+- Manager or stock manager can open the inventory status dashlet and compare
+  current stock, stock level, period movement totals and inventory value.
 - Stock manager can manage materials and acknowledge low-stock alerts.
 - Confirm each EspoDental role or role-team user receives the matching
   dashboard template after bootstrap unless a user-specific dashboard template
