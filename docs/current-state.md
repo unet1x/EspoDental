@@ -117,6 +117,8 @@ Current module metadata contains:
 - opening stock movements;
 - scheduled jobs;
 - dashboard template;
+- role-specific dashboard templates for administrator, doctor, assistant,
+  manager and stock workspaces;
 - menu, quick-create list, calendar settings and base currency.
 - category-first catalog menu: the left navigation shows service categories as
   `Каталог услуг` and material categories as `Материалы`; direct `Service` and
@@ -399,6 +401,10 @@ Verification completed after this slice:
   summarizes open invoice balances, unallocated credit and recent payments,
   the patient detail view renders the financial panel, and RU / EN / ES labels
   are present.
+- Structural PHPUnit coverage confirms role-specific dashboard templates are
+  seeded for administrator, doctor, assistant, manager and stock workflows,
+  and that doctor/assistant/stock dashboards do not expose finance widgets
+  outside their ACL surface.
 - Browser smoke on 2026-05-15 confirmed `Appointment.dateStart` renders a
   free-slot picker in edit mode, loads slots for the selected doctor/cabinet,
   respects the EspoCRM timezone for 08:00-21:00 display, and writes the chosen
@@ -441,8 +447,9 @@ The following requirements still need implementation or explicit verification:
   rebuild;
 - verify pediatric/adult mixed chart behavior with a real child patient in the
   browser after the next patient-flow test run;
-- complete role-based workspaces for administrator, doctor, assistant and
-  manager;
+- assign and browser-verify the role-specific dashboard templates for
+  administrator, doctor, assistant, manager and stock users on a real local
+  stack;
 - define and implement MCP/LLM/WhatsApp integration layer.
 
 ## 7. Development Rule

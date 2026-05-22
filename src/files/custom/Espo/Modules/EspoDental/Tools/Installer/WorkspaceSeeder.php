@@ -107,7 +107,7 @@ class WorkspaceSeeder
             'services' => $this->ensureServices(),
             'serviceMaterials' => $this->ensureServiceMaterials(),
             'scheduledJobs' => $this->ensureScheduledJobs(),
-            'dashboardTemplates' => $this->ensureDashboardTemplate(),
+            'dashboardTemplates' => $this->ensureDashboardTemplates(),
             'settings' => $this->ensureSettings($clinic),
             'clinicalLineNames' => $this->ensureClinicalLineNames(),
             'visitNames' => $this->ensureVisitNames(),
@@ -361,11 +361,29 @@ class WorkspaceSeeder
         return $created;
     }
 
-    private function ensureDashboardTemplate(): int
+    private function ensureDashboardTemplates(): int
+    {
+        $created = 0;
+
+        foreach ($this->dashboardTemplates() as $template) {
+            $created += $this->ensureDashboardTemplate(
+                $template['name'],
+                $template['layout'],
+                $template['dashletsOptions']
+            );
+        }
+
+        return $created;
+    }
+
+    /**
+     * @param list<stdClass> $layout
+     */
+    private function ensureDashboardTemplate(string $name, array $layout, stdClass $dashletsOptions): int
     {
         $existing = $this->entityManager
             ->getRDBRepository('DashboardTemplate')
-            ->where(['name' => 'EspoDental: рабочее место клиники'])
+            ->where(['name' => $name])
             ->findOne();
 
         if ($existing) {
@@ -373,9 +391,9 @@ class WorkspaceSeeder
         }
 
         $template = $this->entityManager->getRDBRepository('DashboardTemplate')->getNew();
-        $template->set('name', 'EspoDental: рабочее место клиники');
-        $template->set('layout', $this->dashboardLayout());
-        $template->set('dashletsOptions', $this->dashletsOptions());
+        $template->set('name', $name);
+        $template->set('layout', $layout);
+        $template->set('dashletsOptions', $dashletsOptions);
         $this->entityManager->saveEntity($template);
 
         return 1;
@@ -658,6 +676,53 @@ class WorkspaceSeeder
      */
     private function dashboardLayout(): array
     {
+        return $this->clinicDashboardLayout();
+    }
+
+    /**
+     * @return list<array{name: string, layout: list<stdClass>, dashletsOptions: stdClass}>
+     */
+    private function dashboardTemplates(): array
+    {
+        return [
+            [
+                'name' => 'EspoDental: рабочее место клиники',
+                'layout' => $this->clinicDashboardLayout(),
+                'dashletsOptions' => $this->clinicDashletsOptions(),
+            ],
+            [
+                'name' => 'EspoDental: администратор',
+                'layout' => $this->administratorDashboardLayout(),
+                'dashletsOptions' => $this->administratorDashletsOptions(),
+            ],
+            [
+                'name' => 'EspoDental: врач',
+                'layout' => $this->doctorDashboardLayout(),
+                'dashletsOptions' => $this->doctorDashletsOptions(),
+            ],
+            [
+                'name' => 'EspoDental: ассистент',
+                'layout' => $this->assistantDashboardLayout(),
+                'dashletsOptions' => $this->assistantDashletsOptions(),
+            ],
+            [
+                'name' => 'EspoDental: менеджер',
+                'layout' => $this->managerDashboardLayout(),
+                'dashletsOptions' => $this->managerDashletsOptions(),
+            ],
+            [
+                'name' => 'EspoDental: склад',
+                'layout' => $this->stockDashboardLayout(),
+                'dashletsOptions' => $this->stockDashletsOptions(),
+            ],
+        ];
+    }
+
+    /**
+     * @return list<stdClass>
+     */
+    private function clinicDashboardLayout(): array
+    {
         return [
             (object) [
                 'name' => 'Клиника',
@@ -677,6 +742,11 @@ class WorkspaceSeeder
 
     private function dashletsOptions(): stdClass
     {
+        return $this->clinicDashletsOptions();
+    }
+
+    private function clinicDashletsOptions(): stdClass
+    {
         $options = new stdClass();
         $options->{'ed-resource-calendar'} = (object) [
             'title' => 'Календарь ресурсов',
@@ -693,6 +763,150 @@ class WorkspaceSeeder
         $options->{'ed-monthly-revenue'} = (object) ['title' => 'Выручка по месяцам', 'monthsBack' => 12];
         $options->{'ed-ortho-cases'} = (object) ['title' => 'Активная ортодонтия', 'displayRecords' => 8];
         $options->{'ed-payroll'} = (object) ['title' => 'ЗП за месяц', 'displayRecords' => 8];
+
+        return $options;
+    }
+
+    /**
+     * @return list<stdClass>
+     */
+    private function administratorDashboardLayout(): array
+    {
+        return [
+            (object) [
+                'name' => 'Администратор',
+                'layout' => [
+                    $this->dashlet('ed-admin-calendar', 'ResourceCalendar', 0, 0, 4, 6),
+                    $this->dashlet('ed-admin-today', 'TodaysAppointments', 0, 6, 2, 4),
+                    $this->dashlet('ed-admin-open-invoices', 'OpenInvoices', 2, 6, 2, 4),
+                    $this->dashlet('ed-admin-recent-visits', 'RecentVisits', 0, 10, 2, 4),
+                ],
+            ],
+        ];
+    }
+
+    private function administratorDashletsOptions(): stdClass
+    {
+        $options = new stdClass();
+        $options->{'ed-admin-calendar'} = (object) [
+            'title' => 'Календарь ресурсов',
+            'defaultView' => 'day',
+            'rowMinutes' => 30,
+            'startHour' => 8,
+            'endHour' => 21,
+            'autorefreshInterval' => 1,
+        ];
+        $options->{'ed-admin-today'} = (object) ['title' => 'Сегодняшние приёмы', 'displayRecords' => 10, 'autorefreshInterval' => 1];
+        $options->{'ed-admin-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 10];
+        $options->{'ed-admin-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 8];
+
+        return $options;
+    }
+
+    /**
+     * @return list<stdClass>
+     */
+    private function doctorDashboardLayout(): array
+    {
+        return [
+            (object) [
+                'name' => 'Врач',
+                'layout' => [
+                    $this->dashlet('ed-doctor-today', 'TodaysAppointments', 0, 0, 2, 5),
+                    $this->dashlet('ed-doctor-recent-visits', 'RecentVisits', 2, 0, 2, 5),
+                    $this->dashlet('ed-doctor-ortho-cases', 'ActiveOrthoCases', 0, 5, 2, 4),
+                ],
+            ],
+        ];
+    }
+
+    private function doctorDashletsOptions(): stdClass
+    {
+        $options = new stdClass();
+        $options->{'ed-doctor-today'} = (object) ['title' => 'Мои приёмы сегодня', 'displayRecords' => 10, 'autorefreshInterval' => 1];
+        $options->{'ed-doctor-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 10];
+        $options->{'ed-doctor-ortho-cases'} = (object) ['title' => 'Активная ортодонтия', 'displayRecords' => 8];
+
+        return $options;
+    }
+
+    /**
+     * @return list<stdClass>
+     */
+    private function assistantDashboardLayout(): array
+    {
+        return [
+            (object) [
+                'name' => 'Ассистент',
+                'layout' => [
+                    $this->dashlet('ed-assistant-today', 'TodaysAppointments', 0, 0, 2, 5),
+                    $this->dashlet('ed-assistant-recent-visits', 'RecentVisits', 2, 0, 2, 5),
+                    $this->dashlet('ed-assistant-low-stock', 'LowStockMaterials', 0, 5, 2, 4),
+                ],
+            ],
+        ];
+    }
+
+    private function assistantDashletsOptions(): stdClass
+    {
+        $options = new stdClass();
+        $options->{'ed-assistant-today'} = (object) ['title' => 'Сегодняшние приёмы', 'displayRecords' => 10, 'autorefreshInterval' => 1];
+        $options->{'ed-assistant-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 10];
+        $options->{'ed-assistant-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 8];
+
+        return $options;
+    }
+
+    /**
+     * @return list<stdClass>
+     */
+    private function managerDashboardLayout(): array
+    {
+        return [
+            (object) [
+                'name' => 'Менеджер',
+                'layout' => [
+                    $this->dashlet('ed-manager-revenue', 'MonthlyRevenue', 0, 0, 2, 5),
+                    $this->dashlet('ed-manager-open-invoices', 'OpenInvoices', 2, 0, 2, 5),
+                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 5, 2, 4),
+                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 5, 2, 4),
+                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 9, 2, 4),
+                ],
+            ],
+        ];
+    }
+
+    private function managerDashletsOptions(): stdClass
+    {
+        $options = new stdClass();
+        $options->{'ed-manager-revenue'} = (object) ['title' => 'Выручка по месяцам', 'monthsBack' => 12];
+        $options->{'ed-manager-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 10];
+        $options->{'ed-manager-payroll'} = (object) ['title' => 'ЗП за месяц', 'displayRecords' => 10];
+        $options->{'ed-manager-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 10];
+        $options->{'ed-manager-ortho-cases'} = (object) ['title' => 'Активная ортодонтия', 'displayRecords' => 8];
+
+        return $options;
+    }
+
+    /**
+     * @return list<stdClass>
+     */
+    private function stockDashboardLayout(): array
+    {
+        return [
+            (object) [
+                'name' => 'Склад',
+                'layout' => [
+                    $this->dashlet('ed-stock-low-stock', 'LowStockMaterials', 0, 0, 2, 5),
+                ],
+            ],
+        ];
+    }
+
+    private function stockDashletsOptions(): stdClass
+    {
+        $options = new stdClass();
+        $options->{'ed-stock-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 15, 'autorefreshInterval' => 1];
 
         return $options;
     }

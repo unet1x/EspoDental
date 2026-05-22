@@ -251,6 +251,8 @@ Deliverables:
 - assistant dashboard;
 - manager dashboard;
 - head nurse/stock dashboard;
+- role-specific dashboard templates seeded for administrator, doctor,
+  assistant, manager and stock workflows;
 - role ACL review;
 - default menus per role where supported by EspoCRM.
 

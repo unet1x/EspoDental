@@ -89,6 +89,10 @@
   expired or contains medical alert answers.
 - EspoDental admin settings now include editable dictionaries for payment
   methods, tooth-chart conditions/colors and tooth-surface labels.
+- Role workspace templates are now seeded for administrator, doctor,
+  assistant, manager and stock workflows. They keep the shared clinic dashboard
+  as the default while giving each role a focused home screen with only
+  relevant dashlets.
 - Visit photos get quick-add defaults for name, patient and recorded date.
 - Finished visits reject service/material line edits/removals with a server
   conflict.
