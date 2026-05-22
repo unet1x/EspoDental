@@ -34,6 +34,11 @@
         "params": {"controller": "Report", "action": "cabinetUtilization"}
     },
     {
+        "route": "/EspoDental/Report/noShowCancellations",
+        "method": "get",
+        "params": {"controller": "Report", "action": "noShowCancellations"}
+    },
+    {
         "route": "/EspoDental/SalaryEntry/build",
         "method": "post",
         "params": {"controller": "SalaryEntry", "action": "build"}

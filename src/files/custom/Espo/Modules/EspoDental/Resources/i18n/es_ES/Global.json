@@ -87,6 +87,7 @@
         "MonthlyRevenue": "Ingresos mensuales",
         "DoctorProductivity": "Productividad de doctores",
         "CabinetUtilization": "Utilizacion de gabinetes",
+        "NoShowCancellations": "No asistencias y cancelaciones",
         "PayrollThisMonth": "Nomina del mes",
         "ResourceCalendar": "Calendario de recursos",
         "ActiveOrthoCases": "Casos ortodoncicos activos"

@@ -332,6 +332,127 @@ class ReportService
     }
 
     /**
+     * @return array{
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     summary: array{
+     *         appointmentCount: int,
+     *         noShowCount: int,
+     *         cancellationCount: int,
+     *         issueCount: int,
+     *         noShowRate: float,
+     *         cancellationRate: float,
+     *         issueRate: float
+     *     },
+     *     rows: list<array{
+     *         doctorId: ?string,
+     *         doctorName: string,
+     *         appointmentCount: int,
+     *         noShowCount: int,
+     *         cancellationCount: int,
+     *         issueCount: int,
+     *         noShowRate: float,
+     *         cancellationRate: float,
+     *         issueRate: float
+     *     }>
+     * }
+     */
+    public function getNoShowCancellations(
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
+        ?string $clinicId = null,
+        int $limit = 10
+    ): array {
+        $period = $this->normalizePeriod($dateFrom, $dateTo);
+        $limit = max(1, min(50, $limit));
+        $clinicId = $this->normalizeOptionalId($clinicId);
+
+        $appointmentWhere = [
+            'deleted' => false,
+            'dateStart>=' => $period['from'],
+            'dateStart<' => $period['to'],
+        ];
+
+        if ($clinicId !== null) {
+            $appointmentWhere['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<Appointment> $appointments */
+        $appointments = $this->entityManager
+            ->getRDBRepository(Appointment::ENTITY_TYPE)
+            ->where($appointmentWhere)
+            ->find();
+
+        $summary = [
+            'appointmentCount' => 0,
+            'noShowCount' => 0,
+            'cancellationCount' => 0,
+            'issueCount' => 0,
+            'noShowRate' => 0.0,
+            'cancellationRate' => 0.0,
+            'issueRate' => 0.0,
+        ];
+        $rows = [];
+
+        foreach ($appointments as $appointment) {
+            $doctorId = $this->normalizeOptionalId($appointment->get('doctorId'));
+            $rowKey = $doctorId ?? '__unassigned__';
+
+            if (!isset($rows[$rowKey])) {
+                $rows[$rowKey] = [
+                    'doctorId' => $doctorId,
+                    'doctorName' => (string) ($appointment->get('doctorName') ?: ($doctorId ?? 'Unassigned')),
+                    'appointmentCount' => 0,
+                    'noShowCount' => 0,
+                    'cancellationCount' => 0,
+                    'issueCount' => 0,
+                    'noShowRate' => 0.0,
+                    'cancellationRate' => 0.0,
+                    'issueRate' => 0.0,
+                ];
+            }
+
+            $status = (string) $appointment->getStatus();
+
+            $summary['appointmentCount']++;
+            $rows[$rowKey]['appointmentCount']++;
+
+            if ($status === Appointment::STATUS_NO_SHOW) {
+                $summary['noShowCount']++;
+                $summary['issueCount']++;
+                $rows[$rowKey]['noShowCount']++;
+                $rows[$rowKey]['issueCount']++;
+            }
+
+            if ($status === Appointment::STATUS_CANCELLED) {
+                $summary['cancellationCount']++;
+                $summary['issueCount']++;
+                $rows[$rowKey]['cancellationCount']++;
+                $rows[$rowKey]['issueCount']++;
+            }
+        }
+
+        $summary = $this->withAppointmentRates($summary);
+
+        foreach ($rows as &$row) {
+            $row = $this->withAppointmentRates($row);
+        }
+        unset($row);
+
+        usort($rows, static function (array $a, array $b): int {
+            return [$b['issueRate'], $b['issueCount'], $a['doctorName']]
+                <=> [$a['issueRate'], $a['issueCount'], $b['doctorName']];
+        });
+
+        return [
+            'dateFrom' => $period['from'],
+            'dateTo' => $period['to'],
+            'summary' => $summary,
+            'rows' => array_slice(array_values($rows), 0, $limit),
+        ];
+    }
+
+    /**
      * @param array<string, array{
      *     doctorId: string,
      *     doctorName: string,
@@ -424,6 +545,41 @@ class ReportService
         }
 
         return [$workStartHour, $workEndHour];
+    }
+
+    /**
+     * @param array{
+     *     appointmentCount: int,
+     *     noShowCount: int,
+     *     cancellationCount: int,
+     *     issueCount: int,
+     *     noShowRate: float,
+     *     cancellationRate: float,
+     *     issueRate: float
+     * } $row
+     * @return array{
+     *     appointmentCount: int,
+     *     noShowCount: int,
+     *     cancellationCount: int,
+     *     issueCount: int,
+     *     noShowRate: float,
+     *     cancellationRate: float,
+     *     issueRate: float
+     * }
+     */
+    private function withAppointmentRates(array $row): array
+    {
+        $appointmentCount = max(0, $row['appointmentCount']);
+
+        if ($appointmentCount === 0) {
+            return $row;
+        }
+
+        $row['noShowRate'] = round($row['noShowCount'] / $appointmentCount * 100, 1);
+        $row['cancellationRate'] = round($row['cancellationCount'] / $appointmentCount * 100, 1);
+        $row['issueRate'] = round($row['issueCount'] / $appointmentCount * 100, 1);
+
+        return $row;
     }
 
     private function countPeriodDays(string $from, string $to): int
@@ -519,5 +675,12 @@ class ReportService
         } catch (\Exception) {
             return null;
         }
+    }
+
+    private function normalizeOptionalId(?string $value): ?string
+    {
+        $value = trim((string) $value);
+
+        return $value !== '' ? $value : null;
     }
 }

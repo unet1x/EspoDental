@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/no-show-cancellations",
+    "aclScope": "Appointment",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "No-show & Cancellations"},
+            "displayRecords": {"type": "int", "default": 8, "min": 1, "max": 20}
+        }
+    }
+}

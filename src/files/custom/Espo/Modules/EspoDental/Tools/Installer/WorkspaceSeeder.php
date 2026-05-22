@@ -993,9 +993,10 @@ class WorkspaceSeeder
                     $this->dashlet('ed-manager-open-invoices', 'OpenInvoices', 2, 0, 2, 5),
                     $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 5, 4, 4),
                     $this->dashlet('ed-manager-cabinet-utilization', 'CabinetUtilization', 0, 9, 4, 4),
-                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 13, 2, 4),
-                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 13, 2, 4),
-                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 17, 2, 4),
+                    $this->dashlet('ed-manager-no-show-cancellations', 'NoShowCancellations', 0, 13, 4, 4),
+                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 17, 2, 4),
+                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 17, 2, 4),
+                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 21, 2, 4),
                 ],
             ],
         ];
@@ -1012,6 +1013,10 @@ class WorkspaceSeeder
             'displayRecords' => 8,
             'workStartHour' => 8,
             'workEndHour' => 21,
+        ];
+        $options->{'ed-manager-no-show-cancellations'} = (object) [
+            'title' => 'Неявки и отмены',
+            'displayRecords' => 8,
         ];
         $options->{'ed-manager-payroll'} = (object) ['title' => 'ЗП за месяц', 'displayRecords' => 10];
         $options->{'ed-manager-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 10];

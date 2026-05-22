@@ -87,6 +87,7 @@
         "MonthlyRevenue": "Выручка по месяцам",
         "DoctorProductivity": "Продуктивность врачей",
         "CabinetUtilization": "Загрузка кабинетов",
+        "NoShowCancellations": "Неявки и отмены",
         "PayrollThisMonth": "ЗП за месяц",
         "ResourceCalendar": "Календарь ресурсов",
         "ActiveOrthoCases": "Активные ортодонтические случаи"

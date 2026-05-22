@@ -112,6 +112,45 @@ class Report
 
     /**
      * @throws Forbidden
+     * @return array{
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     summary: array{
+     *         appointmentCount: int,
+     *         noShowCount: int,
+     *         cancellationCount: int,
+     *         issueCount: int,
+     *         noShowRate: float,
+     *         cancellationRate: float,
+     *         issueRate: float
+     *     },
+     *     rows: list<array{
+     *         doctorId: ?string,
+     *         doctorName: string,
+     *         appointmentCount: int,
+     *         noShowCount: int,
+     *         cancellationCount: int,
+     *         issueCount: int,
+     *         noShowRate: float,
+     *         cancellationRate: float,
+     *         issueRate: float
+     *     }>
+     * }
+     */
+    public function getActionNoShowCancellations(Request $request): array
+    {
+        $this->assertReportAccess();
+
+        return $this->reportService->getNoShowCancellations(
+            $request->getQueryParam('dateFrom'),
+            $request->getQueryParam('dateTo'),
+            $request->getQueryParam('clinicId'),
+            (int) ($request->getQueryParam('limit') ?? 10)
+        );
+    }
+
+    /**
+     * @throws Forbidden
      */
     private function assertReportAccess(): void
     {

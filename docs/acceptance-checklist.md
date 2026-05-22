@@ -174,6 +174,8 @@ Checklist:
   service-line count, gross amount and average visit amount by doctor.
 - Manager can open the cabinet utilization dashlet and compare appointment
   count, occupied hours, available hours and utilization percent by cabinet.
+- Manager can open the no-show and cancellations dashlet and compare total
+  appointments, no-shows, cancellations and issue percent by doctor.
 - Stock manager can manage materials and acknowledge low-stock alerts.
 - Confirm each EspoDental role or role-team user receives the matching
   dashboard template after bootstrap unless a user-specific dashboard template

@@ -66,7 +66,7 @@ The following checks were completed on 2026-05-14:
 
 PHPUnit was not run in the local container because composer/phpunit are not
 installed there. Host-side `vendor/bin/phpunit` was run on 2026-05-22 with
-PHP 8.5.6 and passed: 326 tests, 3986 assertions.
+PHP 8.5.6 and passed: 330 tests, 4020 assertions.
 
 ## 3. Existing Entity Scopes
 
@@ -500,6 +500,11 @@ Verification completed after this slice:
   appointment count, finished count, occupied minutes, available minutes and
   utilization percent for the selected period and working-hour window. The
   manager dashboard template includes the `CabinetUtilization` dashlet.
+- Phase 10 now includes a no-show and cancellation report.
+  `GET /EspoDental/Report/noShowCancellations` returns total appointment
+  count, no-show count, cancellation count and issue-rate percentages by doctor
+  for a bounded period. The manager dashboard template includes the
+  `NoShowCancellations` dashlet.
 - Browser smoke on 2026-05-15 confirmed `Appointment.dateStart` renders a
   free-slot picker in edit mode, loads slots for the selected doctor/cabinet,
   respects the EspoCRM timezone for 08:00-21:00 display, and writes the chosen
