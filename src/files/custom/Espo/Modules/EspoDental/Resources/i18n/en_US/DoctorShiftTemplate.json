@@ -12,6 +12,7 @@
         "clinic": "Clinic",
         "cabinet": "Cabinet",
         "weekday": "Weekday",
+        "weekdays": "Weekdays",
         "timeStart": "Start time",
         "timeEnd": "End time",
         "dateStart": "From",
@@ -24,6 +25,15 @@
     },
     "options": {
         "weekday": {
+            "monday": "Monday",
+            "tuesday": "Tuesday",
+            "wednesday": "Wednesday",
+            "thursday": "Thursday",
+            "friday": "Friday",
+            "saturday": "Saturday",
+            "sunday": "Sunday"
+        },
+        "weekdays": {
             "monday": "Monday",
             "tuesday": "Tuesday",
             "wednesday": "Wednesday",

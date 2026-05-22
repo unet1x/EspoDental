@@ -54,6 +54,7 @@ class CheckConflicts
             return;
         }
 
+        $this->guardCabinetClosure($entity, $dateStart, $dateEnd);
         $this->guardDoctorShift($entity, $dateStart, $dateEnd);
 
         $doctorId = $entity->getDoctorId();
@@ -80,6 +81,39 @@ class CheckConflicts
                 default => 'Time slot conflict.',
             };
             throw new Conflict($message);
+        }
+    }
+
+    private function guardCabinetClosure(Appointment $appointment, string $dateStart, string $dateEnd): void
+    {
+        $cabinetId = $appointment->getCabinetId();
+
+        if (!$cabinetId) {
+            return;
+        }
+
+        $range = $this->appointmentLocalDayRange($appointment);
+
+        if ($range === null) {
+            return;
+        }
+
+        try {
+            $startTs = $this->createUtcDateTime($dateStart)->getTimestamp();
+            $endTs = $this->createUtcDateTime($dateEnd)->getTimestamp();
+        } catch (\Exception) {
+            return;
+        }
+
+        $shiftAvailability = new DoctorShiftAvailability($this->entityManager);
+        $closures = $shiftAvailability->loadCabinetClosuresForRange(
+            $range[0],
+            $range[1],
+            $appointment->getClinicId()
+        );
+
+        if ($shiftAvailability->isCabinetClosed($closures, $startTs, $endTs, $cabinetId)) {
+            throw new Conflict('Cabinet is closed for this time.');
         }
     }
 

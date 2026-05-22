@@ -4,7 +4,7 @@
     {"name": "assistant"},
     {"name": "clinic"},
     {"name": "cabinet"},
-    {"name": "weekday"},
+    {"name": "weekdays"},
     {"name": "timeStart"},
     {"name": "timeEnd"},
     {"name": "dateStart"},

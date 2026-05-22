@@ -11,7 +11,7 @@
                 {"name": "cabinet"}
             ],
             [
-                {"name": "weekday"},
+                {"name": "weekdays"},
                 {"name": "type"}
             ],
             [

@@ -236,6 +236,11 @@ class CalendarService
         $now = time();
         $requestedPatientKey = $this->patientKey($parentType, $parentId);
         $shiftAvailability = new DoctorShiftAvailability($this->entityManager);
+        $cabinetClosures = $shiftAvailability->loadCabinetClosuresForRange(
+            $from->format('Y-m-d H:i:s'),
+            $to->format('Y-m-d H:i:s'),
+            $clinicId
+        );
         $doctorSchedule = $doctorId
             ? $shiftAvailability->loadForRange(
                 $doctorId,
@@ -253,6 +258,9 @@ class CalendarService
                 $dayEndTs = $today->setTime($workEndHour, 0)->setTimezone($utc)->getTimestamp();
                 for ($t = $dayStartTs; $t + $durSec <= $dayEndTs; $t += $stepSec) {
                     if ($t < $now) {
+                        continue;
+                    }
+                    if ($shiftAvailability->isCabinetClosed($cabinetClosures, $t, $t + $durSec, $cId)) {
                         continue;
                     }
                     if ($this->overlapsAny($t, $t + $durSec, $occByCabinet[$cId] ?? [])) {

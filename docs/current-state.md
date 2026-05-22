@@ -331,8 +331,11 @@ Implemented in branch `feature-front-desk-intake`:
   migration-safe: if a doctor has no active regular/additional shifts configured
   in the clinic, the previous global clinic work window is still used, while
   closed shifts can still block exceptions.
-- `DoctorShiftTemplate` adds the first recurring schedule helper. A template
-  stores one weekday, local start/end time, date range, type and optional
+- Cabinet-level closures are represented by `DoctorShift(type=closed)` records
+  scoped to a cabinet without a doctor. They remove matching free-slot
+  suggestions and are enforced again during appointment save.
+- `DoctorShiftTemplate` adds the recurring schedule helper. A template stores
+  one or more weekdays, local start/end time, date range, type and optional
   assistant/cabinet pairing. The detail action `Generate Shifts` creates
   ordinary `DoctorShift` records in UTC, links them back to the template and
   skips already-generated matching shifts.
@@ -528,14 +531,17 @@ Verification completed after this slice:
   `Refund invoice payments before storno` while net paid amount is positive,
   refunds are separate outbound `Payment` records linked via `refundOf`,
   cumulative over-refund is rejected, and storno succeeds after full refund.
+- API/browser smoke on 2026-05-22 confirmed the schedule-management slice on a
+  real clinic week: a `DoctorShiftTemplate` with Monday and Wednesday selected
+  generated two linked UTC `DoctorShift` rows; a cabinet-only closed shift
+  removed overlapping Monday slots from `freeSlots`; direct appointment save
+  inside the cabinet closure returned `409 Cabinet is closed for this time.`;
+  and the template detail UI rendered `Дни недели: Понедельник, Среда`.
 
 ## 6. Known Gaps Against Product Spec
 
 The following requirements still need implementation or explicit verification:
 
-- extend the first doctor/assistant shift slice with richer schedule management
-  UI, multi-weekday templates, cabinet closure rules, and browser acceptance
-  coverage on a real clinic day;
 - run a browser/API acceptance pass for the full
   `payment -> next appointment` receptionist flow after the next local stack
   rebuild;

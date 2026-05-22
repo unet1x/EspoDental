@@ -36,7 +36,7 @@ final class Phase21ShiftTemplateTest extends TestCase
         foreach (
             [
                 'doctor', 'assistant', 'clinic', 'cabinet', 'weekday',
-                'timeStart', 'timeEnd', 'dateStart', 'dateEnd', 'type', 'status',
+                'weekdays', 'timeStart', 'timeEnd', 'dateStart', 'dateEnd', 'type', 'status',
             ] as $field
         ) {
             $this->assertArrayHasKey($field, $def['fields']);
@@ -46,9 +46,20 @@ final class Phase21ShiftTemplateTest extends TestCase
             ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
             $def['fields']['weekday']['options']
         );
+        $this->assertSame('multiEnum', $def['fields']['weekdays']['type']);
+        $this->assertSame(
+            ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+            $def['fields']['weekdays']['options']
+        );
         $this->assertSame(['regular', 'additional', 'closed'], $def['fields']['type']['options']);
         $this->assertSame(['active', 'paused'], $def['fields']['status']['options']);
         $this->assertSame('DoctorShift', $def['links']['shifts']['entity']);
+
+        $detail = $this->readJson(self::MODULE_ROOT . '/Resources/layouts/DoctorShiftTemplate/detail.json');
+        $list = $this->readJson(self::MODULE_ROOT . '/Resources/layouts/DoctorShiftTemplate/list.json');
+        $filters = $this->readJson(self::MODULE_ROOT . '/Resources/layouts/DoctorShiftTemplate/filters.json');
+        $encodedLayouts = json_encode([$detail, $list, $filters], JSON_THROW_ON_ERROR);
+        $this->assertStringContainsString('weekdays', $encodedLayouts);
     }
 
     public function testDoctorShiftReferencesTemplate(): void
@@ -88,12 +99,16 @@ final class Phase21ShiftTemplateTest extends TestCase
         $hook = (string) file_get_contents(self::MODULE_ROOT . '/Hooks/DoctorShiftTemplate/Defaults.php');
 
         $this->assertStringContainsString('WEEKDAY_TO_ISO', $template);
+        $this->assertStringContainsString('getWeekdays', $template);
         $this->assertStringContainsString('Template generation range cannot exceed 370 days', $service);
         $this->assertStringContainsString('buildUtcDateTimes', $service);
         $this->assertStringContainsString('findExistingShift', $service);
         $this->assertStringContainsString("'shiftTemplateId'", $service);
         $this->assertStringContainsString("'lastGeneratedAt'", $service);
+        $this->assertStringContainsString('$targetWeekdays', $service);
+        $this->assertStringContainsString('doctor or cabinet is required for closed shift templates', $service);
         $this->assertStringContainsString('timeEnd must be after timeStart', $hook);
+        $this->assertStringContainsString('normalizeWeekdays', $hook);
         $this->assertStringContainsString('resolveDoctorName', (string) file_get_contents(
             self::MODULE_ROOT . '/Hooks/DoctorShift/Defaults.php'
         ));

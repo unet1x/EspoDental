@@ -7,7 +7,6 @@
         },
         "doctor": {
             "type": "link",
-            "required": true,
             "view": "views/fields/user"
         },
         "assistant": {

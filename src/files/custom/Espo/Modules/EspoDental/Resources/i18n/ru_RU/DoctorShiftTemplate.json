@@ -12,6 +12,7 @@
         "clinic": "Клиника",
         "cabinet": "Кабинет",
         "weekday": "День недели",
+        "weekdays": "Дни недели",
         "timeStart": "Начало",
         "timeEnd": "Окончание",
         "dateStart": "С даты",
@@ -24,6 +25,15 @@
     },
     "options": {
         "weekday": {
+            "monday": "Понедельник",
+            "tuesday": "Вторник",
+            "wednesday": "Среда",
+            "thursday": "Четверг",
+            "friday": "Пятница",
+            "saturday": "Суббота",
+            "sunday": "Воскресенье"
+        },
+        "weekdays": {
             "monday": "Понедельник",
             "tuesday": "Вторник",
             "wednesday": "Среда",

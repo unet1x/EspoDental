@@ -50,12 +50,14 @@ Checklist:
 - Confirm conflicting doctor/cabinet/patient slot is rejected.
 - Create a doctor shift for the selected doctor and confirm free slots outside
   that shift are not offered.
-- Create a shift template for a weekday/date range, run `Generate Shifts`, and
-  confirm matching `DoctorShift` records are created once and linked to the
-  template.
+- Create a shift template for multiple weekdays/date range, run
+  `Generate Shifts`, and confirm matching `DoctorShift` records are created
+  once for each selected weekday and linked to the template.
 - Add an additional doctor shift later the same day and confirm those slots
   become available.
 - Add a closed shift period and confirm overlapping slots are blocked.
+- Add a cabinet-only closed shift period and confirm overlapping slots are not
+  offered and direct appointment save returns a server conflict.
 - Confirm an assistant linked on the selected doctor shift is copied to the
   saved appointment without exposing manual assistant selection in booking.
 - Launch health questionnaire QR/token.

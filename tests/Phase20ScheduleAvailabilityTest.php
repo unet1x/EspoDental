@@ -37,6 +37,7 @@ final class Phase20ScheduleAvailabilityTest extends TestCase
 
         $this->assertSame(['regular', 'additional', 'closed'], $def['fields']['type']['options']);
         $this->assertSame(['active', 'cancelled'], $def['fields']['status']['options']);
+        $this->assertArrayNotHasKey('required', $def['fields']['doctor']);
         $this->assertSame('User', $def['links']['doctor']['entity']);
         $this->assertSame('User', $def['links']['assistant']['entity']);
     }
@@ -78,6 +79,9 @@ final class Phase20ScheduleAvailabilityTest extends TestCase
         $this->assertStringContainsString('hasAvailability', $availability);
         $this->assertStringContainsString('hasAnyAvailability', $availability);
         $this->assertStringContainsString('Doctor has no active shift for this time.', $availability);
+        $this->assertStringContainsString('loadCabinetClosuresForRange', $availability);
+        $this->assertStringContainsString('isCabinetClosed', $availability);
+        $this->assertStringContainsString('isCabinetClosed($cabinetClosures', $calendar);
     }
 
     public function testAppointmentSaveValidatesShiftAndDerivesAssistant(): void
@@ -90,7 +94,9 @@ final class Phase20ScheduleAvailabilityTest extends TestCase
         $this->assertStringContainsString('appointmentLocalDayRange', $frontDeskFlow);
 
         $this->assertStringContainsString('guardDoctorShift', $conflicts);
+        $this->assertStringContainsString('guardCabinetClosure', $conflicts);
         $this->assertStringContainsString('DoctorShiftAvailability', $conflicts);
+        $this->assertStringContainsString('Cabinet is closed for this time.', $conflicts);
         $this->assertStringContainsString('Doctor is not available at this time.', $conflicts);
     }
 

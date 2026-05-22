@@ -28,14 +28,38 @@ class Defaults
             $entity->set('type', DoctorShift::TYPE_REGULAR);
         }
 
+        $weekdays = $this->normalizeWeekdays($entity);
+        $entity->set('weekdays', $weekdays);
+        $entity->set('weekday', $weekdays[0]);
+
         $this->validate($entity);
         $entity->set('name', $this->buildName($entity));
     }
 
     private function validate(DoctorShiftTemplate $template): void
     {
-        if (!array_key_exists($template->getWeekday(), DoctorShiftTemplate::WEEKDAY_TO_ISO)) {
-            throw new BadRequest('Invalid weekday');
+        $weekdays = $template->getWeekdays();
+
+        if ($weekdays === []) {
+            throw new BadRequest('At least one weekday is required');
+        }
+
+        foreach ($weekdays as $weekday) {
+            if (!array_key_exists($weekday, DoctorShiftTemplate::WEEKDAY_TO_ISO)) {
+                throw new BadRequest('Invalid weekday');
+            }
+        }
+
+        if (!$template->getDoctorId() && $template->getType() !== DoctorShift::TYPE_CLOSED) {
+            throw new BadRequest('doctor is required for working shift templates');
+        }
+
+        if (
+            $template->getType() === DoctorShift::TYPE_CLOSED
+            && !$template->getDoctorId()
+            && !$template->getCabinetId()
+        ) {
+            throw new BadRequest('doctor or cabinet is required for closed shift templates');
         }
 
         $this->validateTime($template->getTimeStart(), 'timeStart');
@@ -53,6 +77,21 @@ class Defaults
         }
     }
 
+    /**
+     * @return list<string>
+     */
+    private function normalizeWeekdays(DoctorShiftTemplate $template): array
+    {
+        $weekdays = $template->getWeekdays();
+
+        if ($weekdays === []) {
+            $weekday = $template->getWeekday();
+            $weekdays = $weekday !== '' ? [$weekday] : [DoctorShiftTemplate::WEEKDAY_MONDAY];
+        }
+
+        return $weekdays;
+    }
+
     private function validateTime(string $value, string $field): void
     {
         if (!preg_match('/^\d{2}:\d{2}$/', $value)) {
@@ -68,12 +107,15 @@ class Defaults
 
     private function buildName(DoctorShiftTemplate $template): string
     {
-        $doctorName = trim((string) ($template->get('doctorName') ?: 'Doctor'));
+        $doctorName = trim((string) ($template->get('doctorName') ?: ''));
+        $cabinetName = trim((string) ($template->get('cabinetName') ?: ''));
+        $subject = $doctorName !== '' ? $doctorName : ($cabinetName !== '' ? $cabinetName : 'Schedule');
+        $weekdays = implode(', ', array_map('ucfirst', $template->getWeekdays()));
 
         return sprintf(
             '%s - %s %s-%s',
-            $doctorName,
-            ucfirst($template->getWeekday()),
+            $subject,
+            $weekdays,
             $template->getTimeStart(),
             $template->getTimeEnd()
         );

@@ -92,6 +92,60 @@ class DoctorShiftAvailability
     }
 
     /**
+     * @return list<array{start: int, end: int, cabinetId: string}>
+     */
+    public function loadCabinetClosuresForRange(
+        string $dateStart,
+        string $dateEnd,
+        ?string $clinicId = null
+    ): array {
+        $where = [
+            'deleted' => false,
+            'status' => DoctorShift::STATUS_ACTIVE,
+            'type' => DoctorShift::TYPE_CLOSED,
+            'dateStart<' => $dateEnd,
+            'dateEnd>' => $dateStart,
+        ];
+
+        if ($clinicId) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<DoctorShift> $shifts */
+        $shifts = $this->entityManager
+            ->getRDBRepository(DoctorShift::ENTITY_TYPE)
+            ->where($where)
+            ->order('dateStart', 'ASC')
+            ->find();
+
+        $closures = [];
+
+        foreach ($shifts as $shift) {
+            $cabinetId = $this->normalizeId($shift->getCabinetId());
+            $doctorId = $this->normalizeId($shift->getDoctorId());
+
+            if ($cabinetId === null || $doctorId !== null) {
+                continue;
+            }
+
+            $start = $this->toUtcTimestamp((string) $shift->getDateStart());
+            $end = $this->toUtcTimestamp((string) $shift->getDateEnd());
+
+            if ($start === null || $end === null || $end <= $start) {
+                continue;
+            }
+
+            $closures[] = [
+                'start' => $start,
+                'end' => $end,
+                'cabinetId' => $cabinetId,
+            ];
+        }
+
+        return $closures;
+    }
+
+    /**
      * @param array{
      *     hasAvailability: bool,
      *     availability: list<array{start: int, end: int, cabinetId: ?string, assistantId: ?string}>,
@@ -148,6 +202,30 @@ class DoctorShiftAvailability
             'assistantId' => null,
             'reason' => 'Doctor has no active shift for this time.',
         ];
+    }
+
+    /**
+     * @param list<array{start: int, end: int, cabinetId: string}> $closures
+     */
+    public function isCabinetClosed(array $closures, int $start, int $end, ?string $cabinetId): bool
+    {
+        $cabinetId = $this->normalizeId($cabinetId);
+
+        if ($cabinetId === null) {
+            return false;
+        }
+
+        foreach ($closures as $closure) {
+            if ($closure['cabinetId'] !== $cabinetId) {
+                continue;
+            }
+
+            if ($start < $closure['end'] && $end > $closure['start']) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function normalizeId(?string $id): ?string

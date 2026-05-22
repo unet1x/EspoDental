@@ -45,12 +45,15 @@ class DoctorShiftTemplateService
         $timeZone = $this->resolveTimeZone($template->getClinicId());
         $from = new DateTimeImmutable($template->getDateStart() . ' 00:00:00', $timeZone);
         $to = new DateTimeImmutable($template->getDateEnd() . ' 00:00:00', $timeZone);
-        $targetWeekday = DoctorShiftTemplate::WEEKDAY_TO_ISO[$template->getWeekday()];
+        $targetWeekdays = array_flip(array_map(
+            static fn (string $weekday): int => DoctorShiftTemplate::WEEKDAY_TO_ISO[$weekday],
+            $template->getWeekdays()
+        ));
         $created = 0;
         $skipped = 0;
 
         for ($day = $from; $day <= $to; $day = $day->add(new DateInterval('P1D'))) {
-            if ((int) $day->format('N') !== $targetWeekday) {
+            if (!isset($targetWeekdays[(int) $day->format('N')])) {
                 continue;
             }
 
@@ -77,12 +80,32 @@ class DoctorShiftTemplateService
 
     private function validateTemplate(DoctorShiftTemplate $template): void
     {
-        if (!array_key_exists($template->getWeekday(), DoctorShiftTemplate::WEEKDAY_TO_ISO)) {
-            throw new BadRequest('Invalid weekday');
+        $weekdays = $template->getWeekdays();
+
+        if ($weekdays === []) {
+            throw new BadRequest('At least one weekday is required');
         }
 
-        if (!$template->getDoctorId() || !$template->getClinicId()) {
-            throw new BadRequest('doctor and clinic are required');
+        foreach ($weekdays as $weekday) {
+            if (!array_key_exists($weekday, DoctorShiftTemplate::WEEKDAY_TO_ISO)) {
+                throw new BadRequest('Invalid weekday');
+            }
+        }
+
+        if (!$template->getClinicId()) {
+            throw new BadRequest('clinic is required');
+        }
+
+        if (!$template->getDoctorId() && $template->getType() !== DoctorShift::TYPE_CLOSED) {
+            throw new BadRequest('doctor is required for working shift templates');
+        }
+
+        if (
+            $template->getType() === DoctorShift::TYPE_CLOSED
+            && !$template->getDoctorId()
+            && !$template->getCabinetId()
+        ) {
+            throw new BadRequest('doctor or cabinet is required for closed shift templates');
         }
 
         $this->validateTime($template->getTimeStart(), 'timeStart');
@@ -150,7 +173,6 @@ class DoctorShiftTemplateService
             ->where([
                 'deleted' => false,
                 'shiftTemplateId' => $template->getId(),
-                'doctorId' => $template->getDoctorId(),
                 'dateStart' => $startUtc->format('Y-m-d H:i:s'),
                 'dateEnd' => $endUtc->format('Y-m-d H:i:s'),
             ])

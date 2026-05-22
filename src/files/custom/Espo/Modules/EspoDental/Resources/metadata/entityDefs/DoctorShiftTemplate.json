@@ -27,6 +27,11 @@
             "options": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
             "default": "monday"
         },
+        "weekdays": {
+            "type": "multiEnum",
+            "options": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"],
+            "default": ["monday"]
+        },
         "timeStart": {
             "type": "varchar",
             "required": true,

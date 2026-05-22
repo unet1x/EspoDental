@@ -12,6 +12,7 @@
         "clinic": "Clinica",
         "cabinet": "Gabinete",
         "weekday": "Dia de la semana",
+        "weekdays": "Dias de la semana",
         "timeStart": "Inicio",
         "timeEnd": "Fin",
         "dateStart": "Desde",
@@ -24,6 +25,15 @@
     },
     "options": {
         "weekday": {
+            "monday": "Lunes",
+            "tuesday": "Martes",
+            "wednesday": "Miercoles",
+            "thursday": "Jueves",
+            "friday": "Viernes",
+            "saturday": "Sabado",
+            "sunday": "Domingo"
+        },
+        "weekdays": {
             "monday": "Lunes",
             "tuesday": "Martes",
             "wednesday": "Miercoles",

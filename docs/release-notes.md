@@ -53,9 +53,6 @@
   available for the same time.
 - Global `Appointment` quick-create is removed from the default workspace; the
   normal booking path is the contextual patient/preliminary-patient action.
-- Personal doctor shifts are not implemented yet; they are documented as the
-  next schedule-availability slice so slots can be limited to first/second or
-  additional shifts.
 - Added `DoctorShift` for the first schedule-availability slice: regular and
   additional shifts open doctor availability, closed shifts block time,
   cabinet-scoped shifts restrict matching cabinets, and the shift assistant is
@@ -63,9 +60,11 @@
 - `EspoDental/Calendar/freeSlots` now respects configured doctor shifts when a
   doctor is selected. Doctors with no active regular/additional shifts
   still fall back to the existing clinic work window for migration safety.
-- Added `DoctorShiftTemplate` with a `Generate Shifts` detail action. Each
-  template covers one weekday, local start/end time and date range, generating
-  linked `DoctorShift` records idempotently in UTC.
+- `DoctorShiftTemplate` now supports multiple weekdays in one template; the
+  `Generate Shifts` detail action creates one linked UTC `DoctorShift` per
+  selected weekday/date match and remains idempotent.
+- Cabinet-only closed shifts now block matching free-slot suggestions and are
+  enforced again when an appointment is saved.
 - Visit and invoice detail views now expose `Book Next Appointment`, opening
   the same short contextual appointment modal as the patient card and carrying
   patient, clinic, doctor, cabinet and visit-note context where available.

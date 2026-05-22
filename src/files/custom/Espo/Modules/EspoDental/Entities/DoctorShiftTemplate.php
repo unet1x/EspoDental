@@ -31,6 +31,16 @@ class DoctorShiftTemplate extends Entity
         self::WEEKDAY_SUNDAY => 7,
     ];
 
+    public const WEEKDAYS = [
+        self::WEEKDAY_MONDAY,
+        self::WEEKDAY_TUESDAY,
+        self::WEEKDAY_WEDNESDAY,
+        self::WEEKDAY_THURSDAY,
+        self::WEEKDAY_FRIDAY,
+        self::WEEKDAY_SATURDAY,
+        self::WEEKDAY_SUNDAY,
+    ];
+
     public function getDoctorId(): ?string
     {
         return $this->get('doctorId');
@@ -54,6 +64,40 @@ class DoctorShiftTemplate extends Entity
     public function getWeekday(): string
     {
         return (string) $this->get('weekday');
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function getWeekdays(): array
+    {
+        $value = $this->get('weekdays');
+        $days = [];
+
+        if (is_array($value)) {
+            $days = $value;
+        } elseif (is_string($value) && trim($value) !== '') {
+            $decoded = json_decode($value, true);
+            if (is_array($decoded)) {
+                $days = $decoded;
+            } else {
+                $days = explode(',', $value);
+            }
+        }
+
+        $days = array_values(array_unique(array_filter(array_map(
+            static fn ($day): string => trim((string) $day),
+            $days
+        ))));
+
+        if ($days === [] && $this->getWeekday() !== '') {
+            $days = [$this->getWeekday()];
+        }
+
+        return array_values(array_filter(
+            $days,
+            static fn (string $day): bool => in_array($day, self::WEEKDAYS, true)
+        ));
     }
 
     public function getTimeStart(): string

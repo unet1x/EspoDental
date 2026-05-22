@@ -38,8 +38,28 @@ class Defaults
             $entity->set('type', DoctorShift::TYPE_REGULAR);
         }
 
+        $this->assertScope($entity);
         $this->assertDateOrder($entity);
         $entity->set('name', $this->buildName($entity));
+    }
+
+    private function assertScope(DoctorShift $shift): void
+    {
+        if (!$shift->getClinicId()) {
+            throw new BadRequest('clinic is required');
+        }
+
+        if (!$shift->getDoctorId() && $shift->getType() !== DoctorShift::TYPE_CLOSED) {
+            throw new BadRequest('doctor is required for working shifts');
+        }
+
+        if (
+            $shift->getType() === DoctorShift::TYPE_CLOSED
+            && !$shift->getDoctorId()
+            && !$shift->getCabinetId()
+        ) {
+            throw new BadRequest('doctor or cabinet is required for closed shifts');
+        }
     }
 
     private function assertDateOrder(DoctorShift $shift): void
@@ -65,12 +85,12 @@ class Defaults
 
     private function buildName(DoctorShift $shift): string
     {
-        $doctorName = $this->resolveDoctorName($shift);
+        $subjectName = $this->resolveSubjectName($shift);
         $type = $this->translateType($shift->getType());
         $dateStart = (string) $shift->getDateStart();
 
         if ($dateStart === '') {
-            return $doctorName . ' - ' . $type;
+            return $subjectName . ' - ' . $type;
         }
 
         try {
@@ -81,7 +101,20 @@ class Defaults
             $date = substr($dateStart, 0, 16);
         }
 
-        return $doctorName . ' - ' . $date . ' - ' . $type;
+        return $subjectName . ' - ' . $date . ' - ' . $type;
+    }
+
+    private function resolveSubjectName(DoctorShift $shift): string
+    {
+        $doctorName = $this->resolveDoctorName($shift);
+
+        if ($doctorName !== '') {
+            return $doctorName;
+        }
+
+        $cabinetName = trim((string) ($shift->get('cabinetName') ?: ''));
+
+        return $cabinetName !== '' ? $cabinetName : 'Schedule';
     }
 
     private function resolveDoctorName(DoctorShift $shift): string
@@ -103,7 +136,7 @@ class Defaults
             }
         }
 
-        return 'Doctor';
+        return '';
     }
 
     private function translateType(string $type): string
