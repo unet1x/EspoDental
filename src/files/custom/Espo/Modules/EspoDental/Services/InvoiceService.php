@@ -130,6 +130,9 @@ class InvoiceService
         if (!$invoice) {
             throw new NotFound('Invoice not found');
         }
+
+        $this->calculator->recalculate($invoice);
+
         if (
             in_array($invoice->getStatus(), [
             Invoice::STATUS_STORNO,
@@ -138,6 +141,9 @@ class InvoiceService
             ], true)
         ) {
             throw new Conflict('Invoice cannot be storno-ed from current status');
+        }
+        if (round($invoice->getPaidAmount(), 2) > 0.0) {
+            throw new Conflict('Refund invoice payments before storno');
         }
 
         /** @var Invoice $storno */

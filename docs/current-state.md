@@ -284,6 +284,13 @@ Implemented in branch `feature-front-desk-intake`:
   paid, storno or cancelled invoices, patient/clinic mismatches and amounts
   above the invoice balance. Unlinked inbound payments remain the documented
   prepayment/credit path.
+- Cash-desk corrections now use an explicit correction workflow: a refund payment
+  is created as a separate outbound `Payment` linked through
+  `refundOf`, and the original posted payment remains immutable. The refund
+  service caps cumulative refunds at the original payment amount. Invoice
+  storno recalculates current payment state and blocks paid or partially-paid
+  invoices with `Refund invoice payments before storno`, so staff must refund
+  linked payments before cancelling the invoice debt.
 - `DoctorShift` is introduced as the first schedule-availability model:
   regular/additional shifts open doctor availability, closed shifts block time,
   shifts can be scoped to a cabinet, and an optional assistant on the matching
@@ -426,6 +433,10 @@ Verification completed after this slice:
 - API smoke on 2026-05-22 confirmed direct `PATCH Material.currentStock`
   returns `409` and direct `PATCH StockMovement.quantity` on a posted movement
   returns `409`.
+- Structural PHPUnit coverage confirms posted payments are immutable, refund
+  payment corrections do not mutate the source payment, cumulative refunds are
+  capped and invoice storno requires linked invoice payments to be refunded
+  first.
 
 ## 6. Known Gaps Against Product Spec
 
@@ -436,7 +447,9 @@ The following requirements still need implementation or explicit verification:
   testing;
 - add inline quantity editing in visit material relationship panels where
   EspoCRM relationship panels support it;
-- make invoice/payment correction workflows explicit;
+- browser/API verify the explicit invoice/payment correction workflow on a
+  real local stack, including the `Refund invoice payments before storno`
+  server-side guard;
 - polish patient tabs: tooth chart, history, questionnaire, files, financials,
   orthodontics, family, CBCT;
 - extend the first doctor/assistant shift slice with richer schedule management

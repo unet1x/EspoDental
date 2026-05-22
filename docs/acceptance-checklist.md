@@ -106,6 +106,13 @@ Checklist:
 - Confirm draft, paid, cancelled/storno and over-balance invoice payments are
   rejected server-side.
 - Confirm payment changes patient balance.
+- Create a refund payment for a completed inbound payment; confirm it is a
+  separate outbound correction linked through `refundOf` and the source
+  payment remains posted.
+- Confirm cumulative refund payment amounts cannot exceed the original
+  payment amount.
+- Try invoice storno while linked payments are still net-positive; confirm the
+  server returns `Refund invoice payments before storno`.
 - Confirm the patient card financial panel shows current balance, open invoice
   balance, unallocated credit, open invoices and recent payments.
 - Print or generate invoice/act/receipt artifact.

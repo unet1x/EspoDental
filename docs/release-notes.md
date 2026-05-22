@@ -73,6 +73,11 @@
   appointments above past visits with clinic-local times and direct links.
 - Patient detail now includes a `Financials` panel with current balance, open
   invoice balance, unallocated credit, open invoices and recent payments.
+- Payment corrections now create a separate outbound refund payment linked to
+  the source payment instead of mutating the original posted row. Cumulative
+  refunds are capped at the original amount, posted payments cannot be edited
+  or removed through normal saves, and invoice storno now returns
+  `Refund invoice payments before storno` until linked payments are refunded.
 - Service-line price/currency/VAT always comes from the selected service;
   material-line unit/cost always comes from the selected material.
 - Doctor-facing visit layouts hide service price/currency/VAT, material cost,

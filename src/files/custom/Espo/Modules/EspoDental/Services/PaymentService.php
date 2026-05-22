@@ -143,12 +143,17 @@ class PaymentService
             throw new Conflict('Only inbound payments can be refunded');
         }
 
-        $refundAmount = $amount ?? $source->getAmount();
+        $remaining = round($source->getAmount() - $this->sumExistingRefunds($source), 2);
+        if ($remaining <= 0.0) {
+            throw new Conflict('Payment has no refundable amount remaining');
+        }
+
+        $refundAmount = round($amount ?? $remaining, 2);
         if ($refundAmount <= 0) {
             throw new BadRequest('Refund amount must be positive');
         }
-        if ($refundAmount > $source->getAmount()) {
-            throw new BadRequest('Refund cannot exceed original payment');
+        if ($refundAmount > $remaining) {
+            throw new BadRequest('Refund cannot exceed remaining refundable amount');
         }
 
         /** @var Payment $refund */
@@ -166,10 +171,27 @@ class PaymentService
         $refund->set('notes', $reason !== '' ? $reason : ('Refund of #' . (string) $source->get('number')));
         $this->entityManager->saveEntity($refund);
 
-        $source->set('status', Payment::STATUS_REFUNDED);
-        $this->entityManager->saveEntity($source);
-
         return ['refundPaymentId' => (string) $refund->getId()];
+    }
+
+    private function sumExistingRefunds(Payment $source): float
+    {
+        /** @var iterable<Payment> $refunds */
+        $refunds = $this->entityManager
+            ->getRDBRepository(Payment::ENTITY_TYPE)
+            ->where([
+                'refundOfId' => $source->getId(),
+                'direction' => Payment::DIRECTION_OUT,
+                'status' => Payment::STATUS_COMPLETED,
+            ])
+            ->find();
+
+        $sum = 0.0;
+        foreach ($refunds as $refund) {
+            $sum += $refund->getAmount();
+        }
+
+        return round($sum, 2);
     }
 
     /**
