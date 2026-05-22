@@ -106,6 +106,8 @@ Checklist:
 - Confirm draft, paid, cancelled/storno and over-balance invoice payments are
   rejected server-side.
 - Confirm payment changes patient balance.
+- Confirm the patient card financial panel shows current balance, open invoice
+  balance, unallocated credit, open invoices and recent payments.
 - Print or generate invoice/act/receipt artifact.
 - Book next appointment from patient/visit/invoice context.
 - Confirm future appointments appear above past visits in the patient card

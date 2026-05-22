@@ -5,16 +5,18 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
         setup: function () {
             Dep.prototype.setup.call(this);
             this.listenTo(this.model, 'sync', function () {
-                this.renderClinicalFilesPanel();
                 this.renderPatientHistoryPanel();
+                this.renderPatientFinancialPanel();
+                this.renderClinicalFilesPanel();
             });
         },
 
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
             this.renderQuestionnaireAlert();
-            this.renderClinicalFilesPanel();
             this.renderPatientHistoryPanel();
+            this.renderPatientFinancialPanel();
+            this.renderClinicalFilesPanel();
         },
 
         renderQuestionnaireAlert: function () {
@@ -74,6 +76,66 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
                     self.translate('Error') +
                 '</span>');
             });
+        },
+
+        renderPatientFinancialPanel: function () {
+            if (!this.model.id || !this.$el) {
+                return;
+            }
+
+            var $panel = this.ensurePatientFinancialPanel();
+            var $body = $panel.find('[data-name="patient-financials-body"]');
+            var self = this;
+
+            $body.html('<span class="text-muted">' +
+                this.translate('Loading...', 'messages', 'Global') +
+                '</span>');
+
+            Espo.Ajax.getRequest('Patient/action/financials', {
+                id: this.model.id,
+                limit: 8
+            }).then(function (data) {
+                self.renderPatientFinancialContent($body, data || {});
+            }).catch(function () {
+                $body.html('<span class="text-danger">' +
+                    self.translate('Error') +
+                    '</span>');
+            });
+        },
+
+        ensurePatientFinancialPanel: function () {
+            var $existing = this.$el.find('[data-name="patient-financials-panel"]');
+            if ($existing.length) {
+                return $existing;
+            }
+
+            var $panel = $('<div class="panel panel-default" data-name="patient-financials-panel">' +
+                '<div class="panel-heading">' +
+                    '<span class="panel-title">' +
+                        this.translate('Financials', 'labels', 'Patient') +
+                    '</span>' +
+                '</div>' +
+                '<div class="panel-body" data-name="patient-financials-body"></div>' +
+            '</div>');
+
+            var $anchor = this.$el.find('[data-name="patient-history-panel"]').first();
+
+            if (!$anchor.length) {
+                var $questionnaireField = this.$el.find('[data-name="lastQuestionnaireAt"]').first();
+                $anchor = $questionnaireField.closest('.panel').first();
+            }
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('.panel').first();
+            }
+
+            if ($anchor.length) {
+                $panel.insertAfter($anchor);
+            } else {
+                this.$el.append($panel);
+            }
+
+            return $panel;
         },
 
         renderPatientHistoryPanel: function () {
@@ -150,9 +212,14 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             var $questionnaireField = this.$el.find('[data-name="lastQuestionnaireAt"]').first();
             var $anchor = $questionnaireField.closest('.panel').first();
 
-            var $historyPanel = this.$el.find('[data-name="patient-history-panel"]').first();
-            if ($historyPanel.length) {
-                $anchor = $historyPanel;
+            var $financialPanel = this.$el.find('[data-name="patient-financials-panel"]').first();
+            if ($financialPanel.length) {
+                $anchor = $financialPanel;
+            } else {
+                var $historyPanel = this.$el.find('[data-name="patient-history-panel"]').first();
+                if ($historyPanel.length) {
+                    $anchor = $historyPanel;
+                }
             }
 
             if (!$anchor.length) {
@@ -166,6 +233,121 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             }
 
             return $panel;
+        },
+
+        renderPatientFinancialContent: function ($body, data) {
+            var openInvoices = Array.isArray(data.openInvoices) ? data.openInvoices : [];
+            var recentPayments = Array.isArray(data.recentPayments) ? data.recentPayments : [];
+
+            $body.html(
+                this.renderFinancialSummary(data || {}) +
+                '<div class="row">' +
+                    '<div class="col-sm-6">' +
+                        '<h5 style="margin-top:0">' +
+                            this.translate('Open Invoices', 'labels', 'Patient') +
+                        '</h5>' +
+                        this.renderOpenInvoices(openInvoices) +
+                    '</div>' +
+                    '<div class="col-sm-6">' +
+                        '<h5 style="margin-top:0">' +
+                            this.translate('Recent Payments', 'labels', 'Patient') +
+                        '</h5>' +
+                        this.renderRecentPayments(recentPayments) +
+                    '</div>' +
+                '</div>'
+            );
+        },
+
+        renderFinancialSummary: function (data) {
+            var currency = this.pickFinancialCurrency(data);
+            var items = [
+                {
+                    label: this.translate('Current Balance', 'labels', 'Patient'),
+                    value: this.formatMoney(data.balance, currency)
+                },
+                {
+                    label: this.translate('Open Invoice Balance', 'labels', 'Patient'),
+                    value: this.formatMoney(data.openInvoiceBalance, currency)
+                },
+                {
+                    label: this.translate('Unallocated Credit', 'labels', 'Patient'),
+                    value: this.formatMoney(data.unallocatedCredit, currency)
+                }
+            ];
+
+            var html = '<div class="row" style="margin-bottom:12px">';
+            items.forEach(function (item) {
+                html += '<div class="col-sm-4">' +
+                    '<div class="text-muted small">' + this.escapeHtml(item.label) + '</div>' +
+                    '<strong>' + this.escapeHtml(item.value) + '</strong>' +
+                '</div>';
+            }, this);
+            html += '</div>';
+
+            return html;
+        },
+
+        renderOpenInvoices: function (invoices) {
+            if (!invoices.length) {
+                return this.emptyState();
+            }
+
+            var html = '<div class="table-responsive">' +
+                '<table class="table table-condensed table-bordered" style="margin-bottom:0">' +
+                '<tbody>';
+
+            invoices.forEach(function (invoice) {
+                var title = invoice.number || invoice.name || this.translate('Invoice', 'scopeNames', 'Global');
+                var currency = invoice.currency || this.pickFinancialCurrency({});
+
+                html += '<tr><td>' +
+                    '<a href="#Invoice/view/' + this.escapeAttribute(invoice.id) + '">' +
+                        this.escapeHtml(title) +
+                    '</a>' +
+                    '<div class="text-muted small">' + this.escapeHtml(invoice.localIssuedAt || invoice.issuedAt || '') + '</div>' +
+                    '<div class="small">' +
+                        this.escapeHtml(this.translate('Balance', 'labels', 'Invoice') + ': ' +
+                            this.formatMoney(invoice.balance, currency)) +
+                    '</div>' +
+                    this.renderStatusLabel(invoice.status, 'Invoice') +
+                '</td></tr>';
+            }.bind(this));
+
+            html += '</tbody></table></div>';
+
+            return html;
+        },
+
+        renderRecentPayments: function (payments) {
+            if (!payments.length) {
+                return this.emptyState();
+            }
+
+            var html = '<div class="table-responsive">' +
+                '<table class="table table-condensed table-bordered" style="margin-bottom:0">' +
+                '<tbody>';
+
+            payments.forEach(function (payment) {
+                var title = payment.number || this.translate('Payment', 'scopeNames', 'Global');
+                var currency = payment.currency || this.pickFinancialCurrency({});
+                var direction = this.translateOptionValue(payment.direction, 'direction', 'Payment');
+                var method = this.translatePaymentMethod(payment.method);
+
+                html += '<tr><td>' +
+                    '<a href="#Payment/view/' + this.escapeAttribute(payment.id) + '">' +
+                        this.escapeHtml(title) +
+                    '</a>' +
+                    '<div class="text-muted small">' + this.escapeHtml(payment.localPaidAt || payment.paidAt || '') + '</div>' +
+                    '<div class="small">' +
+                        this.escapeHtml(direction + ' · ' + method + ' · ' + this.formatMoney(payment.amount, currency)) +
+                    '</div>' +
+                    this.renderStatusLabel(payment.status, 'Payment') +
+                '</td></tr>';
+            }.bind(this));
+
+            html += '</tbody></table></div>';
+
+            return html;
         },
 
         renderPatientHistoryContent: function ($body, data) {
@@ -452,6 +634,40 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             }
 
             return value;
+        },
+
+        translatePaymentMethod: function (method) {
+            if (!method) {
+                return '';
+            }
+
+            var key = 'Payment method ' + method;
+            var label = this.translate(key, 'messages', 'Invoice');
+
+            return label === key ? String(method).replace(/_/g, ' ') : label;
+        },
+
+        pickFinancialCurrency: function (data) {
+            var invoices = Array.isArray(data.openInvoices) ? data.openInvoices : [];
+            var payments = Array.isArray(data.recentPayments) ? data.recentPayments : [];
+
+            if (invoices.length && invoices[0].currency) {
+                return invoices[0].currency;
+            }
+            if (payments.length && payments[0].currency) {
+                return payments[0].currency;
+            }
+
+            return 'RUB';
+        },
+
+        formatMoney: function (value, currency) {
+            var amount = parseFloat(value || 0);
+            if (isNaN(amount)) {
+                amount = 0;
+            }
+
+            return amount.toFixed(2) + ' ' + (currency || 'RUB');
         },
 
         emptyState: function () {

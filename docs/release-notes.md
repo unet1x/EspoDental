@@ -71,6 +71,8 @@
   patient, clinic, doctor, cabinet and visit-note context where available.
 - Patient detail now includes a `Patient History` panel that lists future
   appointments above past visits with clinic-local times and direct links.
+- Patient detail now includes a `Financials` panel with current balance, open
+  invoice balance, unallocated credit, open invoices and recent payments.
 - Service-line price/currency/VAT always comes from the selected service;
   material-line unit/cost always comes from the selected material.
 - Doctor-facing visit layouts hide service price/currency/VAT, material cost,

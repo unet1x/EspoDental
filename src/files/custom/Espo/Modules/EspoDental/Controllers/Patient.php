@@ -10,6 +10,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Modules\EspoDental\Services\HealthQuestionnaireService;
 use Espo\Modules\EspoDental\Services\PatientFileService;
+use Espo\Modules\EspoDental\Services\PatientFinancialService;
 use Espo\Modules\EspoDental\Services\PatientHistoryService;
 
 class Patient extends Record
@@ -76,6 +77,42 @@ class Patient extends Record
             $id,
             $this->getAcl()->checkScope('Appointment', 'read'),
             $this->getAcl()->checkScope('Visit', 'read'),
+            $limit
+        );
+    }
+
+    /**
+     * GET /Patient/action/financials?id=...
+     *
+     * @return array{
+     *     patientId: string,
+     *     balance: float,
+     *     openInvoiceBalance: float,
+     *     unallocatedCredit: float,
+     *     openInvoices: list<array<string, mixed>>,
+     *     recentPayments: list<array<string, mixed>>
+     * }
+     */
+    public function getActionFinancials(Request $request): array
+    {
+        $id = $request->getQueryParam('id');
+        $limit = (int) ($request->getQueryParam('limit') ?? 8);
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest('id is required');
+        }
+
+        if (!$this->getAcl()->checkScope('Patient', 'read')) {
+            throw new Forbidden();
+        }
+
+        /** @var PatientFinancialService $service */
+        $service = $this->injectableFactory->create(PatientFinancialService::class);
+
+        return $service->getPatientFinancials(
+            $id,
+            $this->getAcl()->checkScope('Invoice', 'read'),
+            $this->getAcl()->checkScope('Payment', 'read'),
             $limit
         );
     }
