@@ -149,6 +149,8 @@ Checklist:
 - Outbound external messages have `NotificationLog` audit rows with channel,
   direction, provider, recipient, status, attempts and external message id when
   the provider returns one.
+- Bot/LLM proposals are stored in `AssistantActionProposal`; high-risk medical
+  or financial proposals cannot become `applied` before a human-approved status.
 - Questionnaire older than 1 year shows a patient alert.
 - Questionnaire PDF contains answers in two columns and includes the stored
   signature.

@@ -1,0 +1,60 @@
+{
+    "labels": {
+        "Create AssistantActionProposal": "Создать предложение ассистента",
+        "Overview": "Основное",
+        "Review": "Ревью"
+    },
+    "fields": {
+        "name": "Название",
+        "source": "Источник",
+        "actionType": "Действие",
+        "riskLevel": "Риск",
+        "status": "Статус",
+        "requiresApproval": "Требует одобрения",
+        "patient": "Пациент",
+        "appointment": "Приём",
+        "notificationLog": "Уведомление",
+        "targetType": "Тип цели",
+        "targetId": "ID цели",
+        "summary": "Сводка",
+        "payload": "Полезная нагрузка",
+        "reviewNotes": "Заметки ревью",
+        "reviewedAt": "Проверено",
+        "reviewedBy": "Проверил",
+        "appliedAt": "Применено",
+        "assignedUser": "Ответственный",
+        "teams": "Команды"
+    },
+    "options": {
+        "source": {"mcp": "MCP", "llm": "LLM", "manual": "Вручную", "system": "Система"},
+        "actionType": {
+            "draft_message": "Черновик сообщения",
+            "propose_appointment": "Предложить запись",
+            "issue_questionnaire": "Выдать анкету",
+            "update_contact": "Обновить контакт",
+            "post_payment": "Провести платёж",
+            "finish_visit": "Завершить приём",
+            "edit_medical_note": "Изменить медзапись",
+            "cancel_invoice": "Отменить счёт",
+            "other": "Другое"
+        },
+        "riskLevel": {"low": "Низкий", "medium": "Средний", "high": "Высокий", "critical": "Критический"},
+        "status": {
+            "draft": "Черновик",
+            "pending_review": "На ревью",
+            "approved": "Одобрено",
+            "rejected": "Отклонено",
+            "applied": "Применено",
+            "cancelled": "Отменено"
+        }
+    },
+    "links": {
+        "patient": "Пациент",
+        "appointment": "Приём",
+        "notificationLog": "Уведомление"
+    },
+    "boolFilters": {"pendingReview": "На ревью", "highRisk": "Высокий риск"},
+    "messages": {
+        "Assistant proposal must be approved before it can be applied": "Предложение ассистента должно быть одобрено перед применением"
+    }
+}

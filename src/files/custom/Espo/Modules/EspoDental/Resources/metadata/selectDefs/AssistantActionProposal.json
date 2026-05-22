@@ -1,0 +1,6 @@
+{
+    "boolFilterClassNameMap": {
+        "pendingReview": "Espo\\Modules\\EspoDental\\Classes\\Select\\AssistantActionProposal\\BoolFilters\\PendingReview",
+        "highRisk": "Espo\\Modules\\EspoDental\\Classes\\Select\\AssistantActionProposal\\BoolFilters\\HighRisk"
+    }
+}

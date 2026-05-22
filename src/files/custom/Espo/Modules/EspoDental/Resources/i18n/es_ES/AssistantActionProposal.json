@@ -1,0 +1,60 @@
+{
+    "labels": {
+        "Create AssistantActionProposal": "Crear propuesta del asistente",
+        "Overview": "Resumen",
+        "Review": "Revision"
+    },
+    "fields": {
+        "name": "Nombre",
+        "source": "Origen",
+        "actionType": "Accion",
+        "riskLevel": "Riesgo",
+        "status": "Estado",
+        "requiresApproval": "Requiere aprobacion",
+        "patient": "Paciente",
+        "appointment": "Cita",
+        "notificationLog": "Notificacion",
+        "targetType": "Tipo de destino",
+        "targetId": "ID de destino",
+        "summary": "Resumen",
+        "payload": "Payload",
+        "reviewNotes": "Notas de revision",
+        "reviewedAt": "Revisado",
+        "reviewedBy": "Revisado por",
+        "appliedAt": "Aplicado",
+        "assignedUser": "Asignado",
+        "teams": "Equipos"
+    },
+    "options": {
+        "source": {"mcp": "MCP", "llm": "LLM", "manual": "Manual", "system": "Sistema"},
+        "actionType": {
+            "draft_message": "Borrador de mensaje",
+            "propose_appointment": "Proponer cita",
+            "issue_questionnaire": "Emitir cuestionario",
+            "update_contact": "Actualizar contacto",
+            "post_payment": "Registrar pago",
+            "finish_visit": "Finalizar visita",
+            "edit_medical_note": "Editar nota medica",
+            "cancel_invoice": "Cancelar factura",
+            "other": "Otra"
+        },
+        "riskLevel": {"low": "Bajo", "medium": "Medio", "high": "Alto", "critical": "Critico"},
+        "status": {
+            "draft": "Borrador",
+            "pending_review": "Pendiente",
+            "approved": "Aprobada",
+            "rejected": "Rechazada",
+            "applied": "Aplicada",
+            "cancelled": "Cancelada"
+        }
+    },
+    "links": {
+        "patient": "Paciente",
+        "appointment": "Cita",
+        "notificationLog": "Notificacion"
+    },
+    "boolFilters": {"pendingReview": "Pendiente", "highRisk": "Alto riesgo"},
+    "messages": {
+        "Assistant proposal must be approved before it can be applied": "La propuesta del asistente debe aprobarse antes de aplicarse"
+    }
+}

@@ -109,6 +109,11 @@
         "visit": {"type": "hasOne", "entity": "Visit", "foreign": "appointment"},
         "statusLogs": {"type": "hasMany", "entity": "AppointmentStatusLog", "foreign": "appointment"},
         "notificationLogs": {"type": "hasMany", "entity": "NotificationLog", "foreign": "appointment"},
+        "assistantActionProposals": {
+            "type": "hasMany",
+            "entity": "AssistantActionProposal",
+            "foreign": "appointment"
+        },
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"},
         "assignedUser": {"type": "belongsTo", "entity": "User"},

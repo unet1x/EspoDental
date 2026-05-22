@@ -206,6 +206,11 @@
         "invoices": {"type": "hasMany", "entity": "Invoice", "foreign": "patient"},
         "payments": {"type": "hasMany", "entity": "Payment", "foreign": "patient"},
         "notificationLogs": {"type": "hasMany", "entity": "NotificationLog", "foreign": "patient"},
+        "assistantActionProposals": {
+            "type": "hasMany",
+            "entity": "AssistantActionProposal",
+            "foreign": "patient"
+        },
         "orthodonticCards": {"type": "hasMany", "entity": "OrthodonticCard", "foreign": "patient"},
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"},

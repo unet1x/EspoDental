@@ -33,7 +33,7 @@ class RoleSeeder
         'ToothChartSnapshot', 'VisitPhoto',
         'Invoice', 'InvoiceLine', 'Payment',
         'MaterialCategory', 'Material', 'StockMovement', 'ServiceMaterial',
-        'LowStockAlert', 'NotificationLog',
+        'LowStockAlert', 'NotificationLog', 'AssistantActionProposal',
         'SalaryProfile', 'SalaryEntry', 'SalaryBonus',
         'OrthodonticCard', 'TreatmentStage', 'ToothMovementPlan',
         'OrthoPhoto', 'CephalometricMeasurement',
@@ -215,6 +215,7 @@ class RoleSeeder
         $manager['ServiceMaterial']      = $row('yes', 'all', 'all', 'all', 'no');
         $manager['LowStockAlert']        = $row('no', 'all', 'all', 'no', 'all');
         $manager['NotificationLog']      = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['AssistantActionProposal'] = $row('yes', 'all', 'all', 'all', 'no');
         $manager['SalaryBonus']          = $row('yes', 'all', 'all', 'all', 'no');
         $manager['TreatmentStage']       = $row('yes', 'all', 'all', 'all', 'no');
         $manager['ToothMovementPlan']    = $row('yes', 'all', 'all', 'all', 'no');
@@ -246,6 +247,7 @@ class RoleSeeder
             'ServiceMaterial'      => $row('no', 'all', 'no', 'no', 'no'),
             'LowStockAlert'        => $row('no', 'team', 'no', 'no', 'no'),
             'NotificationLog'      => $row('no', 'team', 'no', 'no', 'no'),
+            'AssistantActionProposal' => $row('no', 'team', 'no', 'no', 'no'),
             'SalaryProfile'        => $row('no', 'own', 'no', 'no', 'no'),
             'SalaryEntry'          => $row('no', 'own', 'no', 'no', 'own'),
             'SalaryBonus'          => $row('no', 'own', 'no', 'no', 'no'),
@@ -281,6 +283,7 @@ class RoleSeeder
             'ServiceMaterial'      => $row('no', 'all', 'no', 'no', 'no'),
             'LowStockAlert'        => $row('no', 'no', 'no', 'no', 'no'),
             'NotificationLog'      => $row('no', 'team', 'no', 'no', 'no'),
+            'AssistantActionProposal' => $row('no', 'no', 'no', 'no', 'no'),
             'SalaryProfile'        => $row('no', 'own', 'no', 'no', 'no'),
             'SalaryEntry'          => $row('no', 'own', 'no', 'no', 'own'),
             'SalaryBonus'          => $row('no', 'own', 'no', 'no', 'no'),
@@ -316,6 +319,7 @@ class RoleSeeder
             'ServiceMaterial'      => $row('no', 'all', 'no', 'no', 'no'),
             'LowStockAlert'        => $row('no', 'team', 'no', 'no', 'no'),
             'NotificationLog'      => $row('yes', 'team', 'team', 'no', 'no'),
+            'AssistantActionProposal' => $row('yes', 'team', 'team', 'no', 'no'),
             'SalaryProfile'        => $row('yes', 'all', 'all', 'no', 'all'),
             'SalaryEntry'          => $row('yes', 'all', 'all', 'no', 'all'),
             'SalaryBonus'          => $row('yes', 'all', 'all', 'all', 'no'),
@@ -351,6 +355,7 @@ class RoleSeeder
             'ServiceMaterial'      => $row('yes', 'all', 'all', 'all', 'no'),
             'LowStockAlert'        => $row('no', 'all', 'all', 'no', 'all'),
             'NotificationLog'      => $row('no', 'no', 'no', 'no', 'no'),
+            'AssistantActionProposal' => $row('no', 'no', 'no', 'no', 'no'),
             'SalaryProfile'        => $row('no', 'own', 'no', 'no', 'no'),
             'SalaryEntry'          => $row('no', 'own', 'no', 'no', 'own'),
             'SalaryBonus'          => $row('no', 'own', 'no', 'no', 'no'),

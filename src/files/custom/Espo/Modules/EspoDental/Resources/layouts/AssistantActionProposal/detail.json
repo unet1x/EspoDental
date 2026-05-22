@@ -1,0 +1,23 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [{"name": "name"}, {"name": "status"}],
+            [{"name": "source"}, {"name": "actionType"}],
+            [{"name": "riskLevel"}, {"name": "requiresApproval"}],
+            [{"name": "patient"}, {"name": "appointment"}],
+            [{"name": "notificationLog"}, false],
+            [{"name": "targetType"}, {"name": "targetId"}],
+            [{"name": "summary", "fullWidth": true}],
+            [{"name": "payload", "fullWidth": true}]
+        ]
+    },
+    {
+        "label": "Review",
+        "rows": [
+            [{"name": "reviewedBy"}, {"name": "reviewedAt"}],
+            [{"name": "reviewNotes", "fullWidth": true}],
+            [{"name": "appliedAt"}, {"name": "assignedUser"}]
+        ]
+    }
+]

@@ -1,0 +1,60 @@
+{
+    "labels": {
+        "Create AssistantActionProposal": "Create Assistant Proposal",
+        "Overview": "Overview",
+        "Review": "Review"
+    },
+    "fields": {
+        "name": "Name",
+        "source": "Source",
+        "actionType": "Action",
+        "riskLevel": "Risk",
+        "status": "Status",
+        "requiresApproval": "Requires Approval",
+        "patient": "Patient",
+        "appointment": "Appointment",
+        "notificationLog": "Notification",
+        "targetType": "Target Type",
+        "targetId": "Target ID",
+        "summary": "Summary",
+        "payload": "Payload",
+        "reviewNotes": "Review Notes",
+        "reviewedAt": "Reviewed At",
+        "reviewedBy": "Reviewed By",
+        "appliedAt": "Applied At",
+        "assignedUser": "Assigned User",
+        "teams": "Teams"
+    },
+    "options": {
+        "source": {"mcp": "MCP", "llm": "LLM", "manual": "Manual", "system": "System"},
+        "actionType": {
+            "draft_message": "Draft message",
+            "propose_appointment": "Propose appointment",
+            "issue_questionnaire": "Issue questionnaire",
+            "update_contact": "Update contact",
+            "post_payment": "Post payment",
+            "finish_visit": "Finish visit",
+            "edit_medical_note": "Edit medical note",
+            "cancel_invoice": "Cancel invoice",
+            "other": "Other"
+        },
+        "riskLevel": {"low": "Low", "medium": "Medium", "high": "High", "critical": "Critical"},
+        "status": {
+            "draft": "Draft",
+            "pending_review": "Pending Review",
+            "approved": "Approved",
+            "rejected": "Rejected",
+            "applied": "Applied",
+            "cancelled": "Cancelled"
+        }
+    },
+    "links": {
+        "patient": "Patient",
+        "appointment": "Appointment",
+        "notificationLog": "Notification"
+    },
+    "boolFilters": {"pendingReview": "Pending Review", "highRisk": "High Risk"},
+    "messages": {
+        "Assistant proposal must be approved before it can be applied": "Assistant proposal must be approved before it can be applied"
+    }
+}

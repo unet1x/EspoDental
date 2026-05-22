@@ -112,6 +112,9 @@
   `NotificationLog` records direction/provider/external message id as the
   outbox audit row, and the WhatsApp adapter is configurable but disabled until
   endpoint/token settings are provided.
+- Added `AssistantActionProposal` as the LLM/MCP draft-and-review workflow.
+  High-risk and critical medical/financial proposals require approval and are
+  blocked from `applied` status unless already approved.
 - EspoDental admin settings now include editable dictionaries for payment
   methods, tooth-chart conditions/colors and tooth-surface labels.
 - Role workspace templates are now seeded for administrator, doctor,

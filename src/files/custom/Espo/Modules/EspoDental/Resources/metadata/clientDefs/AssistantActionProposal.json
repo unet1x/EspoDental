@@ -1,0 +1,6 @@
+{
+    "controller": "controllers/record",
+    "color": "#546A76",
+    "iconClass": "fas fa-robot",
+    "boolFilterList": ["pendingReview", "highRisk"]
+}

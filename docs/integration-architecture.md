@@ -66,3 +66,28 @@ Future MCP and local LLM work should use the same pattern:
 The first MCP tools should therefore read patient context, draft messages or
 prepare appointment proposals. They should not directly post payments, finish
 visits, edit medical notes, delete records or cancel invoices.
+
+## 5. Assistant Action Proposals
+
+`AssistantActionProposal` is the audit and review object for MCP/LLM drafts.
+It records source, action type, target, patient/appointment context, risk,
+payload and review status.
+
+Risky actions are never applied directly by bots. High/critical proposals and
+known medical/financial mutation types force `requiresApproval = true`:
+
+- `post_payment`;
+- `finish_visit`;
+- `edit_medical_note`;
+- `cancel_invoice`.
+
+The workflow is:
+
+1. MCP or LLM creates a `pending_review` proposal.
+2. A permitted user reviews the summary and payload.
+3. The user marks it `approved` or `rejected`.
+4. Only an already `approved` proposal can be marked `applied`.
+
+This keeps the assistant useful for drafting and triage while preserving the
+hard product invariant that bots do not silently mutate critical clinical or
+financial state.

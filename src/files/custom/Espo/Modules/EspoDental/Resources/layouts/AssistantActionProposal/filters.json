@@ -1,0 +1,8 @@
+[
+    {"name": "source"},
+    {"name": "actionType"},
+    {"name": "riskLevel"},
+    {"name": "status"},
+    {"name": "patient"},
+    {"name": "createdAt"}
+]

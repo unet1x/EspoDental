@@ -1,0 +1,85 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 255},
+        "source": {
+            "type": "enum",
+            "options": ["mcp", "llm", "manual", "system"],
+            "default": "llm",
+            "required": true
+        },
+        "actionType": {
+            "type": "enum",
+            "options": [
+                "draft_message",
+                "propose_appointment",
+                "issue_questionnaire",
+                "update_contact",
+                "post_payment",
+                "finish_visit",
+                "edit_medical_note",
+                "cancel_invoice",
+                "other"
+            ],
+            "default": "draft_message",
+            "required": true
+        },
+        "riskLevel": {
+            "type": "enum",
+            "options": ["low", "medium", "high", "critical"],
+            "default": "medium",
+            "required": true,
+            "style": {"low": "success", "medium": "warning", "high": "danger", "critical": "danger"}
+        },
+        "status": {
+            "type": "enum",
+            "options": ["draft", "pending_review", "approved", "rejected", "applied", "cancelled"],
+            "default": "pending_review",
+            "required": true,
+            "audited": true,
+            "style": {
+                "draft": "default",
+                "pending_review": "warning",
+                "approved": "success",
+                "rejected": "danger",
+                "applied": "info",
+                "cancelled": "muted"
+            }
+        },
+        "requiresApproval": {"type": "bool", "default": true, "audited": true},
+        "patient": {"type": "link"},
+        "appointment": {"type": "link"},
+        "notificationLog": {"type": "link"},
+        "targetType": {"type": "varchar", "maxLength": 100},
+        "targetId": {"type": "varchar", "maxLength": 100},
+        "summary": {"type": "text"},
+        "payload": {"type": "jsonObject"},
+        "reviewNotes": {"type": "text"},
+        "reviewedAt": {"type": "datetime", "readOnly": true},
+        "reviewedBy": {"type": "link", "view": "views/fields/user"},
+        "appliedAt": {"type": "datetime", "readOnly": true},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "assignedUser": {"type": "link", "view": "views/fields/assigned-user"},
+        "teams": {"type": "linkMultiple", "view": "views/fields/teams"}
+    },
+    "links": {
+        "patient": {"type": "belongsTo", "entity": "Patient", "foreign": "assistantActionProposals"},
+        "appointment": {"type": "belongsTo", "entity": "Appointment", "foreign": "assistantActionProposals"},
+        "notificationLog": {"type": "belongsTo", "entity": "NotificationLog"},
+        "reviewedBy": {"type": "belongsTo", "entity": "User"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"},
+        "assignedUser": {"type": "belongsTo", "entity": "User"},
+        "teams": {"type": "hasMany", "entity": "Team", "relationName": "entityTeam", "layoutRelationshipsDisabled": true}
+    },
+    "collection": {"orderBy": "createdAt", "order": "desc"},
+    "indexes": {
+        "status_risk": {"columns": ["status", "riskLevel"]},
+        "source_status": {"columns": ["source", "status"]},
+        "patient": {"columns": ["patientId"]},
+        "appointment": {"columns": ["appointmentId"]},
+        "target": {"columns": ["targetType", "targetId"]}
+    }
+}

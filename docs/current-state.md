@@ -287,6 +287,11 @@ Implemented in branch `feature-front-desk-intake`:
   email, Telegram and WhatsApp messages through `MessageDeliveryGateway`; the
   WhatsApp adapter is disabled until its system endpoint/token settings are
   configured.
+- `AssistantActionProposal` is now the local LLM/MCP draft-and-review record.
+  It stores source, action type, patient/appointment context, risk, payload and
+  review status. High-risk or critical medical/financial actions force human
+  approval and cannot be marked applied unless the previous status was
+  `approved`.
 - Patient balance follows the product convention: positive value is patient
   prepayment/credit, negative value is patient debt. The patient balance field
   is color-coded in the UI: green for positive credit and red for debt.
@@ -521,9 +526,9 @@ The following requirements still need implementation or explicit verification:
 - assign and browser-verify the role-specific dashboard templates for
   administrator, doctor, assistant, manager and stock users on a real local
   stack;
-- extend the Phase 9 integration boundary with concrete MCP tools and local
-  LLM draft/approval workflows; WhatsApp also needs provider-specific browser
-  or API acceptance once clinic credentials exist.
+- extend the Phase 9 integration boundary with concrete MCP tool endpoints;
+  WhatsApp also needs provider-specific browser or API acceptance once clinic
+  credentials exist.
 
 ## 7. Development Rule
 
