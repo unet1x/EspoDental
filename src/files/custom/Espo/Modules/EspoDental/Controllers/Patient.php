@@ -13,6 +13,7 @@ use Espo\Modules\EspoDental\Services\PatientCareSummaryService;
 use Espo\Modules\EspoDental\Services\PatientFileService;
 use Espo\Modules\EspoDental\Services\PatientFinancialService;
 use Espo\Modules\EspoDental\Services\PatientHistoryService;
+use Espo\Modules\EspoDental\Services\PatientImagingService;
 use Espo\Modules\EspoDental\Services\PatientQuestionnaireService;
 use Espo\Modules\EspoDental\Services\PatientToothChartService;
 
@@ -208,6 +209,40 @@ class Patient extends Record
         return $service->getPatientToothCharts(
             $id,
             $this->getAcl()->checkScope('ToothChartSnapshot', 'read'),
+            $limit
+        );
+    }
+
+    /**
+     * GET /Patient/action/cbctOrthanc?id=...
+     *
+     * @return array{
+     *     patientId: string,
+     *     visitStudies: list<array<string, mixed>>,
+     *     orthodonticStudies: list<array<string, mixed>>
+     * }
+     */
+    public function getActionCbctOrthanc(Request $request): array
+    {
+        $id = $request->getQueryParam('id');
+        $limit = (int) ($request->getQueryParam('limit') ?? 8);
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest('id is required');
+        }
+
+        if (!$this->getAcl()->checkScope('Patient', 'read')) {
+            throw new Forbidden();
+        }
+
+        /** @var PatientImagingService $service */
+        $service = $this->injectableFactory->create(PatientImagingService::class);
+
+        return $service->getPatientCbctOrthanc(
+            $id,
+            $this->getAcl()->checkScope('VisitPhoto', 'read'),
+            $this->getAcl()->checkScope('OrthoPhoto', 'read') &&
+                $this->getAcl()->checkScope('OrthodonticCard', 'read'),
             $limit
         );
     }

@@ -351,6 +351,11 @@ Implemented in branch `feature-front-desk-intake`:
   recorded date, dentition type, linked visit, doctor and annotated-teeth
   count, giving the doctor a fast patient-level route into historical tooth
   chart records.
+- Patient detail now has a `CBCT / Orthanc` panel backed by
+  `Patient/action/cbctOrthanc`. It shows visit imaging records for X-ray,
+  panoramic and CT/CBCT categories, plus any visit photos with Orthanc
+  URL/Study UID. It also shows orthodontic imaging studies from linked
+  orthodontic cards, including X-ray photo types, file links and Orthanc UID.
 - `HealthQuestionnaire.items` now uses a schema-driven answer table backed by
   `HealthQuestionnaire/action/answers`. The table groups localized question
   labels from `questionnaireSchema.json`, renders Yes/No/text values and marks
@@ -447,6 +452,9 @@ Verification completed after this slice:
   Summary`, `Care Summary` and `Tooth Chart History` panels render in Russian
   after rebuild/app-timestamp refresh. The questionnaire panel shows localized
   grouped answers, date/version and generated PDF/signature links.
+- Browser smoke on 2026-05-22 confirmed the patient detail `CBCT / Orthanc`
+  panel renders in Russian after rebuild/app-timestamp refresh and is placed
+  before `Clinical Files`.
 - API smoke on 2026-05-15 confirmed manual `DELETE /PreliminaryPatient/{id}`
   returns `403` with reason `Preliminary patients cannot be manually removed`.
   The temporary smoke record was then marked deleted directly in the local
@@ -467,6 +475,9 @@ Verification completed after this slice:
 - Structural PHPUnit coverage confirms the patient `Questionnaire Summary`
   endpoint and panel expose latest questionnaire answers grouped by schema,
   generated files, recent questionnaires and alert/expired flags.
+- Structural PHPUnit coverage confirms the patient `CBCT / Orthanc` endpoint
+  and panel expose visit and orthodontic imaging studies, source records,
+  file links and Orthanc URL/UID context.
 
 ## 6. Known Gaps Against Product Spec
 
@@ -480,7 +491,6 @@ The following requirements still need implementation or explicit verification:
 - browser/API verify the explicit invoice/payment correction workflow on a
   real local stack, including the `Refund invoice payments before storno`
   server-side guard;
-- polish patient tabs further: CBCT/Orthanc links;
 - extend the first doctor/assistant shift slice with richer schedule management
   UI, multi-weekday templates, cabinet closure rules, and browser acceptance
   coverage on a real clinic day;

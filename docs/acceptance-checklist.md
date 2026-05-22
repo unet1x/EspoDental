@@ -96,6 +96,8 @@ Checklist:
 - Confirm the patient card Tooth Chart History shows recent tooth-chart
   snapshots with source visit, doctor, dentition type and annotated-teeth
   count.
+- Confirm the patient card CBCT / Orthanc panel shows visit and orthodontic
+  imaging studies with source links, file links and Orthanc URL/UID context.
 - Finish visit.
 - Confirm appointment status is `finished`.
 - Confirm stock write-off movements were created.

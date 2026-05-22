@@ -10,6 +10,7 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
                 this.renderPatientFinancialPanel();
                 this.renderCareSummaryPanel();
                 this.renderToothChartHistoryPanel();
+                this.renderCbctOrthancPanel();
                 this.renderClinicalFilesPanel();
             });
         },
@@ -22,6 +23,7 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             this.renderPatientFinancialPanel();
             this.renderCareSummaryPanel();
             this.renderToothChartHistoryPanel();
+            this.renderCbctOrthancPanel();
             this.renderClinicalFilesPanel();
         },
 
@@ -332,6 +334,82 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             return $panel;
         },
 
+        renderCbctOrthancPanel: function () {
+            if (!this.model.id || !this.$el) {
+                return;
+            }
+
+            var $panel = this.ensureCbctOrthancPanel();
+            var $body = $panel.find('[data-name="patient-cbct-orthanc-body"]');
+            var self = this;
+
+            $body.html('<span class="text-muted">' +
+                this.translate('Loading...', 'messages', 'Global') +
+                '</span>');
+
+            Espo.Ajax.getRequest('Patient/action/cbctOrthanc', {
+                id: this.model.id,
+                limit: 8
+            }).then(function (data) {
+                self.renderCbctOrthancContent($body, data || {});
+            }).catch(function () {
+                $body.html('<span class="text-danger">' +
+                    self.translate('Error') +
+                    '</span>');
+            });
+        },
+
+        ensureCbctOrthancPanel: function () {
+            var $existing = this.$el.find('[data-name="patient-cbct-orthanc-panel"]');
+            if ($existing.length) {
+                return $existing;
+            }
+
+            var $panel = $('<div class="panel panel-default" data-name="patient-cbct-orthanc-panel">' +
+                '<div class="panel-heading">' +
+                    '<span class="panel-title">' +
+                        this.translate('CBCT / Orthanc', 'labels', 'Patient') +
+                    '</span>' +
+                '</div>' +
+                '<div class="panel-body" data-name="patient-cbct-orthanc-body"></div>' +
+            '</div>');
+
+            var $anchor = this.$el.find('[data-name="patient-tooth-chart-history-panel"]').first();
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('[data-name="patient-care-summary-panel"]').first();
+            }
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('[data-name="patient-financials-panel"]').first();
+            }
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('[data-name="patient-history-panel"]').first();
+            }
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('[data-name="patient-questionnaire-summary-panel"]').first();
+            }
+
+            if (!$anchor.length) {
+                var $questionnaireField = this.$el.find('[data-name="lastQuestionnaireAt"]').first();
+                $anchor = $questionnaireField.closest('.panel').first();
+            }
+
+            if (!$anchor.length) {
+                $anchor = this.$el.find('.panel').first();
+            }
+
+            if ($anchor.length) {
+                $panel.insertAfter($anchor);
+            } else {
+                this.$el.append($panel);
+            }
+
+            return $panel;
+        },
+
         renderPatientHistoryPanel: function () {
             if (!this.model.id || !this.$el) {
                 return;
@@ -413,7 +491,10 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
             var $financialPanel = this.$el.find('[data-name="patient-financials-panel"]').first();
             var $careSummaryPanel = this.$el.find('[data-name="patient-care-summary-panel"]').first();
             var $toothChartPanel = this.$el.find('[data-name="patient-tooth-chart-history-panel"]').first();
-            if ($toothChartPanel.length) {
+            var $cbctPanel = this.$el.find('[data-name="patient-cbct-orthanc-panel"]').first();
+            if ($cbctPanel.length) {
+                $anchor = $cbctPanel;
+            } else if ($toothChartPanel.length) {
                 $anchor = $toothChartPanel;
             } else if ($careSummaryPanel.length) {
                 $anchor = $careSummaryPanel;
@@ -644,6 +725,143 @@ define('espo-dental:views/patient/record/detail', ['views/record/detail'], funct
                 value === '1' ||
                 value === 'true' ||
                 value === 'yes';
+        },
+
+        renderCbctOrthancContent: function ($body, data) {
+            var visitStudies = Array.isArray(data.visitStudies) ? data.visitStudies : [];
+            var orthodonticStudies = Array.isArray(data.orthodonticStudies) ? data.orthodonticStudies : [];
+
+            $body.html(
+                '<div class="row">' +
+                    '<div class="col-sm-6">' +
+                        '<h5 style="margin-top:0">' +
+                            this.translate('Visit Imaging', 'labels', 'Patient') +
+                        '</h5>' +
+                        this.renderVisitImagingStudies(visitStudies) +
+                    '</div>' +
+                    '<div class="col-sm-6">' +
+                        '<h5 style="margin-top:0">' +
+                            this.translate('Orthodontic Imaging', 'labels', 'Patient') +
+                        '</h5>' +
+                        this.renderOrthodonticImagingStudies(orthodonticStudies) +
+                    '</div>' +
+                '</div>'
+            );
+        },
+
+        renderVisitImagingStudies: function (studies) {
+            if (!studies.length) {
+                return this.emptyState();
+            }
+
+            var html = '<div class="table-responsive">' +
+                '<table class="table table-condensed table-bordered" style="margin-bottom:0">' +
+                '<tbody>';
+
+            studies.forEach(function (study) {
+                var title = study.name || study.recordedAt || this.translate('VisitPhoto', 'scopeNames', 'Global');
+                var category = this.translateVisitPhotoOption(study.category || '', 'category');
+                var stage = this.translateVisitPhotoOption(study.stage || '', 'stage');
+                var meta = this.renderFamilyMeta([
+                    study.recordedAt,
+                    category,
+                    stage,
+                    study.tooth ? this.translate('tooth', 'fields', 'VisitPhoto') + ': ' + study.tooth : ''
+                ]);
+
+                html += '<tr><td>' +
+                    '<a href="#VisitPhoto/view/' + this.escapeAttribute(study.id) + '">' +
+                        this.escapeHtml(title) +
+                    '</a>' +
+                    meta +
+                    this.renderVisitImagingSource(study) +
+                    this.renderOrthancLinks(study.orthancUrl, study.orthancStudyUid) +
+                    this.renderAttachmentLink(study.imageId, study.imageName) +
+                '</td></tr>';
+            }, this);
+
+            html += '</tbody></table></div>';
+
+            return html;
+        },
+
+        renderOrthodonticImagingStudies: function (studies) {
+            if (!studies.length) {
+                return this.emptyState();
+            }
+
+            var html = '<div class="table-responsive">' +
+                '<table class="table table-condensed table-bordered" style="margin-bottom:0">' +
+                '<tbody>';
+
+            studies.forEach(function (study) {
+                var title = study.name || study.takenAt || this.translate('OrthoPhoto', 'scopeNames', 'Global');
+                var type = this.translateOptionValue(study.type || '', 'type', 'OrthoPhoto');
+                var phase = this.translateOptionValue(study.phase || '', 'phase', 'OrthoPhoto');
+                var cardTitle = study.cardNumber || study.cardName || this.translate('OrthodonticCard', 'scopeNames', 'Global');
+                var card = study.cardId ?
+                    '<div class="small"><a href="#OrthodonticCard/view/' + this.escapeAttribute(study.cardId) + '">' +
+                        this.escapeHtml(cardTitle) +
+                    '</a></div>' :
+                    '';
+
+                html += '<tr><td>' +
+                    '<a href="#OrthoPhoto/view/' + this.escapeAttribute(study.id) + '">' +
+                        this.escapeHtml(title) +
+                    '</a>' +
+                    this.renderFamilyMeta([
+                        study.takenAt,
+                        type,
+                        phase
+                    ]) +
+                    card +
+                    this.renderOrthancLinks('', study.orthancUid) +
+                    this.renderAttachmentLink(study.fileId, study.fileName) +
+                '</td></tr>';
+            }, this);
+
+            html += '</tbody></table></div>';
+
+            return html;
+        },
+
+        renderVisitImagingSource: function (study) {
+            if (!study.visitId) {
+                return '';
+            }
+
+            return '<div class="small"><a href="#Visit/view/' + this.escapeAttribute(study.visitId) + '">' +
+                this.escapeHtml(study.visitName || this.translate('Visit', 'scopeNames', 'Global')) +
+                '</a></div>';
+        },
+
+        renderOrthancLinks: function (url, uid) {
+            var links = [];
+
+            if (url) {
+                links.push('<a href="' + this.escapeAttribute(url) + '" target="_blank">' +
+                    this.escapeHtml(this.translate('Open Orthanc', 'labels', 'Patient')) +
+                    '</a>');
+            }
+
+            if (uid) {
+                links.push('<span class="text-muted">' +
+                    this.escapeHtml(this.translate('Study UID', 'labels', 'Patient') + ': ' + uid) +
+                    '</span>');
+            }
+
+            return links.length ? '<div class="small">' + links.join(' &middot; ') + '</div>' : '';
+        },
+
+        renderAttachmentLink: function (id, name) {
+            if (!id) {
+                return '';
+            }
+
+            return '<div class="small"><a href="?entryPoint=download&id=' + this.escapeAttribute(id) +
+                '" target="_blank">' +
+                this.escapeHtml(name || this.translate('File', 'fields', 'Attachment')) +
+                '</a></div>';
         },
 
         renderToothChartHistoryContent: function ($body, data) {

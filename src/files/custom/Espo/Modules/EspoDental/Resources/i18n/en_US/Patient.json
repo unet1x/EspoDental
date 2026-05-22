@@ -32,6 +32,11 @@
         "Tooth Chart History": "Tooth Chart History",
         "Recent Tooth Charts": "Recent Tooth Charts",
         "Annotated Teeth": "Annotated Teeth",
+        "CBCT / Orthanc": "CBCT / Orthanc",
+        "Visit Imaging": "Visit Imaging",
+        "Orthodontic Imaging": "Orthodontic Imaging",
+        "Open Orthanc": "Open Orthanc",
+        "Study UID": "Study UID",
         "Alerts": "Alerts",
         "Expired": "Expired",
         "Other": "Other"
