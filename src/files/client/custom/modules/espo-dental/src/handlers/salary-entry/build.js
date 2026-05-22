@@ -7,7 +7,8 @@ define('espo-dental:handlers/salary-entry/build', ['action-handler'], function (
                 userId: model.get('userId'),
                 periodFrom: model.get('periodFrom'),
                 periodTo: model.get('periodTo'),
-                profileId: model.get('profileId')
+                profileId: model.get('profileId'),
+                hoursWorked: model.get('hoursWorked') || 0
             }).then(function () {
                 Espo.Ui.success(view.getLanguage().translate('Built', 'labels', 'SalaryEntry'));
                 model.fetch();

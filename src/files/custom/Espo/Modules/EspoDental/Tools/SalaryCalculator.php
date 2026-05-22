@@ -21,25 +21,7 @@ class SalaryCalculator
      */
     public function calculateDoctorRevenue(string $userId, string $from, string $to): array
     {
-        $qb = $this->entityManager->getQueryBuilder()
-            ->select(['SUM:vsl.amountTotal', 'COUNT:DISTINCT:visit.id'])
-            ->from(VisitServiceLine::ENTITY_TYPE, 'vsl')
-            ->leftJoin(Visit::ENTITY_TYPE, 'visit', ['visit.id:' => 'vsl.visitId'])
-            ->where([
-                'visit.doctorId' => $userId,
-                'visit.status' => Visit::STATUS_FINISHED,
-                'visit.startedAt>=' => $from,
-                'visit.startedAt<' => $to,
-                'vsl.deleted' => false,
-                'visit.deleted' => false,
-            ])
-            ->build();
-        $row = $this->entityManager->getQueryExecutor()->execute($qb)->fetch();
-        $values = $row ? array_values($row) : [0, 0];
-        return [
-            'revenueBasis' => (float) ($values[0] ?? 0),
-            'visitsCount' => (int) ($values[1] ?? 0),
-        ];
+        return $this->calculateRevenueForVisitUser('doctorId', $userId, $from, $to);
     }
 
     /**
@@ -47,24 +29,55 @@ class SalaryCalculator
      */
     public function calculateAssistantRevenue(string $userId, string $from, string $to): array
     {
-        $qb = $this->entityManager->getQueryBuilder()
-            ->select(['SUM:vsl.amountTotal', 'COUNT:DISTINCT:visit.id'])
-            ->from(VisitServiceLine::ENTITY_TYPE, 'vsl')
-            ->leftJoin(Visit::ENTITY_TYPE, 'visit', ['visit.id:' => 'vsl.visitId'])
+        return $this->calculateRevenueForVisitUser('assistantId', $userId, $from, $to);
+    }
+
+    /**
+     * @return array{revenueBasis: float, visitsCount: int}
+     */
+    private function calculateRevenueForVisitUser(string $userField, string $userId, string $from, string $to): array
+    {
+        /** @var iterable<Visit> $visits */
+        $visits = $this->entityManager
+            ->getRDBRepository(Visit::ENTITY_TYPE)
             ->where([
-                'visit.assistantId' => $userId,
-                'visit.status' => Visit::STATUS_FINISHED,
-                'visit.startedAt>=' => $from,
-                'visit.startedAt<' => $to,
-                'vsl.deleted' => false,
-                'visit.deleted' => false,
+                $userField => $userId,
+                'status' => Visit::STATUS_FINISHED,
+                'startedAt>=' => $from,
+                'startedAt<' => $to,
+                'deleted' => false,
             ])
-            ->build();
-        $row = $this->entityManager->getQueryExecutor()->execute($qb)->fetch();
-        $values = $row ? array_values($row) : [0, 0];
+            ->find();
+
+        $visitIds = [];
+        foreach ($visits as $visit) {
+            $visitIds[] = (string) $visit->getId();
+        }
+
+        if ($visitIds === []) {
+            return [
+                'revenueBasis' => 0.0,
+                'visitsCount' => 0,
+            ];
+        }
+
+        /** @var iterable<VisitServiceLine> $lines */
+        $lines = $this->entityManager
+            ->getRDBRepository(VisitServiceLine::ENTITY_TYPE)
+            ->where([
+                'visitId' => $visitIds,
+                'deleted' => false,
+            ])
+            ->find();
+
+        $revenueBasis = 0.0;
+        foreach ($lines as $line) {
+            $revenueBasis += $line->getAmount();
+        }
+
         return [
-            'revenueBasis' => (float) ($values[0] ?? 0),
-            'visitsCount' => (int) ($values[1] ?? 0),
+            'revenueBasis' => round($revenueBasis, 2),
+            'visitsCount' => count($visitIds),
         ];
     }
 

@@ -66,7 +66,7 @@ The following checks were completed on 2026-05-14:
 
 PHPUnit was not run in the local container because composer/phpunit are not
 installed there. Host-side `vendor/bin/phpunit` was run on 2026-05-22 with
-PHP 8.5.6 and passed: 334 tests, 4062 assertions.
+PHP 8.5.6 and passed: 337 tests, 4082 assertions.
 
 ## 3. Existing Entity Scopes
 
@@ -510,6 +510,12 @@ Verification completed after this slice:
   stock level, current stock, calculated inventory value and period movement
   totals for inbound, outbound and net quantity. Manager and stock dashboard
   templates include the `InventoryStatus` dashlet.
+- Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
+  accepts `hoursWorked` before calculating the base amount, so hourly profiles
+  calculate from entered hours, fixed monthly profiles use the base rate, and
+  per-visit profiles use finished visit count. Doctor/assistant percentage
+  revenue now sums the actual `VisitServiceLine.amount` field. API smoke
+  confirmed hourly base calculation and doctor/assistant revenue percentages.
 - Browser smoke on 2026-05-15 confirmed `Appointment.dateStart` renders a
   free-slot picker in edit mode, loads slots for the selected doctor/cabinet,
   respects the EspoCRM timezone for 08:00-21:00 display, and writes the chosen

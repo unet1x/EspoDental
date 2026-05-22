@@ -27,7 +27,8 @@ class SalaryService
         string $userId,
         string $periodFrom,
         string $periodTo,
-        ?string $profileId = null
+        ?string $profileId = null,
+        float $hoursWorked = 0.0
     ): SalaryEntry {
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
         if (!$user) {
@@ -72,6 +73,7 @@ class SalaryService
         $entry->set('status', SalaryEntry::STATUS_DRAFT);
         $entry->set('visitsCount', $doctor['visitsCount']);
         $entry->set('revenueBasis', $doctor['revenueBasis']);
+        $entry->set('hoursWorked', max(0.0, $hoursWorked));
 
         $baseAmount = 0.0;
         $revenueAmount = 0.0;
@@ -79,7 +81,7 @@ class SalaryService
         if ($profile instanceof SalaryProfile) {
             $baseAmount = $this->calculator->calculateBase(
                 $profile,
-                (float) ($entry->get('hoursWorked') ?? 0),
+                (float) $entry->get('hoursWorked'),
                 $doctor['visitsCount']
             );
             $revenueAmount = $doctor['revenueBasis'] * ($profile->getRevenuePercent() / 100);

@@ -178,6 +178,9 @@ Checklist:
   appointments, no-shows, cancellations and issue percent by doctor.
 - Manager or stock manager can open the inventory status dashlet and compare
   current stock, stock level, period movement totals and inventory value.
+- Manager can build payroll entries where fixed monthly, hourly and per-visit
+  base models plus doctor/assistant revenue percentages calculate from
+  structured visit/service-line data.
 - Stock manager can manage materials and acknowledge low-stock alerts.
 - Confirm each EspoDental role or role-team user receives the matching
   dashboard template after bootstrap unless a user-specific dashboard template

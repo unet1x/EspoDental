@@ -158,6 +158,10 @@
   `EspoDental/Report/inventoryStatus` and as manager/stock dashboard dashlets,
   summarizing active-material stock level, current stock, period movement
   totals and calculated inventory value.
+- Payroll calculation hardening: salary build now passes entered
+  `hoursWorked` into hourly base calculation before the entry is saved, and
+  doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`
+  field.
 - Visit photos get quick-add defaults for name, patient and recorded date.
 - Finished visits reject service/material line edits/removals with a server
   conflict.

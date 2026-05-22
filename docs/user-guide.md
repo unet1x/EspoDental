@@ -155,7 +155,8 @@ read-only and serve as history.
 ### 5.1 Salary
 
 1. **Salary Profile** per employee with rate type:
-   `fixed` / `per_visit` / `percent_revenue` / `mixed`.
+   `fixed_monthly` / `hourly` / `per_visit`, with optional doctor and
+   assistant revenue percentages.
 2. End of month: **Salary Entry** is built (button "Build entry" in toolbar)
    from the doctor's visits in the period.
 3. Manager reviews, adjusts `SalaryBonus` items (kind: `bonus` / `penalty` /
@@ -164,7 +165,8 @@ read-only and serve as history.
 5. Use the **Payroll This Month** dashlet to track unpaid totals.
 
 1. **Salary Profile** на сотрудника, тип ставки:
-   `fixed` / `per_visit` / `percent_revenue` / `mixed`.
+   `fixed_monthly` / `hourly` / `per_visit`, плюс опциональные проценты от
+   выручки врача и ассистента.
 2. В конце месяца — **Salary Entry** (кнопка "Построить"); считает по визитам.
 3. Корректировки через **Salary Bonus** (`bonus` / `penalty` / `correction`).
 4. **Утвердить → Выплатить** → создаётся `Payment(out)`.

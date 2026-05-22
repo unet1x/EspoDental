@@ -25,13 +25,14 @@ class SalaryEntry extends Record
         $periodFrom = (string) ($data->periodFrom ?? '');
         $periodTo = (string) ($data->periodTo ?? '');
         $profileId = isset($data->profileId) ? (string) $data->profileId : null;
+        $hoursWorked = max(0.0, (float) ($data->hoursWorked ?? 0));
         if ($userId === '' || $periodFrom === '' || $periodTo === '') {
             throw new BadRequest('userId, periodFrom and periodTo are required');
         }
         /** @var SalaryService $salaryService */
         $salaryService = $this->injectableFactory->create(SalaryService::class);
 
-        $entry = $salaryService->buildEntry($userId, $periodFrom, $periodTo, $profileId);
+        $entry = $salaryService->buildEntry($userId, $periodFrom, $periodTo, $profileId, $hoursWorked);
         return (object) ['id' => $entry->getId(), 'total' => $entry->getTotalAmount()];
     }
 
