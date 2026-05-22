@@ -65,7 +65,8 @@ The following checks were completed on 2026-05-14:
 - Direct `POST /Patient` is blocked with `403` for normal API creation.
 
 PHPUnit was not run in the local container because composer/phpunit are not
-installed there.
+installed there. Host-side `vendor/bin/phpunit` was run on 2026-05-22 with
+PHP 8.5.6 and passed: 315 tests, 3874 assertions.
 
 ## 3. Existing Entity Scopes
 
@@ -521,14 +522,17 @@ Verification completed after this slice:
   renders inline quantity inputs, saves an actual-consumption change through
   the UI/API, and a finished visit renders the same panel read-only with no
   inline editor. The temporary material quantity change was restored.
+- API smoke on 2026-05-22 confirmed the explicit cash-desk correction workflow
+  on the local stack: draft invoice payment is rejected, over-balance payment
+  is rejected, issuing an invoice allows payment, storno is blocked with
+  `Refund invoice payments before storno` while net paid amount is positive,
+  refunds are separate outbound `Payment` records linked via `refundOf`,
+  cumulative over-refund is rejected, and storno succeeds after full refund.
 
 ## 6. Known Gaps Against Product Spec
 
 The following requirements still need implementation or explicit verification:
 
-- browser/API verify the explicit invoice/payment correction workflow on a
-  real local stack, including the `Refund invoice payments before storno`
-  server-side guard;
 - extend the first doctor/assistant shift slice with richer schedule management
   UI, multi-weekday templates, cabinet closure rules, and browser acceptance
   coverage on a real clinic day;

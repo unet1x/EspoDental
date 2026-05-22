@@ -78,6 +78,9 @@
   refunds are capped at the original amount, posted payments cannot be edited
   or removed through normal saves, and invoice storno now returns
   `Refund invoice payments before storno` until linked payments are refunded.
+- Local API acceptance on 2026-05-22 confirmed draft/over-balance payment
+  guards, refund-linked outbound payments, cumulative refund caps and storno
+  after full refund on the running EspoCRM stack.
 - Service-line price/currency/VAT always comes from the selected service;
   material-line unit/cost always comes from the selected material.
 - Visit material panels now expose an inline material quantity editor for
