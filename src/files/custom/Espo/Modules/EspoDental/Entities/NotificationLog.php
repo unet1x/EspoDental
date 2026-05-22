@@ -17,6 +17,7 @@ class NotificationLog extends Entity
 
     public const CHANNEL_EMAIL = 'email';
     public const CHANNEL_TELEGRAM = 'telegram';
+    public const CHANNEL_WHATSAPP = 'whatsapp';
     public const CHANNEL_SMS = 'sms';
     public const CHANNEL_INTERNAL = 'internal';
 
@@ -24,6 +25,9 @@ class NotificationLog extends Entity
     public const KIND_QUESTIONNAIRE = 'questionnaire_invite';
     public const KIND_LOW_STOCK = 'low_stock';
     public const KIND_MANUAL = 'manual';
+
+    public const DIRECTION_OUTBOUND = 'outbound';
+    public const DIRECTION_INBOUND = 'inbound';
 
     public function getChannel(): ?string
     {

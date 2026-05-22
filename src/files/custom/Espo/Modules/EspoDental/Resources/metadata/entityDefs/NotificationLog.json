@@ -5,9 +5,17 @@
         "appointment": {"type": "link"},
         "channel": {
             "type": "enum",
-            "options": ["email", "telegram", "sms", "internal"],
+            "options": ["email", "telegram", "whatsapp", "sms", "internal"],
             "required": true
         },
+        "direction": {
+            "type": "enum",
+            "options": ["outbound", "inbound"],
+            "default": "outbound",
+            "required": true
+        },
+        "provider": {"type": "varchar", "maxLength": 100},
+        "externalMessageId": {"type": "varchar", "maxLength": 255},
         "kind": {
             "type": "enum",
             "options": ["appointment_reminder", "questionnaire_invite", "low_stock", "manual", "other"],
@@ -47,6 +55,7 @@
     "collection": {"orderBy": "createdAt", "order": "desc"},
     "indexes": {
         "appointment_channel": {"columns": ["appointmentId", "channel", "kind"]},
+        "external_message": {"columns": ["provider", "externalMessageId"]},
         "scheduled": {"columns": ["scheduledFor", "status"]},
         "patient": {"columns": ["patientId"]}
     }

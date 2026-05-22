@@ -107,6 +107,11 @@
   grouped rows instead of raw JSON, and flags alert answers in the table.
 - Patient detail now shows a visible warning banner when the questionnaire is
   expired or contains medical alert answers.
+- Phase 9 integration work now has a message delivery gateway: appointment
+  reminders route email, Telegram and WhatsApp through one adapter boundary,
+  `NotificationLog` records direction/provider/external message id as the
+  outbox audit row, and the WhatsApp adapter is configurable but disabled until
+  endpoint/token settings are provided.
 - EspoDental admin settings now include editable dictionaries for payment
   methods, tooth-chart conditions/colors and tooth-surface labels.
 - Role workspace templates are now seeded for administrator, doctor,

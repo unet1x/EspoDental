@@ -3,6 +3,7 @@
     {"name": "patient"},
     {"name": "appointment"},
     {"name": "channel"},
+    {"name": "provider"},
     {"name": "kind"},
     {"name": "status"},
     {"name": "sentAt"}

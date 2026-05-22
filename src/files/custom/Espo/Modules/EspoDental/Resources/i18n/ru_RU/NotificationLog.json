@@ -2,14 +2,16 @@
     "labels": {"Create NotificationLog": "Создать уведомление"},
     "fields": {
         "name": "Название", "patient": "Пациент", "appointment": "Приём",
-        "channel": "Канал", "kind": "Тип",
+        "channel": "Канал", "direction": "Направление", "provider": "Провайдер",
+        "externalMessageId": "ID сообщения у провайдера", "kind": "Тип",
         "recipient": "Получатель", "subject": "Тема", "messageText": "Текст",
         "status": "Статус", "errorMessage": "Ошибка",
         "scheduledFor": "Запланировано", "sentAt": "Отправлено",
         "attempts": "Попыток", "payload": "Полезная нагрузка"
     },
     "options": {
-        "channel": {"email": "Email", "telegram": "Telegram", "sms": "SMS", "internal": "Внутреннее"},
+        "channel": {"email": "Email", "telegram": "Telegram", "whatsapp": "WhatsApp", "sms": "SMS", "internal": "Внутреннее"},
+        "direction": {"outbound": "Исходящее", "inbound": "Входящее"},
         "kind": {
             "appointment_reminder": "Напоминание о приёме",
             "questionnaire_invite": "Анкета здоровья",

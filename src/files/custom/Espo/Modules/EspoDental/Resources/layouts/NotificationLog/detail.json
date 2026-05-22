@@ -1,9 +1,11 @@
 [{"rows": [
     [{"name": "patient"}, {"name": "appointment"}],
-    [{"name": "channel"}, {"name": "kind"}],
-    [{"name": "recipient"}, {"name": "status"}],
-    [{"name": "subject"}, {"name": "scheduledFor"}],
-    [{"name": "sentAt"}, {"name": "attempts"}],
+    [{"name": "channel"}, {"name": "direction"}],
+    [{"name": "provider"}, {"name": "externalMessageId"}],
+    [{"name": "kind"}, {"name": "status"}],
+    [{"name": "recipient"}, {"name": "scheduledFor"}],
+    [{"name": "subject"}, {"name": "sentAt"}],
+    [{"name": "attempts"}, {"name": "payload"}],
     [{"name": "messageText", "fullWidth": true}],
     [{"name": "errorMessage", "fullWidth": true}]
 ]}]

@@ -146,6 +146,9 @@ Checklist:
 - Posted invoice/payment/stock movement cannot be silently edited by ordinary
   users.
 - Appointment status changes have `AppointmentStatusLog` rows.
+- Outbound external messages have `NotificationLog` audit rows with channel,
+  direction, provider, recipient, status, attempts and external message id when
+  the provider returns one.
 - Questionnaire older than 1 year shows a patient alert.
 - Questionnaire PDF contains answers in two columns and includes the stored
   signature.

@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace Espo\Modules\EspoDental\Services;
 
 use DateTimeImmutable;
-use Espo\Core\Mail\Email;
-use Espo\Core\Mail\EmailSender;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\NotificationLog;
 use Espo\Modules\EspoDental\Entities\Patient;
+use Espo\Modules\EspoDental\Tools\Messaging\MessageDeliveryGateway;
 use Espo\Modules\EspoDental\Tools\ReminderTemplate;
-use Espo\Modules\EspoDental\Tools\TelegramSender;
 use Espo\ORM\Entity;
 
 class ReminderService
@@ -21,8 +19,7 @@ class ReminderService
     public function __construct(
         private readonly EntityManager $entityManager,
         private readonly ReminderTemplate $template,
-        private readonly TelegramSender $telegramSender,
-        private readonly EmailSender $emailSender,
+        private readonly MessageDeliveryGateway $messageDeliveryGateway,
         private readonly Config $config
     ) {
     }
@@ -100,22 +97,26 @@ class ReminderService
                 $stats['skipped']++;
                 continue;
             }
-            $log = $this->createLog($appointment, $appointmentParent, $channel, $recipient, $tpl);
+            $log = $this->createLog($appointment, $appointmentParent, $channel, $recipient, $tpl, $hoursBefore);
+            $this->entityManager->saveEntity($log);
+
             $ok = false;
             $error = null;
+            $externalMessageId = null;
+            $provider = $this->messageDeliveryGateway->providerFor($channel);
             try {
-                if ($channel === NotificationLog::CHANNEL_TELEGRAM) {
-                    $r = $this->telegramSender->send($recipient, $tpl['text']);
-                    $ok = $r['ok'];
-                    $error = $r['error'];
-                } elseif ($channel === NotificationLog::CHANNEL_EMAIL) {
-                    $ok = $this->sendEmail($recipient, $tpl['subject'], $tpl['html']);
-                }
+                $result = $this->messageDeliveryGateway->send($log, $tpl['html']);
+                $ok = $result['ok'];
+                $error = $result['error'];
+                $provider = $result['provider'];
+                $externalMessageId = $result['externalMessageId'];
             } catch (\Throwable $e) {
                 $ok = false;
                 $error = $e->getMessage();
             }
             $log->set('attempts', 1);
+            $log->set('provider', $provider);
+            $log->set('externalMessageId', $externalMessageId);
             $log->set('status', $ok ? NotificationLog::STATUS_SENT : NotificationLog::STATUS_FAILED);
             if ($ok) {
                 $log->set('sentAt', (new DateTimeImmutable())->format('Y-m-d H:i:s'));
@@ -162,17 +163,24 @@ class ReminderService
     {
         $email = (string) $parent->get('emailAddress');
         $chatId = (string) $parent->get('telegramChatId');
+        $whatsApp = (string) ($parent->get('whatsapp') ?: $parent->get('phone'));
 
         if ($preferred === 'telegram' && $chatId !== '') {
             return [NotificationLog::CHANNEL_TELEGRAM => $chatId];
+        }
+        if ($preferred === 'whatsapp' && $whatsApp !== '') {
+            return [NotificationLog::CHANNEL_WHATSAPP => $whatsApp];
         }
         if ($preferred === 'email' && $email !== '') {
             return [NotificationLog::CHANNEL_EMAIL => $email];
         }
 
         $channels = [];
-        if ($chatId !== '' && $this->telegramSender->isEnabled()) {
+        if ($chatId !== '' && $this->messageDeliveryGateway->isEnabled(NotificationLog::CHANNEL_TELEGRAM)) {
             $channels[NotificationLog::CHANNEL_TELEGRAM] = $chatId;
+        }
+        if ($whatsApp !== '' && $this->messageDeliveryGateway->isEnabled(NotificationLog::CHANNEL_WHATSAPP)) {
+            $channels[NotificationLog::CHANNEL_WHATSAPP] = $whatsApp;
         }
         if ($email !== '') {
             $channels[NotificationLog::CHANNEL_EMAIL] = $email;
@@ -202,7 +210,8 @@ class ReminderService
         Entity $parent,
         string $channel,
         string $recipient,
-        array $tpl
+        array $tpl,
+        int $hoursBefore
     ): NotificationLog {
         /** @var NotificationLog $log */
         $log = $this->entityManager->getNewEntity(NotificationLog::ENTITY_TYPE);
@@ -210,27 +219,18 @@ class ReminderService
         $log->set('patientId', $parent instanceof Patient ? $parent->getId() : null);
         $log->set('appointmentId', $appointment->getId());
         $log->set('channel', $channel);
+        $log->set('direction', NotificationLog::DIRECTION_OUTBOUND);
+        $log->set('provider', $this->messageDeliveryGateway->providerFor($channel));
         $log->set('kind', NotificationLog::KIND_REMINDER);
         $log->set('recipient', $recipient);
         $log->set('subject', $tpl['subject']);
         $log->set('messageText', $tpl['text']);
         $log->set('status', NotificationLog::STATUS_QUEUED);
+        $log->set('payload', [
+            'template' => NotificationLog::KIND_REMINDER,
+            'source' => 'reminder-service',
+            'hoursBefore' => $hoursBefore,
+        ]);
         return $log;
-    }
-
-    private function sendEmail(string $address, string $subject, string $html): bool
-    {
-        try {
-            $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
-            $email->set('subject', $subject);
-            $email->set('body', $html);
-            $email->set('isHtml', true);
-            $email->set('to', $address);
-            $email->set('from', $this->config->get('outboundEmailFromAddress'));
-            $this->emailSender->send($email);
-            return true;
-        } catch (\Throwable) {
-            return false;
-        }
     }
 }

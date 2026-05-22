@@ -10,6 +10,19 @@
         "espoDentalTelegramApiBase": {
             "level": "system"
         },
+        "espoDentalWhatsAppEnabled": {
+            "level": "system"
+        },
+        "espoDentalWhatsAppProvider": {
+            "level": "system"
+        },
+        "espoDentalWhatsAppApiBase": {
+            "level": "system"
+        },
+        "espoDentalWhatsAppAccessToken": {
+            "level": "system",
+            "isSensitive": true
+        },
         "espoDentalReminderHoursBefore": {
             "level": "global"
         },

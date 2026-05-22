@@ -2,14 +2,16 @@
     "labels": {"Create NotificationLog": "Crear notificacion"},
     "fields": {
         "name": "Nombre", "patient": "Paciente", "appointment": "Cita",
-        "channel": "Canal", "kind": "Tipo",
+        "channel": "Canal", "direction": "Direccion", "provider": "Proveedor",
+        "externalMessageId": "ID externo del mensaje", "kind": "Tipo",
         "recipient": "Destinatario", "subject": "Asunto", "messageText": "Mensaje",
         "status": "Estado", "errorMessage": "Error",
         "scheduledFor": "Programada", "sentAt": "Enviada",
         "attempts": "Intentos", "payload": "Payload"
     },
     "options": {
-        "channel": {"email": "Email", "telegram": "Telegram", "sms": "SMS", "internal": "Interna"},
+        "channel": {"email": "Email", "telegram": "Telegram", "whatsapp": "WhatsApp", "sms": "SMS", "internal": "Interna"},
+        "direction": {"outbound": "Saliente", "inbound": "Entrante"},
         "kind": {
             "appointment_reminder": "Recordatorio de cita",
             "questionnaire_invite": "Cuestionario de salud",

@@ -14,6 +14,27 @@
             "default": "https://api.telegram.org",
             "tab": "EspoDental"
         },
+        "espoDentalWhatsAppEnabled": {
+            "type": "bool",
+            "default": false,
+            "tab": "EspoDental"
+        },
+        "espoDentalWhatsAppProvider": {
+            "type": "varchar",
+            "maxLength": 100,
+            "default": "generic",
+            "tab": "EspoDental",
+            "tooltip": true
+        },
+        "espoDentalWhatsAppApiBase": {
+            "type": "url",
+            "tab": "EspoDental",
+            "tooltip": true
+        },
+        "espoDentalWhatsAppAccessToken": {
+            "type": "password",
+            "tab": "EspoDental"
+        },
         "espoDentalReminderHoursBefore": {
             "type": "int",
             "default": 24,

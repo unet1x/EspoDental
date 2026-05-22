@@ -281,6 +281,12 @@ Implemented in branch `feature-front-desk-intake`:
 - Child appointment reminders resolve delivery contact/preferences from the
   linked parent patient when present; otherwise they use the child card's
   own communication settings.
+- Phase 9 integration work has started with a message delivery gateway.
+  `NotificationLog` now acts as the message outbox/audit row with direction,
+  provider and external message id fields. Appointment reminders route outbound
+  email, Telegram and WhatsApp messages through `MessageDeliveryGateway`; the
+  WhatsApp adapter is disabled until its system endpoint/token settings are
+  configured.
 - Patient balance follows the product convention: positive value is patient
   prepayment/credit, negative value is patient debt. The patient balance field
   is color-coded in the UI: green for positive credit and red for debt.
@@ -515,7 +521,9 @@ The following requirements still need implementation or explicit verification:
 - assign and browser-verify the role-specific dashboard templates for
   administrator, doctor, assistant, manager and stock users on a real local
   stack;
-- define and implement MCP/LLM/WhatsApp integration layer.
+- extend the Phase 9 integration boundary with concrete MCP tools and local
+  LLM draft/approval workflows; WhatsApp also needs provider-specific browser
+  or API acceptance once clinic credentials exist.
 
 ## 7. Development Rule
 

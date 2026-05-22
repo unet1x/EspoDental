@@ -22,6 +22,14 @@
             [
                 {"name": "espoDentalTelegramBotToken"},
                 {"name": "espoDentalTelegramApiBase"}
+            ],
+            [
+                {"name": "espoDentalWhatsAppEnabled"},
+                {"name": "espoDentalWhatsAppProvider"}
+            ],
+            [
+                {"name": "espoDentalWhatsAppApiBase"},
+                {"name": "espoDentalWhatsAppAccessToken"}
             ]
         ]
     },
