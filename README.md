@@ -359,6 +359,10 @@ EspoDental поставляется со вторым compose-стеком
   контракт шаблонов отчётов, расшифровки ЗП и настроек интеграций SimpleStom
 - [docs/simple-stom-demo-runbook.md](docs/simple-stom-demo-runbook.md) —
   локальная демо-база SimpleStom и ручной приёмочный сценарий
+- [docs/espo-dental-product-development-plan.md](docs/espo-dental-product-development-plan.md) —
+  продуктовый план доводки EspoDental после сверки с SimpleStom
+- [docs/espo-dental-product-decisions.md](docs/espo-dental-product-decisions.md) —
+  принятые продуктовые решения для следующих этапов разработки
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

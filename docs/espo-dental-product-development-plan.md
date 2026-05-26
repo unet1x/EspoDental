@@ -6,6 +6,8 @@
 
 Цель документа: зафиксировать, как довести EspoDental до удобной стоматологической МИС внутри EspoCRM, не копируя SimpleStom как отдельное приложение.
 
+Связанный decision log: [docs/espo-dental-product-decisions.md](espo-dental-product-decisions.md).
+
 ## 1. Product Position
 
 EspoDental должен быть не набором CRUD-страниц, а рабочим ядром стоматологической CRM/МИС для клиники или небольшой сети:
@@ -55,14 +57,17 @@ EspoCRM остается платформой: пользователи, ACL, р
 
 ### 3.2 Product decisions still need closure
 
-Открытые решения, которые влияют на разработку:
+Решения, которые влияют на разработку, зафиксированы в
+[docs/espo-dental-product-decisions.md](espo-dental-product-decisions.md).
+Короткая выжимка:
 
-- cabinet procedure capabilities: отдельная сущность или JSON/settings;
-- patient flags: отдельный справочник или использование существующих полей/tags;
-- broader family graph: достаточно parent/child или нужна связь семьи между любыми пациентами;
-- portal authentication: оставить signed token или закрепить email + OTP как в SimpleStom;
-- cash shift: текущей сущности достаточно или нужен более строгий immutable close/reconcile contract;
-- reports: достаточно сохраненных `ReportDefinition` и dashlets или нужен полноценный report builder уровня SimpleStom.
+- cabinet procedure requirements пока остаются JSON-backed, без новой сущности;
+- patient flags пока покрываются `vip`, `restrictions`, questionnaire alerts и статусами;
+- family MVP остается через parent/guardian and child links;
+- patient portal использует OTP session как основной вход;
+- cash shift остается отдельной операционной сущностью;
+- reports развиваются от existing endpoints, dashlets and `ReportDefinition`;
+- AI/MCP работает через narrow tools and proposal records, без прямых risky mutations.
 
 ### 3.3 End-to-end demo must become the product acceptance source
 
@@ -282,6 +287,11 @@ Deliverables:
 Done when:
 
 - no open decision blocks calendar, patient workspace, cash desk or inventory work.
+
+Status:
+
+- product decisions are locked in `docs/espo-dental-product-decisions.md`;
+- the next concrete work can start with Stage B and Stage C.
 
 ### Stage B - UX Language And Visual Consistency
 
