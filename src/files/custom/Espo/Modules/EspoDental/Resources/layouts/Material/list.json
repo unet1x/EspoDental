@@ -3,6 +3,8 @@
     {"name": "code"},
     {"name": "category"},
     {"name": "unit"},
+    {"name": "purchasingUnit"},
+    {"name": "conversionFactor"},
     {"name": "currentStock"},
     {"name": "stockLevel"},
     {"name": "minStock"}

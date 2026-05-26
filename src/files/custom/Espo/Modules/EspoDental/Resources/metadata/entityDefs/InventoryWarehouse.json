@@ -1,0 +1,38 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 255},
+        "warehouseType": {
+            "type": "enum",
+            "options": ["main", "satellite"],
+            "default": "main",
+            "required": true
+        },
+        "clinic": {"type": "link", "required": true},
+        "cabinet": {"type": "link"},
+        "responsibleUser": {"type": "link", "view": "views/fields/user"},
+        "inventoryFrequencyDays": {"type": "int", "default": 30, "min": 1},
+        "nextInventoryDueAt": {"type": "date"},
+        "lastInventoryAt": {"type": "date"},
+        "lastInventoryTaskCreatedAt": {"type": "datetime"},
+        "notes": {"type": "text"},
+        "isActive": {"type": "bool", "default": true},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "cabinet": {"type": "belongsTo", "entity": "Cabinet"},
+        "responsibleUser": {"type": "belongsTo", "entity": "User"},
+        "stockLots": {"type": "hasMany", "entity": "InventoryStockLot", "foreign": "warehouse"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "name", "order": "asc"},
+    "indexes": {
+        "clinic_type": {"columns": ["clinicId", "warehouseType"]},
+        "cabinet": {"columns": ["cabinetId"]},
+        "inventory_due": {"columns": ["nextInventoryDueAt", "isActive"]}
+    }
+}

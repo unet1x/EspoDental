@@ -4,6 +4,8 @@
         "service": {"type": "link", "required": true},
         "material": {"type": "link", "required": true},
         "quantity": {"type": "float", "required": true, "default": 1, "min": 0},
+        "unit": {"type": "varchar", "maxLength": 16},
+        "isRequired": {"type": "bool", "default": true},
         "notes": {"type": "text"},
         "createdAt": {"type": "datetime", "readOnly": true},
         "modifiedAt": {"type": "datetime", "readOnly": true},

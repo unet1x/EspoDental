@@ -2,11 +2,14 @@
     "labels": {"Create Material": "Create Material", "Overview": "Overview", "Stock": "Stock"},
     "fields": {
         "name": "Name", "code": "Code", "sku": "SKU", "category": "Category",
-        "unit": "Unit", "manufacturer": "Manufacturer", "vendor": "Vendor",
+        "unit": "Unit", "consumptionUnit": "Consumption Unit",
+        "purchasingUnit": "Purchasing Unit", "conversionFactor": "Conversion Factor",
+        "manufacturer": "Manufacturer", "vendor": "Vendor",
         "price": "Price", "color": "Color",
         "minStock": "Min Stock", "criticalStock": "Critical Stock", "maxStock": "Max Stock",
         "currentStock": "Current Stock", "stockLevel": "Level",
-        "expiryControl": "Expiry Control", "isActive": "Active", "description": "Description"
+        "expiryControl": "Expiry Control", "trackExpiration": "Track Expiration",
+        "reorderUrl": "Reorder URL", "isActive": "Active", "description": "Description"
     },
     "options": {
         "unit": {
@@ -16,7 +19,10 @@
         },
         "stockLevel": {"": "—", "ok": "OK", "low": "Low", "critical": "Critical", "out": "Out of stock"}
     },
-    "links": {"category": "Category", "movements": "Movements", "serviceMaterials": "Used in Services", "alerts": "Alerts"},
+    "links": {
+        "category": "Category", "movements": "Movements", "stockLots": "Stock Lots",
+        "serviceMaterials": "Used in Services", "alerts": "Alerts"
+    },
     "boolFilters": {"onlyActive": "Only active", "lowStock": "Low stock", "criticalStock": "Critical"},
     "tooltips": {
         "minStock": "Warning threshold",

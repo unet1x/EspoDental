@@ -17,6 +17,11 @@ class StockMovement extends Entity
     public const TYPE_TRANSFER_IN = 'transfer_in';
     public const TYPE_ADJUSTMENT = 'adjustment';
     public const TYPE_RETURN = 'return';
+    public const TYPE_MANUAL_INCREASE = 'manual_increase';
+    public const TYPE_MANUAL_DECREASE = 'manual_decrease';
+    public const TYPE_MANUAL_SET = 'manual_set';
+    public const TYPE_INVENTORY_COUNT = 'inventory_count';
+    public const TYPE_RECEPTION_USAGE = 'reception_usage';
 
     public const DIRECTION_IN = 'in';
     public const DIRECTION_OUT = 'out';
@@ -25,6 +30,18 @@ class StockMovement extends Entity
         self::TYPE_RECEIPT,
         self::TYPE_TRANSFER_IN,
         self::TYPE_RETURN,
+        self::TYPE_MANUAL_INCREASE,
+        self::TYPE_MANUAL_SET,
+        self::TYPE_INVENTORY_COUNT,
+    ];
+
+    public const MANUAL_CORRECTION_TYPES = [
+        self::TYPE_ADJUSTMENT,
+        self::TYPE_MANUAL_INCREASE,
+        self::TYPE_MANUAL_DECREASE,
+        self::TYPE_MANUAL_SET,
+        self::TYPE_INVENTORY_COUNT,
+        self::TYPE_WRITEOFF,
     ];
 
     public function getQuantity(): float

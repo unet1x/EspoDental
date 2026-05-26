@@ -6,6 +6,8 @@
         "unit": "Unidad", "unitPrice": "Precio", "totalCost": "Coste",
         "performedAt": "Realizado el", "performedBy": "Realizado por", "batch": "Lote",
         "expiryDate": "Caducidad", "reason": "Motivo",
+        "sourceWarehouse": "Almacen origen", "targetWarehouse": "Almacen destino",
+        "stockLot": "Lote",
         "sourceVisit": "Visita origen", "sourceVisitServiceLine": "Linea origen",
         "sourceVisitMaterialLine": "Linea de material origen"
     },
@@ -14,10 +16,15 @@
             "receipt": "Recepcion", "consumption": "Consumo (visita)",
             "writeoff": "Baja", "transfer_out": "Transferencia (salida)",
             "transfer_in": "Transferencia (entrada)", "adjustment": "Ajuste",
-            "return": "Devolucion"
+            "return": "Devolucion", "manual_increase": "Aumento manual",
+            "manual_decrease": "Disminucion manual", "manual_set": "Ajuste manual",
+            "inventory_count": "Inventario", "reception_usage": "Uso en visita"
         },
         "direction": {"in": "Entrada", "out": "Salida"}
     },
-    "links": {"material": "Material", "clinic": "Clinica"},
+    "links": {
+        "material": "Material", "clinic": "Clinica", "sourceWarehouse": "Almacen origen",
+        "targetWarehouse": "Almacen destino", "stockLot": "Lote"
+    },
     "boolFilters": {"today": "Hoy", "thisMonth": "Este mes"}
 }

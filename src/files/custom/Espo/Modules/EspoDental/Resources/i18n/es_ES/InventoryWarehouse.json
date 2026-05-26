@@ -1,0 +1,11 @@
+{
+    "labels": {"Create InventoryWarehouse": "Crear almacen"},
+    "fields": {
+        "name": "Nombre", "warehouseType": "Tipo", "clinic": "Clinica", "cabinet": "Gabinete",
+        "responsibleUser": "Responsable", "inventoryFrequencyDays": "Frecuencia de inventario",
+        "nextInventoryDueAt": "Proximo inventario", "lastInventoryAt": "Ultimo inventario",
+        "lastInventoryTaskCreatedAt": "Ultima tarea", "notes": "Notas", "isActive": "Activo"
+    },
+    "options": {"warehouseType": {"main": "Principal", "satellite": "Gabinete"}},
+    "links": {"clinic": "Clinica", "cabinet": "Gabinete", "stockLots": "Lotes"}
+}

@@ -195,6 +195,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   SimpleStom-style doctor reception workspace contract
 - [docs/simple-stom-tooth-chart-contract.md](docs/simple-stom-tooth-chart-contract.md) —
   SimpleStom tooth chart dentition, state and snapshot-history contract
+- [docs/simple-stom-services-inventory.md](docs/simple-stom-services-inventory.md) —
+  SimpleStom service catalog and lot-aware inventory contract
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -343,6 +345,8 @@ EspoDental поставляется со вторым compose-стеком
   контракт рабочего места врача на приёме SimpleStom
 - [docs/simple-stom-tooth-chart-contract.md](docs/simple-stom-tooth-chart-contract.md) —
   контракт зубной формулы SimpleStom: прикусы, состояния и история снимков
+- [docs/simple-stom-services-inventory.md](docs/simple-stom-services-inventory.md) —
+  контракт каталога услуг и складского учета SimpleStom
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

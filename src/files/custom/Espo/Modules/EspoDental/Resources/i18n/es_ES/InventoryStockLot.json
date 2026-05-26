@@ -1,0 +1,13 @@
+{
+    "labels": {"Create InventoryStockLot": "Crear lote"},
+    "fields": {
+        "name": "Nombre", "warehouse": "Almacen", "material": "Material",
+        "quantityInPurchasingUnits": "Cantidad en unidad de compra",
+        "lotNumber": "Numero de lote", "expiresAt": "Caduca el", "receivedAt": "Recibido el",
+        "sourceTransaction": "Transaccion origen"
+    },
+    "links": {
+        "warehouse": "Almacen", "material": "Material",
+        "sourceTransaction": "Transaccion origen", "movements": "Movimientos"
+    }
+}

@@ -1,0 +1,13 @@
+{
+    "labels": {"Create InventoryStockLot": "Создать партию"},
+    "fields": {
+        "name": "Название", "warehouse": "Склад", "material": "Материал",
+        "quantityInPurchasingUnits": "Количество в ед. закупки",
+        "lotNumber": "Номер партии", "expiresAt": "Срок годности", "receivedAt": "Дата прихода",
+        "sourceTransaction": "Исходная операция"
+    },
+    "links": {
+        "warehouse": "Склад", "material": "Материал",
+        "sourceTransaction": "Исходная операция", "movements": "Операции"
+    }
+}

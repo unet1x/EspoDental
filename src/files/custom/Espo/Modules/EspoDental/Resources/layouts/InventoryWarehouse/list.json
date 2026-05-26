@@ -1,0 +1,9 @@
+[
+    {"name": "name"},
+    {"name": "warehouseType"},
+    {"name": "clinic", "link": true},
+    {"name": "cabinet", "link": true},
+    {"name": "responsibleUser", "link": true},
+    {"name": "nextInventoryDueAt"},
+    {"name": "isActive"}
+]

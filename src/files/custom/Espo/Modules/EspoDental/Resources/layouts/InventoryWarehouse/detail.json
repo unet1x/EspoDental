@@ -1,0 +1,12 @@
+[
+    {
+        "rows": [
+            [{"name": "name"}, {"name": "warehouseType"}],
+            [{"name": "clinic"}, {"name": "cabinet"}],
+            [{"name": "responsibleUser"}, {"name": "isActive"}],
+            [{"name": "inventoryFrequencyDays"}, {"name": "nextInventoryDueAt"}],
+            [{"name": "lastInventoryAt"}, {"name": "lastInventoryTaskCreatedAt"}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

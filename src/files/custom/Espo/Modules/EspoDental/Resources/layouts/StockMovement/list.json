@@ -5,5 +5,8 @@
     {"name": "direction"},
     {"name": "quantity"},
     {"name": "totalCost"},
+    {"name": "sourceWarehouse", "link": true},
+    {"name": "targetWarehouse", "link": true},
+    {"name": "stockLot", "link": true},
     {"name": "clinic"}
 ]

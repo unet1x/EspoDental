@@ -10,6 +10,17 @@
             "default": "pcs",
             "required": true
         },
+        "consumptionUnit": {
+            "type": "enum",
+            "options": ["pcs", "ml", "g", "kg", "l", "box", "pack", "syringe", "tube", "cartridge"],
+            "default": "pcs"
+        },
+        "purchasingUnit": {
+            "type": "enum",
+            "options": ["pcs", "ml", "g", "kg", "l", "box", "pack", "syringe", "tube", "cartridge"],
+            "default": "pcs"
+        },
+        "conversionFactor": {"type": "float", "default": 1, "min": 0.0001},
         "manufacturer": {"type": "varchar", "maxLength": 128},
         "vendor": {"type": "varchar", "maxLength": 128},
         "price": {"type": "currency", "default": "0.00"},
@@ -26,6 +37,8 @@
             "style": {"": "default", "ok": "success", "low": "warning", "critical": "danger", "out": "danger"}
         },
         "expiryControl": {"type": "bool", "default": false},
+        "trackExpiration": {"type": "bool", "default": false},
+        "reorderUrl": {"type": "url", "maxLength": 255},
         "isActive": {"type": "bool", "default": true},
         "description": {"type": "text"},
         "createdAt": {"type": "datetime", "readOnly": true},
@@ -38,6 +51,7 @@
     "links": {
         "category": {"type": "belongsTo", "entity": "MaterialCategory", "foreign": "materials"},
         "movements": {"type": "hasMany", "entity": "StockMovement", "foreign": "material"},
+        "stockLots": {"type": "hasMany", "entity": "InventoryStockLot", "foreign": "material"},
         "serviceMaterials": {"type": "hasMany", "entity": "ServiceMaterial", "foreign": "material"},
         "visitMaterialLines": {"type": "hasMany", "entity": "VisitMaterialLine", "foreign": "material"},
         "alerts": {"type": "hasMany", "entity": "LowStockAlert", "foreign": "material"},

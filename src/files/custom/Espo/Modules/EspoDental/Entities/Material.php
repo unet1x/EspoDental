@@ -40,6 +40,26 @@ class Material extends Entity
         return $this->get('unit');
     }
 
+    public function getConsumptionUnit(): string
+    {
+        return (string) ($this->get('consumptionUnit') ?? $this->get('unit') ?? 'pcs');
+    }
+
+    public function getPurchasingUnit(): string
+    {
+        return (string) ($this->get('purchasingUnit') ?? $this->getConsumptionUnit());
+    }
+
+    public function getConversionFactor(): float
+    {
+        return max(0.0001, (float) ($this->get('conversionFactor') ?? 1));
+    }
+
+    public function tracksExpiration(): bool
+    {
+        return (bool) ($this->get('trackExpiration') ?? $this->get('expiryControl') ?? false);
+    }
+
     public function isActive(): bool
     {
         return (bool) $this->get('isActive');

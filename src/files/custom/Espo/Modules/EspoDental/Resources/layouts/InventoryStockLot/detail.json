@@ -1,0 +1,10 @@
+[
+    {
+        "rows": [
+            [{"name": "warehouse"}, {"name": "material"}],
+            [{"name": "quantityInPurchasingUnits"}, {"name": "lotNumber"}],
+            [{"name": "expiresAt"}, {"name": "receivedAt"}],
+            [{"name": "sourceTransaction"}]
+        ]
+    }
+]

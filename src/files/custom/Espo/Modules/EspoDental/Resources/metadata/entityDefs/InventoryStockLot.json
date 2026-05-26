@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "warehouse": {"type": "link", "required": true},
+        "material": {"type": "link", "required": true},
+        "quantityInPurchasingUnits": {"type": "float", "required": true, "default": 0, "min": 0},
+        "lotNumber": {"type": "varchar", "maxLength": 64},
+        "expiresAt": {"type": "date"},
+        "receivedAt": {"type": "date"},
+        "sourceTransaction": {"type": "link"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "warehouse": {"type": "belongsTo", "entity": "InventoryWarehouse", "foreign": "stockLots"},
+        "material": {"type": "belongsTo", "entity": "Material", "foreign": "stockLots"},
+        "sourceTransaction": {"type": "belongsTo", "entity": "StockMovement"},
+        "movements": {"type": "hasMany", "entity": "StockMovement", "foreign": "stockLot"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "expiresAt", "order": "asc"},
+    "indexes": {
+        "warehouse_material": {"columns": ["warehouseId", "materialId"]},
+        "material_expiry": {"columns": ["materialId", "expiresAt"]},
+        "lot_number": {"columns": ["lotNumber"]}
+    }
+}

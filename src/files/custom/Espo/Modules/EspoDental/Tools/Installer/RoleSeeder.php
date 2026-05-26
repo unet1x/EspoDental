@@ -34,7 +34,8 @@ class RoleSeeder
         'Visit', 'VisitNoteTemplate', 'ServiceCategory', 'Service', 'VisitServiceLine', 'VisitMaterialLine',
         'ToothChartSnapshot', 'VisitPhoto',
         'Invoice', 'InvoiceLine', 'Payment',
-        'MaterialCategory', 'Material', 'StockMovement', 'ServiceMaterial',
+        'MaterialCategory', 'Material', 'InventoryWarehouse', 'InventoryStockLot',
+        'StockMovement', 'ServiceMaterial',
         'LowStockAlert', 'NotificationLog', 'AssistantActionProposal',
         'SalaryProfile', 'SalaryEntry', 'SalaryBonus',
         'OrthodonticCard', 'TreatmentStage', 'ToothMovementPlan',
@@ -218,6 +219,8 @@ class RoleSeeder
         $manager['VisitPhoto']           = $row('yes', 'all', 'all', 'all', 'no');
         $manager['InvoiceLine']          = $row('yes', 'all', 'all', 'all', 'no');
         $manager['MaterialCategory']     = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['InventoryWarehouse']   = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['InventoryStockLot']    = $row('yes', 'all', 'all', 'all', 'no');
         $manager['StockMovement']        = $row('yes', 'all', 'no', 'no', 'no');
         $manager['ServiceMaterial']      = $row('yes', 'all', 'all', 'all', 'no');
         $manager['LowStockAlert']        = $row('no', 'all', 'all', 'no', 'all');
@@ -255,6 +258,8 @@ class RoleSeeder
             'Payment'              => $row('no', 'team', 'no', 'no', 'team'),
             'MaterialCategory'     => $row('no', 'all', 'no', 'no', 'no'),
             'Material'             => $row('no', 'all', 'no', 'no', 'no'),
+            'InventoryWarehouse'   => $row('no', 'team', 'no', 'no', 'no'),
+            'InventoryStockLot'    => $row('no', 'team', 'no', 'no', 'no'),
             'StockMovement'        => $row('no', 'team', 'no', 'no', 'no'),
             'ServiceMaterial'      => $row('no', 'all', 'no', 'no', 'no'),
             'LowStockAlert'        => $row('no', 'team', 'no', 'no', 'no'),
@@ -296,6 +301,8 @@ class RoleSeeder
             'Payment'              => $row('no', 'team', 'no', 'no', 'no'),
             'MaterialCategory'     => $row('no', 'all', 'no', 'no', 'no'),
             'Material'             => $row('no', 'all', 'no', 'no', 'no'),
+            'InventoryWarehouse'   => $row('no', 'team', 'no', 'no', 'no'),
+            'InventoryStockLot'    => $row('no', 'team', 'no', 'no', 'no'),
             'StockMovement'        => $row('no', 'no', 'no', 'no', 'no'),
             'ServiceMaterial'      => $row('no', 'all', 'no', 'no', 'no'),
             'LowStockAlert'        => $row('no', 'no', 'no', 'no', 'no'),
@@ -337,6 +344,8 @@ class RoleSeeder
             'Payment'              => $row('yes', 'team', 'team', 'no', 'team'),
             'MaterialCategory'     => $row('no', 'all', 'no', 'no', 'no'),
             'Material'             => $row('no', 'all', 'no', 'no', 'no'),
+            'InventoryWarehouse'   => $row('no', 'team', 'no', 'no', 'no'),
+            'InventoryStockLot'    => $row('no', 'team', 'no', 'no', 'no'),
             'StockMovement'        => $row('no', 'no', 'no', 'no', 'no'),
             'ServiceMaterial'      => $row('no', 'all', 'no', 'no', 'no'),
             'LowStockAlert'        => $row('no', 'team', 'no', 'no', 'no'),
@@ -378,6 +387,8 @@ class RoleSeeder
             'Payment'              => $row('no', 'no', 'no', 'no', 'no'),
             'MaterialCategory'     => $row('yes', 'all', 'all', 'all', 'no'),
             'Material'             => $row('yes', 'all', 'all', 'all', 'all'),
+            'InventoryWarehouse'   => $row('yes', 'all', 'all', 'all', 'no'),
+            'InventoryStockLot'    => $row('yes', 'all', 'all', 'all', 'no'),
             'StockMovement'        => $row('yes', 'all', 'no', 'no', 'no'),
             'ServiceMaterial'      => $row('yes', 'all', 'all', 'all', 'no'),
             'LowStockAlert'        => $row('no', 'all', 'all', 'no', 'all'),

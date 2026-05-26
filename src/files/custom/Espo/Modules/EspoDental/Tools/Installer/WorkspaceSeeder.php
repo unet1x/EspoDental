@@ -123,6 +123,7 @@ class WorkspaceSeeder
         return $result + [
             'clinics' => $clinicResult['created'],
             'cabinets' => $this->ensureCabinets($clinic),
+            'inventoryWarehouses' => $this->ensureInventoryWarehouses($clinic),
             'materialCategories' => $this->ensureMaterialCategories(),
             'materials' => $this->ensureMaterials(),
             'stockMovements' => $this->ensureOpeningStock($clinic),
@@ -208,6 +209,70 @@ class WorkspaceSeeder
         return $created;
     }
 
+    private function ensureInventoryWarehouses(Entity $clinic): int
+    {
+        $created = 0;
+
+        $main = $this->entityManager
+            ->getRDBRepository('InventoryWarehouse')
+            ->where([
+                'clinicId' => $clinic->getId(),
+                'warehouseType' => 'main',
+            ])
+            ->findOne();
+
+        if (!$main) {
+            $warehouse = $this->entityManager->getRDBRepository('InventoryWarehouse')->getNew();
+            $this->setValues($warehouse, [
+                'name' => 'Основной склад',
+                'warehouseType' => 'main',
+                'clinicId' => $clinic->getId(),
+                'inventoryFrequencyDays' => 30,
+                'isActive' => true,
+            ]);
+            $this->entityManager->saveEntity($warehouse);
+            $created++;
+        }
+
+        /** @var iterable<Entity> $cabinets */
+        $cabinets = $this->entityManager
+            ->getRDBRepository('Cabinet')
+            ->where([
+                'clinicId' => $clinic->getId(),
+                'isActive' => true,
+            ])
+            ->find();
+
+        foreach ($cabinets as $cabinet) {
+            $existing = $this->entityManager
+                ->getRDBRepository('InventoryWarehouse')
+                ->where([
+                    'clinicId' => $clinic->getId(),
+                    'cabinetId' => $cabinet->getId(),
+                    'warehouseType' => 'satellite',
+                ])
+                ->findOne();
+
+            if ($existing) {
+                continue;
+            }
+
+            $warehouse = $this->entityManager->getRDBRepository('InventoryWarehouse')->getNew();
+            $this->setValues($warehouse, [
+                'name' => 'Склад ' . (string) $cabinet->get('name'),
+                'warehouseType' => 'satellite',
+                'clinicId' => $clinic->getId(),
+                'cabinetId' => $cabinet->getId(),
+                'inventoryFrequencyDays' => 30,
+                'isActive' => true,
+            ]);
+            $this->entityManager->saveEntity($warehouse);
+            $created++;
+        }
+
+        return $created;
+    }
+
     private function ensureMaterials(): int
     {
         $created = 0;
@@ -227,11 +292,15 @@ class WorkspaceSeeder
                 'name' => $cfg['name'],
                 'code' => $cfg['code'],
                 'unit' => $cfg['unit'],
+                'consumptionUnit' => $cfg['unit'],
+                'purchasingUnit' => $cfg['unit'],
+                'conversionFactor' => 1,
                 'price' => $cfg['price'],
                 'priceCurrency' => 'RUB',
                 'minStock' => $cfg['minStock'],
                 'criticalStock' => $cfg['criticalStock'],
                 'stockLevel' => 'ok',
+                'trackExpiration' => false,
                 'isActive' => true,
                 'categoryId' => $category->getId(),
             ]);
@@ -246,6 +315,7 @@ class WorkspaceSeeder
     {
         $created = 0;
         $now = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        $warehouse = $this->findMainWarehouse($clinic);
 
         foreach (self::MATERIALS as $cfg) {
             if ($cfg['openingStock'] <= 0) {
@@ -282,11 +352,55 @@ class WorkspaceSeeder
                 'performedAt' => $now,
                 'reason' => self::OPENING_STOCK_REASON,
             ]);
+            if ($warehouse) {
+                $movement->set('targetWarehouseId', $warehouse->getId());
+            }
             $this->entityManager->saveEntity($movement);
+            if ($warehouse) {
+                $this->ensureOpeningStockLot($warehouse, $material, $movement, (float) $cfg['openingStock']);
+            }
             $created++;
         }
 
         return $created;
+    }
+
+    private function findMainWarehouse(Entity $clinic): ?Entity
+    {
+        return $this->entityManager
+            ->getRDBRepository('InventoryWarehouse')
+            ->where([
+                'clinicId' => $clinic->getId(),
+                'warehouseType' => 'main',
+            ])
+            ->findOne();
+    }
+
+    private function ensureOpeningStockLot(Entity $warehouse, Entity $material, Entity $movement, float $quantity): void
+    {
+        $existing = $this->entityManager
+            ->getRDBRepository('InventoryStockLot')
+            ->where([
+                'warehouseId' => $warehouse->getId(),
+                'materialId' => $material->getId(),
+                'sourceTransactionId' => $movement->getId(),
+            ])
+            ->findOne();
+
+        if ($existing) {
+            return;
+        }
+
+        $lot = $this->entityManager->getRDBRepository('InventoryStockLot')->getNew();
+        $this->setValues($lot, [
+            'warehouseId' => $warehouse->getId(),
+            'materialId' => $material->getId(),
+            'quantityInPurchasingUnits' => $quantity,
+            'lotNumber' => 'OPENING',
+            'receivedAt' => (new DateTimeImmutable())->format('Y-m-d'),
+            'sourceTransactionId' => $movement->getId(),
+        ]);
+        $this->entityManager->saveEntity($lot);
     }
 
     private function ensureServices(): int
@@ -779,6 +893,8 @@ class WorkspaceSeeder
             $this->divider('ed-catalogs', 'Прайс и склад'),
             'ServiceCategory',
             'MaterialCategory',
+            'InventoryWarehouse',
+            'InventoryStockLot',
             'StockMovement',
             'LowStockAlert',
             $this->divider('ed-ortho', 'Ортодонтия'),

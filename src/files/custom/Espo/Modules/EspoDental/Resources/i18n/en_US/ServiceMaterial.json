@@ -1,5 +1,9 @@
 {
     "labels": {"Create ServiceMaterial": "Add Norm"},
-    "fields": {"name": "Name", "service": "Service", "material": "Material", "quantity": "Per service unit", "notes": "Notes"},
+    "fields": {
+        "name": "Name", "service": "Service", "material": "Material",
+        "quantity": "Per service unit", "unit": "Unit", "isRequired": "Required",
+        "notes": "Notes"
+    },
     "links": {"service": "Service", "material": "Material"}
 }

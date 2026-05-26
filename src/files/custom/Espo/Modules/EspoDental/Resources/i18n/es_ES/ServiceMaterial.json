@@ -1,5 +1,9 @@
 {
     "labels": {"Create ServiceMaterial": "Anadir norma"},
-    "fields": {"name": "Nombre", "service": "Servicio", "material": "Material", "quantity": "Por unidad", "notes": "Notas"},
+    "fields": {
+        "name": "Nombre", "service": "Servicio", "material": "Material",
+        "quantity": "Por unidad", "unit": "Unidad", "isRequired": "Obligatorio",
+        "notes": "Notas"
+    },
     "links": {"service": "Servicio", "material": "Material"}
 }

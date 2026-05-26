@@ -6,6 +6,8 @@
         "unit": "Ед.", "unitPrice": "Цена", "totalCost": "Сумма",
         "performedAt": "Дата", "performedBy": "Кем", "batch": "Партия",
         "expiryDate": "Срок годности", "reason": "Причина",
+        "sourceWarehouse": "Склад-источник", "targetWarehouse": "Склад-получатель",
+        "stockLot": "Партия",
         "sourceVisit": "Источник: приём", "sourceVisitServiceLine": "Источник: позиция",
         "sourceVisitMaterialLine": "Источник: расход"
     },
@@ -14,10 +16,15 @@
             "receipt": "Поступление", "consumption": "Списание (приём)",
             "writeoff": "Списание (брак)", "transfer_out": "Перемещение (расход)",
             "transfer_in": "Перемещение (приход)", "adjustment": "Корректировка",
-            "return": "Возврат"
+            "return": "Возврат", "manual_increase": "Ручное увеличение",
+            "manual_decrease": "Ручное уменьшение", "manual_set": "Ручная установка",
+            "inventory_count": "Инвентаризация", "reception_usage": "Расход приема"
         },
         "direction": {"in": "Приход", "out": "Расход"}
     },
-    "links": {"material": "Материал", "clinic": "Клиника"},
+    "links": {
+        "material": "Материал", "clinic": "Клиника", "sourceWarehouse": "Склад-источник",
+        "targetWarehouse": "Склад-получатель", "stockLot": "Партия"
+    },
     "boolFilters": {"today": "Сегодня", "thisMonth": "В этом месяце"}
 }

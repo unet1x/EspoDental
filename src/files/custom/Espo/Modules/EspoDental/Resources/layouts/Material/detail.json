@@ -2,6 +2,8 @@
     {"label": "Overview", "rows": [
         [{"name": "name"}, {"name": "code"}],
         [{"name": "category"}, {"name": "unit"}],
+        [{"name": "consumptionUnit"}, {"name": "purchasingUnit"}],
+        [{"name": "conversionFactor"}, {"name": "reorderUrl"}],
         [{"name": "sku"}, {"name": "manufacturer"}],
         [{"name": "vendor"}, {"name": "price"}],
         [{"name": "color"}, {"name": "isActive"}]
@@ -9,7 +11,8 @@
     {"label": "Stock", "rows": [
         [{"name": "currentStock"}, {"name": "stockLevel"}],
         [{"name": "minStock"}, {"name": "criticalStock"}],
-        [{"name": "maxStock"}, {"name": "expiryControl"}]
+        [{"name": "maxStock"}, {"name": "expiryControl"}],
+        [{"name": "trackExpiration"}, false]
     ]},
     {"rows": [
         [{"name": "description", "fullWidth": true}],

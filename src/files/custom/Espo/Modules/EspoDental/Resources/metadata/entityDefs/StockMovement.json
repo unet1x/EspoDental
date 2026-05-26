@@ -5,7 +5,20 @@
         "clinic": {"type": "link", "required": true},
         "type": {
             "type": "enum",
-            "options": ["receipt", "consumption", "writeoff", "transfer_out", "transfer_in", "adjustment", "return"],
+            "options": [
+                "receipt",
+                "consumption",
+                "writeoff",
+                "transfer_out",
+                "transfer_in",
+                "adjustment",
+                "return",
+                "manual_increase",
+                "manual_decrease",
+                "manual_set",
+                "inventory_count",
+                "reception_usage"
+            ],
             "default": "consumption",
             "required": true,
             "audited": true
@@ -25,6 +38,9 @@
         "sourceVisit": {"type": "link"},
         "sourceVisitServiceLine": {"type": "link"},
         "sourceVisitMaterialLine": {"type": "link"},
+        "sourceWarehouse": {"type": "link"},
+        "targetWarehouse": {"type": "link"},
+        "stockLot": {"type": "link"},
         "batch": {"type": "varchar", "maxLength": 64},
         "expiryDate": {"type": "date"},
         "reason": {"type": "text"},
@@ -40,6 +56,9 @@
         "sourceVisit": {"type": "belongsTo", "entity": "Visit"},
         "sourceVisitServiceLine": {"type": "belongsTo", "entity": "VisitServiceLine"},
         "sourceVisitMaterialLine": {"type": "belongsTo", "entity": "VisitMaterialLine"},
+        "sourceWarehouse": {"type": "belongsTo", "entity": "InventoryWarehouse"},
+        "targetWarehouse": {"type": "belongsTo", "entity": "InventoryWarehouse"},
+        "stockLot": {"type": "belongsTo", "entity": "InventoryStockLot", "foreign": "movements"},
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"}
     },
@@ -48,6 +67,8 @@
         "material_performed": {"columns": ["materialId", "performedAt"]},
         "clinic_performed": {"columns": ["clinicId", "performedAt"]},
         "type": {"columns": ["type"]},
-        "source_visit_material_line": {"columns": ["sourceVisitMaterialLineId"]}
+        "source_visit_material_line": {"columns": ["sourceVisitMaterialLineId"]},
+        "warehouse_performed": {"columns": ["sourceWarehouseId", "targetWarehouseId", "performedAt"]},
+        "stock_lot": {"columns": ["stockLotId"]}
     }
 }

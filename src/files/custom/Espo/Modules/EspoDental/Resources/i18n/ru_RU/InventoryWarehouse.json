@@ -1,0 +1,11 @@
+{
+    "labels": {"Create InventoryWarehouse": "Создать склад"},
+    "fields": {
+        "name": "Название", "warehouseType": "Тип", "clinic": "Клиника", "cabinet": "Кабинет",
+        "responsibleUser": "Ответственный", "inventoryFrequencyDays": "Периодичность инвентаризации",
+        "nextInventoryDueAt": "Следующая инвентаризация", "lastInventoryAt": "Последняя инвентаризация",
+        "lastInventoryTaskCreatedAt": "Последняя задача", "notes": "Заметки", "isActive": "Активен"
+    },
+    "options": {"warehouseType": {"main": "Основной", "satellite": "Кабинетный"}},
+    "links": {"clinic": "Клиника", "cabinet": "Кабинет", "stockLots": "Партии"}
+}

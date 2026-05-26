@@ -1,5 +1,7 @@
 [
     {"name": "service"},
     {"name": "material"},
-    {"name": "quantity"}
+    {"name": "quantity"},
+    {"name": "unit"},
+    {"name": "isRequired"}
 ]

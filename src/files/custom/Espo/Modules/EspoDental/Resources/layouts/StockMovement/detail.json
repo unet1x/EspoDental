@@ -5,6 +5,8 @@
     [{"name": "unitPrice"}, {"name": "totalCost"}],
     [{"name": "performedAt"}, {"name": "performedBy"}],
     [{"name": "batch"}, {"name": "expiryDate"}],
+    [{"name": "sourceWarehouse"}, {"name": "targetWarehouse"}],
+    [{"name": "stockLot"}, false],
     [{"name": "sourceVisit"}, {"name": "sourceVisitServiceLine"}],
     [{"name": "sourceVisitMaterialLine"}, false],
     [{"name": "reason", "fullWidth": true}]

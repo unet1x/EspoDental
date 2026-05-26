@@ -2,11 +2,14 @@
     "labels": {"Create Material": "Создать материал", "Overview": "Основное", "Stock": "Склад"},
     "fields": {
         "name": "Название", "code": "Код", "sku": "Артикул", "category": "Категория",
-        "unit": "Ед. изм.", "manufacturer": "Производитель", "vendor": "Поставщик",
+        "unit": "Ед. изм.", "consumptionUnit": "Ед. расхода",
+        "purchasingUnit": "Ед. закупки", "conversionFactor": "Коэффициент пересчета",
+        "manufacturer": "Производитель", "vendor": "Поставщик",
         "price": "Цена", "color": "Цвет",
         "minStock": "Минимум", "criticalStock": "Критич. остаток", "maxStock": "Максимум",
         "currentStock": "Остаток", "stockLevel": "Уровень",
-        "expiryControl": "Контроль срока годности", "isActive": "Активен", "description": "Описание"
+        "expiryControl": "Контроль срока годности", "trackExpiration": "Учитывать сроки",
+        "reorderUrl": "Ссылка для заказа", "isActive": "Активен", "description": "Описание"
     },
     "options": {
         "unit": {
@@ -16,7 +19,10 @@
         },
         "stockLevel": {"": "—", "ok": "В норме", "low": "Низкий", "critical": "Критический", "out": "Закончился"}
     },
-    "links": {"category": "Категория", "movements": "Операции", "serviceMaterials": "В услугах", "alerts": "Алерты"},
+    "links": {
+        "category": "Категория", "movements": "Операции", "stockLots": "Партии",
+        "serviceMaterials": "В услугах", "alerts": "Алерты"
+    },
     "boolFilters": {"onlyActive": "Только активные", "lowStock": "Низкий остаток", "criticalStock": "Критический"},
     "tooltips": {
         "minStock": "Уровень для предупреждения",

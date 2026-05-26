@@ -1,0 +1,11 @@
+{
+    "labels": {"Create InventoryWarehouse": "Create Warehouse"},
+    "fields": {
+        "name": "Name", "warehouseType": "Type", "clinic": "Clinic", "cabinet": "Cabinet",
+        "responsibleUser": "Responsible", "inventoryFrequencyDays": "Inventory Frequency Days",
+        "nextInventoryDueAt": "Next Inventory Due", "lastInventoryAt": "Last Inventory",
+        "lastInventoryTaskCreatedAt": "Last Task Created", "notes": "Notes", "isActive": "Active"
+    },
+    "options": {"warehouseType": {"main": "Main", "satellite": "Satellite"}},
+    "links": {"clinic": "Clinic", "cabinet": "Cabinet", "stockLots": "Stock Lots"}
+}

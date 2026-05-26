@@ -6,7 +6,8 @@
             [{"name": "category"}, {"name": "isActive"}],
             [{"name": "price"}, {"name": "vatRate"}],
             [{"name": "duration"}, {"name": "perTooth"}],
-            [{"name": "color"}, {"name": "icd10"}]
+            [{"name": "color"}, {"name": "icd10"}],
+            [{"name": "cabinetRequirements", "fullWidth": true}]
         ]
     },
     {

@@ -79,7 +79,7 @@ class StockService
             $mv->set('clinicId', $clinicId);
             $mv->set('type', StockMovement::TYPE_CONSUMPTION);
             $mv->set('quantity', $line->getQuantity());
-            $mv->set('unit', (string) ($line->get('unit') ?: $material->get('unit')));
+            $mv->set('unit', (string) ($line->get('unit') ?: $material->getConsumptionUnit()));
             $mv->set('unitPrice', $line->getUnitPrice());
             $mv->set('performedAt', (new DateTimeImmutable())->format('Y-m-d H:i:s'));
             $mv->set('performedById', $visit->get('doctorId'));
@@ -149,7 +149,7 @@ class StockService
                 $mv->set('clinicId', $clinicId);
                 $mv->set('type', StockMovement::TYPE_CONSUMPTION);
                 $mv->set('quantity', $qty);
-                $mv->set('unit', (string) $material->get('unit'));
+                $mv->set('unit', $material->getConsumptionUnit());
                 $mv->set('unitPrice', (float) $material->get('price'));
                 $mv->set('performedAt', (new DateTimeImmutable())->format('Y-m-d H:i:s'));
                 $mv->set('performedById', $visit->get('doctorId'));

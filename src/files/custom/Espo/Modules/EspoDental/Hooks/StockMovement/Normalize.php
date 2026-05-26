@@ -36,6 +36,13 @@ class Normalize
             throw new BadRequest('Type is required');
         }
 
+        if (
+            in_array($type, StockMovement::MANUAL_CORRECTION_TYPES, true) &&
+            trim((string) ($entity->get('reason') ?? '')) === ''
+        ) {
+            throw new BadRequest('Manual stock corrections require a reason');
+        }
+
         $entity->set('direction', StockMovement::deriveDirection($type));
 
         $qty = $entity->getQuantity();
@@ -46,14 +53,30 @@ class Normalize
             $entity->set('performedAt', (new DateTimeImmutable())->format('Y-m-d H:i:s'));
         }
 
+        $material = null;
+        if ($entity->getMaterialId()) {
+            /** @var Material|null $material */
+            $material = $this->entityManager->getEntityById(Material::ENTITY_TYPE, $entity->getMaterialId());
+        }
+
+        if (
+            $type === StockMovement::TYPE_RECEIPT &&
+            $material &&
+            $material->tracksExpiration() &&
+            trim((string) ($entity->get('expiryDate') ?? '')) === ''
+        ) {
+            throw new BadRequest('Expiration date is required for this material');
+        }
+
         if (!$entity->get('name') && $entity->getMaterialId()) {
-            /** @var Material|null $m */
-            $m = $this->entityManager->getEntityById(Material::ENTITY_TYPE, $entity->getMaterialId());
-            if ($m) {
+            if ($material) {
                 $sign = $entity->getDirection() === StockMovement::DIRECTION_IN ? '+' : '-';
-                $entity->set('name', $sign . $qty . ' ' . (string) $m->get('unit') . ' · ' . (string) $m->get('name'));
+                $entity->set(
+                    'name',
+                    $sign . $qty . ' ' . $material->getConsumptionUnit() . ' · ' . (string) $material->get('name')
+                );
                 if (!$entity->get('unit')) {
-                    $entity->set('unit', (string) $m->get('unit'));
+                    $entity->set('unit', $material->getConsumptionUnit());
                 }
             }
         }

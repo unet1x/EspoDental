@@ -1,0 +1,8 @@
+[
+    {"name": "warehouse", "link": true},
+    {"name": "material", "link": true},
+    {"name": "quantityInPurchasingUnits"},
+    {"name": "lotNumber"},
+    {"name": "expiresAt"},
+    {"name": "receivedAt"}
+]

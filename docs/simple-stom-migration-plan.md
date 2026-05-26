@@ -53,6 +53,8 @@ Stage 8 doctor reception workspace rules are locked in
 [`docs/simple-stom-reception-workspace.md`](simple-stom-reception-workspace.md).
 Stage 9 tooth chart rules are locked in
 [`docs/simple-stom-tooth-chart-contract.md`](simple-stom-tooth-chart-contract.md).
+Stage 10 service and inventory rules are locked in
+[`docs/simple-stom-services-inventory.md`](simple-stom-services-inventory.md).
 
 Important visual reference order:
 
@@ -384,7 +386,7 @@ Verification:
 | 7. Questionnaire and portal | Completed | Added child-aware questionnaire schema, client-side RU/EN/ES language switching, ES/RU PDF rules, portal sessions/events and public future-appointment/reschedule request endpoints. |
 | 8. Doctor reception workspace | Completed | Added reception workspace API, autosave, `VisitNoteTemplate`, SimpleStom-style Visit detail panel and locked finished-visit editing rules. |
 | 9. Tooth chart contract | Completed | Added whole-tooth state editing, veneer/sealant surface rules, bridge/removed-tooth visual behavior and in-place patient workspace snapshot history. |
-| 10. Services and inventory | Pending | Warehouse/lot model is the largest data gap. |
+| 10. Services and inventory | Completed | Added material unit semantics, service material required/unit fields, warehouse and stock-lot entities, FEFO planning service and seeded main/cabinet warehouses. |
 | 11. Cash desk and shift closing | Pending | Cash shift likely needs a new entity. |
 | 12. Reports, payroll and integrations | Pending | MCP/AI is excluded from this run. |
 | 13. Demo environment | Pending | Final local demo with seeded DB. |

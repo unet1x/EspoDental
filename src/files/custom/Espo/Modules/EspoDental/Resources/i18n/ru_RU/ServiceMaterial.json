@@ -1,5 +1,9 @@
 {
     "labels": {"Create ServiceMaterial": "Добавить норму"},
-    "fields": {"name": "Название", "service": "Услуга", "material": "Материал", "quantity": "На 1 услугу", "notes": "Заметка"},
+    "fields": {
+        "name": "Название", "service": "Услуга", "material": "Материал",
+        "quantity": "На 1 услугу", "unit": "Ед.", "isRequired": "Обязательно",
+        "notes": "Заметка"
+    },
     "links": {"service": "Услуга", "material": "Материал"}
 }

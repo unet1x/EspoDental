@@ -1,0 +1,6 @@
+{
+    "controller": "controllers/record",
+    "removeDisabled": true,
+    "color": "#6F9E78",
+    "iconClass": "fas fa-boxes-stacked"
+}

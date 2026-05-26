@@ -6,6 +6,8 @@
         "unit": "Unit", "unitPrice": "Unit price", "totalCost": "Total cost",
         "performedAt": "Performed at", "performedBy": "Performed by", "batch": "Batch",
         "expiryDate": "Expiry", "reason": "Reason",
+        "sourceWarehouse": "Source warehouse", "targetWarehouse": "Target warehouse",
+        "stockLot": "Stock lot",
         "sourceVisit": "Source visit", "sourceVisitServiceLine": "Source line",
         "sourceVisitMaterialLine": "Source material line"
     },
@@ -14,10 +16,15 @@
             "receipt": "Receipt", "consumption": "Consumption (visit)",
             "writeoff": "Write-off", "transfer_out": "Transfer (out)",
             "transfer_in": "Transfer (in)", "adjustment": "Adjustment",
-            "return": "Return"
+            "return": "Return", "manual_increase": "Manual increase",
+            "manual_decrease": "Manual decrease", "manual_set": "Manual set",
+            "inventory_count": "Inventory count", "reception_usage": "Reception usage"
         },
         "direction": {"in": "Inbound", "out": "Outbound"}
     },
-    "links": {"material": "Material", "clinic": "Clinic"},
+    "links": {
+        "material": "Material", "clinic": "Clinic", "sourceWarehouse": "Source warehouse",
+        "targetWarehouse": "Target warehouse", "stockLot": "Stock lot"
+    },
     "boolFilters": {"today": "Today", "thisMonth": "This month"}
 }
