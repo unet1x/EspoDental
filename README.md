@@ -177,6 +177,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   MAX / Proxmox VM migration and backup/restore runbook
 - [docs/simple-stom-migration-plan.md](docs/simple-stom-migration-plan.md) —
   SimpleStom feature and visual migration plan
+- [docs/simple-stom-gap-matrix.md](docs/simple-stom-gap-matrix.md) —
+  SimpleStom parity matrix and acceptance demo scope
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -305,6 +307,10 @@ EspoDental поставляется со вторым compose-стеком
 - [docs/admin-guide.md](docs/admin-guide.md) — установка, обновление,
   бэкап, мульти-клиника, staging + ночной конвейер (раздел 9)
 - [docs/user-guide.md](docs/user-guide.md) — повседневные сценарии: регистратура, доктор, менеджер
+- [docs/simple-stom-migration-plan.md](docs/simple-stom-migration-plan.md) —
+  план переноса функций и визуального языка SimpleStom
+- [docs/simple-stom-gap-matrix.md](docs/simple-stom-gap-matrix.md) —
+  матрица расхождений и приемочный демо-сценарий SimpleStom
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

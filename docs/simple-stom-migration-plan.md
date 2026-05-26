@@ -35,6 +35,9 @@ Reference materials reviewed:
 - `demo_seed.py`
 - `test_api.py`
 
+Stage 1 scope is locked in
+[`docs/simple-stom-gap-matrix.md`](simple-stom-gap-matrix.md).
+
 Important visual reference order:
 
 1. Use the latest feedback renders as the target for calendar, cash desk,
@@ -130,6 +133,7 @@ Work:
 Verification:
 
 - Add or update structural tests that lock the chosen scope where possible.
+- `tests/SimpleStomMigrationPlanTest.php`
 - `vendor/bin/phpunit tests --no-coverage` if dependencies are present.
 
 ### Stage 2 - Visual System Foundation
@@ -348,7 +352,7 @@ Verification:
 | Stage | Status | Notes |
 | --- | --- | --- |
 | 0. Migration contract | Completed | Plan added and linked from README; `git diff --check` passed. |
-| 1. Gap matrix and acceptance scope | Pending | Starts after stage 0 commit. |
+| 1. Gap matrix and acceptance scope | Completed | Gap matrix added in `docs/simple-stom-gap-matrix.md`; structural test added for migration docs and acceptance scope. |
 | 2. Visual system foundation | Pending | Depends on stage 1 scope. |
 | 3. Dashboard actions and tasks | Pending | Depends on visual foundation and task decision. |
 | 4. Calendar feedback UX | Pending | Depends on stage 1 conflict/waitlist decisions. |
