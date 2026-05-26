@@ -99,6 +99,11 @@
         "params": {"controller": "Appointment", "action": "bookFromSlot"}
     },
     {
+        "route": "/EspoDental/Patient/workspace",
+        "method": "get",
+        "params": {"controller": "Patient", "action": "workspace"}
+    },
+    {
         "route": "/EspoDental/Integration/tools",
         "method": "get",
         "params": {"controller": "Integration", "action": "tools"}

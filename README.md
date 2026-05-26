@@ -187,6 +187,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   feedback calendar UX and waitlist contract
 - [docs/simple-stom-slot-booking.md](docs/simple-stom-slot-booking.md) —
   slot-first booking wizard contract
+- [docs/simple-stom-patient-workspace.md](docs/simple-stom-patient-workspace.md) —
+  SimpleStom-style split patient workspace contract
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -327,6 +329,8 @@ EspoDental поставляется со вторым compose-стеком
   календарь по feedback-макету и контракт листа ожидания
 - [docs/simple-stom-slot-booking.md](docs/simple-stom-slot-booking.md) —
   контракт записи пациента из свободного слота
+- [docs/simple-stom-patient-workspace.md](docs/simple-stom-patient-workspace.md) —
+  контракт двухпанельного рабочего места пациента SimpleStom
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

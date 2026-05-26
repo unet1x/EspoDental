@@ -860,6 +860,7 @@ class WorkspaceSeeder
                     $this->dashlet('ed-monthly-revenue', 'MonthlyRevenue', 0, 18, 2, 4),
                     $this->dashlet('ed-ortho-cases', 'ActiveOrthoCases', 2, 18, 1, 4),
                     $this->dashlet('ed-payroll', 'PayrollThisMonth', 3, 18, 1, 4),
+                    $this->dashlet('ed-patient-workspace', 'PatientWorkspace', 0, 22, 4, 6),
                 ],
             ],
         ];
@@ -889,6 +890,7 @@ class WorkspaceSeeder
         $options->{'ed-monthly-revenue'} = (object) ['title' => 'Выручка по месяцам', 'monthsBack' => 12];
         $options->{'ed-ortho-cases'} = (object) ['title' => 'Активная ортодонтия', 'displayRecords' => 8];
         $options->{'ed-payroll'} = (object) ['title' => 'ЗП за месяц', 'displayRecords' => 8];
+        $options->{'ed-patient-workspace'} = (object) ['title' => 'Пациенты', 'displayRecords' => 20];
 
         return $options;
     }
@@ -907,6 +909,7 @@ class WorkspaceSeeder
                     $this->dashlet('ed-admin-today', 'TodaysAppointments', 0, 10, 2, 4),
                     $this->dashlet('ed-admin-open-invoices', 'OpenInvoices', 2, 10, 2, 4),
                     $this->dashlet('ed-admin-recent-visits', 'RecentVisits', 0, 14, 2, 4),
+                    $this->dashlet('ed-admin-patient-workspace', 'PatientWorkspace', 0, 18, 4, 6),
                 ],
             ],
         ];
@@ -927,6 +930,7 @@ class WorkspaceSeeder
         $options->{'ed-admin-today'} = (object) ['title' => 'Сегодняшние приёмы', 'displayRecords' => 10, 'autorefreshInterval' => 1];
         $options->{'ed-admin-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 10];
         $options->{'ed-admin-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 8];
+        $options->{'ed-admin-patient-workspace'} = (object) ['title' => 'Пациенты', 'displayRecords' => 20];
 
         return $options;
     }
@@ -944,6 +948,7 @@ class WorkspaceSeeder
                     $this->dashlet('ed-doctor-today', 'TodaysAppointments', 0, 4, 2, 5),
                     $this->dashlet('ed-doctor-recent-visits', 'RecentVisits', 2, 4, 2, 5),
                     $this->dashlet('ed-doctor-ortho-cases', 'ActiveOrthoCases', 0, 9, 2, 4),
+                    $this->dashlet('ed-doctor-patient-workspace', 'PatientWorkspace', 0, 13, 4, 6),
                 ],
             ],
         ];
@@ -956,6 +961,7 @@ class WorkspaceSeeder
         $options->{'ed-doctor-today'} = (object) ['title' => 'Мои приёмы сегодня', 'displayRecords' => 10, 'autorefreshInterval' => 1];
         $options->{'ed-doctor-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 10];
         $options->{'ed-doctor-ortho-cases'} = (object) ['title' => 'Активная ортодонтия', 'displayRecords' => 8];
+        $options->{'ed-doctor-patient-workspace'} = (object) ['title' => 'Пациенты врача', 'displayRecords' => 20];
 
         return $options;
     }
@@ -973,6 +979,7 @@ class WorkspaceSeeder
                     $this->dashlet('ed-assistant-today', 'TodaysAppointments', 0, 4, 2, 5),
                     $this->dashlet('ed-assistant-recent-visits', 'RecentVisits', 2, 4, 2, 5),
                     $this->dashlet('ed-assistant-low-stock', 'LowStockMaterials', 0, 9, 2, 4),
+                    $this->dashlet('ed-assistant-patient-workspace', 'PatientWorkspace', 0, 13, 4, 6),
                 ],
             ],
         ];
@@ -985,6 +992,7 @@ class WorkspaceSeeder
         $options->{'ed-assistant-today'} = (object) ['title' => 'Сегодняшние приёмы', 'displayRecords' => 10, 'autorefreshInterval' => 1];
         $options->{'ed-assistant-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 10];
         $options->{'ed-assistant-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 8];
+        $options->{'ed-assistant-patient-workspace'} = (object) ['title' => 'Пациенты ассистента', 'displayRecords' => 20];
 
         return $options;
     }

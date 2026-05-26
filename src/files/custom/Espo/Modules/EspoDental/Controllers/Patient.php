@@ -16,9 +16,33 @@ use Espo\Modules\EspoDental\Services\PatientHistoryService;
 use Espo\Modules\EspoDental\Services\PatientImagingService;
 use Espo\Modules\EspoDental\Services\PatientQuestionnaireService;
 use Espo\Modules\EspoDental\Services\PatientToothChartService;
+use Espo\Modules\EspoDental\Services\PatientWorkspaceService;
 
 class Patient extends Record
 {
+    /**
+     * GET /EspoDental/Patient/workspace
+     *
+     * @return array<string, mixed>
+     */
+    public function getActionWorkspace(Request $request): array
+    {
+        if (!$this->getAcl()->checkScope('Patient', 'read')) {
+            throw new Forbidden();
+        }
+
+        /** @var PatientWorkspaceService $service */
+        $service = $this->injectableFactory->create(PatientWorkspaceService::class);
+        $query = $request->getQueryParam('q');
+        $selectedId = $request->getQueryParam('selectedId');
+
+        return $service->getWorkspace(
+            is_string($query) ? $query : null,
+            is_string($selectedId) ? $selectedId : null,
+            (int) ($request->getQueryParam('limit') ?? 20)
+        );
+    }
+
     /**
      * GET /Patient/action/files?id=...
      *

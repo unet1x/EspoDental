@@ -94,7 +94,8 @@
         "PayrollThisMonth": "ЗП за месяц",
         "ResourceCalendar": "Календарь ресурсов",
         "ActiveOrthoCases": "Активные ортодонтические случаи",
-        "DashboardActionCenter": "Центр действий"
+        "DashboardActionCenter": "Центр действий",
+        "PatientWorkspace": "Рабочее место пациентов"
     },
     "calendar": {
         "Day": "День", "Week": "Неделя", "Today": "Сегодня",

@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/patient-workspace",
+    "aclScope": "Patient",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Patients Workspace"},
+            "displayRecords": {"type": "int", "default": 20, "min": 5, "max": 50}
+        }
+    }
+}

@@ -94,7 +94,8 @@
         "PayrollThisMonth": "Payroll This Month",
         "ResourceCalendar": "Resource Calendar",
         "ActiveOrthoCases": "Active Ortho Cases",
-        "DashboardActionCenter": "Action Center"
+        "DashboardActionCenter": "Action Center",
+        "PatientWorkspace": "Patients Workspace"
     },
     "calendar": {
         "Day": "Day", "Week": "Week", "Today": "Today",

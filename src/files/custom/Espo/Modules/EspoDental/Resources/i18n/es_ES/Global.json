@@ -94,7 +94,8 @@
         "PayrollThisMonth": "Nomina del mes",
         "ResourceCalendar": "Calendario de recursos",
         "ActiveOrthoCases": "Casos ortodoncicos activos",
-        "DashboardActionCenter": "Centro de acciones"
+        "DashboardActionCenter": "Centro de acciones",
+        "PatientWorkspace": "Espacio de pacientes"
     },
     "calendar": {
         "Day": "Dia", "Week": "Semana", "Today": "Hoy",
