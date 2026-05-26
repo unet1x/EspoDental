@@ -13,13 +13,14 @@ use PHPUnit\Framework\TestCase;
  */
 final class QuestionnaireSchemaTest extends TestCase
 {
-    private const SCHEMA_PATH = __DIR__ . '/../src/files/custom/Espo/Modules/EspoDental/Resources/metadata/dental/questionnaireSchema.json';
+    private const SCHEMA_PATH =
+        __DIR__ . '/../src/files/custom/Espo/Modules/EspoDental/Resources/metadata/dental/questionnaireSchema.json';
     private const LANGUAGES = ['ru_RU', 'en_US', 'es_ES'];
 
     public function testSchemaIsValidJson(): void
     {
         $data = $this->loadSchema();
-        $this->assertSame(1, $data['version']);
+        $this->assertSame(2, $data['version']);
         $this->assertIsArray($data['groups']);
         $this->assertGreaterThan(0, count($data['groups']));
     }
@@ -29,10 +30,18 @@ final class QuestionnaireSchemaTest extends TestCase
     {
         $data = $this->loadSchema();
         foreach ($data['groups'] as $group) {
-            $this->assertArrayHasKey($language, $group['labels'], "Group {$group['id']} missing label in {$language}");
+            $this->assertArrayHasKey(
+                $language,
+                $group['labels'],
+                "Group {$group['id']} missing label in {$language}"
+            );
             $this->assertNotEmpty($group['labels'][$language]);
             foreach ($group['items'] as $item) {
-                $this->assertArrayHasKey($language, $item['labels'] ?? [], "Item {$item['id']} missing label in {$language}");
+                $this->assertArrayHasKey(
+                    $language,
+                    $item['labels'] ?? [],
+                    "Item {$item['id']} missing label in {$language}"
+                );
                 $this->assertNotEmpty($item['labels'][$language]);
             }
         }
@@ -55,7 +64,11 @@ final class QuestionnaireSchemaTest extends TestCase
         $data = $this->loadSchema();
         foreach ($data['groups'] as $group) {
             foreach ($group['items'] as $item) {
-                $this->assertContains($item['type'] ?? 'bool', ['bool', 'text'], "Unsupported item type for {$item['id']}");
+                $this->assertContains(
+                    $item['type'] ?? 'bool',
+                    ['bool', 'text'],
+                    "Unsupported item type for {$item['id']}"
+                );
             }
         }
     }

@@ -1,0 +1,53 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "patient": {"type": "link"},
+        "session": {"type": "link"},
+        "appointment": {"type": "link"},
+        "rescheduleRequest": {"type": "link"},
+        "action": {
+            "type": "enum",
+            "options": [
+                "request_code",
+                "verify_code",
+                "logout",
+                "list_appointments",
+                "create_reschedule_request",
+                "cancel_reschedule_request"
+            ],
+            "readOnly": true
+        },
+        "status": {
+            "type": "enum",
+            "options": ["success", "failure", "blocked"],
+            "readOnly": true,
+            "style": {"success": "success", "failure": "danger", "blocked": "warning"}
+        },
+        "contactMethod": {"type": "enum", "options": ["email"], "readOnly": true},
+        "contactValueSnapshot": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "ipAddress": {"type": "varchar", "readOnly": true, "maxLength": 64},
+        "userAgent": {"type": "varchar", "readOnly": true, "maxLength": 512},
+        "metadata": {"type": "jsonObject", "readOnly": true, "view": "espo-dental:views/fields/json-value"},
+        "errorDetail": {"type": "text", "readOnly": true},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "patient": {"type": "belongsTo", "entity": "Patient", "foreign": "portalEvents"},
+        "session": {"type": "belongsTo", "entity": "PatientPortalSession", "foreign": "events"},
+        "appointment": {"type": "belongsTo", "entity": "Appointment"},
+        "rescheduleRequest": {
+            "type": "belongsTo",
+            "entity": "AppointmentRescheduleRequest",
+            "foreign": "portalEvents"
+        },
+        "createdBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "createdAt", "order": "desc"},
+    "indexes": {
+        "patient": {"columns": ["patientId"]},
+        "session": {"columns": ["sessionId"]},
+        "action_status": {"columns": ["action", "status"]},
+        "reschedule": {"columns": ["rescheduleRequestId"]}
+    }
+}

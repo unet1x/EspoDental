@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "patient": "Пациент",
+        "contactMethod": "Способ контакта",
+        "contactValueSnapshot": "Контакт",
+        "tokenHash": "Хэш токена доступа",
+        "otpHash": "Хэш одноразового кода",
+        "otpAttemptCount": "Попытки кода",
+        "otpLockedAt": "Код заблокирован",
+        "expiresAt": "Истекает",
+        "usedAt": "Проверено",
+        "lastSeenAt": "Последняя активность",
+        "revokedAt": "Отозвано",
+        "ipAddress": "IP адрес",
+        "userAgent": "User-Agent"
+    }
+}

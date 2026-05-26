@@ -1,0 +1,6 @@
+[
+    {"name": "patient", "type": "link"},
+    {"name": "contactMethod", "type": "enum"},
+    {"name": "expiresAt", "type": "datetime"},
+    {"name": "revokedAt", "type": "datetime"}
+]

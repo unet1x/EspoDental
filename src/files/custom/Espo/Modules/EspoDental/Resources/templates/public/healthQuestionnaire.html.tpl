@@ -12,6 +12,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helve
 h1 { font-size: 22px; margin: 0 0 4px; }
 .subtitle { color: #666; margin: 0 0 18px; font-size: 14px; }
 .patient { font-weight: 600; margin-bottom: 16px; }
+.language-switch { display: flex; gap: 8px; margin: 0 0 16px; }
+.language-switch button { border: 1.5px solid #d0d0d0; background: #fff; border-radius: 10px; padding: 8px 12px; font-weight: 600; }
+.language-switch button.active { border-color: #2a73e8; color: #2a73e8; background: #e7f0ff; }
+.progress { height: 6px; background: #e7ebe9; border-radius: 999px; margin: 0 0 16px; overflow: hidden; }
+.progress span { display: block; height: 100%; width: 0; background: #438f7e; transition: width .2s ease; }
 .card { background: #fff; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
 .group-title { font-size: 16px; font-weight: 600; margin: 0 0 10px; }
 .item { padding: 10px 0; border-bottom: 1px solid #eee; }
@@ -41,6 +46,12 @@ textarea { width: 100%; min-height: 60px; padding: 10px; border: 1.5px solid #d0
 <div class="wrap">
 <h1>{{title}}</h1>
 <p class="subtitle" id="subtitle"></p>
+<div class="language-switch" id="language-switch">
+    <button type="button" data-language="ru_RU">RU</button>
+    <button type="button" data-language="en_US">EN</button>
+    <button type="button" data-language="es_ES">ES</button>
+</div>
+<div class="progress"><span id="progress-bar"></span></div>
 <div class="patient">{{patientFullName}}</div>
 {{errorBanner}}
 <form id="hq-form" autocomplete="off">
@@ -63,23 +74,54 @@ textarea { width: 100%; min-height: 60px; padding: 10px; border: 1.5px solid #d0
 (function () {
 'use strict';
 var bootstrap = JSON.parse(document.getElementById('hq-bootstrap').textContent);
-var schema = bootstrap.schema;
-var s = bootstrap.strings;
-document.getElementById('subtitle').textContent = s.subtitle;
-document.getElementById('sig-prompt').textContent = s.signaturePrompt;
-document.getElementById('sig-clear').textContent = s.clear;
-document.getElementById('hq-submit').textContent = s.submit;
-
+var schemas = bootstrap.schemas || {};
+var currentLanguage = bootstrap.language || 'ru_RU';
+var schema = schemas[currentLanguage] || bootstrap.schema;
+var s = (bootstrap.stringsByLanguage || {})[currentLanguage] || bootstrap.strings;
 var answers = Object.create(null);
 var requiredBoolIds = [];
 
 var groupsEl = document.getElementById('groups');
-(schema.groups || []).forEach(function (group) {
+var submitBtn = document.getElementById('hq-submit');
+
+function setStrings(language) {
+    s = (bootstrap.stringsByLanguage || {})[language] || bootstrap.strings;
+    document.getElementById('subtitle').textContent = s.subtitle;
+    document.getElementById('sig-prompt').textContent = s.signaturePrompt;
+    document.getElementById('sig-clear').textContent = s.clear;
+    submitBtn.textContent = s.submit;
+}
+
+function groupVisible(group) {
     if (group.conditional && group.conditional.showIf && group.conditional.showIf.patientGender) {
         if (group.conditional.showIf.patientGender !== bootstrap.patientGender) {
-            return;
+            return false;
         }
     }
+    if (group.conditional && group.conditional.showIf
+        && Object.prototype.hasOwnProperty.call(group.conditional.showIf, 'isChild')) {
+        if (Boolean(group.conditional.showIf.isChild) !== Boolean(bootstrap.patientIsChild)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+function updateProgress() {
+    var done = requiredBoolIds.filter(function (id) {
+        return Object.prototype.hasOwnProperty.call(answers, id);
+    }).length;
+    var pct = requiredBoolIds.length ? Math.round((done / requiredBoolIds.length) * 100) : 0;
+    document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function renderGroups() {
+    groupsEl.innerHTML = '';
+    requiredBoolIds = [];
+
+    (schema.groups || []).forEach(function (group) {
+    if (!groupVisible(group)) return;
+
     var card = document.createElement('div');
     card.className = 'card';
     var h = document.createElement('div');
@@ -105,24 +147,47 @@ var groupsEl = document.getElementById('groups');
                 ch.className = 'choice';
                 ch.textContent = key === 'yes' ? s.yes : s.no;
                 ch.dataset.value = key === 'yes' ? 'true' : 'false';
+                if (Object.prototype.hasOwnProperty.call(answers, item.id)
+                    && answers[item.id] === (key === 'yes')) {
+                    ch.classList.add('active');
+                }
                 ch.onclick = function () {
                     row.querySelectorAll('.choice').forEach(function (c) { c.classList.remove('active'); });
                     ch.classList.add('active');
                     wrap.classList.remove('missing');
                     answers[item.id] = key === 'yes';
+                    updateProgress();
                 };
                 row.appendChild(ch);
             });
             wrap.appendChild(row);
         } else {
             var ta = document.createElement('textarea');
-            ta.oninput = function () { answers[item.id] = ta.value; };
+            ta.value = answers[item.id] || '';
+            ta.oninput = function () { answers[item.id] = ta.value; updateProgress(); };
             wrap.appendChild(ta);
         }
         card.appendChild(wrap);
     });
     groupsEl.appendChild(card);
+    });
+    updateProgress();
+}
+
+function setLanguage(language) {
+    currentLanguage = language;
+    schema = schemas[language] || schema;
+    document.querySelectorAll('#language-switch button').forEach(function (button) {
+        button.classList.toggle('active', button.dataset.language === language);
+    });
+    setStrings(language);
+    renderGroups();
+}
+
+document.querySelectorAll('#language-switch button').forEach(function (button) {
+    button.onclick = function () { setLanguage(button.dataset.language); };
 });
+setLanguage(currentLanguage);
 
 // Minimal signature pad: vanilla canvas, MIT-clean, no dependencies.
 var canvas = document.getElementById('sig-canvas');
@@ -174,7 +239,6 @@ document.getElementById('sig-clear').onclick = function () {
     hasInk = false;
 };
 
-var submitBtn = document.getElementById('hq-submit');
 document.getElementById('hq-form').onsubmit = function (e) {
     e.preventDefault();
     var missing = requiredBoolIds.filter(function (id) {

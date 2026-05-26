@@ -1,0 +1,8 @@
+[
+    {"name": "name", "width": 22},
+    {"name": "appointment", "width": 18},
+    {"name": "patient", "width": 18},
+    {"name": "status", "width": 16},
+    {"name": "requestedStartAt", "width": 14},
+    {"name": "source", "width": 12}
+]

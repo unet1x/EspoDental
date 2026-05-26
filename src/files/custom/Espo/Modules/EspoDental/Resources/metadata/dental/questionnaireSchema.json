@@ -1,5 +1,5 @@
 {
-    "version": 1,
+    "version": 2,
     "groups": [
         {
             "id": "general",
@@ -86,6 +86,29 @@
             ]
         },
         {
+            "id": "childDental",
+            "conditional": {"showIf": {"isChild": true}},
+            "labels": {
+                "ru_RU": "Детская стоматология",
+                "en_US": "Child dental history",
+                "es_ES": "Historia dental infantil"
+            },
+            "items": [
+                {"id": "child.brushing_frequency", "type": "text",
+                    "labels": {"ru_RU": "Как часто ребенок чистит зубы", "en_US": "How often the child brushes teeth", "es_ES": "Con que frecuencia se cepilla el nino"}},
+                {"id": "child.snoring", "type": "bool",
+                    "labels": {"ru_RU": "Храп во сне", "en_US": "Snoring during sleep", "es_ES": "Ronquidos durante el sueno"}},
+                {"id": "child.mouth_breathing", "type": "bool",
+                    "labels": {"ru_RU": "Дыхание ртом днем или ночью", "en_US": "Mouth breathing during day or night", "es_ES": "Respiracion bucal de dia o de noche"}},
+                {"id": "child.bad_habits", "type": "bool",
+                    "labels": {"ru_RU": "Соска, бутылочка, грызет ногти или предметы", "en_US": "Pacifier, bottle, nail biting or object biting", "es_ES": "Chupete, biberon, unas u objetos en la boca"}},
+                {"id": "child.dental_trauma", "type": "bool", "alert": true,
+                    "labels": {"ru_RU": "Травмы зубов или ЧЛО", "en_US": "Dental or maxillofacial trauma", "es_ES": "Trauma dental o maxilofacial"}},
+                {"id": "child.speech_therapist", "type": "bool",
+                    "labels": {"ru_RU": "Занимается с логопедом", "en_US": "Works with a speech therapist", "es_ES": "Trabaja con logopeda"}}
+            ]
+        },
+        {
             "id": "female",
             "conditional": {"showIf": {"patientGender": "female"}},
             "labels": {
@@ -98,6 +121,37 @@
                     "labels": {"ru_RU": "Беременность", "en_US": "Pregnancy", "es_ES": "Embarazo"}},
                 {"id": "female.lactation", "type": "bool", "alert": true,
                     "labels": {"ru_RU": "Кормление грудью", "en_US": "Breastfeeding", "es_ES": "Lactancia"}}
+            ]
+        },
+        {
+            "id": "representative",
+            "conditional": {"showIf": {"isChild": true}},
+            "labels": {
+                "ru_RU": "Законный представитель",
+                "en_US": "Legal representative",
+                "es_ES": "Representante legal"
+            },
+            "items": [
+                {"id": "representative.completed_by_name", "type": "text",
+                    "labels": {"ru_RU": "Кто заполнил, ФИО", "en_US": "Completed by, full name", "es_ES": "Completado por, nombre completo"}},
+                {"id": "representative.completed_by_relation", "type": "text",
+                    "labels": {"ru_RU": "Степень родства", "en_US": "Relationship", "es_ES": "Relacion"}}
+            ]
+        },
+        {
+            "id": "confirmation",
+            "labels": {
+                "ru_RU": "Подтверждение",
+                "en_US": "Confirmation",
+                "es_ES": "Confirmacion"
+            },
+            "items": [
+                {"id": "acknowledge.information_affects_diagnosis", "type": "bool",
+                    "labels": {"ru_RU": "Понимаю, что полнота информации влияет на диагностику и лечение", "en_US": "I understand that complete information affects diagnosis and treatment", "es_ES": "Entiendo que la informacion completa afecta diagnostico y tratamiento"}},
+                {"id": "acknowledge.update_health_changes", "type": "bool",
+                    "labels": {"ru_RU": "Обязуюсь сообщать об изменениях здоровья", "en_US": "I agree to report health changes", "es_ES": "Me comprometo a informar cambios de salud"}},
+                {"id": "acknowledge.questionnaire_update_period", "type": "bool",
+                    "labels": {"ru_RU": "Понимаю, что анкету нужно обновлять не реже одного раза в год", "en_US": "I understand the questionnaire must be updated at least once a year", "es_ES": "Entiendo que el cuestionario debe actualizarse al menos una vez al ano"}}
             ]
         }
     ]

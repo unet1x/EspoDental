@@ -41,7 +41,7 @@ class HealthQuestionnaire
             $error = $e->getMessage();
         }
 
-        $language = $tokenEntity ? $tokenEntity->getLanguage() : $this->detectLanguage($request);
+        $language = $this->resolveLanguage($request, $tokenEntity);
 
         $patient = null;
         if ($tokenEntity) {
@@ -58,12 +58,13 @@ class HealthQuestionnaire
             }
         }
 
-        $schema = $this->service->getSchema($language);
+        $schema = $this->service->getSchema($language, $patient);
 
         $html = $this->renderer->render([
             'language' => $language,
             'token' => $token,
             'schema' => $schema,
+            'schemas' => $this->service->getSchemas($patient),
             'patient' => $patient,
             'error' => $error,
             'submitUrl' => $this->buildSubmitUrl($token),
@@ -91,5 +92,21 @@ class HealthQuestionnaire
             return 'en_US';
         }
         return 'ru_RU';
+    }
+
+    private function resolveLanguage(Request $request, ?QuestionnaireToken $tokenEntity): string
+    {
+        $queryLanguage = (string) $request->getQueryParam('lang');
+        $map = ['ru' => 'ru_RU', 'en' => 'en_US', 'es' => 'es_ES'];
+
+        if (isset($map[$queryLanguage])) {
+            return $map[$queryLanguage];
+        }
+
+        if (in_array($queryLanguage, ['ru_RU', 'en_US', 'es_ES'], true)) {
+            return $queryLanguage;
+        }
+
+        return $tokenEntity ? $tokenEntity->getLanguage() : $this->detectLanguage($request);
     }
 }

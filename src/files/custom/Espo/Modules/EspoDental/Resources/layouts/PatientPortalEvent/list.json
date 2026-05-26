@@ -1,0 +1,9 @@
+[
+    {"name": "createdAt", "width": 14},
+    {"name": "patient", "width": 18},
+    {"name": "action", "width": 18},
+    {"name": "status", "width": 10},
+    {"name": "session", "width": 16},
+    {"name": "appointment", "width": 16},
+    {"name": "rescheduleRequest", "width": 16}
+]

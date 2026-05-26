@@ -47,6 +47,8 @@ Stage 5 slot booking rules are locked in
 [`docs/simple-stom-slot-booking.md`](simple-stom-slot-booking.md).
 Stage 6 patient workspace rules are locked in
 [`docs/simple-stom-patient-workspace.md`](simple-stom-patient-workspace.md).
+Stage 7 questionnaire and portal rules are locked in
+[`docs/simple-stom-questionnaire-portal.md`](simple-stom-questionnaire-portal.md).
 
 Important visual reference order:
 
@@ -257,6 +259,7 @@ Verification:
 - Public questionnaire tests.
 - PDF smoke tests.
 - Portal isolation/security tests.
+- `tests/SimpleStomQuestionnairePortalTest.php`
 
 ### Stage 8 - Doctor Reception Workspace
 
@@ -373,7 +376,7 @@ Verification:
 | 4. Calendar feedback UX | Completed | Added `AppointmentWaitlistEntry`, `CalendarFeedbackService`, `GET /EspoDental/Calendar/feedbackPanel`, and a new `resource-calendar-feedback` dashlet view with right-side waitlist/cancelled panels. |
 | 5. Slot booking wizard | Completed | Added candidate search and `bookFromSlot` backend flow, plus a scoped slot-booking modal opened from free calendar cells. |
 | 6. Patients workspace | Completed | Added `PatientWorkspaceService`, `GET /EspoDental/Patient/workspace`, a scoped split patient workspace dashlet and role dashboard placement. |
-| 7. Questionnaire and portal | Pending | Requires questionnaire gap check. |
+| 7. Questionnaire and portal | Completed | Added child-aware questionnaire schema, client-side RU/EN/ES language switching, ES/RU PDF rules, portal sessions/events and public future-appointment/reschedule request endpoints. |
 | 8. Doctor reception workspace | Pending | Can reuse existing Visit backend. |
 | 9. Tooth chart contract | Pending | Existing renderer is the target baseline. |
 | 10. Services and inventory | Pending | Warehouse/lot model is the largest data gap. |

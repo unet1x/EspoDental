@@ -17,6 +17,10 @@
         "patient": "Пациент",
         "preliminaryPatient": "Предварительный пациент",
         "language": "Язык",
+        "formLanguage": "Язык заполнения",
+        "templateType": "Тип шаблона",
+        "templateVersion": "Версия шаблона",
+        "pdfLanguageMode": "Язык PDF",
         "items": "Ответы",
         "alertItems": "Алерты",
         "hasAlerts": "Есть алерты",
@@ -34,6 +38,13 @@
             "ru_RU": "Русский",
             "en_US": "English",
             "es_ES": "Espanol"
+        },
+        "templateType": {
+            "adult": "Взрослая",
+            "child": "Детская"
+        },
+        "pdfLanguageMode": {
+            "es_ru": "Испанский / русский"
         }
     },
     "links": {

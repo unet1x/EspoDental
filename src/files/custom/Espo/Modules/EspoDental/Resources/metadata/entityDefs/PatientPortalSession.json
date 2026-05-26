@@ -1,0 +1,36 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "patient": {"type": "link", "required": true},
+        "contactMethod": {
+            "type": "enum",
+            "options": ["email"],
+            "default": "email",
+            "readOnly": true
+        },
+        "contactValueSnapshot": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "tokenHash": {"type": "varchar", "readOnly": true, "maxLength": 128},
+        "otpHash": {"type": "varchar", "readOnly": true, "maxLength": 128},
+        "otpAttemptCount": {"type": "int", "readOnly": true, "default": 0},
+        "otpLockedAt": {"type": "datetime", "readOnly": true},
+        "expiresAt": {"type": "datetime", "readOnly": true},
+        "usedAt": {"type": "datetime", "readOnly": true},
+        "lastSeenAt": {"type": "datetime", "readOnly": true},
+        "revokedAt": {"type": "datetime", "readOnly": true},
+        "ipAddress": {"type": "varchar", "readOnly": true, "maxLength": 64},
+        "userAgent": {"type": "varchar", "readOnly": true, "maxLength": 512},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "patient": {"type": "belongsTo", "entity": "Patient", "foreign": "portalSessions"},
+        "events": {"type": "hasMany", "entity": "PatientPortalEvent", "foreign": "session"},
+        "createdBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "createdAt", "order": "desc"},
+    "indexes": {
+        "patient": {"columns": ["patientId"]},
+        "tokenHash": {"columns": ["tokenHash"]},
+        "contact": {"columns": ["contactMethod", "contactValueSnapshot", "expiresAt"]}
+    }
+}

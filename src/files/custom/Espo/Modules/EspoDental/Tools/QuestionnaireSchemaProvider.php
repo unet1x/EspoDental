@@ -6,6 +6,7 @@ namespace Espo\Modules\EspoDental\Tools;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\ORM\Entity;
 
 class QuestionnaireSchemaProvider
 {
@@ -25,7 +26,7 @@ class QuestionnaireSchemaProvider
      *
      * @return array{version: int, groups: array<int, array<string, mixed>>}
      */
-    public function get(string $language): array
+    public function get(string $language, ?Entity $subject = null): array
     {
         $language = in_array($language, self::SUPPORTED_LANGUAGES, true) ? $language : 'ru_RU';
         $raw = $this->loadRaw();
@@ -38,6 +39,7 @@ class QuestionnaireSchemaProvider
                     'id' => $item['id'],
                     'type' => $item['type'] ?? 'bool',
                     'alert' => (bool) ($item['alert'] ?? false),
+                    'required' => ($item['type'] ?? 'bool') === 'bool',
                     'label' => $item['labels'][$language] ?? $item['labels']['en_US'] ?? $item['id'],
                 ];
             }
@@ -51,8 +53,47 @@ class QuestionnaireSchemaProvider
 
         return [
             'version' => (int) ($raw['version'] ?? 1),
+            'templateType' => $this->getTemplateType($subject),
+            'pdfLanguageMode' => 'es_ru',
             'groups' => $groups,
         ];
+    }
+
+    /**
+     * @return array<string, array<string, mixed>>
+     */
+    public function getAll(?Entity $subject = null): array
+    {
+        $schemas = [];
+        foreach (self::SUPPORTED_LANGUAGES as $language) {
+            $schemas[$language] = $this->get($language, $subject);
+        }
+
+        return $schemas;
+    }
+
+    public function getTemplateType(?Entity $subject): string
+    {
+        if (!$subject) {
+            return 'adult';
+        }
+
+        if ((bool) $subject->get('isChild')) {
+            return 'child';
+        }
+
+        $birthDate = (string) ($subject->get('dateOfBirth') ?? '');
+        if ($birthDate === '') {
+            return 'adult';
+        }
+
+        try {
+            $age = (new \DateTimeImmutable($birthDate))->diff(new \DateTimeImmutable())->y;
+        } catch (\Exception) {
+            return 'adult';
+        }
+
+        return $age < 18 ? 'child' : 'adult';
     }
 
     /**

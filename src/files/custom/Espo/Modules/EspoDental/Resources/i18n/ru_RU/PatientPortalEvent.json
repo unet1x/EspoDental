@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "patient": "Пациент",
+        "session": "Сессия",
+        "appointment": "Запись",
+        "rescheduleRequest": "Запрос переноса",
+        "action": "Действие",
+        "status": "Статус",
+        "contactMethod": "Способ контакта",
+        "contactValueSnapshot": "Контакт",
+        "ipAddress": "IP адрес",
+        "userAgent": "User-Agent",
+        "metadata": "Метаданные",
+        "errorDetail": "Детали ошибки"
+    }
+}

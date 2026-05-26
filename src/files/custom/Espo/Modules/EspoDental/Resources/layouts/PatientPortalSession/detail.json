@@ -1,0 +1,14 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [{"name": "name"}, {"name": "patient"}],
+            [{"name": "contactMethod"}, {"name": "contactValueSnapshot"}],
+            [{"name": "expiresAt"}, {"name": "usedAt"}],
+            [{"name": "lastSeenAt"}, {"name": "revokedAt"}],
+            [{"name": "otpAttemptCount"}, {"name": "otpLockedAt"}],
+            [{"name": "ipAddress"}, false],
+            [{"name": "userAgent", "fullWidth": true}]
+        ]
+    }
+]

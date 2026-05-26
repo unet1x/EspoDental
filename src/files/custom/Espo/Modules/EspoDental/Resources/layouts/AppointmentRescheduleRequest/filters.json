@@ -1,0 +1,7 @@
+[
+    {"name": "status", "type": "enum"},
+    {"name": "patient", "type": "link"},
+    {"name": "appointment", "type": "link"},
+    {"name": "source", "type": "enum"},
+    {"name": "requestedStartAt", "type": "datetime"}
+]

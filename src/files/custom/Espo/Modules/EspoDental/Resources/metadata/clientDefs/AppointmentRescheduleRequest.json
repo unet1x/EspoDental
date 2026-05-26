@@ -1,0 +1,5 @@
+{
+    "controller": "controllers/record",
+    "color": "#438F7E",
+    "iconClass": "fas fa-calendar-days"
+}

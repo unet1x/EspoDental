@@ -1,0 +1,21 @@
+{
+    "fields": {
+        "appointment": "Cita",
+        "patient": "Paciente",
+        "requestedBy": "Solicitado por",
+        "source": "Origen",
+        "requestedStartAt": "Inicio solicitado",
+        "requestedEndAt": "Fin solicitado",
+        "requestedDoctor": "Doctor solicitado",
+        "requestedCabinet": "Gabinete solicitado",
+        "requestedClinic": "Clinica solicitada",
+        "previousAppointmentStatus": "Estado anterior de la cita",
+        "status": "Estado",
+        "patientComment": "Comentario del paciente",
+        "internalComment": "Comentario interno",
+        "confirmedAt": "Confirmado el",
+        "confirmedBy": "Confirmado por",
+        "rejectedAt": "Rechazado el",
+        "rejectionReason": "Motivo del rechazo"
+    }
+}

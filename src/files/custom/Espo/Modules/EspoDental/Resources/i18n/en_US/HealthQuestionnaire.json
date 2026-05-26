@@ -17,6 +17,10 @@
         "patient": "Patient",
         "preliminaryPatient": "Lead Patient",
         "language": "Language",
+        "formLanguage": "Form Language",
+        "templateType": "Template Type",
+        "templateVersion": "Template Version",
+        "pdfLanguageMode": "PDF Language Mode",
         "items": "Answers",
         "alertItems": "Alerts",
         "hasAlerts": "Has Alerts",
@@ -34,6 +38,13 @@
             "ru_RU": "Russian",
             "en_US": "English",
             "es_ES": "Spanish"
+        },
+        "templateType": {
+            "adult": "Adult",
+            "child": "Child"
+        },
+        "pdfLanguageMode": {
+            "es_ru": "Spanish / Russian"
         }
     },
     "links": {

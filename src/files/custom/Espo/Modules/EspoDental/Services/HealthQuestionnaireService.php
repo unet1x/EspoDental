@@ -38,9 +38,17 @@ class HealthQuestionnaireService
     /**
      * @return array<string, mixed>
      */
-    public function getSchema(string $language): array
+    public function getSchema(string $language, ?Entity $subject = null): array
     {
-        return $this->schemaProvider->get($language);
+        return $this->schemaProvider->get($language, $subject);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getSchemas(?Entity $subject = null): array
+    {
+        return $this->schemaProvider->getAll($subject);
     }
 
     /**
@@ -214,6 +222,7 @@ class HealthQuestionnaireService
         $this->validateRequiredAnswers($items, $language, $patient ?: $prelim);
 
         $alertItems = $this->collectAlerts($items, $language);
+        $schema = $this->schemaProvider->get($language, $patient ?: $prelim);
         $filledAt = (new DateTimeImmutable())->format('Y-m-d H:i:s');
         $expiresAt = (new DateTimeImmutable())
             ->modify('+' . self::QUESTIONNAIRE_TTL_DAYS . ' days')
@@ -233,6 +242,10 @@ class HealthQuestionnaireService
             $questionnaire->set('preliminaryPatientId', $preliminaryPatientId);
         }
         $questionnaire->set('language', $language);
+        $questionnaire->set('formLanguage', $language);
+        $questionnaire->set('templateType', $schema['templateType'] ?? 'adult');
+        $questionnaire->set('templateVersion', (int) ($schema['version'] ?? 1));
+        $questionnaire->set('pdfLanguageMode', 'es_ru');
         $questionnaire->set('items', (object) $items);
         $questionnaire->set('alertItems', $alertItems);
         $questionnaire->set('hasAlerts', count($alertItems) > 0);
@@ -340,14 +353,13 @@ class HealthQuestionnaireService
      */
     private function collectRequiredBoolItemIds(string $language, ?Entity $subject): array
     {
-        $schema = $this->schemaProvider->get($language);
+        $schema = $this->schemaProvider->get($language, $subject);
         $patientGender = $subject ? (string) $subject->get('gender') : '';
+        $isChild = (($schema['templateType'] ?? 'adult') === 'child');
         $ids = [];
 
         foreach ($schema['groups'] ?? [] as $group) {
-            $requiredGender = $group['conditional']['showIf']['patientGender'] ?? null;
-
-            if ($requiredGender && $requiredGender !== $patientGender) {
+            if (!$this->isGroupVisible($group, $patientGender, $isChild)) {
                 continue;
             }
 
@@ -393,6 +405,25 @@ class HealthQuestionnaireService
             }
         }
         return $alerts;
+    }
+
+    /**
+     * @param array<string, mixed> $group
+     */
+    private function isGroupVisible(array $group, string $patientGender, bool $isChild): bool
+    {
+        $showIf = $group['conditional']['showIf'] ?? [];
+        $requiredGender = $showIf['patientGender'] ?? null;
+
+        if ($requiredGender && $requiredGender !== $patientGender) {
+            return false;
+        }
+
+        if (array_key_exists('isChild', $showIf) && (bool) $showIf['isChild'] !== $isChild) {
+            return false;
+        }
+
+        return true;
     }
 
     private function storeSignature(string $dataUri, string $patientId): ?Attachment

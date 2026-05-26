@@ -1,0 +1,21 @@
+{
+    "fields": {
+        "appointment": "Appointment",
+        "patient": "Patient",
+        "requestedBy": "Requested By",
+        "source": "Source",
+        "requestedStartAt": "Requested Start",
+        "requestedEndAt": "Requested End",
+        "requestedDoctor": "Requested Doctor",
+        "requestedCabinet": "Requested Cabinet",
+        "requestedClinic": "Requested Clinic",
+        "previousAppointmentStatus": "Previous Appointment Status",
+        "status": "Status",
+        "patientComment": "Patient Comment",
+        "internalComment": "Internal Comment",
+        "confirmedAt": "Confirmed At",
+        "confirmedBy": "Confirmed By",
+        "rejectedAt": "Rejected At",
+        "rejectionReason": "Rejection Reason"
+    }
+}

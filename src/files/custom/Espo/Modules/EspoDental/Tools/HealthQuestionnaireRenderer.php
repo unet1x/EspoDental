@@ -21,6 +21,7 @@ class HealthQuestionnaireRenderer
      *     language: string,
      *     token: string,
      *     schema: array<string, mixed>,
+     *     schemas: array<string, mixed>,
      *     patient: ?Entity,
      *     error: ?string,
      *     submitUrl: string
@@ -45,15 +46,23 @@ class HealthQuestionnaireRenderer
             );
         }
         $patientGender = $patient ? (string) $patient->get('gender') : '';
+        $patientIsChild = (($vars['schema']['templateType'] ?? 'adult') === 'child');
 
         $bootstrap = [
             'language' => $vars['language'],
             'token' => $vars['token'],
             'schema' => $vars['schema'],
+            'schemas' => $vars['schemas'] ?? [$vars['language'] => $vars['schema']],
             'submitUrl' => $vars['submitUrl'],
             'patientFullName' => $patientFullName,
             'patientGender' => $patientGender,
+            'patientIsChild' => $patientIsChild,
             'strings' => $strings,
+            'stringsByLanguage' => [
+                'ru_RU' => $this->getStrings('ru_RU'),
+                'en_US' => $this->getStrings('en_US'),
+                'es_ES' => $this->getStrings('es_ES'),
+            ],
             'error' => $vars['error'],
         ];
 

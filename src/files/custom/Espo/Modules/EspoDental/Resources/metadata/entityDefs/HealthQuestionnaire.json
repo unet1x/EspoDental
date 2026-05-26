@@ -16,6 +16,28 @@
             "options": ["ru_RU", "en_US", "es_ES"],
             "default": "ru_RU"
         },
+        "formLanguage": {
+            "type": "enum",
+            "options": ["ru_RU", "en_US", "es_ES"],
+            "default": "ru_RU",
+            "readOnly": true
+        },
+        "templateType": {
+            "type": "enum",
+            "options": ["adult", "child"],
+            "default": "adult",
+            "readOnly": true
+        },
+        "templateVersion": {
+            "type": "int",
+            "readOnly": true
+        },
+        "pdfLanguageMode": {
+            "type": "enum",
+            "options": ["es_ru"],
+            "default": "es_ru",
+            "readOnly": true
+        },
         "items": {
             "type": "jsonObject",
             "readOnly": true,

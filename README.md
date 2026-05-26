@@ -189,6 +189,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   slot-first booking wizard contract
 - [docs/simple-stom-patient-workspace.md](docs/simple-stom-patient-workspace.md) —
   SimpleStom-style split patient workspace contract
+- [docs/simple-stom-questionnaire-portal.md](docs/simple-stom-questionnaire-portal.md) —
+  questionnaire language/PDF and patient portal contract
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -331,6 +333,8 @@ EspoDental поставляется со вторым compose-стеком
   контракт записи пациента из свободного слота
 - [docs/simple-stom-patient-workspace.md](docs/simple-stom-patient-workspace.md) —
   контракт двухпанельного рабочего места пациента SimpleStom
+- [docs/simple-stom-questionnaire-portal.md](docs/simple-stom-questionnaire-portal.md) —
+  контракт анкеты, ES/RU PDF и портала пациента
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

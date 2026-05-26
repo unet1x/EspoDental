@@ -7,7 +7,15 @@
                 {"name": "preliminaryPatient"}
             ],
             [
-                {"name": "language"}
+                {"name": "language"},
+                {"name": "formLanguage"}
+            ],
+            [
+                {"name": "templateType"},
+                {"name": "templateVersion"}
+            ],
+            [
+                {"name": "pdfLanguageMode"}
             ],
             [
                 {"name": "filledAt"},

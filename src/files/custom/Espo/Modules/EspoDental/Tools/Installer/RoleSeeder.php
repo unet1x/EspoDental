@@ -28,7 +28,9 @@ class RoleSeeder
     public const SCOPES = [
         'Clinic', 'Cabinet',
         'PreliminaryPatient', 'Patient',
-        'Appointment', 'AppointmentWaitlistEntry', 'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog',
+        'Appointment', 'AppointmentWaitlistEntry', 'AppointmentRescheduleRequest',
+        'PatientPortalSession', 'PatientPortalEvent',
+        'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog',
         'Visit', 'ServiceCategory', 'Service', 'VisitServiceLine', 'VisitMaterialLine',
         'ToothChartSnapshot', 'VisitPhoto',
         'Invoice', 'InvoiceLine', 'Payment',
@@ -202,6 +204,9 @@ class RoleSeeder
         }
         $manager['AppointmentStatusLog'] = $row('no', 'all', 'no', 'no', 'no');
         $manager['AppointmentWaitlistEntry'] = $row('yes', 'all', 'all', 'all', 'all');
+        $manager['AppointmentRescheduleRequest'] = $row('yes', 'all', 'all', 'all', 'all');
+        $manager['PatientPortalSession'] = $row('no', 'all', 'no', 'no', 'no');
+        $manager['PatientPortalEvent'] = $row('no', 'all', 'no', 'no', 'no');
         $manager['DoctorShiftTemplate']  = $row('yes', 'all', 'all', 'all', 'no');
         $manager['DoctorShift']          = $row('yes', 'all', 'all', 'all', 'no');
         $manager['ServiceCategory']      = $row('yes', 'all', 'all', 'all', 'no');
@@ -230,6 +235,9 @@ class RoleSeeder
             'Patient'              => $row('yes', 'team', 'team', 'no', 'team'),
             'Appointment'          => $row('yes', 'team', 'team', 'no', 'team'),
             'AppointmentWaitlistEntry' => $row('no', 'team', 'no', 'no', 'team'),
+            'AppointmentRescheduleRequest' => $row('no', 'team', 'no', 'no', 'team'),
+            'PatientPortalSession' => $row('no', 'no', 'no', 'no', 'no'),
+            'PatientPortalEvent'   => $row('no', 'no', 'no', 'no', 'no'),
             'DoctorShiftTemplate'  => $row('no', 'all', 'no', 'no', 'no'),
             'DoctorShift'          => $row('no', 'all', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
@@ -267,6 +275,9 @@ class RoleSeeder
             'Patient'              => $row('no', 'team', 'no', 'no', 'team'),
             'Appointment'          => $row('no', 'team', 'no', 'no', 'team'),
             'AppointmentWaitlistEntry' => $row('no', 'team', 'no', 'no', 'team'),
+            'AppointmentRescheduleRequest' => $row('no', 'no', 'no', 'no', 'no'),
+            'PatientPortalSession' => $row('no', 'no', 'no', 'no', 'no'),
+            'PatientPortalEvent'   => $row('no', 'no', 'no', 'no', 'no'),
             'DoctorShiftTemplate'  => $row('no', 'all', 'no', 'no', 'no'),
             'DoctorShift'          => $row('no', 'all', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
@@ -304,6 +315,9 @@ class RoleSeeder
             'Patient'              => $row('yes', 'team', 'team', 'no', 'team'),
             'Appointment'          => $row('yes', 'team', 'team', 'team', 'team'),
             'AppointmentWaitlistEntry' => $row('yes', 'team', 'team', 'team', 'team'),
+            'AppointmentRescheduleRequest' => $row('yes', 'team', 'team', 'team', 'team'),
+            'PatientPortalSession' => $row('no', 'team', 'no', 'no', 'no'),
+            'PatientPortalEvent'   => $row('no', 'team', 'no', 'no', 'no'),
             'DoctorShiftTemplate'  => $row('yes', 'all', 'all', 'no', 'no'),
             'DoctorShift'          => $row('yes', 'all', 'all', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
@@ -341,6 +355,9 @@ class RoleSeeder
             'Patient'              => $row('no', 'no', 'no', 'no', 'no'),
             'Appointment'          => $row('no', 'no', 'no', 'no', 'no'),
             'AppointmentWaitlistEntry' => $row('no', 'no', 'no', 'no', 'no'),
+            'AppointmentRescheduleRequest' => $row('no', 'no', 'no', 'no', 'no'),
+            'PatientPortalSession' => $row('no', 'no', 'no', 'no', 'no'),
+            'PatientPortalEvent'   => $row('no', 'no', 'no', 'no', 'no'),
             'DoctorShiftTemplate'  => $row('no', 'no', 'no', 'no', 'no'),
             'DoctorShift'          => $row('no', 'no', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'no', 'no', 'no', 'no'),

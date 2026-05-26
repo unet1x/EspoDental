@@ -1,0 +1,8 @@
+[
+    {"name": "patient", "type": "link"},
+    {"name": "session", "type": "link"},
+    {"name": "appointment", "type": "link"},
+    {"name": "rescheduleRequest", "type": "link"},
+    {"name": "action", "type": "enum"},
+    {"name": "status", "type": "enum"}
+]

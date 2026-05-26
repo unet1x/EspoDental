@@ -9,6 +9,42 @@
         }
     },
     {
+        "route": "/EspoDental/Public/PatientPortal/requestCode",
+        "method": "post",
+        "noAuth": true,
+        "params": {"controller": "PublicPatientPortal", "action": "requestCode"}
+    },
+    {
+        "route": "/EspoDental/Public/PatientPortal/verifyCode",
+        "method": "post",
+        "noAuth": true,
+        "params": {"controller": "PublicPatientPortal", "action": "verifyCode"}
+    },
+    {
+        "route": "/EspoDental/Public/PatientPortal/appointments",
+        "method": "get",
+        "noAuth": true,
+        "params": {"controller": "PublicPatientPortal", "action": "appointments"}
+    },
+    {
+        "route": "/EspoDental/Public/PatientPortal/rescheduleRequests",
+        "method": "post",
+        "noAuth": true,
+        "params": {"controller": "PublicPatientPortal", "action": "rescheduleRequests"}
+    },
+    {
+        "route": "/EspoDental/Public/PatientPortal/rescheduleRequests/{id}/cancel",
+        "method": "post",
+        "noAuth": true,
+        "params": {"controller": "PublicPatientPortal", "action": "cancelRescheduleRequest"}
+    },
+    {
+        "route": "/EspoDental/Public/PatientPortal/logout",
+        "method": "post",
+        "noAuth": true,
+        "params": {"controller": "PublicPatientPortal", "action": "logout"}
+    },
+    {
         "route": "/EspoDental/Report/monthlyRevenue",
         "method": "get",
         "params": {"controller": "Report", "action": "monthlyRevenue"}

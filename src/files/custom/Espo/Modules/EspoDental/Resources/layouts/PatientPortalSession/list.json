@@ -1,0 +1,8 @@
+[
+    {"name": "name", "width": 22},
+    {"name": "patient", "width": 20},
+    {"name": "contactMethod", "width": 10},
+    {"name": "contactValueSnapshot", "width": 22},
+    {"name": "expiresAt", "width": 14},
+    {"name": "lastSeenAt", "width": 14}
+]

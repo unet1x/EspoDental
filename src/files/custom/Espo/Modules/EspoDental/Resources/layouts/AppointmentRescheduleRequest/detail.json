@@ -1,0 +1,17 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [{"name": "name"}, {"name": "status"}],
+            [{"name": "appointment"}, {"name": "patient"}],
+            [{"name": "requestedBy"}, {"name": "source"}],
+            [{"name": "requestedStartAt"}, {"name": "requestedEndAt"}],
+            [{"name": "requestedDoctor"}, {"name": "requestedCabinet"}],
+            [{"name": "requestedClinic"}, {"name": "previousAppointmentStatus"}],
+            [{"name": "patientComment", "fullWidth": true}],
+            [{"name": "internalComment", "fullWidth": true}],
+            [{"name": "confirmedAt"}, {"name": "confirmedBy"}],
+            [{"name": "rejectedAt"}, {"name": "rejectionReason"}]
+        ]
+    }
+]

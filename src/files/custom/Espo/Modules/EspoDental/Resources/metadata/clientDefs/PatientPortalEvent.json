@@ -1,0 +1,5 @@
+{
+    "controller": "controllers/record",
+    "color": "#7D8B99",
+    "iconClass": "fas fa-clock-rotate-left"
+}

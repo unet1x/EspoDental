@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "patient": "Patient",
+        "session": "Session",
+        "appointment": "Appointment",
+        "rescheduleRequest": "Reschedule Request",
+        "action": "Action",
+        "status": "Status",
+        "contactMethod": "Contact Method",
+        "contactValueSnapshot": "Contact Snapshot",
+        "ipAddress": "IP Address",
+        "userAgent": "User Agent",
+        "metadata": "Metadata",
+        "errorDetail": "Error Detail"
+    }
+}

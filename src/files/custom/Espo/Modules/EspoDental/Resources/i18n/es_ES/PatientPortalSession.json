@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "patient": "Paciente",
+        "contactMethod": "Metodo de contacto",
+        "contactValueSnapshot": "Contacto",
+        "tokenHash": "Hash del token de acceso",
+        "otpHash": "Hash del codigo",
+        "otpAttemptCount": "Intentos del codigo",
+        "otpLockedAt": "Codigo bloqueado el",
+        "expiresAt": "Expira el",
+        "usedAt": "Verificado el",
+        "lastSeenAt": "Ultima actividad",
+        "revokedAt": "Revocado el",
+        "ipAddress": "IP",
+        "userAgent": "User-Agent"
+    }
+}

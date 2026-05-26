@@ -110,6 +110,11 @@
         "statusLogs": {"type": "hasMany", "entity": "AppointmentStatusLog", "foreign": "appointment"},
         "notificationLogs": {"type": "hasMany", "entity": "NotificationLog", "foreign": "appointment"},
         "waitlistEntries": {"type": "hasMany", "entity": "AppointmentWaitlistEntry", "foreign": "appointment"},
+        "rescheduleRequests": {
+            "type": "hasMany",
+            "entity": "AppointmentRescheduleRequest",
+            "foreign": "appointment"
+        },
         "assistantActionProposals": {
             "type": "hasMany",
             "entity": "AssistantActionProposal",

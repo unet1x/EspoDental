@@ -1,0 +1,21 @@
+{
+    "fields": {
+        "appointment": "Запись",
+        "patient": "Пациент",
+        "requestedBy": "Кем запрошено",
+        "source": "Источник",
+        "requestedStartAt": "Желаемое начало",
+        "requestedEndAt": "Желаемое окончание",
+        "requestedDoctor": "Желаемый врач",
+        "requestedCabinet": "Желаемый кабинет",
+        "requestedClinic": "Желаемая клиника",
+        "previousAppointmentStatus": "Предыдущий статус записи",
+        "status": "Статус",
+        "patientComment": "Комментарий пациента",
+        "internalComment": "Внутренний комментарий",
+        "confirmedAt": "Подтверждено",
+        "confirmedBy": "Подтвердил",
+        "rejectedAt": "Отклонено",
+        "rejectionReason": "Причина отказа"
+    }
+}
