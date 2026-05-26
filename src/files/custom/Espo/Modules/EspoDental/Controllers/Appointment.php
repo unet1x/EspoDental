@@ -13,6 +13,53 @@ use Espo\Modules\EspoDental\Services\AppointmentService;
 class Appointment extends Record
 {
     /**
+     * GET /EspoDental/Appointment/bookingCandidates?q=...
+     *
+     * @return list<array<string, mixed>>
+     */
+    public function getActionBookingCandidates(Request $request): array
+    {
+        if (!$this->getAcl()->checkScope('Appointment', 'create')) {
+            throw new Forbidden();
+        }
+
+        /** @var AppointmentService $service */
+        $service = $this->injectableFactory->create(AppointmentService::class);
+
+        return $service->searchBookingCandidates(
+            (string) ($request->getQueryParam('q') ?? ''),
+            (int) ($request->getQueryParam('limit') ?? 10)
+        );
+    }
+
+    /**
+     * POST /EspoDental/Appointment/bookFromSlot
+     *
+     * @return array{appointmentId: string, parentType: string, parentId: string, createdPreliminaryPatient: bool}
+     */
+    public function postActionBookFromSlot(Request $request): array
+    {
+        if (!$this->getAcl()->checkScope('Appointment', 'create')) {
+            throw new Forbidden();
+        }
+
+        $body = $request->getParsedBody();
+        $data = is_object($body) ? get_object_vars($body) : [];
+
+        if (
+            empty($data['parentId']) &&
+            !$this->getAcl()->checkScope('PreliminaryPatient', 'create')
+        ) {
+            throw new Forbidden();
+        }
+
+        /** @var AppointmentService $service */
+        $service = $this->injectableFactory->create(AppointmentService::class);
+
+        return $service->bookFromSlot($data);
+    }
+
+    /**
      * POST /Appointment/action/startVisit
      *
      * @return array{visitId: string, appointmentId: string}

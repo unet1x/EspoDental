@@ -89,6 +89,16 @@
         "params": {"controller": "Calendar", "action": "feedbackPanel"}
     },
     {
+        "route": "/EspoDental/Appointment/bookingCandidates",
+        "method": "get",
+        "params": {"controller": "Appointment", "action": "bookingCandidates"}
+    },
+    {
+        "route": "/EspoDental/Appointment/bookFromSlot",
+        "method": "post",
+        "params": {"controller": "Appointment", "action": "bookFromSlot"}
+    },
+    {
         "route": "/EspoDental/Integration/tools",
         "method": "get",
         "params": {"controller": "Integration", "action": "tools"}

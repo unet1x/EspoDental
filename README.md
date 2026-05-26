@@ -185,6 +185,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   SimpleStom-style dashboard action center contract
 - [docs/simple-stom-calendar-feedback.md](docs/simple-stom-calendar-feedback.md) —
   feedback calendar UX and waitlist contract
+- [docs/simple-stom-slot-booking.md](docs/simple-stom-slot-booking.md) —
+  slot-first booking wizard contract
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -323,6 +325,8 @@ EspoDental поставляется со вторым compose-стеком
   контракт dashboard-центра действий SimpleStom
 - [docs/simple-stom-calendar-feedback.md](docs/simple-stom-calendar-feedback.md) —
   календарь по feedback-макету и контракт листа ожидания
+- [docs/simple-stom-slot-booking.md](docs/simple-stom-slot-booking.md) —
+  контракт записи пациента из свободного слота
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

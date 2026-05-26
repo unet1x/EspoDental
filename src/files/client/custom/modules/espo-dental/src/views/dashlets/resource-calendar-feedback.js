@@ -1,7 +1,8 @@
 define('espo-dental:views/dashlets/resource-calendar-feedback', [
     'views/dashlets/abstract/base',
     'espo-dental:lib/resource-grid',
-    'espo-dental:lib/simple-stom-ui'
+    'espo-dental:lib/simple-stom-ui',
+    'espo-dental:views/appointment/modals/slot-booking'
 ], function (Dep, ResourceGrid, SimpleStomUi) {
     return Dep.extend({
         name: 'ResourceCalendar',
@@ -277,17 +278,25 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
         },
 
         openSlotBooking: function (cabinetId, localStart, timezone) {
-            var query = '?dateStart=' + encodeURIComponent(localStart || '');
+            this.createView('slotBooking', 'espo-dental:views/appointment/modals/slot-booking', {
+                slot: {
+                    localStart: localStart || '',
+                    timezone: timezone || '',
+                    cabinetId: cabinetId || '',
+                    clinicId: this.clinicId || '',
+                    freeWindowMinutes: 180
+                },
+                clinicId: this.clinicId || ''
+            }, (function (view) {
+                view.render();
+                view.on('done', (function (response) {
+                    this.fetchAndRender();
 
-            if (cabinetId) {
-                query += '&cabinetId=' + encodeURIComponent(cabinetId);
-            }
-
-            if (timezone) {
-                query += '&timezone=' + encodeURIComponent(timezone);
-            }
-
-            this.getRouter().navigate('#Appointment/create' + query, {trigger: true});
+                    if (response && response.appointmentId) {
+                        this.getRouter().navigate('#Appointment/view/' + response.appointmentId, {trigger: true});
+                    }
+                }).bind(this));
+            }).bind(this));
         }
     });
 });

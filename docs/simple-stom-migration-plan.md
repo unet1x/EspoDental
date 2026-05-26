@@ -43,6 +43,8 @@ Stage 3 dashboard action-center rules are locked in
 [`docs/simple-stom-dashboard-action-center.md`](simple-stom-dashboard-action-center.md).
 Stage 4 calendar feedback rules are locked in
 [`docs/simple-stom-calendar-feedback.md`](simple-stom-calendar-feedback.md).
+Stage 5 slot booking rules are locked in
+[`docs/simple-stom-slot-booking.md`](simple-stom-slot-booking.md).
 
 Important visual reference order:
 
@@ -214,6 +216,7 @@ Verification:
 
 - Front-desk intake tests from preliminary patient to appointment.
 - Regression checks for patient/doctor/cabinet conflicts.
+- `tests/SimpleStomSlotBookingTest.php`
 
 ### Stage 6 - Patients Workspace
 
@@ -365,7 +368,7 @@ Verification:
 | 2. Visual system foundation | Completed | Added scoped UI-kit `simple-stom-ui.js`, documented tokens in `docs/simple-stom-visual-system.md`, and locked the contract with `tests/SimpleStomVisualSystemTest.php`. |
 | 3. Dashboard actions and tasks | Completed | Added `DashboardActionCenterService`, `GET /EspoDental/Dashboard/actionCenter`, scoped action-center dashlet and role dashboard template placement; native EspoCRM `Task` is the first-pass task model. |
 | 4. Calendar feedback UX | Completed | Added `AppointmentWaitlistEntry`, `CalendarFeedbackService`, `GET /EspoDental/Calendar/feedbackPanel`, and a new `resource-calendar-feedback` dashlet view with right-side waitlist/cancelled panels. |
-| 5. Slot booking wizard | Pending | Depends on stage 4 slot model. |
+| 5. Slot booking wizard | Completed | Added candidate search and `bookFromSlot` backend flow, plus a scoped slot-booking modal opened from free calendar cells. |
 | 6. Patients workspace | Pending | Can run after visual foundation. |
 | 7. Questionnaire and portal | Pending | Requires questionnaire gap check. |
 | 8. Doctor reception workspace | Pending | Can reuse existing Visit backend. |
