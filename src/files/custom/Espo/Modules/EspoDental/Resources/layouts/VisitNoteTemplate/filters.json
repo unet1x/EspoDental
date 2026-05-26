@@ -1,0 +1,5 @@
+[
+    {"name": "section", "type": "enum"},
+    {"name": "ownerUser", "type": "link"},
+    {"name": "isShared", "type": "bool"}
+]

@@ -31,7 +31,7 @@ class RoleSeeder
         'Appointment', 'AppointmentWaitlistEntry', 'AppointmentRescheduleRequest',
         'PatientPortalSession', 'PatientPortalEvent',
         'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog',
-        'Visit', 'ServiceCategory', 'Service', 'VisitServiceLine', 'VisitMaterialLine',
+        'Visit', 'VisitNoteTemplate', 'ServiceCategory', 'Service', 'VisitServiceLine', 'VisitMaterialLine',
         'ToothChartSnapshot', 'VisitPhoto',
         'Invoice', 'InvoiceLine', 'Payment',
         'MaterialCategory', 'Material', 'StockMovement', 'ServiceMaterial',
@@ -212,6 +212,7 @@ class RoleSeeder
         $manager['ServiceCategory']      = $row('yes', 'all', 'all', 'all', 'no');
         $manager['Service']              = $row('yes', 'all', 'all', 'all', 'no');
         $manager['VisitServiceLine']     = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['VisitNoteTemplate']    = $row('yes', 'all', 'all', 'all', 'no');
         $manager['VisitMaterialLine']    = $row('yes', 'all', 'all', 'all', 'no');
         $manager['ToothChartSnapshot']   = $row('yes', 'all', 'all', 'all', 'no');
         $manager['VisitPhoto']           = $row('yes', 'all', 'all', 'all', 'no');
@@ -242,6 +243,7 @@ class RoleSeeder
             'DoctorShift'          => $row('no', 'all', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
             'Visit'                => $row('yes', 'team', 'own', 'no', 'team'),
+            'VisitNoteTemplate'    => $row('yes', 'own', 'own', 'own', 'no'),
             'ServiceCategory'      => $row('no', 'all', 'no', 'no', 'no'),
             'Service'              => $row('no', 'all', 'no', 'no', 'no'),
             'VisitServiceLine'     => $row('yes', 'team', 'own', 'own', 'no'),
@@ -282,6 +284,7 @@ class RoleSeeder
             'DoctorShift'          => $row('no', 'all', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
             'Visit'                => $row('no', 'team', 'no', 'no', 'team'),
+            'VisitNoteTemplate'    => $row('yes', 'own', 'own', 'own', 'no'),
             'ServiceCategory'      => $row('no', 'all', 'no', 'no', 'no'),
             'Service'              => $row('no', 'all', 'no', 'no', 'no'),
             'VisitServiceLine'     => $row('no', 'team', 'no', 'no', 'no'),
@@ -322,6 +325,7 @@ class RoleSeeder
             'DoctorShift'          => $row('yes', 'all', 'all', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
             'Visit'                => $row('no', 'team', 'no', 'no', 'team'),
+            'VisitNoteTemplate'    => $row('yes', 'team', 'team', 'no', 'no'),
             'ServiceCategory'      => $row('no', 'all', 'no', 'no', 'no'),
             'Service'              => $row('no', 'all', 'no', 'no', 'no'),
             'VisitServiceLine'     => $row('no', 'team', 'no', 'no', 'no'),
@@ -362,6 +366,7 @@ class RoleSeeder
             'DoctorShift'          => $row('no', 'no', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'no', 'no', 'no', 'no'),
             'Visit'                => $row('no', 'no', 'no', 'no', 'no'),
+            'VisitNoteTemplate'    => $row('no', 'no', 'no', 'no', 'no'),
             'ServiceCategory'      => $row('no', 'all', 'no', 'no', 'no'),
             'Service'              => $row('no', 'all', 'no', 'no', 'no'),
             'VisitServiceLine'     => $row('no', 'no', 'no', 'no', 'no'),

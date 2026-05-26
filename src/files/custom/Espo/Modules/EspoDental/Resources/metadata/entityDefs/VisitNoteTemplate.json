@@ -1,0 +1,29 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 160},
+        "ownerUser": {"type": "link", "view": "views/fields/user"},
+        "section": {
+            "type": "enum",
+            "options": ["complaints", "performed", "recommendations", "treatmentPlan"],
+            "default": "performed"
+        },
+        "body": {"type": "text", "required": true},
+        "isShared": {"type": "bool", "default": false},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "teams": {"type": "linkMultiple", "view": "views/fields/teams"}
+    },
+    "links": {
+        "ownerUser": {"type": "belongsTo", "entity": "User"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"},
+        "teams": {"type": "hasMany", "entity": "Team", "relationName": "entityTeam", "layoutRelationshipsDisabled": true}
+    },
+    "collection": {"orderBy": "name", "order": "asc"},
+    "indexes": {
+        "owner_section": {"columns": ["ownerUserId", "section"]},
+        "shared_section": {"columns": ["isShared", "section"]}
+    }
+}

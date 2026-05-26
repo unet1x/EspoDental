@@ -13,6 +13,72 @@ use Espo\Modules\EspoDental\Services\VisitService;
 class Visit extends Record
 {
     /**
+     * GET /EspoDental/Visit/receptionWorkspace?id=...
+     *
+     * @return array<string, mixed>
+     */
+    public function getActionReceptionWorkspace(Request $request): array
+    {
+        $id = $request->getQueryParam('id');
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest('id is required');
+        }
+
+        if (!$this->getAcl()->checkScope('Visit', 'read')) {
+            throw new Forbidden();
+        }
+
+        /** @var VisitService $service */
+        $service = $this->injectableFactory->create(VisitService::class);
+
+        return $service->getReceptionWorkspace($id);
+    }
+
+    /**
+     * POST /EspoDental/Visit/autosaveReception
+     *
+     * @return array{ok: true, savedFields: list<string>, isLocked: bool}
+     */
+    public function postActionAutosaveReception(Request $request): array
+    {
+        $body = $request->getParsedBody();
+        $id = is_object($body) ? ($body->id ?? null) : null;
+
+        if (!$id || !is_string($id)) {
+            throw new BadRequest('id is required');
+        }
+
+        if (!$this->getAcl()->checkScope('Visit', 'edit')) {
+            throw new Forbidden();
+        }
+
+        /** @var VisitService $service */
+        $service = $this->injectableFactory->create(VisitService::class);
+
+        return $service->autosaveReceptionNotes($id, is_object($body) ? (array) $body : []);
+    }
+
+    /**
+     * POST /EspoDental/Visit/noteTemplate
+     *
+     * @return array{templateId: string}
+     */
+    public function postActionNoteTemplate(Request $request): array
+    {
+        $body = $request->getParsedBody();
+
+        if (!$this->getAcl()->checkScope('VisitNoteTemplate', 'create')) {
+            throw new Forbidden();
+        }
+
+        /** @var VisitService $service */
+        $service = $this->injectableFactory->create(VisitService::class);
+
+        return $service->createNoteTemplate(is_object($body) ? (array) $body : []);
+    }
+
+    /**
      * GET /Visit/action/toothChart?id=...
      *
      * @return array<string, mixed>

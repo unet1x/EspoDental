@@ -1,0 +1,10 @@
+{
+    "labels": {"Create VisitNoteTemplate": "Create Visit Note Template"},
+    "fields": {
+        "name": "Name",
+        "ownerUser": "Owner",
+        "section": "Section",
+        "body": "Body",
+        "isShared": "Shared"
+    }
+}

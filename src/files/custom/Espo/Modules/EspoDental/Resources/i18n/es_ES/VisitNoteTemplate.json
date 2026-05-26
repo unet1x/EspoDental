@@ -1,0 +1,10 @@
+{
+    "labels": {"Create VisitNoteTemplate": "Crear plantilla de nota"},
+    "fields": {
+        "name": "Nombre",
+        "ownerUser": "Propietario",
+        "section": "Seccion",
+        "body": "Texto",
+        "isShared": "Compartida"
+    }
+}

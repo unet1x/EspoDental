@@ -1,0 +1,10 @@
+{
+    "labels": {"Create VisitNoteTemplate": "Создать шаблон заметки"},
+    "fields": {
+        "name": "Название",
+        "ownerUser": "Владелец",
+        "section": "Раздел",
+        "body": "Текст",
+        "isShared": "Общий"
+    }
+}

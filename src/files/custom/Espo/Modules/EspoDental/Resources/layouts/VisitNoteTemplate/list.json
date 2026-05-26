@@ -1,0 +1,7 @@
+[
+    {"name": "name", "width": 30},
+    {"name": "section", "width": 18},
+    {"name": "ownerUser", "width": 18},
+    {"name": "isShared", "width": 10},
+    {"name": "modifiedAt", "width": 14}
+]

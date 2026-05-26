@@ -140,6 +140,21 @@
         "params": {"controller": "Patient", "action": "workspace"}
     },
     {
+        "route": "/EspoDental/Visit/receptionWorkspace",
+        "method": "get",
+        "params": {"controller": "Visit", "action": "receptionWorkspace"}
+    },
+    {
+        "route": "/EspoDental/Visit/autosaveReception",
+        "method": "post",
+        "params": {"controller": "Visit", "action": "autosaveReception"}
+    },
+    {
+        "route": "/EspoDental/Visit/noteTemplate",
+        "method": "post",
+        "params": {"controller": "Visit", "action": "noteTemplate"}
+    },
+    {
         "route": "/EspoDental/Integration/tools",
         "method": "get",
         "params": {"controller": "Integration", "action": "tools"}

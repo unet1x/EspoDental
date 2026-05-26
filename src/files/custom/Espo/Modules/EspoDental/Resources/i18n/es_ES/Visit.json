@@ -20,6 +20,7 @@
         "complaints": "Motivo",
         "performed": "Realizado",
         "recommendations": "Recomendaciones",
+        "treatmentPlan": "Plan de tratamiento",
         "startedAt": "Iniciado",
         "finishedAt": "Finalizado",
         "totalAmount": "Importe",

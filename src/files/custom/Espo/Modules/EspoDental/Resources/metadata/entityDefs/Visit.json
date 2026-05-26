@@ -48,6 +48,9 @@
         "recommendations": {
             "type": "text"
         },
+        "treatmentPlan": {
+            "type": "text"
+        },
         "startedAt": {
             "type": "datetime",
             "required": true

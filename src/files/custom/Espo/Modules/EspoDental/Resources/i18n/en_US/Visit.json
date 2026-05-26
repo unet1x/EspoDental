@@ -20,6 +20,7 @@
         "complaints": "Complaints",
         "performed": "Performed",
         "recommendations": "Recommendations",
+        "treatmentPlan": "Treatment Plan",
         "startedAt": "Started At",
         "finishedAt": "Finished At",
         "totalAmount": "Total Amount",

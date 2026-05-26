@@ -191,6 +191,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   SimpleStom-style split patient workspace contract
 - [docs/simple-stom-questionnaire-portal.md](docs/simple-stom-questionnaire-portal.md) —
   questionnaire language/PDF and patient portal contract
+- [docs/simple-stom-reception-workspace.md](docs/simple-stom-reception-workspace.md) —
+  SimpleStom-style doctor reception workspace contract
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -335,6 +337,8 @@ EspoDental поставляется со вторым compose-стеком
   контракт двухпанельного рабочего места пациента SimpleStom
 - [docs/simple-stom-questionnaire-portal.md](docs/simple-stom-questionnaire-portal.md) —
   контракт анкеты, ES/RU PDF и портала пациента
+- [docs/simple-stom-reception-workspace.md](docs/simple-stom-reception-workspace.md) —
+  контракт рабочего места врача на приёме SimpleStom
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

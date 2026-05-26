@@ -8,21 +8,121 @@ use DateTimeImmutable;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Entities\User;
 use Espo\Modules\EspoDental\Entities\Appointment;
+use Espo\Modules\EspoDental\Entities\Invoice;
 use Espo\Modules\EspoDental\Entities\Patient;
 use Espo\Modules\EspoDental\Entities\ToothChartSnapshot;
 use Espo\Modules\EspoDental\Entities\Visit;
+use Espo\Modules\EspoDental\Entities\VisitMaterialLine;
+use Espo\Modules\EspoDental\Entities\VisitNoteTemplate;
+use Espo\Modules\EspoDental\Entities\VisitPhoto;
 use Espo\Modules\EspoDental\Entities\VisitServiceLine;
-use Espo\Modules\EspoDental\Services\InvoiceService;
-use Espo\Modules\EspoDental\Services\StockService;
 
 class VisitService
 {
     public function __construct(
         private readonly EntityManager $entityManager,
         private readonly InvoiceService $invoiceService,
-        private readonly StockService $stockService
+        private readonly StockService $stockService,
+        private readonly User $user
     ) {
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getReceptionWorkspace(string $visitId): array
+    {
+        $visit = $this->getVisitOrFail($visitId);
+        $isFinished = $visit->getStatus() === Visit::STATUS_FINISHED;
+        $counts = $this->getReceptionCounts($visit);
+
+        return [
+            'visitId' => (string) $visit->getId(),
+            'status' => $visit->getStatus(),
+            'isLocked' => $isFinished,
+            'allowedSections' => [
+                'complaints' => !$isFinished,
+                'performed' => !$isFinished,
+                'recommendations' => !$isFinished,
+                'treatmentPlan' => true,
+                'photos' => true,
+            ],
+            'notes' => [
+                'complaints' => (string) ($visit->get('complaints') ?? ''),
+                'performed' => (string) ($visit->get('performed') ?? ''),
+                'recommendations' => (string) ($visit->get('recommendations') ?? ''),
+                'treatmentPlan' => (string) ($visit->get('treatmentPlan') ?? ''),
+            ],
+            'counts' => $counts,
+            'checklist' => $this->buildReceptionChecklist($visit, $counts),
+            'templates' => $this->getPersonalTemplates(),
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array{ok: true, savedFields: list<string>, isLocked: bool}
+     */
+    public function autosaveReceptionNotes(string $visitId, array $data): array
+    {
+        $visit = $this->getVisitOrFail($visitId);
+        $isFinished = $visit->getStatus() === Visit::STATUS_FINISHED;
+        $editable = $isFinished
+            ? ['treatmentPlan']
+            : ['complaints', 'performed', 'recommendations', 'treatmentPlan'];
+
+        $saved = [];
+        foreach ($editable as $field) {
+            if (!array_key_exists($field, $data)) {
+                continue;
+            }
+
+            $visit->set($field, trim((string) $data[$field]));
+            $saved[] = $field;
+        }
+
+        if ($saved !== []) {
+            $this->entityManager->saveEntity($visit);
+        }
+
+        return [
+            'ok' => true,
+            'savedFields' => $saved,
+            'isLocked' => $isFinished,
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @return array{templateId: string}
+     */
+    public function createNoteTemplate(array $data): array
+    {
+        $section = (string) ($data['section'] ?? VisitNoteTemplate::SECTION_PERFORMED);
+        if (
+            !in_array($section, [
+                VisitNoteTemplate::SECTION_COMPLAINTS,
+                VisitNoteTemplate::SECTION_PERFORMED,
+                VisitNoteTemplate::SECTION_RECOMMENDATIONS,
+                VisitNoteTemplate::SECTION_TREATMENT_PLAN,
+            ], true)
+        ) {
+            $section = VisitNoteTemplate::SECTION_PERFORMED;
+        }
+
+        /** @var VisitNoteTemplate $template */
+        $template = $this->entityManager->getNewEntity(VisitNoteTemplate::ENTITY_TYPE);
+        $template->set('name', trim((string) ($data['name'] ?? 'Visit template')));
+        $template->set('ownerUserId', $this->user->getId());
+        $template->set('section', $section);
+        $template->set('body', trim((string) ($data['body'] ?? '')));
+        $template->set('isShared', (bool) ($data['isShared'] ?? false));
+
+        $this->entityManager->saveEntity($template);
+
+        return ['templateId' => (string) $template->getId()];
     }
 
     /**
@@ -43,12 +143,7 @@ class VisitService
      */
     private function finishVisitInTransaction(string $visitId): array
     {
-        /** @var Visit|null $visit */
-        $visit = $this->entityManager->getEntityById(Visit::ENTITY_TYPE, $visitId);
-
-        if (!$visit) {
-            throw new NotFound('Visit not found');
-        }
+        $visit = $this->getVisitOrFail($visitId);
 
         if (!in_array($visit->getStatus(), [Visit::STATUS_IN_PROGRESS, Visit::STATUS_FINISHED], true)) {
             throw new Conflict('Visit is not in progress');
@@ -127,12 +222,7 @@ class VisitService
      */
     public function getToothChartData(string $visitId): array
     {
-        /** @var Visit|null $visit */
-        $visit = $this->entityManager->getEntityById(Visit::ENTITY_TYPE, $visitId);
-
-        if (!$visit) {
-            throw new NotFound('Visit not found');
-        }
+        $visit = $this->getVisitOrFail($visitId);
 
         /** @var ToothChartSnapshot|null $snapshot */
         $snapshot = $this->entityManager
@@ -193,6 +283,101 @@ class VisitService
         return (int) $this->entityManager
             ->getRDBRepository(VisitServiceLine::ENTITY_TYPE)
             ->where(['visitId' => $visit->getId()])
+            ->count();
+    }
+
+    private function getVisitOrFail(string $visitId): Visit
+    {
+        /** @var Visit|null $visit */
+        $visit = $this->entityManager->getEntityById(Visit::ENTITY_TYPE, $visitId);
+
+        if (!$visit) {
+            throw new NotFound('Visit not found');
+        }
+
+        return $visit;
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function getReceptionCounts(Visit $visit): array
+    {
+        $visitId = (string) $visit->getId();
+
+        return [
+            'services' => $this->countByVisit(VisitServiceLine::ENTITY_TYPE, $visitId),
+            'materials' => $this->countByVisit(VisitMaterialLine::ENTITY_TYPE, $visitId),
+            'photos' => $this->countByVisit(VisitPhoto::ENTITY_TYPE, $visitId),
+            'toothCharts' => $this->countByVisit(ToothChartSnapshot::ENTITY_TYPE, $visitId),
+            'invoices' => $this->countByVisit(Invoice::ENTITY_TYPE, $visitId),
+        ];
+    }
+
+    /**
+     * @param array<string, int> $counts
+     * @return list<array{key: string, label: string, done: bool}>
+     */
+    private function buildReceptionChecklist(Visit $visit, array $counts): array
+    {
+        return [
+            [
+                'key' => 'complaints',
+                'label' => 'Complaints',
+                'done' => trim((string) ($visit->get('complaints') ?? '')) !== '',
+            ],
+            [
+                'key' => 'treatmentNotes',
+                'label' => 'Treatment notes',
+                'done' => trim((string) ($visit->get('performed') ?? '')) !== '',
+            ],
+            ['key' => 'services', 'label' => 'Services', 'done' => $counts['services'] > 0],
+            ['key' => 'materials', 'label' => 'Materials', 'done' => $counts['materials'] > 0],
+            ['key' => 'toothChart', 'label' => 'Tooth chart', 'done' => $counts['toothCharts'] > 0],
+            [
+                'key' => 'invoice',
+                'label' => 'Invoice',
+                'done' => $visit->getStatus() !== Visit::STATUS_FINISHED || $counts['invoices'] > 0,
+            ],
+        ];
+    }
+
+    /**
+     * @return list<array{id: string, name: string, section: string, body: string, isShared: bool}>
+     */
+    private function getPersonalTemplates(): array
+    {
+        /** @var iterable<VisitNoteTemplate> $templates */
+        $templates = $this->entityManager
+            ->getRDBRepository(VisitNoteTemplate::ENTITY_TYPE)
+            ->where([
+                'OR' => [
+                    ['ownerUserId' => $this->user->getId()],
+                    ['isShared' => true],
+                ],
+            ])
+            ->order('name', 'ASC')
+            ->find();
+
+        $rows = [];
+        foreach ($templates as $template) {
+            $rows[] = [
+                'id' => (string) $template->getId(),
+                'name' => (string) ($template->get('name') ?? ''),
+                'section' => (string) ($template->get('section') ?? ''),
+                'body' => (string) ($template->get('body') ?? ''),
+                'isShared' => (bool) ($template->get('isShared') ?? false),
+            ];
+        }
+
+        return $rows;
+    }
+
+    private function countByVisit(string $entityType, string $visitId): int
+    {
+        return (int) $this->entityManager
+            ->getRDBRepository($entityType)
+            ->where(['visitId' => $visitId])
             ->count();
     }
 }
