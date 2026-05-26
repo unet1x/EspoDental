@@ -60,8 +60,9 @@ final class SimpleStomPatientWorkspaceTest extends TestCase
                 'renderPatientList',
                 'renderPatientDetail',
                 'renderTabs',
-                'Clinical only',
-                'Financial only',
+                'Только клиническая история',
+                'Только расчеты и оплаты',
+                'Записаться на прием',
                 'bookAppointment',
                 'uploadFile',
             ] as $needle

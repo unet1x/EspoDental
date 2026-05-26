@@ -47,9 +47,13 @@ final class SimpleStomCalendarFeedbackTest extends TestCase
 
     public function testCalendarFeedbackBackendContractExists(): void
     {
+        $calendar = $this->readFile(self::MODULE_ROOT . '/Services/CalendarService.php');
         $service = $this->readFile(self::MODULE_ROOT . '/Services/CalendarFeedbackService.php');
         $controller = $this->readFile(self::MODULE_ROOT . '/Controllers/Calendar.php');
         $routes = $this->readFile(self::MODULE_ROOT . '/Resources/routes.json');
+
+        $this->assertStringContainsString('resolveParentName', $calendar);
+        $this->assertStringContainsString("'patientName' => \$parentName", $calendar);
 
         foreach (
             [
@@ -57,6 +61,8 @@ final class SimpleStomCalendarFeedbackTest extends TestCase
                 'getFeedbackPanel',
                 'getWaitlist',
                 'getCancelledAppointments',
+                'resolveParentName',
+                "'patientName' => \$parentName",
                 'AppointmentWaitlistEntry::STATUS_WAITING',
                 'Appointment::STATUS_CANCELLED',
                 'Appointment::STATUS_NO_SHOW',
@@ -83,6 +89,24 @@ final class SimpleStomCalendarFeedbackTest extends TestCase
         $this->assertStringContainsString('EspoDental/Calendar/feedbackPanel', $view);
         $this->assertStringContainsString('renderWaitlist', $view);
         $this->assertStringContainsString('renderCancelled', $view);
+        $this->assertStringContainsString('openSlotBooking', $view);
+    }
+
+    public function testAppointmentListOpensAsCalendarWorkspace(): void
+    {
+        $clientDefs = $this->readJson(self::MODULE_ROOT . '/Resources/metadata/clientDefs/Appointment.json');
+        $view = $this->readFile(self::CLIENT_ROOT . '/views/appointment/record/list.js');
+
+        $this->assertSame(
+            'espo-dental:views/appointment/record/list',
+            $clientDefs['recordViews']['list'] ?? null
+        );
+        $this->assertStringContainsString("'views/record/list'", $view);
+        $this->assertStringContainsString('data-name="appointment-calendar-workspace"', $view);
+        $this->assertStringContainsString('EspoDental/Calendar/appointments', $view);
+        $this->assertStringContainsString('EspoDental/Calendar/feedbackPanel', $view);
+        $this->assertStringContainsString('EspoDental/Calendar/move', $view);
+        $this->assertStringContainsString('espo-dental:lib/resource-grid', $view);
         $this->assertStringContainsString('openSlotBooking', $view);
     }
 

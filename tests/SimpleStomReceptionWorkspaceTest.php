@@ -61,13 +61,13 @@ final class SimpleStomReceptionWorkspaceTest extends TestCase
             [
                 'espo-dental:lib/simple-stom-ui',
                 'renderReceptionWorkspace',
-                'Doctor reception workspace',
-                'Completion checklist',
+                'Рабочее место приема',
+                'Чеклист завершения',
                 'EspoDental/Visit/receptionWorkspace',
                 'EspoDental/Visit/autosaveReception',
                 'EspoDental/Visit/noteTemplate',
                 'saveNoteTemplate',
-                'Treatment plan',
+                'План лечения',
             ] as $needle
         ) {
             $this->assertStringContainsString($needle, $view);

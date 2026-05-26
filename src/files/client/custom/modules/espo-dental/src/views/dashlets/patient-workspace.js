@@ -31,7 +31,7 @@ define('espo-dental:views/dashlets/patient-workspace', [
         renderShell: function () {
             var html = '<div class="espo-dental-stom-toolbar">' +
                 '<input type="text" class="form-control input-sm" data-name="patientSearch" ' +
-                'placeholder="Search patients" style="max-width:260px">' +
+                'placeholder="Фамилия, имя, телефон или номер карты" style="max-width:360px">' +
                 '<span class="espo-dental-stom-toolbar__spacer"></span>' +
                 '</div>' +
                 '<div class="espo-dental-stom-layout espo-dental-stom-layout--two">' +
@@ -58,8 +58,8 @@ define('espo-dental:views/dashlets/patient-workspace', [
                 limit: parseInt(this.getOption('displayRecords'), 10) || 20
             };
 
-            this.$el.find('[data-name="patientList"]').html(SimpleStomUi.emptyState('Loading patients...'));
-            this.$el.find('[data-name="patientDetail"]').html(SimpleStomUi.emptyState('Loading card...'));
+            this.$el.find('[data-name="patientList"]').html(SimpleStomUi.emptyState('Загрузка пациентов...'));
+            this.$el.find('[data-name="patientDetail"]').html(SimpleStomUi.emptyState('Загрузка карточки...'));
 
             Espo.Ajax.getRequest('EspoDental/Patient/workspace', data)
                 .then((function (response) {
@@ -67,8 +67,8 @@ define('espo-dental:views/dashlets/patient-workspace', [
                     this.renderWorkspace(response || {});
                 }).bind(this))
                 .catch((function () {
-                    this.$el.find('[data-name="patientList"]').html(SimpleStomUi.emptyState('Patients failed to load.'));
-                    this.$el.find('[data-name="patientDetail"]').html(SimpleStomUi.emptyState('Patient card failed to load.'));
+                    this.$el.find('[data-name="patientList"]').html(SimpleStomUi.emptyState('Не удалось загрузить список пациентов.'));
+                    this.$el.find('[data-name="patientDetail"]').html(SimpleStomUi.emptyState('Не удалось загрузить карточку пациента.'));
                 }).bind(this));
         },
 
@@ -78,7 +78,7 @@ define('espo-dental:views/dashlets/patient-workspace', [
         },
 
         renderPatientList: function (patients) {
-            var body = SimpleStomUi.emptyState('No patients.');
+            var body = SimpleStomUi.emptyState('Пациенты не найдены.');
 
             if (patients.length) {
                 body = '<ul class="espo-dental-stom-list">';
@@ -103,7 +103,7 @@ define('espo-dental:views/dashlets/patient-workspace', [
             }
 
             this.$el.find('[data-name="patientList"]').html(SimpleStomUi.panel({
-                title: 'Patients',
+                title: 'Список пациентов',
                 body: body,
                 classes: ['espo-dental-stom-panel--compact']
             }));
@@ -111,14 +111,13 @@ define('espo-dental:views/dashlets/patient-workspace', [
 
         renderPatientDetail: function (patient) {
             if (!patient) {
-                this.$el.find('[data-name="patientDetail"]').html(SimpleStomUi.emptyState('Select a patient.'));
+                this.$el.find('[data-name="patientDetail"]').html(SimpleStomUi.emptyState('Выберите пациента из списка.'));
                 return;
             }
 
             var body = '<div class="espo-dental-stom-toolbar">' +
-                SimpleStomUi.button('Open', {tone: 'quiet', attrs: {'data-action': 'openPatient'}}) +
-                SimpleStomUi.button('Book', {tone: 'primary', attrs: {'data-action': 'bookAppointment'}}) +
-                SimpleStomUi.button('Upload file', {tone: 'quiet', attrs: {'data-action': 'uploadFile'}}) +
+                SimpleStomUi.button('Записаться на прием', {tone: 'primary', attrs: {'data-action': 'bookAppointment'}}) +
+                SimpleStomUi.button('Загрузить файл', {tone: 'quiet', attrs: {'data-action': 'uploadFile'}}) +
                 '</div>';
 
             body += '<div style="margin-bottom:10px">' +
@@ -131,19 +130,19 @@ define('espo-dental:views/dashlets/patient-workspace', [
             body += this.renderTabs(patient.tabs || {});
 
             this.$el.find('[data-name="patientDetail"]').html(SimpleStomUi.panel({
-                title: 'Patient card',
+                title: 'Карточка пациента',
                 body: body
             }));
         },
 
         renderTabs: function (tabs) {
             var labels = {
-                basicData: 'Basic data',
-                toothChart: 'Tooth chart',
-                clinicalHistory: 'Clinical history',
-                files: 'Files',
-                finance: 'Finance',
-                family: 'Family'
+                basicData: 'Основные данные',
+                toothChart: 'Зубная формула',
+                clinicalHistory: 'История обращений',
+                files: 'Файлы',
+                finance: 'Расчеты / финансы',
+                family: 'Семья'
             };
             var order = ['basicData', 'toothChart', 'clinicalHistory', 'files', 'finance', 'family'];
             var html = '<div class="espo-dental-stom-toolbar" style="margin-bottom:8px">';
@@ -168,11 +167,11 @@ define('espo-dental:views/dashlets/patient-workspace', [
             }
 
             if (tab === 'clinicalHistory') {
-                return this.renderKeyValues('Clinical only', data);
+                return this.renderKeyValues('Только клиническая история, без оплат и финансовых сумм', data);
             }
 
             if (tab === 'finance') {
-                return this.renderKeyValues('Financial only', data);
+                return this.renderKeyValues('Только расчеты и оплаты, без клинических записей', data);
             }
 
             return this.renderKeyValues('', data);
@@ -182,7 +181,7 @@ define('espo-dental:views/dashlets/patient-workspace', [
             data = data || {};
 
             if (!data.snapshotCount) {
-                return SimpleStomUi.emptyState('No tooth chart snapshots.');
+                return SimpleStomUi.emptyState('Снимков зубной формулы пока нет.');
             }
 
             var current = data.currentSnapshot || {};
@@ -208,11 +207,11 @@ define('espo-dental:views/dashlets/patient-workspace', [
             var summary = snapshot.summary || [];
 
             if (!summary.length) {
-                return SimpleStomUi.emptyState('Current snapshot has no marked conditions.');
+                return SimpleStomUi.emptyState('В текущем снимке нет отмеченных состояний.');
             }
 
             var html = '<table class="espo-dental-stom-table"><thead><tr>' +
-                '<th>Tooth</th><th>Surface</th><th>State</th><th>Note</th>' +
+                '<th>Зуб</th><th>Поверхность</th><th>Состояние</th><th>Заметка</th>' +
                 '</tr></thead><tbody>';
 
             summary.forEach(function (row) {
@@ -233,9 +232,9 @@ define('espo-dental:views/dashlets/patient-workspace', [
                 return '';
             }
 
-            var html = '<div class="espo-dental-stom-muted" style="margin-bottom:6px">History</div>' +
+            var html = '<div class="espo-dental-stom-muted" style="margin-bottom:6px">История снимков</div>' +
                 '<table class="espo-dental-stom-table"><thead><tr>' +
-                '<th>Date</th><th>Dentition</th><th>Visit</th><th>Doctor</th><th>Annotated</th>' +
+                '<th>Дата</th><th>Прикус</th><th>Прием</th><th>Врач</th><th>Отмечено</th>' +
                 '</tr></thead><tbody>';
 
             snapshots.forEach(function (snapshot) {

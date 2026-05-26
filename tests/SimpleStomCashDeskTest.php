@@ -29,9 +29,9 @@ final class SimpleStomCashDeskTest extends TestCase
         $this->assertStringContainsString('getActionWorkspace', $controller);
         $this->assertStringContainsString('postActionCloseShift', $controller);
         $this->assertStringContainsString('CashDeskWorkspace', $dashlet);
-        $this->assertStringContainsString('Only unpaid', $dashlet);
-        $this->assertStringContainsString('Close shift', $dashlet);
-        $this->assertStringContainsString('New payment', $dashlet);
+        $this->assertStringContainsString('Только неоплаченные', $dashlet);
+        $this->assertStringContainsString('Закрытие смены', $dashlet);
+        $this->assertStringContainsString('Новая оплата', $dashlet);
         $this->assertStringContainsString('data-invoice-id', $dashlet);
     }
 

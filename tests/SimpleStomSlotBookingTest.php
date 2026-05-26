@@ -55,7 +55,7 @@ final class SimpleStomSlotBookingTest extends TestCase
                 'buildDurationOptions',
                 'freeWindowMinutes',
                 'selectCandidate',
-                'New preliminary patient',
+                'Новый предварительный пациент',
                 'durationMinutes',
             ] as $needle
         ) {

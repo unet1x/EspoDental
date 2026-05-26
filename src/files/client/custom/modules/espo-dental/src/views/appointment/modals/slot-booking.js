@@ -13,12 +13,12 @@ define('espo-dental:views/appointment/modals/slot-booking', [
         },
 
         setup: function () {
-            this.headerText = this.options.title || 'Book slot';
+            this.headerText = this.options.title || 'Запись пациента';
             this.slot = this.options.slot || {};
             this.selectedCandidate = null;
             this.buttonList = [
-                {name: 'book', label: 'Book', style: 'primary'},
-                {name: 'cancel', label: 'Cancel'}
+                {name: 'book', label: 'Записать', style: 'primary'},
+                {name: 'cancel', label: 'Отмена'}
             ];
         },
 
@@ -33,16 +33,16 @@ define('espo-dental:views/appointment/modals/slot-booking', [
                 '<div class="espo-dental-stom-layout espo-dental-stom-layout--two">' +
                 '<div>' +
                 '<div class="form-group">' +
-                '<label>Patient search</label>' +
+                '<label>Пациент</label>' +
                 '<input type="text" class="form-control" data-name="patientSearch" ' +
-                'placeholder="Name, phone or email">' +
+                'placeholder="ФИО, телефон или email">' +
                 '<div data-name="candidateResults" style="margin-top:8px"></div>' +
                 '</div>' +
                 '<div class="form-group">' +
-                '<label><input type="radio" name="bookingMode" data-name="bookingMode" value="existing" checked> Existing patient</label> ' +
-                '<label style="margin-left:12px"><input type="radio" name="bookingMode" data-name="bookingMode" value="new"> New preliminary patient</label>' +
+                '<label><input type="radio" name="bookingMode" data-name="bookingMode" value="existing" checked> Существующий пациент</label> ' +
+                '<label style="margin-left:12px"><input type="radio" name="bookingMode" data-name="bookingMode" value="new"> Новый предварительный пациент</label>' +
                 '</div>' +
-                '<div data-name="selectedCandidate">' + SimpleStomUi.emptyState('Select a patient or switch to new.') + '</div>' +
+                '<div data-name="selectedCandidate">' + SimpleStomUi.emptyState('Выберите пациента или создайте предварительного.') + '</div>' +
                 '</div>' +
                 '<div>' +
                 '<div data-name="newPatientFields" style="display:none">' +
@@ -57,44 +57,44 @@ define('espo-dental:views/appointment/modals/slot-booking', [
         },
 
         renderNewPatientFields: function () {
-            return '<div class="form-group"><label>Last name</label>' +
+            return '<div class="form-group"><label>Фамилия</label>' +
                 '<input type="text" class="form-control" data-name="lastName"></div>' +
-                '<div class="form-group"><label>First name</label>' +
+                '<div class="form-group"><label>Имя</label>' +
                 '<input type="text" class="form-control" data-name="firstName"></div>' +
-                '<div class="form-group"><label>Middle name</label>' +
+                '<div class="form-group"><label>Отчество</label>' +
                 '<input type="text" class="form-control" data-name="middleName"></div>' +
-                '<div class="form-group"><label>Phone</label>' +
+                '<div class="form-group"><label>Телефон</label>' +
                 '<input type="text" class="form-control" data-name="phone"></div>' +
                 '<div class="form-group"><label>Email</label>' +
                 '<input type="email" class="form-control" data-name="emailAddress"></div>';
         },
 
         renderSlotFields: function (durations) {
-            var html = '<div class="form-group"><label>Start</label>' +
+            var html = '<div class="form-group"><label>Дата и время</label>' +
                 '<input type="text" class="form-control" data-name="localStart" value="' +
                 SimpleStomUi.escapeHtml(this.slot.localStart || '') + '"></div>';
 
-            html += '<div class="form-group"><label>Clinic ID</label>' +
+            html += '<div class="form-group"><label>Клиника</label>' +
                 '<input type="text" class="form-control" data-name="clinicId" value="' +
                 SimpleStomUi.escapeHtml(this.slot.clinicId || this.options.clinicId || '') + '"></div>' +
-                '<div class="form-group"><label>Doctor ID</label>' +
+                '<div class="form-group"><label>Врач</label>' +
                 '<input type="text" class="form-control" data-name="doctorId" value="' +
                 SimpleStomUi.escapeHtml(this.options.doctorId || '') + '"></div>' +
-                '<div class="form-group"><label>Cabinet ID</label>' +
+                '<div class="form-group"><label>Кабинет</label>' +
                 '<input type="text" class="form-control" data-name="cabinetId" value="' +
                 SimpleStomUi.escapeHtml(this.slot.cabinetId || '') + '"></div>';
 
-            html += '<div class="form-group"><label>Duration</label>' +
+            html += '<div class="form-group"><label>Длительность</label>' +
                 '<select class="form-control" data-name="durationMinutes">';
 
             durations.forEach(function (minutes) {
-                html += '<option value="' + minutes + '">' + minutes + ' min</option>';
+                html += '<option value="' + minutes + '">' + minutes + ' мин.</option>';
             });
 
             html += '</select></div>' +
-                '<div class="form-group"><label>Reason</label>' +
+                '<div class="form-group"><label>С чем обратился</label>' +
                 '<input type="text" class="form-control" data-name="reason"></div>' +
-                '<div class="form-group"><label>Notes</label>' +
+                '<div class="form-group"><label>Заметки</label>' +
                 '<textarea class="form-control" data-name="notes" rows="3"></textarea></div>';
 
             return html;
@@ -125,7 +125,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
                 return;
             }
 
-            $results.html(SimpleStomUi.emptyState('Searching...'));
+            $results.html(SimpleStomUi.emptyState('Поиск...'));
 
             Espo.Ajax.getRequest('EspoDental/Appointment/bookingCandidates', {
                 q: query,
@@ -133,7 +133,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
             }).then((function (rows) {
                 this.renderCandidates(rows || []);
             }).bind(this)).catch(function () {
-                $results.html(SimpleStomUi.emptyState('Search failed.'));
+                $results.html(SimpleStomUi.emptyState('Поиск не выполнен.'));
             });
         },
 
@@ -142,7 +142,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
             var html;
 
             if (!rows.length) {
-                $results.html(SimpleStomUi.emptyState('No matches.'));
+                $results.html(SimpleStomUi.emptyState('Совпадений нет.'));
                 return;
             }
 
@@ -159,7 +159,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
                     '<button type="button" class="espo-dental-stom-button" data-action="selectCandidate" ' +
                     'data-id="' + SimpleStomUi.escapeHtml(row.id) + '" ' +
                     'data-type="' + SimpleStomUi.escapeHtml(row.entityType) + '" ' +
-                    'data-label="' + SimpleStomUi.escapeHtml(row.name || row.id) + '">Select</button>' +
+                    'data-label="' + SimpleStomUi.escapeHtml(row.name || row.id) + '">Выбрать</button>' +
                     '</li>';
             });
             html += '</ul>';
@@ -177,7 +177,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
             };
 
             this.$el.find('[data-name="selectedCandidate"]').html(SimpleStomUi.panel({
-                title: 'Selected',
+                title: 'Выбран пациент',
                 body: SimpleStomUi.escapeHtml(this.selectedCandidate.label),
                 classes: ['espo-dental-stom-panel--compact']
             }));
@@ -210,7 +210,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
                 }).bind(this))
                 .catch((function (xhr) {
                     this.enableButton('book');
-                    Espo.Ui.error((xhr && xhr.responseText) || 'Booking failed');
+                    Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось создать запись');
                 }).bind(this));
         },
 
@@ -229,7 +229,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
 
             if (mode === 'existing') {
                 if (!this.selectedCandidate) {
-                    Espo.Ui.warning('Select a patient first.');
+                    Espo.Ui.warning('Сначала выберите пациента.');
                     return null;
                 }
 

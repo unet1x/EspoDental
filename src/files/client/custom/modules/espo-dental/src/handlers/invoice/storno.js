@@ -1,4 +1,7 @@
-define('espo-dental:handlers/invoice/storno', ['action-handler'], function (Dep) {
+define('espo-dental:handlers/invoice/storno', [
+    'action-handler',
+    'espo-dental:utils/dialogs'
+], function (Dep, Dialogs) {
 
     return Dep.extend({
 
@@ -11,16 +14,23 @@ define('espo-dental:handlers/invoice/storno', ['action-handler'], function (Dep)
                 return;
             }
 
-            var reason = window.prompt(view.translate('Storno reason', 'messages', 'Invoice') || 'Reason') || '';
+            Dialogs.prompt(view, {
+                title: view.translate('Storno reason', 'messages', 'Invoice') || 'Reason',
+                value: ''
+            }).then(function (reason) {
+                if (reason === null) {
+                    return;
+                }
 
-            Espo.Ajax.postRequest('Invoice/action/storno', {id: model.id, reason: reason})
-                .then(function (response) {
-                    Espo.Ui.success(view.translate('Invoice storno-ed', 'messages', 'Invoice'));
-                    if (response && response.stornoInvoiceId) {
-                        view.getRouter().navigate('#Invoice/view/' + response.stornoInvoiceId, {trigger: true});
-                    } else {
-                        model.fetch();
-                    }
+                Espo.Ajax.postRequest('Invoice/action/storno', {id: model.id, reason: reason || ''})
+                    .then(function (response) {
+                        Espo.Ui.success(view.translate('Invoice storno-ed', 'messages', 'Invoice'));
+                        if (response && response.stornoInvoiceId) {
+                            view.getRouter().navigate('#Invoice/view/' + response.stornoInvoiceId, {trigger: true});
+                        } else {
+                            model.fetch();
+                        }
+                    });
                 });
         }
     });

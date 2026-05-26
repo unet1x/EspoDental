@@ -396,3 +396,70 @@ Verification:
 | 11. Cash desk and shift closing | Completed | Added invoice-first cash desk workspace, advance application, cash-shift closing, financial adjustments and document-sequence metadata. |
 | 12. Reports, payroll and integrations | Completed | Added saved report definitions, payroll source breakdown, SMTP/WhatsApp/Telegram integration settings and sanitized secret metadata. MCP/AI is excluded from this run. |
 | 13. Demo environment | Completed | Added optional `espo-dental-demo-seed`, local demo runbook and seeded SimpleStom acceptance data for patients, calendar, portal, visit, cash desk, inventory, reports and payroll. |
+
+## Post-Parity Improvement Pass
+
+Audit date: 2026-05-26.
+
+The structural SimpleStom migration is complete and covered by the
+`SimpleStom*` test suite, but the local UI audit against the SimpleStom
+feedback renders still found polish gaps. The next improvements should happen
+as small UI/UX passes, not as another broad data-model migration.
+
+### Pass 1 - Operational Language And Visible Actions
+
+Goal: remove English placeholder labels from SimpleStom-style workspaces and
+align visible actions with the approved Russian feedback renders.
+
+Work:
+
+- localize the action center, calendar feedback panel, patient workspace, cash
+  desk, slot booking modal and reception workspace text;
+- translate status/risk badges through the scoped SimpleStom UI helper;
+- remove the top-level calendar `New slot` button so booking starts from a
+  free slot click;
+- remove the patient workspace `Open` quick action from the compact card,
+  leaving `Записаться на прием` and `Загрузить файл` as the primary actions.
+
+Verification:
+
+- `vendor/bin/phpunit tests --no-coverage`;
+- browser smoke of the local dashboard and at least one calendar/patient/cash
+  workspace.
+
+### Pass 2 - Calendar Fidelity
+
+Goal: close the remaining difference between the feedback render and the
+current resource calendar.
+
+Work:
+
+- add a real month-forward view only after backend and grid semantics support
+  the SimpleStom rule for selected doctor shifts;
+- add visible doctor and cabinet filters to the feedback toolbar;
+- add a compact mini-calendar/right-column toggle instead of rendering waiting
+  and cancelled panels as two always-visible sections.
+
+### Pass 3 - Patient And Cash Desk Workflows
+
+Goal: move beyond the shell views and make the workflows feel like the
+SimpleStom reference.
+
+Work:
+
+- enrich patient workspace rows with age, communication channel, allergy/tag,
+  next appointment and debt markers;
+- make the cash desk select a doctor explicitly and show a selected-invoice
+  action panel before opening payment actions;
+- implement a real payment wizard entry point from the cash desk dashlet.
+
+### Pass 4 - Inventory Workspace
+
+Goal: match `16-feedback-inventory.png` as an operational storage surface.
+
+Work:
+
+- add a dedicated SimpleStom inventory workspace over warehouses, stock lots,
+  cabinet issue rows, expiry alerts and future-order candidates;
+- keep the current inventory report dashlet as a manager summary, not as the
+  primary stock workspace.

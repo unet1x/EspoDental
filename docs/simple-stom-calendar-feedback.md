@@ -16,6 +16,8 @@ dashlet metadata now points to a new scoped view:
   `GET /EspoDental/Calendar/feedbackPanel`
 - New calendar dashlet view:
   `src/files/client/custom/modules/espo-dental/src/views/dashlets/resource-calendar-feedback.js`
+- Appointment list workspace:
+  `src/files/client/custom/modules/espo-dental/src/views/appointment/record/list.js`
 - Dashlet metadata:
   `src/files/custom/Espo/Modules/EspoDental/Resources/metadata/dashlets/ResourceCalendar.json`
 
@@ -45,6 +47,8 @@ It adds the SimpleStom feedback layout:
 
 - compact toolbar;
 - date picker as the mini-calendar control;
+- the `Appointment` list route opens with the resource calendar first, while the
+  standard table remains below as a secondary working list;
 - slot-first click path to appointment creation with date/cabinet prefilled in
   the URL query;
 - right side panel with waitlist entries and cancelled/no-show appointments;

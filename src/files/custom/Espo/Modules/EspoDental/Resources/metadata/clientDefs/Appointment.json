@@ -6,6 +6,9 @@
     "modalViews": {
         "edit": "espo-dental:views/appointment/modals/edit"
     },
+    "recordViews": {
+        "list": "espo-dental:views/appointment/record/list"
+    },
     "boolFilterList": ["onlyMy", "myDoctor", "today", "upcoming"],
     "defaultSidePanelFieldLists": {
         "detail": ["createdAt", "modifiedAt"],

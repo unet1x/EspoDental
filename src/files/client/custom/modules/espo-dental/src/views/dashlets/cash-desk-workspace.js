@@ -28,7 +28,7 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
 
         fetchWorkspace: function () {
             var unpaidOnly = this.$el.find('[data-name="unpaidOnly"]').is(':checked');
-            this.$el.find('[data-name="cashBody"]').html(SimpleStomUi.emptyState('Loading cash desk...'));
+            this.$el.find('[data-name="cashBody"]').html(SimpleStomUi.emptyState('Загрузка кассы...'));
 
             Espo.Ajax.getRequest('EspoDental/CashDesk/workspace', {
                 unpaidOnly: unpaidOnly ? 'true' : 'false',
@@ -36,7 +36,7 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
             }).then((function (data) {
                 this.renderWorkspace(data || {});
             }).bind(this)).catch((function () {
-                this.$el.find('[data-name="cashBody"]').html(SimpleStomUi.emptyState('Cash desk failed to load.'));
+                this.$el.find('[data-name="cashBody"]').html(SimpleStomUi.emptyState('Не удалось загрузить кассу.'));
             }).bind(this));
         },
 
@@ -48,11 +48,11 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
         renderFilters: function (filters) {
             var checked = filters.unpaidOnly === false ? '' : ' checked';
             var html = '<label style="display:flex;align-items:center;gap:6px;margin:0">' +
-                '<input type="checkbox" data-name="unpaidOnly"' + checked + '> Only unpaid' +
+                '<input type="checkbox" data-name="unpaidOnly"' + checked + '> Только неоплаченные' +
                 '</label>';
 
             this.$el.find('[data-name="cashFilters"]').html(SimpleStomUi.panel({
-                title: 'Filters',
+                title: 'Фильтры',
                 body: html,
                 classes: ['espo-dental-stom-panel--compact']
             }));
@@ -60,13 +60,13 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
 
         renderInvoices: function (invoices, closingPreview) {
             var html = '<div class="espo-dental-stom-toolbar" style="margin-bottom:8px">' +
-                SimpleStomUi.button('New payment', {tone: 'primary', attrs: {'data-action': 'newPayment'}}) +
-                SimpleStomUi.button('Close shift', {tone: 'quiet', attrs: {'data-action': 'closeShift'}}) +
+                SimpleStomUi.button('Новая оплата', {tone: 'primary', attrs: {'data-action': 'newPayment'}}) +
+                SimpleStomUi.button('Закрытие смены', {tone: 'quiet', attrs: {'data-action': 'closeShift'}}) +
                 '</div>';
 
             html += this.renderClosingPreview(closingPreview);
             html += '<table class="espo-dental-stom-table"><thead><tr>' +
-                '<th>Invoice</th><th>Patient</th><th>Status</th><th>Total</th><th>Paid</th><th>Balance</th>' +
+                '<th>Счет</th><th>Пациент</th><th>Статус</th><th>Итого</th><th>Оплачено</th><th>Остаток</th>' +
                 '</tr></thead><tbody>';
             invoices.forEach(function (invoice) {
                 html += '<tr data-invoice-id="' + SimpleStomUi.escapeHtml(invoice.id || '') + '">' +
@@ -81,8 +81,8 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
             html += '</tbody></table>';
 
             this.$el.find('[data-name="cashBody"]').html(SimpleStomUi.panel({
-                title: 'Invoices',
-                body: invoices.length ? html : SimpleStomUi.emptyState('No invoices.')
+                title: 'Неоплаченные счета',
+                body: invoices.length ? html : SimpleStomUi.emptyState('Счетов для оплаты нет.')
             }));
         },
 
@@ -92,15 +92,15 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
             }
 
             return '<div class="espo-dental-stom-toolbar" style="margin-bottom:8px">' +
-                SimpleStomUi.badge('Cash ' + (preview.cashTotal || 0), 'primary') +
-                SimpleStomUi.badge('Card ' + (preview.cardTotal || 0)) +
-                SimpleStomUi.badge('Crypto ' + (preview.cryptoTotal || 0)) +
-                SimpleStomUi.badge('Advance ' + (preview.advanceTotal || 0)) +
+                SimpleStomUi.badge('Наличные ' + (preview.cashTotal || 0), 'primary') +
+                SimpleStomUi.badge('Карта ' + (preview.cardTotal || 0)) +
+                SimpleStomUi.badge('Крипто ' + (preview.cryptoTotal || 0)) +
+                SimpleStomUi.badge('Аванс ' + (preview.advanceTotal || 0)) +
                 '</div>';
         },
 
         closeShift: function () {
-            this.notify('Select a clinic before closing shift.', 'warning');
+            this.notify('Выберите клинику перед закрытием смены.', 'warning');
         }
     });
 });

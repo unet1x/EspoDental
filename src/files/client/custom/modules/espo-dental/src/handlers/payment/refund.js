@@ -1,4 +1,7 @@
-define('espo-dental:handlers/payment/refund', ['action-handler'], function (Dep) {
+define('espo-dental:handlers/payment/refund', [
+    'action-handler',
+    'espo-dental:utils/dialogs'
+], function (Dep, Dialogs) {
 
     return Dep.extend({
 
@@ -10,29 +13,39 @@ define('espo-dental:handlers/payment/refund', ['action-handler'], function (Dep)
                 return;
             }
             var max = parseFloat(model.get('amount') || 0);
-            var amount = window.prompt(
-                view.translate('Refund amount', 'messages', 'Payment'),
-                max.toFixed(2)
-            );
-            if (!amount) { return; }
-            amount = parseFloat(amount);
-            if (!(amount > 0) || amount > max) {
-                Espo.Ui.warning('Invalid amount');
-                return;
-            }
-            var reason = window.prompt(view.translate('Refund reason', 'messages', 'Payment'), '') || '';
-
-            Espo.Ajax.postRequest('Payment/action/refund', {
-                id: model.id,
-                amount: amount,
-                reason: reason
-            }).then(function (response) {
-                Espo.Ui.success(view.translate('Refund created', 'messages', 'Payment'));
-                if (response && response.refundPaymentId) {
-                    view.getRouter().navigate('#Payment/view/' + response.refundPaymentId, {trigger: true});
-                } else {
-                    model.fetch();
+            Dialogs.prompt(view, {
+                title: view.translate('Refund amount', 'messages', 'Payment'),
+                value: max.toFixed(2),
+                inputType: 'number'
+            }).then(function (amount) {
+                if (!amount) { return; }
+                amount = parseFloat(amount);
+                if (!(amount > 0) || amount > max) {
+                    Espo.Ui.warning('Invalid amount');
+                    return;
                 }
+
+                Dialogs.prompt(view, {
+                    title: view.translate('Refund reason', 'messages', 'Payment'),
+                    value: ''
+                }).then(function (reason) {
+                    if (reason === null) {
+                        return;
+                    }
+
+                    Espo.Ajax.postRequest('Payment/action/refund', {
+                        id: model.id,
+                        amount: amount,
+                        reason: reason || ''
+                    }).then(function (response) {
+                        Espo.Ui.success(view.translate('Refund created', 'messages', 'Payment'));
+                        if (response && response.refundPaymentId) {
+                            view.getRouter().navigate('#Payment/view/' + response.refundPaymentId, {trigger: true});
+                        } else {
+                            model.fetch();
+                        }
+                    });
+                });
             });
         }
     });

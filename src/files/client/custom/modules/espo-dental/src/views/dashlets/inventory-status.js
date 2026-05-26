@@ -11,7 +11,7 @@ define('espo-dental:views/dashlets/inventory-status', ['views/dashlets/abstract/
             var limit = parseInt(this.getOption('displayRecords')) || 8;
 
             this.$el.find('.espo-dental-inventory-status')
-                .html('<div class="text-muted small">Loading...</div>');
+                .html('<div class="text-muted small">Загрузка...</div>');
 
             Espo.Ajax.getRequest('EspoDental/Report/inventoryStatus', {limit: limit})
                 .then((function (data) {
@@ -19,7 +19,7 @@ define('espo-dental:views/dashlets/inventory-status', ['views/dashlets/abstract/
                 }).bind(this))
                 .catch((function () {
                     this.$el.find('.espo-dental-inventory-status')
-                        .html('<div class="text-danger small">Failed to load.</div>');
+                        .html('<div class="text-danger small">Не удалось загрузить.</div>');
                 }).bind(this));
         },
 
@@ -27,23 +27,23 @@ define('espo-dental:views/dashlets/inventory-status', ['views/dashlets/abstract/
             var $host = this.$el.find('.espo-dental-inventory-status');
 
             if (!rows.length) {
-                $host.html('<div class="text-muted small">No data.</div>');
+                $host.html('<div class="text-muted small">Нет данных.</div>');
                 return;
             }
 
             var html = '<div class="small text-muted" style="margin-bottom:6px">' +
-                'Materials: ' + (summary.materialCount || 0) +
-                ' | Low: ' + (summary.lowStockCount || 0) +
-                ' | Critical: ' + (summary.criticalStockCount || 0) +
-                ' | Out: ' + (summary.outStockCount || 0) +
-                ' | Value: ' + this.formatMoney(summary.inventoryValue) +
+                'Материалы: ' + (summary.materialCount || 0) +
+                ' | Ниже порога: ' + (summary.lowStockCount || 0) +
+                ' | Критично: ' + (summary.criticalStockCount || 0) +
+                ' | Нет остатка: ' + (summary.outStockCount || 0) +
+                ' | Стоимость: ' + this.formatMoney(summary.inventoryValue) +
                 '</div>';
 
             html += '<div class="table-responsive"><table class="table table-condensed table-striped">' +
                 '<thead><tr>' +
-                '<th>Material</th><th>Level</th><th class="text-right">Stock</th>' +
-                '<th class="text-right">Out</th><th class="text-right">Net</th>' +
-                '<th class="text-right">Value</th>' +
+                '<th>Материал</th><th>Уровень</th><th class="text-right">Остаток</th>' +
+                '<th class="text-right">Списано</th><th class="text-right">Итого</th>' +
+                '<th class="text-right">Стоимость</th>' +
                 '</tr></thead><tbody>';
 
             rows.forEach((function (row) {

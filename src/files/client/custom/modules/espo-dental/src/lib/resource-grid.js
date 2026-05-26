@@ -2,14 +2,27 @@ define('espo-dental:lib/resource-grid', [], function () {
     'use strict';
 
     var STATUS_COLORS = {
-        planned: '#1F77B4',
-        confirmed: '#2CA02C',
-        checked_in: '#FFBB22',
-        in_progress: '#FF7F0E',
+        planned: '#4b7eaa',
+        confirmed: '#438f7e',
+        checked_in: '#c88f2c',
+        arrived: '#438f7e',
+        in_progress: '#2f705f',
         finished: '#7F7F7F',
         completed: '#7F7F7F',
-        cancelled: '#D62728',
-        no_show: '#A0522D'
+        cancelled: '#c45f52',
+        no_show: '#a84838'
+    };
+
+    var STATUS_LABELS = {
+        planned: 'не подтверждена',
+        confirmed: 'подтверждена',
+        checked_in: 'ожидает',
+        arrived: 'в клинике',
+        in_progress: 'у врача',
+        finished: 'завершена',
+        completed: 'завершена',
+        cancelled: 'отменена',
+        no_show: 'неявка'
     };
 
     function pad(n) { return n < 10 ? '0' + n : '' + n; }
@@ -66,7 +79,7 @@ define('espo-dental:lib/resource-grid', [], function () {
     ResourceGrid.prototype.render = function () {
         var cabinets = this.payload.cabinets || [];
         if (cabinets.length === 0) {
-            this.host.innerHTML = '<div class="text-muted small" style="padding:10px">No cabinets.</div>';
+            this.host.innerHTML = '<div class="text-muted small" style="padding:10px">Нет кабинетов.</div>';
             return;
         }
         var totalRows = ((this.endHour - this.startHour) * 60) / this.rowMinutes;
@@ -200,6 +213,11 @@ define('espo-dental:lib/resource-grid', [], function () {
             var left = this.timeColumnWidth + globalCol * this.colWidth + 2;
             var w = this.colWidth - 4;
             var bg = STATUS_COLORS[a.status] || '#888';
+            var patientName = a.parentName || a.name || '';
+            var statusLabel = STATUS_LABELS[a.status] || a.status || '';
+            var metaParts = [];
+            if (statusLabel) metaParts.push(this.escape(statusLabel));
+            if (a.doctorName) metaParts.push(this.escape(a.doctorName));
             var card = document.createElement('div');
             card.className = 'rc-appointment';
             card.setAttribute('data-id', a.id);
@@ -212,11 +230,8 @@ define('espo-dental:lib/resource-grid', [], function () {
                 + 'width:' + w + 'px;height:' + height + 'px;background:' + bg + ';color:#fff;'
                 + 'border-radius:3px;padding:3px 6px;cursor:move;overflow:hidden;font-size:11px;'
                 + 'line-height:1.2;box-shadow:0 1px 2px rgba(0,0,0,0.15)';
-            var titleParts = [];
-            if (a.parentName) titleParts.push(this.escape(a.parentName));
-            if (a.doctorName) titleParts.push(this.escape(a.doctorName));
-            card.innerHTML = '<strong>' + pad(startDt.getHours()) + ':' + pad(startDt.getMinutes())
-                + '</strong><br>' + titleParts.join('<br>');
+            card.innerHTML = '<strong>' + this.escape(patientName || 'Запись') + '</strong><br>' +
+                '<span>' + metaParts.join(' · ') + '</span>';
             var resizer = document.createElement('div');
             resizer.className = 'rc-resizer';
             resizer.style.cssText = 'position:absolute;left:0;right:0;bottom:0;height:6px;'

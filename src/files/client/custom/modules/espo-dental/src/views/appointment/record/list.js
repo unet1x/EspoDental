@@ -1,102 +1,135 @@
-define('espo-dental:views/dashlets/resource-calendar-feedback', [
-    'views/dashlets/abstract/base',
+define('espo-dental:views/appointment/record/list', [
+    'views/record/list',
     'espo-dental:lib/resource-grid',
     'espo-dental:lib/simple-stom-ui',
     'espo-dental:views/appointment/modals/slot-booking'
 ], function (Dep, ResourceGrid, SimpleStomUi) {
     return Dep.extend({
-        name: 'ResourceCalendar',
-        templateContent: '<div class="espo-dental-resource-calendar-feedback"></div>',
+        calendarView: 'day',
+        currentDate: null,
+        rowMinutes: 30,
+        startHour: 8,
+        endHour: 21,
+        feedbackLimit: 12,
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
             var d = new Date();
             this.currentDate = d.toISOString().slice(0, 10);
-            this.view = this.getOption('defaultView') || 'day';
-            this.clinicId = this.getOption('clinicId') || null;
-            this.cabinetId = this.getOption('cabinetId') || null;
-            this.rowMinutes = parseInt(this.getOption('rowMinutes'), 10) || 30;
-            this.startHour = parseInt(this.getOption('startHour'), 10);
-            this.endHour = parseInt(this.getOption('endHour'), 10);
-
-            if (isNaN(this.startHour)) {
-                this.startHour = 8;
-            }
-
-            if (isNaN(this.endHour)) {
-                this.endHour = 21;
-            }
         },
 
         afterRender: function () {
+            if (Dep.prototype.afterRender) {
+                Dep.prototype.afterRender.call(this);
+            }
+
             SimpleStomUi.ensureStyles();
-            this.renderShell();
-            this.fetchAndRender();
+            this.renderCalendarWorkspace();
+            this.fetchCalendar();
         },
 
-        renderShell: function () {
-            var html = '<div class="espo-dental-stom-toolbar" data-name="calendar-toolbar"></div>' +
+        remove: function () {
+            this.disposeCalendarGrid();
+
+            return Dep.prototype.remove.call(this);
+        },
+
+        renderCalendarWorkspace: function () {
+            this.disposeCalendarGrid();
+            this.$el.children('[data-name="appointment-calendar-workspace"]').remove();
+
+            var body = '<div class="espo-dental-stom-toolbar" data-name="appointment-calendar-toolbar"></div>' +
                 '<div class="espo-dental-stom-layout espo-dental-stom-layout--two" ' +
                 'style="grid-template-columns:minmax(0,1fr) minmax(260px,320px)">' +
                 SimpleStomUi.panel({
-                    title: 'Календарь',
-                    body: '<div class="resource-calendar-host" style="overflow:auto;max-height:620px"></div>'
+                    title: 'Расписание',
+                    body: '<div class="resource-calendar-host" style="overflow:auto;max-height:640px"></div>'
                 }) +
-                '<div data-name="calendar-side-panel"></div>' +
+                '<div data-name="appointment-calendar-side-panel"></div>' +
                 '</div>';
 
-            this.$el.find('.espo-dental-resource-calendar-feedback').html(SimpleStomUi.workspace(html));
-            this.renderToolbar();
+            this.$el.prepend(
+                '<div data-name="appointment-calendar-workspace" style="margin-bottom:12px">' +
+                SimpleStomUi.workspace(body, {classes: ['espo-dental-appointment-calendar-workspace']}) +
+                '</div>'
+            );
+
+            this.renderCalendarToolbar();
         },
 
-        renderToolbar: function () {
+        renderCalendarToolbar: function () {
             var self = this;
-            var $toolbar = this.$el.find('[data-name="calendar-toolbar"]');
-            var step = this.view === 'week' ? 7 : 1;
-            var $prev = $('<button type="button" class="espo-dental-stom-button" title="Назад">&lt;</button>');
-            var $next = $('<button type="button" class="espo-dental-stom-button" title="Вперед">&gt;</button>');
-            var $today = $('<button type="button" class="espo-dental-stom-button">Сегодня</button>');
-            var $reload = $('<button type="button" class="espo-dental-stom-button" title="Обновить">Обновить</button>');
+            var $toolbar = this.$el.find('[data-name="appointment-calendar-toolbar"]');
+            var step = this.calendarView === 'week' ? 7 : 1;
+            var activeDay = this.calendarView === 'day' ? ' espo-dental-stom-button--primary' : '';
+            var activeWeek = this.calendarView === 'week' ? ' espo-dental-stom-button--primary' : '';
+            var $prev = $('<button type="button" class="espo-dental-stom-button" title="Предыдущий период">' +
+                '<span class="fas fa-chevron-left" aria-hidden="true"></span>' +
+                '</button>');
+            var $next = $('<button type="button" class="espo-dental-stom-button" title="Следующий период">' +
+                '<span class="fas fa-chevron-right" aria-hidden="true"></span>' +
+                '</button>');
+            var $today = $('<button type="button" class="espo-dental-stom-button">' +
+                '<span class="fas fa-calendar-day" aria-hidden="true"></span><span>Сегодня</span>' +
+                '</button>');
+            var $reload = $('<button type="button" class="espo-dental-stom-button" title="Обновить">' +
+                '<span class="fas fa-sync-alt" aria-hidden="true"></span>' +
+                '</button>');
             var $date = $('<input type="date" class="form-control input-sm" style="width:140px">').val(this.currentDate);
-            var $view = $('<select class="form-control input-sm" style="width:110px"></select>')
-                .append('<option value="day">День</option><option value="week">Неделя</option>')
-                .val(this.view);
+            var $day = $('<button type="button" class="espo-dental-stom-button' + activeDay + '">День</button>');
+            var $week = $('<button type="button" class="espo-dental-stom-button' + activeWeek + '">Неделя</button>');
 
             $prev.on('click', function () {
-                self.shiftDate(-step);
+                self.shiftCalendarDate(-step);
             });
             $next.on('click', function () {
-                self.shiftDate(step);
+                self.shiftCalendarDate(step);
             });
             $today.on('click', function () {
                 self.currentDate = new Date().toISOString().slice(0, 10);
-                self.fetchAndRender();
-                self.renderToolbar();
+                self.renderCalendarToolbar();
+                self.fetchCalendar();
             });
             $reload.on('click', function () {
-                self.fetchAndRender();
+                self.fetchCalendar();
             });
             $date.on('change', function () {
                 self.currentDate = $(this).val();
-                self.fetchAndRender();
+                self.fetchCalendar();
             });
-            $view.on('change', function () {
-                self.view = $(this).val();
-                self.fetchAndRender();
+            $day.on('click', function () {
+                self.calendarView = 'day';
+                self.renderCalendarToolbar();
+                self.fetchCalendar();
             });
-            $toolbar.empty().append($prev, $today, $next, $date, $view, $reload, '<span class="espo-dental-stom-toolbar__spacer"></span>');
+            $week.on('click', function () {
+                self.calendarView = 'week';
+                self.renderCalendarToolbar();
+                self.fetchCalendar();
+            });
+
+            $toolbar.empty().append(
+                $prev,
+                $today,
+                $next,
+                $date,
+                $('<span class="btn-group" style="display:inline-flex;gap:4px"></span>').append($day, $week),
+                $reload,
+                '<span class="espo-dental-stom-toolbar__spacer"></span>'
+            );
         },
 
-        shiftDate: function (delta) {
+        shiftCalendarDate: function (delta) {
             var d = new Date(this.currentDate + 'T00:00:00');
             d.setDate(d.getDate() + delta);
             this.currentDate = d.toISOString().slice(0, 10);
-            this.renderToolbar();
-            this.fetchAndRender();
+
+            this.renderCalendarToolbar();
+            this.fetchCalendar();
         },
 
-        fetchAndRender: function () {
+        fetchCalendar: function () {
             this.fetchAppointments();
             this.fetchFeedbackPanel();
         },
@@ -104,25 +137,22 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
         fetchAppointments: function () {
             var self = this;
             var $host = this.$el.find('.resource-calendar-host');
-            var data = {date: this.currentDate, view: this.view};
+            var data = {
+                date: this.currentDate,
+                view: this.calendarView
+            };
 
-            if (this.clinicId) {
-                data.clinicId = this.clinicId;
-            }
-
-            if (this.cabinetId) {
-                data.cabinetId = this.cabinetId;
+            if (!$host.length) {
+                return;
             }
 
             $host.html(SimpleStomUi.emptyState('Загрузка календаря...'));
 
             Espo.Ajax.getRequest('EspoDental/Calendar/appointments', data)
                 .then(function (response) {
-                    if (self.grid && self.grid.dispose) {
-                        self.grid.dispose();
-                    }
+                    self.disposeCalendarGrid();
 
-                    self.grid = new ResourceGrid($host[0], response, {
+                    self.grid = new ResourceGrid($host[0], response || {}, {
                         startHour: self.startHour,
                         endHour: self.endHour,
                         rowMinutes: self.rowMinutes,
@@ -140,29 +170,28 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
 
         fetchFeedbackPanel: function () {
             var self = this;
-            var data = {
-                date: this.currentDate,
-                limit: parseInt(this.getOption('displayRecords'), 10) || 12
-            };
-            var $panel = this.$el.find('[data-name="calendar-side-panel"]');
+            var $panel = this.$el.find('[data-name="appointment-calendar-side-panel"]');
 
-            if (this.clinicId) {
-                data.clinicId = this.clinicId;
+            if (!$panel.length) {
+                return;
             }
 
             $panel.html(SimpleStomUi.panel({
-                title: 'Ожидающие и отмененные',
+                title: 'Контроль дня',
                 body: SimpleStomUi.emptyState('Загрузка...')
             }));
 
-            Espo.Ajax.getRequest('EspoDental/Calendar/feedbackPanel', data)
+            Espo.Ajax.getRequest('EspoDental/Calendar/feedbackPanel', {
+                date: this.currentDate,
+                limit: this.feedbackLimit
+            })
                 .then(function (response) {
                     self.renderFeedbackPanel(response || {});
                 })
                 .catch(function () {
                     $panel.html(SimpleStomUi.panel({
-                        title: 'Ожидающие и отмененные',
-                        body: SimpleStomUi.emptyState('Не удалось загрузить правую панель.')
+                        title: 'Контроль дня',
+                        body: SimpleStomUi.emptyState('Не удалось загрузить контроль дня.')
                     }));
                 });
         },
@@ -173,39 +202,40 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
             html += this.renderWaitlist(data.waitlist || []);
             html += this.renderCancelled(data.cancelled || []);
 
-            this.$el.find('[data-name="calendar-side-panel"]').html(html);
+            this.$el.find('[data-name="appointment-calendar-side-panel"]').html(html);
         },
 
         renderWaitlist: function (rows) {
-            return this.renderListPanel('Ожидающие записи', rows, function (row) {
+            return this.renderListPanel('Лист ожидания', rows, function (row) {
                 var href = row.id ? '#AppointmentWaitlistEntry/view/' + encodeURIComponent(row.id) : '#';
 
                 return '<li class="espo-dental-stom-list__item">' +
                     '<span>' +
-                    '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.parentName || row.name || 'Лист ожидания') + '</a>' +
+                    '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.parentName || row.name || 'Пациент') + '</a>' +
                     '<span class="espo-dental-stom-muted"> · ' +
                     SimpleStomUi.escapeHtml(row.requestedDate || 'любая дата') +
                     '</span>' +
                     '</span>' +
                     SimpleStomUi.badge(row.priority || 'normal', row.priority || 'normal') +
                     '</li>';
-            }, 'Нет пациентов в листе ожидания.');
+            }, 'Лист ожидания пуст.');
         },
 
         renderCancelled: function (rows) {
-            return this.renderListPanel('Отмененные', rows, function (row) {
+            return this.renderListPanel('Отмененные и неявки', rows, function (row) {
                 var href = row.id ? '#Appointment/view/' + encodeURIComponent(row.id) : '#';
+                var time = String(row.dateStart || '').slice(11, 16);
 
                 return '<li class="espo-dental-stom-list__item">' +
                     '<span>' +
                     '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.parentName || row.name || 'Запись') + '</a>' +
                     '<span class="espo-dental-stom-muted"> · ' +
-                    SimpleStomUi.escapeHtml(String(row.dateStart || '').slice(11, 16)) +
+                    SimpleStomUi.escapeHtml(time || 'без времени') +
                     '</span>' +
                     '</span>' +
                     SimpleStomUi.badge(row.status || 'cancelled', row.status || 'cancelled') +
                     '</li>';
-            }, 'Сегодня нет отмененных записей.');
+            }, 'Нет отмен и неявок.');
         },
 
         renderListPanel: function (title, rows, renderRow, emptyMessage) {
@@ -230,6 +260,7 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
             if (typeof change === 'object') {
                 change.id = id;
                 this.persistAppointmentChange(change);
+
                 return;
             }
 
@@ -245,6 +276,7 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
             if (typeof change === 'object') {
                 change.id = id;
                 this.persistAppointmentChange(change);
+
                 return;
             }
 
@@ -256,11 +288,12 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
 
             Espo.Ajax.postRequest('EspoDental/Calendar/move', payload)
                 .then(function () {
-                    self.fetchAndRender();
+                    self.fetchCalendar();
+                    self.refreshRecordList();
                 })
                 .catch(function (xhr) {
-                    Espo.Ui.error((xhr && xhr.responseText) || 'Update failed');
-                    self.fetchAndRender();
+                    Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось обновить запись.');
+                    self.fetchCalendar();
                 });
         },
 
@@ -278,20 +311,35 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
                     localStart: localStart || '',
                     timezone: timezone || '',
                     cabinetId: cabinetId || '',
-                    clinicId: this.clinicId || '',
+                    clinicId: '',
                     freeWindowMinutes: 180
                 },
-                clinicId: this.clinicId || ''
+                clinicId: ''
             }, (function (view) {
                 view.render();
                 view.on('done', (function (response) {
-                    this.fetchAndRender();
+                    this.fetchCalendar();
+                    this.refreshRecordList();
 
                     if (response && response.appointmentId) {
                         this.getRouter().navigate('#Appointment/view/' + response.appointmentId, {trigger: true});
                     }
                 }).bind(this));
             }).bind(this));
+        },
+
+        refreshRecordList: function () {
+            if (this.collection && this.collection.fetch) {
+                this.collection.fetch();
+            }
+        },
+
+        disposeCalendarGrid: function () {
+            if (this.grid && this.grid.dispose) {
+                this.grid.dispose();
+            }
+
+            this.grid = null;
         }
     });
 });

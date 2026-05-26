@@ -45,6 +45,30 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         critical: 'espo-dental-stom-badge--danger'
     };
 
+    var badgeLabels = {
+        planned: 'запланировано',
+        scheduled: 'не подтверждена',
+        confirmed: 'подтверждена',
+        waiting: 'ожидает',
+        arrived: 'в клинике',
+        inProgress: 'у врача',
+        in_progress: 'у врача',
+        completed: 'завершено',
+        finished: 'завершено',
+        cancelled: 'отменено',
+        noShow: 'неявка',
+        no_show: 'неявка',
+        normal: 'обычно',
+        high: 'важно',
+        urgent: 'срочно',
+        low: 'низкий',
+        medium: 'средний',
+        critical: 'критично',
+        open: 'открыто',
+        done: 'выполнено',
+        task: 'задача'
+    };
+
     function ensureStyles(doc) {
         doc = doc || (typeof document !== 'undefined' ? document : null);
 
@@ -63,19 +87,21 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
             '.espo-dental-stom-layout--three{grid-template-columns:minmax(220px,280px) minmax(0,1fr) minmax(240px,320px);}',
             '.espo-dental-stom-panel{background:' + tokens.surface + ';border:1px solid ' + tokens.border + ';border-radius:' + tokens.radius + ';box-shadow:' + tokens.shadow + ';min-width:0;}',
             '.espo-dental-stom-panel__header{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid ' + tokens.border + ';}',
-            '.espo-dental-stom-panel__title{margin:0;font-size:14px;font-weight:600;color:' + tokens.text + ';}',
+            '.espo-dental-stom-panel__title{margin:0;font-size:16px;font-weight:700;color:' + tokens.text + ';}',
             '.espo-dental-stom-panel__body{padding:12px;}',
             '.espo-dental-stom-panel--compact .espo-dental-stom-panel__body{padding:8px 10px;}',
             '.espo-dental-stom-muted{color:' + tokens.muted + ';}',
-            '.espo-dental-stom-kpi{display:grid;gap:4px;padding:10px 12px;background:' + tokens.surface + ';border:1px solid ' + tokens.border + ';border-radius:' + tokens.radius + ';}',
-            '.espo-dental-stom-kpi__value{font-size:22px;font-weight:700;color:' + tokens.text + ';line-height:1;}',
-            '.espo-dental-stom-kpi__label{font-size:12px;color:' + tokens.muted + ';}',
+            '.espo-dental-stom-kpi{display:grid;gap:6px;min-height:82px;padding:12px 14px;background:' + tokens.surface + ';border:1px solid ' + tokens.border + ';border-radius:' + tokens.radius + ';box-shadow:' + tokens.shadow + ';}',
+            '.espo-dental-stom-kpi__value{font-size:26px;font-weight:800;color:' + tokens.text + ';line-height:1;}',
+            '.espo-dental-stom-kpi__label{font-size:12px;color:' + tokens.muted + ';font-weight:700;text-transform:uppercase;}',
             '.espo-dental-stom-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12px;}',
             '.espo-dental-stom-table th{background:' + tokens.surfaceAlt + ';color:' + tokens.muted + ';font-weight:600;border-bottom:1px solid ' + tokens.border + ';padding:7px 8px;text-align:left;}',
             '.espo-dental-stom-table td{border-bottom:1px solid ' + tokens.border + ';padding:7px 8px;vertical-align:middle;}',
             '.espo-dental-stom-table tr:last-child td{border-bottom:0;}',
             '.espo-dental-stom-list{display:grid;gap:6px;margin:0;padding:0;list-style:none;}',
             '.espo-dental-stom-list__item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border:1px solid ' + tokens.border + ';border-radius:' + tokens.compactRadius + ';background:' + tokens.surface + ';}',
+            '.espo-dental-stom-list__item>span:first-child{min-width:0;}',
+            '.espo-dental-stom-list__item a{font-weight:700;}',
             '.espo-dental-stom-badge{display:inline-flex;align-items:center;gap:4px;max-width:100%;border-radius:999px;padding:2px 7px;font-size:11px;font-weight:600;line-height:1.35;white-space:normal;}',
             '.espo-dental-stom-badge--primary{background:#dfeeea;color:' + tokens.primaryDark + ';}',
             '.espo-dental-stom-badge--success{background:#e2f1e8;color:' + tokens.success + ';}',
@@ -182,9 +208,10 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
 
     function badge(label, tone, attrs) {
         var toneClass = statusClasses[tone] || riskClasses[tone] || 'espo-dental-stom-badge--muted';
+        var displayLabel = badgeLabels[label] || badgeLabels[tone] || label;
 
         return '<span class="espo-dental-stom-badge ' + toneClass + '"' + renderAttributes(attrs) + '>' +
-            escapeHtml(label) +
+            escapeHtml(displayLabel) +
             '</span>';
     }
 
@@ -212,6 +239,7 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         tokens: tokens,
         statusClasses: statusClasses,
         riskClasses: riskClasses,
+        badgeLabels: badgeLabels,
         ensureStyles: ensureStyles,
         escapeHtml: escapeHtml,
         workspace: workspace,

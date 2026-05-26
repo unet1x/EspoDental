@@ -33,7 +33,7 @@ class CalendarService
      *         id: string, name: string, dateStart: string, dateEnd: string,
      *         localStart: string, localEnd: string, timezone: string,
      *         cabinetId: ?string, doctorId: ?string, doctorName: ?string,
-     *         parentName: ?string, status: string
+     *         parentName: string, patientName: string, status: string
      *     }>
      * }
      */
@@ -109,6 +109,12 @@ class CalendarService
                 ? $appointmentEndUtc->setTimezone($appointmentTimeZone)->format('Y-m-d H:i:s')
                 : '';
 
+            $parentName = $this->resolveParentName(
+                $a->getParentType(),
+                $a->getParentId(),
+                (string) ($a->get('parentName') ?: $a->get('name'))
+            );
+
             $appData[] = [
                 'id' => $a->getId(),
                 'name' => (string) $a->get('name'),
@@ -120,7 +126,8 @@ class CalendarService
                 'cabinetId' => $a->get('cabinetId'),
                 'doctorId' => $a->get('doctorId'),
                 'doctorName' => $a->get('doctorName'),
-                'parentName' => $a->get('parentName'),
+                'parentName' => $parentName,
+                'patientName' => $parentName,
                 'status' => (string) $a->getStatus(),
             ];
         }
@@ -353,6 +360,25 @@ class CalendarService
         } catch (\Exception) {
             return new DateTimeZone('UTC');
         }
+    }
+
+    private function resolveParentName(?string $parentType, ?string $parentId, string $fallback = ''): string
+    {
+        if (!$parentType || !$parentId) {
+            return $fallback;
+        }
+
+        try {
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
+        } catch (\Throwable) {
+            return $fallback;
+        }
+
+        if (!$parent) {
+            return $fallback;
+        }
+
+        return (string) ($parent->get('name') ?: $fallback);
     }
 
     /**

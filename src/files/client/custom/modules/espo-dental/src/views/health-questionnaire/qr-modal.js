@@ -42,7 +42,7 @@ define('espo-dental:views/health-questionnaire/qr-modal', ['views/modal', 'espo-
                     Espo.Ui.success(this.translate('Copied', 'messages', 'HealthQuestionnaire'));
                 }.bind(this));
             } else {
-                window.prompt('Copy URL:', url);
+                Espo.Ui.info(url);
             }
         }
     });

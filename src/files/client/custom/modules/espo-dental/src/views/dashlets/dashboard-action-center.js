@@ -21,7 +21,7 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
             }
 
             this.$el.find('.espo-dental-dashboard-action-center')
-                .html(SimpleStomUi.workspace(SimpleStomUi.emptyState('Loading...')));
+                .html(SimpleStomUi.workspace(SimpleStomUi.emptyState('Загрузка центра действий...')));
 
             Espo.Ajax.getRequest('EspoDental/Dashboard/actionCenter', data)
                 .then((function (response) {
@@ -29,7 +29,7 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
                 }).bind(this))
                 .catch((function () {
                     this.$el.find('.espo-dental-dashboard-action-center')
-                        .html(SimpleStomUi.workspace(SimpleStomUi.emptyState('Failed to load.')));
+                        .html(SimpleStomUi.workspace(SimpleStomUi.emptyState('Не удалось загрузить центр действий.')));
                 }).bind(this));
         },
 
@@ -38,13 +38,15 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
             var html = '';
 
             html += this.renderSummary(summary);
-            html += '<div class="espo-dental-stom-layout espo-dental-stom-layout--two">';
+            html += '<div class="espo-dental-stom-layout espo-dental-stom-layout--three">';
             html += '<div>';
-            html += this.renderWaitingPatients(data.waitingPatients || []);
             html += this.renderPendingActions(data.pendingActions || []);
             html += '</div>';
             html += '<div>';
+            html += this.renderWaitingPatients(data.waitingPatients || []);
             html += this.renderAssignedTasks(data.assignedTasks || []);
+            html += '</div>';
+            html += '<div>';
             html += this.renderAlerts(data.alerts || []);
             html += this.renderWeeklyWorkload(data.weeklyWorkload || []);
             html += '</div>';
@@ -55,11 +57,11 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
 
         renderSummary: function (summary) {
             var items = [
-                ['Waiting', summary.waitingPatients || 0],
-                ['Actions', summary.pendingActions || 0],
-                ['Tasks', summary.assignedTasks || 0],
-                ['Alerts', summary.openAlerts || 0],
-                ['Week', summary.weekAppointments || 0]
+                ['Пациентов в клинике', summary.waitingPatients || 0],
+                ['Нужно действие', summary.pendingActions || 0],
+                ['Мои задачи', summary.assignedTasks || 0],
+                ['Алерты', summary.openAlerts || 0],
+                ['Неделя', summary.weekAppointments || 0]
             ];
 
             var html = '<div class="espo-dental-stom-layout" ' +
@@ -76,12 +78,12 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
         },
 
         renderWaitingPatients: function (rows) {
-            return this.renderPanelList('Waiting patients', rows, (function (row) {
+            return this.renderPanelList('Пациенты ожидают', rows, (function (row) {
                 var href = row.id ? '#Appointment/view/' + encodeURIComponent(row.id) : '#';
 
                 return '<li class="espo-dental-stom-list__item">' +
                     '<span>' +
-                    '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.parentName || row.name || 'Appointment') + '</a>' +
+                    '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.parentName || row.name || 'Запись') + '</a>' +
                     '<span class="espo-dental-stom-muted"> · ' +
                     SimpleStomUi.escapeHtml(this.formatTime(row.dateStart)) +
                     (row.cabinetName ? ' · ' + SimpleStomUi.escapeHtml(row.cabinetName) : '') +
@@ -89,13 +91,13 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
                     '</span>' +
                     SimpleStomUi.badge(row.status || 'waiting', row.status || 'waiting') +
                     '</li>';
-            }).bind(this), 'No waiting patients.');
+            }).bind(this), 'Нет ожидающих пациентов.');
         },
 
         renderPendingActions: function (rows) {
-            return this.renderPanelList('Pending actions', rows, function (row) {
+            return this.renderPanelList('Нужно действие', rows, function (row) {
                 var href = row.id ? '#AssistantActionProposal/view/' + encodeURIComponent(row.id) : '#';
-                var label = row.summary || row.name || row.actionType || 'Action';
+                var label = row.summary || row.name || row.actionType || 'Действие';
 
                 return '<li class="espo-dental-stom-list__item">' +
                     '<span>' +
@@ -106,32 +108,32 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
                     '</span>' +
                     SimpleStomUi.badge(row.riskLevel || 'medium', row.riskLevel || 'medium') +
                     '</li>';
-            }, 'No pending actions.');
+            }, 'Нет действий, требующих реакции.');
         },
 
         renderAssignedTasks: function (rows) {
-            return this.renderPanelList('My tasks', rows, function (row) {
+            return this.renderPanelList('Мои задачи', rows, function (row) {
                 var href = row.id ? '#Task/view/' + encodeURIComponent(row.id) : '#';
 
                 return '<li class="espo-dental-stom-list__item">' +
                     '<span>' +
-                    '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.name || 'Task') + '</a>' +
+                    '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.name || 'Задача') + '</a>' +
                     '<span class="espo-dental-stom-muted"> · ' +
-                    SimpleStomUi.escapeHtml(row.dateEnd || 'No due date') +
+                    SimpleStomUi.escapeHtml(row.dateEnd || 'без срока') +
                     '</span>' +
                     '</span>' +
                     SimpleStomUi.badge(row.priority || row.status || 'task', row.priority || 'muted') +
                     '</li>';
-            }, 'No assigned tasks.');
+            }, 'Нет назначенных задач.');
         },
 
         renderAlerts: function (rows) {
-            return this.renderPanelList('Stock alerts', rows, function (row) {
+            return this.renderPanelList('Алерты', rows, function (row) {
                 var href = row.id ? '#LowStockAlert/view/' + encodeURIComponent(row.id) : '#';
 
                 return '<li class="espo-dental-stom-list__item">' +
                     '<span>' +
-                    '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.materialName || row.name || 'Material') + '</a>' +
+                    '<a href="' + href + '">' + SimpleStomUi.escapeHtml(row.materialName || row.name || 'Материал') + '</a>' +
                     '<span class="espo-dental-stom-muted"> · ' +
                     SimpleStomUi.escapeHtml(row.currentStock) + ' / ' +
                     SimpleStomUi.escapeHtml(row.threshold) +
@@ -139,17 +141,17 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
                     '</span>' +
                     SimpleStomUi.badge(row.level || 'low', row.level || 'low') +
                     '</li>';
-            }, 'No open stock alerts.');
+            }, 'Нет открытых складских алертов.');
         },
 
         renderWeeklyWorkload: function (rows) {
             var body;
 
             if (!rows.length) {
-                body = SimpleStomUi.emptyState('No appointments this week.');
+                body = SimpleStomUi.emptyState('Нет записей на этой неделе.');
             } else {
                 body = '<table class="espo-dental-stom-table"><thead><tr>' +
-                    '<th>Date</th><th class="text-right">Appointments</th><th class="text-right">Waiting</th>' +
+                    '<th>Дата</th><th class="text-right">Записи</th><th class="text-right">В клинике</th>' +
                     '</tr></thead><tbody>';
                 rows.forEach(function (row) {
                     body += '<tr>' +
@@ -164,7 +166,7 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
             }
 
             return SimpleStomUi.panel({
-                title: 'Weekly workload',
+                title: 'Неделя',
                 body: body,
                 classes: ['espo-dental-stom-panel--compact']
             });

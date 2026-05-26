@@ -1,7 +1,8 @@
 define('espo-dental:views/dashlets/resource-calendar', [
     'views/dashlets/abstract/base',
-    'espo-dental:lib/resource-grid'
-], function (Dep, ResourceGrid) {
+    'espo-dental:lib/resource-grid',
+    'espo-dental:utils/dialogs'
+], function (Dep, ResourceGrid, Dialogs) {
     return Dep.extend({
         name: 'ResourceCalendar',
         templateContent:
@@ -133,30 +134,40 @@ define('espo-dental:views/dashlets/resource-calendar', [
 
         openFindSlot: function () {
             var self = this;
-            var duration = parseInt(window.prompt('Slot duration (minutes)', '30')) || 30;
-            var dateFrom = this.currentDate;
-            var data = {
-                dateFrom: dateFrom,
-                dateTo: dateFrom,
-                durationMinutes: duration,
-                workStartHour: this.startHour,
-                workEndHour: this.endHour,
-                stepMinutes: this.rowMinutes,
-                limit: 20
-            };
-            if (this.clinicId) data.clinicId = this.clinicId;
-            if (this.cabinetId) data.cabinetId = this.cabinetId;
-            Espo.Ajax.getRequest('EspoDental/Calendar/freeSlots', data).then(function (resp) {
-                var slots = (resp && resp.slots) || [];
-                if (!slots.length) {
-                    Espo.Ui.warning('No free slots');
+            Dialogs.prompt(this, {
+                title: 'Slot duration (minutes)',
+                value: '30',
+                inputType: 'number'
+            }).then(function (value) {
+                if (value === null) {
                     return;
                 }
-                var msg = slots.slice(0, 10).map(function (s) {
-                    return (s.localStart || s.start) + ' / ' + s.cabinetName;
-                }).join('\n');
-                Espo.Ui.info('Free slots:\n' + msg);
-            }).catch(function () { Espo.Ui.error('Find slot failed'); });
+
+                var duration = parseInt(value, 10) || 30;
+                var dateFrom = self.currentDate;
+                var data = {
+                    dateFrom: dateFrom,
+                    dateTo: dateFrom,
+                    durationMinutes: duration,
+                    workStartHour: self.startHour,
+                    workEndHour: self.endHour,
+                    stepMinutes: self.rowMinutes,
+                    limit: 20
+                };
+                if (self.clinicId) data.clinicId = self.clinicId;
+                if (self.cabinetId) data.cabinetId = self.cabinetId;
+                Espo.Ajax.getRequest('EspoDental/Calendar/freeSlots', data).then(function (resp) {
+                    var slots = (resp && resp.slots) || [];
+                    if (!slots.length) {
+                        Espo.Ui.warning('No free slots');
+                        return;
+                    }
+                    var msg = slots.slice(0, 10).map(function (s) {
+                        return (s.localStart || s.start) + ' / ' + s.cabinetName;
+                    }).join('\n');
+                    Espo.Ui.info('Free slots:\n' + msg);
+                }).catch(function () { Espo.Ui.error('Find slot failed'); });
+            });
         }
     });
 });

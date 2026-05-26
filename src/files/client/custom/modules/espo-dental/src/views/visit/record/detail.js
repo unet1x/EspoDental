@@ -25,7 +25,7 @@ define('espo-dental:views/visit/record/detail', [
             SimpleStomUi.ensureStyles();
             var $host = this.ensureReceptionWorkspaceHost();
             $host.find('[data-name="reception-workspace-body"]')
-                .html(SimpleStomUi.emptyState('Loading reception workspace...'));
+                .html(SimpleStomUi.emptyState('Загрузка рабочего места приема...'));
 
             Espo.Ajax.getRequest('EspoDental/Visit/receptionWorkspace', {id: this.model.id})
                 .then((function (data) {
@@ -34,7 +34,7 @@ define('espo-dental:views/visit/record/detail', [
                 }).bind(this))
                 .catch((function () {
                     $host.find('[data-name="reception-workspace-body"]')
-                        .html(SimpleStomUi.emptyState('Reception workspace failed to load.'));
+                        .html(SimpleStomUi.emptyState('Не удалось загрузить рабочее место приема.'));
                 }).bind(this));
         },
 
@@ -47,20 +47,20 @@ define('espo-dental:views/visit/record/detail', [
 
             var summary = '<div class="espo-dental-stom-toolbar">' +
                 SimpleStomUi.badge(data.status || 'visit', data.status || 'normal') +
-                SimpleStomUi.badge(isLocked ? 'Read only' : 'Autosave on', isLocked ? 'warning' : 'success') +
+                SimpleStomUi.badge(isLocked ? 'только чтение' : 'автосохранение', isLocked ? 'warning' : 'success') +
                 '<span class="espo-dental-stom-toolbar__spacer"></span>' +
                 this.renderTemplateControls(data.templates || []) +
                 '</div>';
 
             summary += '<div class="espo-dental-stom-layout espo-dental-stom-layout--three">' +
-                this.renderNotesPanel('Complaints', 'complaints', notes.complaints, allowed.complaints) +
-                this.renderNotesPanel('Treatment notes', 'performed', notes.performed, allowed.performed) +
+                this.renderNotesPanel('Жалобы', 'complaints', notes.complaints, allowed.complaints) +
+                this.renderNotesPanel('Что было сделано', 'performed', notes.performed, allowed.performed) +
                 this.renderChecklistPanel(checklist, counts) +
                 '</div>';
 
             summary += '<div class="espo-dental-stom-layout espo-dental-stom-layout--two" style="margin-top:12px">' +
-                this.renderNotesPanel('Recommendations', 'recommendations', notes.recommendations, allowed.recommendations) +
-                this.renderNotesPanel('Treatment plan', 'treatmentPlan', notes.treatmentPlan, allowed.treatmentPlan) +
+                this.renderNotesPanel('Рекомендации', 'recommendations', notes.recommendations, allowed.recommendations) +
+                this.renderNotesPanel('План лечения', 'treatmentPlan', notes.treatmentPlan, allowed.treatmentPlan) +
                 '</div>';
 
             this.ensureReceptionWorkspaceHost()
@@ -70,7 +70,7 @@ define('espo-dental:views/visit/record/detail', [
         },
 
         renderTemplateControls: function (templates) {
-            var options = '<option value="">Templates</option>';
+            var options = '<option value="">Шаблоны</option>';
             templates.forEach(function (template) {
                 options += '<option value="' + SimpleStomUi.escapeHtml(template.id) + '" ' +
                     'data-section="' + SimpleStomUi.escapeHtml(template.section) + '" ' +
@@ -82,7 +82,7 @@ define('espo-dental:views/visit/record/detail', [
             return '<select class="form-control input-sm" data-name="visitNoteTemplate" style="max-width:220px">' +
                 options +
                 '</select>' +
-                SimpleStomUi.button('Save template', {
+                SimpleStomUi.button('Сохранить шаблон', {
                     tone: 'quiet',
                     attrs: {'data-action': 'saveNoteTemplate'}
                 });
@@ -107,20 +107,20 @@ define('espo-dental:views/visit/record/detail', [
             checklist.forEach(function (item) {
                 body += '<li class="espo-dental-stom-list__item">' +
                     '<span>' + SimpleStomUi.escapeHtml(item.label) + '</span>' +
-                    SimpleStomUi.badge(item.done ? 'Done' : 'Open', item.done ? 'success' : 'warning') +
+                    SimpleStomUi.badge(item.done ? 'готово' : 'открыто', item.done ? 'success' : 'warning') +
                     '</li>';
             });
             body += '</ul>';
 
             body += '<table class="espo-dental-stom-table" style="margin-top:10px"><tbody>' +
-                '<tr><th>Services</th><td>' + (counts.services || 0) + '</td></tr>' +
-                '<tr><th>Materials</th><td>' + (counts.materials || 0) + '</td></tr>' +
-                '<tr><th>Photos</th><td>' + (counts.photos || 0) + '</td></tr>' +
-                '<tr><th>Invoices</th><td>' + (counts.invoices || 0) + '</td></tr>' +
+                '<tr><th>Услуги</th><td>' + (counts.services || 0) + '</td></tr>' +
+                '<tr><th>Материалы</th><td>' + (counts.materials || 0) + '</td></tr>' +
+                '<tr><th>Фото</th><td>' + (counts.photos || 0) + '</td></tr>' +
+                '<tr><th>Счета</th><td>' + (counts.invoices || 0) + '</td></tr>' +
                 '</tbody></table>';
 
             return SimpleStomUi.panel({
-                title: 'Completion checklist',
+                title: 'Чеклист завершения',
                 body: body,
                 classes: ['espo-dental-stom-panel--compact']
             });
@@ -176,7 +176,7 @@ define('espo-dental:views/visit/record/detail', [
             var body = $field.val() || '';
 
             if (!body) {
-                this.notify('Template body is empty.', 'warning');
+                this.notify('Текст шаблона пустой.', 'warning');
                 return;
             }
 
@@ -204,14 +204,14 @@ define('espo-dental:views/visit/record/detail', [
                             '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
                                 '<span aria-hidden="true">&times;</span>' +
                             '</button>' +
-                            '<h4 class="modal-title">Template name</h4>' +
+                            '<h4 class="modal-title">Название шаблона</h4>' +
                         '</div>' +
                         '<div class="modal-body">' +
                             '<input type="text" class="form-control" data-name="templateName" maxlength="200">' +
                         '</div>' +
                         '<div class="modal-footer">' +
-                            '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
-                            '<button type="button" class="btn btn-primary" data-action="applyTemplateName">Save</button>' +
+                            '<button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>' +
+                            '<button type="button" class="btn btn-primary" data-action="applyTemplateName">Сохранить</button>' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -240,7 +240,7 @@ define('espo-dental:views/visit/record/detail', [
 
             var $panel = $('<div class="panel panel-default" data-name="visit-reception-workspace">' +
                 '<div class="panel-heading">' +
-                    '<span class="panel-title">Doctor reception workspace</span>' +
+                    '<span class="panel-title">Рабочее место приема</span>' +
                 '</div>' +
                 '<div class="panel-body" data-name="reception-workspace-body"></div>' +
             '</div>');

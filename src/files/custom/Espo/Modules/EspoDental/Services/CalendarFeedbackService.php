@@ -65,6 +65,12 @@ class CalendarFeedbackService
                 continue;
             }
 
+            $parentName = $this->resolveParentName(
+                (string) ($entry->get('parentType') ?? ''),
+                (string) ($entry->get('parentId') ?? ''),
+                (string) ($entry->get('parentName') ?: $entry->get('name'))
+            );
+
             $rows[] = [
                 'id' => (string) $entry->getId(),
                 'name' => (string) ($entry->get('name') ?? ''),
@@ -72,7 +78,8 @@ class CalendarFeedbackService
                 'priority' => (string) ($entry->get('priority') ?? ''),
                 'parentType' => (string) ($entry->get('parentType') ?? ''),
                 'parentId' => (string) ($entry->get('parentId') ?? ''),
-                'parentName' => (string) ($entry->get('parentName') ?: $entry->get('name')),
+                'parentName' => $parentName,
+                'patientName' => $parentName,
                 'requestedDoctorId' => (string) ($entry->get('requestedDoctorId') ?? ''),
                 'requestedDoctorName' => (string) ($entry->get('requestedDoctorName') ?? ''),
                 'preferredCabinetId' => (string) ($entry->get('preferredCabinetId') ?? ''),
@@ -119,6 +126,12 @@ class CalendarFeedbackService
 
         $rows = [];
         foreach ($appointments as $appointment) {
+            $parentName = $this->resolveParentName(
+                $appointment->getParentType(),
+                $appointment->getParentId(),
+                (string) ($appointment->get('parentName') ?: $appointment->get('name'))
+            );
+
             $rows[] = [
                 'id' => (string) $appointment->getId(),
                 'name' => (string) ($appointment->get('name') ?? ''),
@@ -127,7 +140,8 @@ class CalendarFeedbackService
                 'dateEnd' => (string) $appointment->getDateEnd(),
                 'parentType' => (string) ($appointment->get('parentType') ?? ''),
                 'parentId' => (string) ($appointment->get('parentId') ?? ''),
-                'parentName' => (string) ($appointment->get('parentName') ?: $appointment->get('name')),
+                'parentName' => $parentName,
+                'patientName' => $parentName,
                 'doctorName' => (string) ($appointment->get('doctorName') ?? ''),
                 'cabinetName' => (string) ($appointment->get('cabinetName') ?? ''),
             ];
@@ -138,6 +152,25 @@ class CalendarFeedbackService
         }
 
         return $rows;
+    }
+
+    private function resolveParentName(?string $parentType, ?string $parentId, string $fallback = ''): string
+    {
+        if (!$parentType || !$parentId) {
+            return $fallback;
+        }
+
+        try {
+            $parent = $this->entityManager->getEntityById($parentType, $parentId);
+        } catch (\Throwable) {
+            return $fallback;
+        }
+
+        if (!$parent) {
+            return $fallback;
+        }
+
+        return (string) ($parent->get('name') ?: $fallback);
     }
 
     private function normalizeDate(string $date): DateTimeImmutable
