@@ -179,6 +179,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   SimpleStom feature and visual migration plan
 - [docs/simple-stom-gap-matrix.md](docs/simple-stom-gap-matrix.md) —
   SimpleStom parity matrix and acceptance demo scope
+- [docs/simple-stom-visual-system.md](docs/simple-stom-visual-system.md) —
+  scoped SimpleStom visual tokens and UI-kit rules
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -311,6 +313,8 @@ EspoDental поставляется со вторым compose-стеком
   план переноса функций и визуального языка SimpleStom
 - [docs/simple-stom-gap-matrix.md](docs/simple-stom-gap-matrix.md) —
   матрица расхождений и приемочный демо-сценарий SimpleStom
+- [docs/simple-stom-visual-system.md](docs/simple-stom-visual-system.md) —
+  визуальные токены и правила UI-kit для экранов SimpleStom
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

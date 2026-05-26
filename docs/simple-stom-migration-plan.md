@@ -37,6 +37,8 @@ Reference materials reviewed:
 
 Stage 1 scope is locked in
 [`docs/simple-stom-gap-matrix.md`](simple-stom-gap-matrix.md).
+Stage 2 visual rules are locked in
+[`docs/simple-stom-visual-system.md`](simple-stom-visual-system.md).
 
 Important visual reference order:
 
@@ -152,6 +154,7 @@ Work:
 Verification:
 
 - JS syntax smoke for changed client files.
+- `tests/SimpleStomVisualSystemTest.php`
 - Metadata integrity tests.
 
 ### Stage 3 - Dashboard Actions And Tasks
@@ -353,7 +356,7 @@ Verification:
 | --- | --- | --- |
 | 0. Migration contract | Completed | Plan added and linked from README; `git diff --check` passed. |
 | 1. Gap matrix and acceptance scope | Completed | Gap matrix added in `docs/simple-stom-gap-matrix.md`; structural test added for migration docs and acceptance scope. |
-| 2. Visual system foundation | Pending | Depends on stage 1 scope. |
+| 2. Visual system foundation | Completed | Added scoped UI-kit `simple-stom-ui.js`, documented tokens in `docs/simple-stom-visual-system.md`, and locked the contract with `tests/SimpleStomVisualSystemTest.php`. |
 | 3. Dashboard actions and tasks | Pending | Depends on visual foundation and task decision. |
 | 4. Calendar feedback UX | Pending | Depends on stage 1 conflict/waitlist decisions. |
 | 5. Slot booking wizard | Pending | Depends on stage 4 slot model. |
