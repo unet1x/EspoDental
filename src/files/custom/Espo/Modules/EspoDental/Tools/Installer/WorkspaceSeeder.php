@@ -87,6 +87,80 @@ class WorkspaceSeeder
         ['name' => 'EspoDental: контроль складских остатков', 'job' => 'EspoDentalCheckStockThresholds', 'scheduling' => '*/30 * * * *'],
     ];
 
+    /** @var list<array{name: string, description: string, source: string, columns: list<string>, metrics: list<string>}> */
+    private const REPORT_DEFINITIONS = [
+        [
+            'name' => 'SimpleStom: выручка и платежи',
+            'description' => 'Платежи, возвраты, авансы и разбивка по методам оплаты.',
+            'source' => 'payments',
+            'columns' => ['paidAt', 'method', 'direction', 'status', 'amount', 'currency'],
+            'metrics' => ['amount_sum', 'payment_count'],
+        ],
+        [
+            'name' => 'SimpleStom: P&L клиники',
+            'description' => 'Финансовый обзор по выручке, корректировкам, зарплате и материалам.',
+            'source' => 'finance',
+            'columns' => ['period', 'revenue', 'adjustments', 'payroll', 'materials'],
+            'metrics' => ['gross_revenue', 'net_revenue', 'margin'],
+        ],
+        [
+            'name' => 'SimpleStom: рентабельность услуг',
+            'description' => 'Доходность услуг с учетом норм списания материалов.',
+            'source' => 'service_profitability',
+            'columns' => ['service', 'category', 'quantity', 'revenue', 'materialCost'],
+            'metrics' => ['revenue_sum', 'material_cost_sum', 'profit'],
+        ],
+        [
+            'name' => 'SimpleStom: финансы материалов',
+            'description' => 'Оборот материалов, остатки, списания и закупочная стоимость.',
+            'source' => 'material_finance',
+            'columns' => ['material', 'warehouse', 'movementType', 'quantity', 'unitPrice'],
+            'metrics' => ['stock_value', 'consumption_cost'],
+        ],
+        [
+            'name' => 'SimpleStom: загрузка врачей',
+            'description' => 'Рабочее время, приемы, отмены и доля занятых слотов врачей.',
+            'source' => 'doctor_utilization',
+            'columns' => ['doctor', 'appointments', 'completed', 'cancelled', 'workedMinutes'],
+            'metrics' => ['utilization_percent', 'completed_count'],
+        ],
+        [
+            'name' => 'SimpleStom: загрузка кабинетов',
+            'description' => 'Использование кабинетов по расписанию и фактическим приемам.',
+            'source' => 'cabinet_utilization',
+            'columns' => ['cabinet', 'appointments', 'workedMinutes', 'idleMinutes'],
+            'metrics' => ['utilization_percent'],
+        ],
+        [
+            'name' => 'SimpleStom: воронка пациентов',
+            'description' => 'Путь предварительного пациента до записи, приема и оплаты.',
+            'source' => 'patient_funnel',
+            'columns' => ['stage', 'patientCount', 'conversionPercent'],
+            'metrics' => ['patient_count', 'conversion_percent'],
+        ],
+        [
+            'name' => 'SimpleStom: записи и неявки',
+            'description' => 'Статусы записей, переносы, отмены и неявки.',
+            'source' => 'appointments',
+            'columns' => ['date', 'doctor', 'cabinet', 'status', 'reason'],
+            'metrics' => ['appointment_count', 'no_show_count', 'cancelled_count'],
+        ],
+        [
+            'name' => 'SimpleStom: склад и FEFO',
+            'description' => 'Остатки по складам, партиям, срокам годности и критическим уровням.',
+            'source' => 'inventory',
+            'columns' => ['material', 'warehouse', 'lotNumber', 'expiresAt', 'quantity'],
+            'metrics' => ['quantity_sum', 'expiring_count', 'critical_count'],
+        ],
+        [
+            'name' => 'SimpleStom: зарплата',
+            'description' => 'Начисления зарплаты с расшифровкой источников и ручных корректировок.',
+            'source' => 'payroll',
+            'columns' => ['user', 'periodFrom', 'periodTo', 'status', 'totalAmount'],
+            'metrics' => ['base_sum', 'revenue_sum', 'assistant_sum', 'adjustment_sum'],
+        ],
+    ];
+
     /** @var array<string, string> */
     private const ROLE_DASHBOARD_TEMPLATES = [
         'EspoDental Manager' => 'EspoDental: менеджер',
@@ -132,6 +206,7 @@ class WorkspaceSeeder
             'scheduledJobs' => $this->ensureScheduledJobs(),
             'dashboardTemplates' => $this->ensureDashboardTemplates(),
             'dashboardTemplateAssignments' => $this->ensureDashboardTemplateAssignments(),
+            'reportDefinitions' => $this->ensureReportDefinitions(),
             'settings' => $this->ensureSettings($clinic),
             'clinicalLineNames' => $this->ensureClinicalLineNames(),
             'visitNames' => $this->ensureVisitNames(),
@@ -547,6 +622,38 @@ class WorkspaceSeeder
         return 1;
     }
 
+    private function ensureReportDefinitions(): int
+    {
+        $created = 0;
+
+        foreach (self::REPORT_DEFINITIONS as $cfg) {
+            $existing = $this->entityManager
+                ->getRDBRepository('ReportDefinition')
+                ->where(['name' => $cfg['name']])
+                ->findOne();
+
+            if ($existing) {
+                continue;
+            }
+
+            $report = $this->entityManager->getRDBRepository('ReportDefinition')->getNew();
+            $report->set('name', $cfg['name']);
+            $report->set('description', $cfg['description']);
+            $report->set('source', $cfg['source']);
+            $report->set('visibility', 'public');
+            $report->set('isActive', true);
+            $report->set('filters', (object) []);
+            $report->set('columns', (object) ['fields' => $cfg['columns']]);
+            $report->set('groupings', (object) []);
+            $report->set('metrics', (object) ['fields' => $cfg['metrics']]);
+            $report->set('sort', (object) []);
+            $this->entityManager->saveEntity($report);
+            $created++;
+        }
+
+        return $created;
+    }
+
     private function ensureSettings(Entity $clinic): int
     {
         if (!$this->configWriter) {
@@ -586,6 +693,9 @@ class WorkspaceSeeder
             'espoDentalReminderHoursBefore' => 24,
             'espoDentalReminderSecondHoursBefore' => 2,
             'espoDentalReminderWindowMinutes' => 20,
+            'espoDentalSmtpEnabled' => false,
+            'espoDentalSmtpPort' => 587,
+            'espoDentalSmtpEncryption' => 'tls',
         ]);
         $this->configWriter->save();
 
@@ -908,6 +1018,9 @@ class WorkspaceSeeder
             'SalaryProfile',
             'SalaryEntry',
             'SalaryBonus',
+            'ReportDefinition',
+            'IntegrationSettings',
+            'IntegrationSecret',
             'NotificationLog',
             'User',
             'Team',

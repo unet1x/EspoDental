@@ -1,0 +1,30 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "clinic": {"type": "link"},
+        "integrationType": {
+            "type": "enum",
+            "options": ["smtp", "whatsapp", "telegram"],
+            "required": true
+        },
+        "isEnabled": {"type": "bool", "default": false},
+        "settings": {"type": "jsonObject", "default": "{}"},
+        "secretsReference": {"type": "varchar", "maxLength": 255},
+        "updatedAt": {"type": "datetime", "readOnly": true},
+        "updatedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "updatedBy": {"type": "belongsTo", "entity": "User"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "integrationType", "order": "asc"},
+    "indexes": {
+        "clinic_type": {"columns": ["clinicId", "integrationType"], "unique": true}
+    }
+}

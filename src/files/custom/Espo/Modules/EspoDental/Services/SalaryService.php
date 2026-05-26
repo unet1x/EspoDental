@@ -92,6 +92,26 @@ class SalaryService
         $entry->set('assistantAmount', round($assistantAmount, 2));
         $entry->set('bonusAmount', round($bonuses['bonus'], 2));
         $entry->set('deductionAmount', round($bonuses['deduction'], 2));
+        $entry->set('sourceBreakdown', [
+            'doctor' => [
+                'sourceType' => 'reception',
+                'revenueBasis' => round($doctor['revenueBasis'], 2),
+                'visitsCount' => $doctor['visitsCount'],
+            ],
+            'assistant' => [
+                'sourceType' => 'reception',
+                'revenueBasis' => round($assistant['revenueBasis'], 2),
+            ],
+            'manualAdjustments' => [
+                'sourceType' => 'manual_adjustment',
+                'bonus' => round($bonuses['bonus'], 2),
+                'deduction' => round($bonuses['deduction'], 2),
+            ],
+            'rule' => [
+                'profileId' => $profile instanceof SalaryProfile ? (string) $profile->getId() : '',
+                'rateType' => $profile instanceof SalaryProfile ? $profile->getRateType() : '',
+            ],
+        ]);
         $entry->set('name', $this->buildEntryName($user, $periodFrom));
 
         $this->entityManager->saveEntity($entry);

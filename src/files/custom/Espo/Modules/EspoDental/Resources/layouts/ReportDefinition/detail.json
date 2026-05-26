@@ -1,0 +1,13 @@
+[
+    {"rows": [
+        [{"name": "name"}, {"name": "source"}],
+        [{"name": "visibility"}, {"name": "ownerUser"}],
+        [{"name": "isActive"}, false],
+        [{"name": "description", "fullWidth": true}],
+        [{"name": "filters", "fullWidth": true}],
+        [{"name": "columns", "fullWidth": true}],
+        [{"name": "groupings", "fullWidth": true}],
+        [{"name": "metrics", "fullWidth": true}],
+        [{"name": "sort", "fullWidth": true}]
+    ]}
+]

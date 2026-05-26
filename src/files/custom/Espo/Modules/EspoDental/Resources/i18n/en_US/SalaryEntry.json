@@ -11,7 +11,7 @@
         "baseAmount": "Base/Hours", "revenueAmount": "Doctor %", "assistantAmount": "Assistant %",
         "bonusAmount": "Bonuses", "deductionAmount": "Deductions", "totalAmount": "Total",
         "currency": "Currency", "revenueBasis": "Revenue basis", "visitsCount": "Visits",
-        "hoursWorked": "Hours", "status": "Status",
+        "hoursWorked": "Hours", "sourceBreakdown": "Source breakdown", "status": "Status",
         "approvedAt": "Approved at", "approvedBy": "Approved by",
         "paidAt": "Paid at", "paidPayment": "Payout payment", "notes": "Notes"
     },

@@ -2,6 +2,7 @@
     "labels": {
         "EspoDental": "EspoDental",
         "EspoDental Settings": "Настройки EspoDental",
+        "Integrations": "Интеграции",
         "Dictionaries": "Справочники"
     },
     "fields": {
@@ -12,6 +13,13 @@
         "espoDentalWhatsAppProvider": "WhatsApp-провайдер",
         "espoDentalWhatsAppApiBase": "WhatsApp API endpoint",
         "espoDentalWhatsAppAccessToken": "WhatsApp access token",
+        "espoDentalSmtpEnabled": "SMTP включён",
+        "espoDentalSmtpHost": "SMTP host",
+        "espoDentalSmtpPort": "SMTP port",
+        "espoDentalSmtpUsername": "SMTP пользователь",
+        "espoDentalSmtpPassword": "SMTP пароль",
+        "espoDentalSmtpEncryption": "SMTP шифрование",
+        "espoDentalSmtpFromAddress": "SMTP отправитель",
         "espoDentalReminderHoursBefore": "Напоминание за (часов)",
         "espoDentalReminderSecondHoursBefore": "Доп. напоминание за (часов)",
         "espoDentalReminderWindowMinutes": "Окно срабатывания, мин",
@@ -27,6 +35,9 @@
         "espoDentalReminderWindowMinutes": "Допустимое расхождение от целевого момента",
         "espoDentalWhatsAppProvider": "Метка провайдера сохраняется в журнале уведомлений. Используйте generic для proxy endpoint или whatsapp-cloud для payload Meta Cloud API.",
         "espoDentalWhatsAppApiBase": "HTTPS endpoint адаптера. Для whatsapp-cloud укажите полный Graph endpoint с окончанием /{phone-number-id}/messages. Если пусто, WhatsApp не используется.",
+        "espoDentalSmtpEnabled": "Включает SMTP-отправку email-уведомлений клиники. Структурные тесты не делают внешних отправок.",
+        "espoDentalSmtpHost": "Имя SMTP-сервера для настроенного почтового адаптера.",
+        "espoDentalSmtpFromAddress": "Адрес отправителя по умолчанию для стоматологических уведомлений.",
         "espoDentalDefaultClinic": "Если выбрана, автоматически подставляется новым предварительным пациентам. Если не выбрана и активная клиника всего одна, она подставится автоматически.",
         "espoDentalPaymentMethods": "JSON-массив объектов вида {\"id\":\"cash\",\"label\":\"Наличные\"}. Эти значения используются в выпадающем списке принятия оплаты.",
         "espoDentalToothChartConditions": "JSON-массив объектов вида {\"id\":\"caries\",\"label\":\"Кариес\",\"color\":\"#c83e58\"}. Эти значения используются в редакторе поверхностей зуба.",

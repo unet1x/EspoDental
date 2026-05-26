@@ -38,6 +38,7 @@ class RoleSeeder
         'MaterialCategory', 'Material', 'InventoryWarehouse', 'InventoryStockLot',
         'StockMovement', 'ServiceMaterial',
         'LowStockAlert', 'NotificationLog', 'AssistantActionProposal',
+        'ReportDefinition', 'IntegrationSettings', 'IntegrationSecret',
         'SalaryProfile', 'SalaryEntry', 'SalaryBonus',
         'OrthodonticCard', 'TreatmentStage', 'ToothMovementPlan',
         'OrthoPhoto', 'CephalometricMeasurement',
@@ -230,6 +231,9 @@ class RoleSeeder
         $manager['LowStockAlert']        = $row('no', 'all', 'all', 'no', 'all');
         $manager['NotificationLog']      = $row('yes', 'all', 'all', 'all', 'no');
         $manager['AssistantActionProposal'] = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['ReportDefinition']     = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['IntegrationSettings']  = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['IntegrationSecret']    = $row('yes', 'all', 'all', 'all', 'no');
         $manager['SalaryBonus']          = $row('yes', 'all', 'all', 'all', 'no');
         $manager['TreatmentStage']       = $row('yes', 'all', 'all', 'all', 'no');
         $manager['ToothMovementPlan']    = $row('yes', 'all', 'all', 'all', 'no');
@@ -272,6 +276,9 @@ class RoleSeeder
             'LowStockAlert'        => $row('no', 'team', 'no', 'no', 'no'),
             'NotificationLog'      => $row('no', 'team', 'no', 'no', 'no'),
             'AssistantActionProposal' => $row('no', 'team', 'no', 'no', 'no'),
+            'ReportDefinition'     => $row('no', 'no', 'no', 'no', 'no'),
+            'IntegrationSettings'  => $row('no', 'no', 'no', 'no', 'no'),
+            'IntegrationSecret'    => $row('no', 'no', 'no', 'no', 'no'),
             'SalaryProfile'        => $row('no', 'own', 'no', 'no', 'no'),
             'SalaryEntry'          => $row('no', 'own', 'no', 'no', 'own'),
             'SalaryBonus'          => $row('no', 'own', 'no', 'no', 'no'),
@@ -318,6 +325,9 @@ class RoleSeeder
             'LowStockAlert'        => $row('no', 'no', 'no', 'no', 'no'),
             'NotificationLog'      => $row('no', 'team', 'no', 'no', 'no'),
             'AssistantActionProposal' => $row('no', 'no', 'no', 'no', 'no'),
+            'ReportDefinition'     => $row('no', 'no', 'no', 'no', 'no'),
+            'IntegrationSettings'  => $row('no', 'no', 'no', 'no', 'no'),
+            'IntegrationSecret'    => $row('no', 'no', 'no', 'no', 'no'),
             'SalaryProfile'        => $row('no', 'own', 'no', 'no', 'no'),
             'SalaryEntry'          => $row('no', 'own', 'no', 'no', 'own'),
             'SalaryBonus'          => $row('no', 'own', 'no', 'no', 'no'),
@@ -364,6 +374,9 @@ class RoleSeeder
             'LowStockAlert'        => $row('no', 'team', 'no', 'no', 'no'),
             'NotificationLog'      => $row('yes', 'team', 'team', 'no', 'no'),
             'AssistantActionProposal' => $row('yes', 'team', 'team', 'no', 'no'),
+            'ReportDefinition'     => $row('no', 'no', 'no', 'no', 'no'),
+            'IntegrationSettings'  => $row('no', 'no', 'no', 'no', 'no'),
+            'IntegrationSecret'    => $row('no', 'no', 'no', 'no', 'no'),
             'SalaryProfile'        => $row('yes', 'all', 'all', 'no', 'all'),
             'SalaryEntry'          => $row('yes', 'all', 'all', 'no', 'all'),
             'SalaryBonus'          => $row('yes', 'all', 'all', 'all', 'no'),
@@ -410,6 +423,9 @@ class RoleSeeder
             'LowStockAlert'        => $row('no', 'all', 'all', 'no', 'all'),
             'NotificationLog'      => $row('no', 'no', 'no', 'no', 'no'),
             'AssistantActionProposal' => $row('no', 'no', 'no', 'no', 'no'),
+            'ReportDefinition'     => $row('no', 'no', 'no', 'no', 'no'),
+            'IntegrationSettings'  => $row('no', 'no', 'no', 'no', 'no'),
+            'IntegrationSecret'    => $row('no', 'no', 'no', 'no', 'no'),
             'SalaryProfile'        => $row('no', 'own', 'no', 'no', 'no'),
             'SalaryEntry'          => $row('no', 'own', 'no', 'no', 'own'),
             'SalaryBonus'          => $row('no', 'own', 'no', 'no', 'no'),

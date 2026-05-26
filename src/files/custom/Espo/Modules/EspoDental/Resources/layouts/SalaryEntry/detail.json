@@ -10,7 +10,8 @@
         [{"name": "revenueAmount"}, {"name": "revenueBasis"}],
         [{"name": "assistantAmount"}, {"name": "visitsCount"}],
         [{"name": "bonusAmount"}, {"name": "deductionAmount"}],
-        [{"name": "totalAmount"}, false]
+        [{"name": "totalAmount"}, false],
+        [{"name": "sourceBreakdown", "fullWidth": true}]
     ]},
     {"label": "Workflow", "rows": [
         [{"name": "approvedAt"}, {"name": "approvedBy"}],

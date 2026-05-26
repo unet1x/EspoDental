@@ -1,0 +1,7 @@
+[
+    {"name": "integrationType"},
+    {"name": "clinic", "link": true},
+    {"name": "isEnabled"},
+    {"name": "secretsReference"},
+    {"name": "updatedAt"}
+]

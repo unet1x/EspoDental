@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "name": "Name",
+        "clinic": "Clinic",
+        "integrationType": "Integration type",
+        "isEnabled": "Enabled",
+        "settings": "Settings",
+        "secretsReference": "Secrets reference",
+        "updatedAt": "Updated at",
+        "updatedBy": "Updated by"
+    },
+    "options": {
+        "integrationType": {
+            "smtp": "SMTP",
+            "whatsapp": "WhatsApp",
+            "telegram": "Telegram"
+        }
+    },
+    "links": {"clinic": "Clinic", "updatedBy": "Updated by"}
+}

@@ -1,0 +1,49 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 255},
+        "description": {"type": "text"},
+        "source": {
+            "type": "enum",
+            "options": [
+                "payments",
+                "finance",
+                "service_profitability",
+                "material_finance",
+                "doctor_utilization",
+                "cabinet_utilization",
+                "patient_funnel",
+                "appointments",
+                "inventory",
+                "payroll"
+            ],
+            "required": true
+        },
+        "filters": {"type": "jsonObject", "default": "{}"},
+        "columns": {"type": "jsonObject", "default": "{}"},
+        "groupings": {"type": "jsonObject", "default": "{}"},
+        "metrics": {"type": "jsonObject", "default": "{}"},
+        "sort": {"type": "jsonObject", "default": "{}"},
+        "ownerUser": {"type": "link", "view": "views/fields/user"},
+        "visibility": {
+            "type": "enum",
+            "options": ["private", "public"],
+            "default": "private",
+            "required": true
+        },
+        "isActive": {"type": "bool", "default": true},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "ownerUser": {"type": "belongsTo", "entity": "User"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "name", "order": "asc"},
+    "indexes": {
+        "source_visibility": {"columns": ["source", "visibility"]},
+        "owner": {"columns": ["ownerUserId"]}
+    }
+}

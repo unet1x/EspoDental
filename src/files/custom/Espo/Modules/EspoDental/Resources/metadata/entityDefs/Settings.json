@@ -35,6 +35,46 @@
             "type": "password",
             "tab": "EspoDental"
         },
+        "espoDentalSmtpEnabled": {
+            "type": "bool",
+            "default": false,
+            "tab": "EspoDental",
+            "tooltip": true
+        },
+        "espoDentalSmtpHost": {
+            "type": "varchar",
+            "maxLength": 255,
+            "tab": "EspoDental",
+            "tooltip": true
+        },
+        "espoDentalSmtpPort": {
+            "type": "int",
+            "default": 587,
+            "min": 1,
+            "max": 65535,
+            "tab": "EspoDental"
+        },
+        "espoDentalSmtpUsername": {
+            "type": "varchar",
+            "maxLength": 255,
+            "tab": "EspoDental"
+        },
+        "espoDentalSmtpPassword": {
+            "type": "password",
+            "tab": "EspoDental"
+        },
+        "espoDentalSmtpEncryption": {
+            "type": "enum",
+            "options": ["none", "tls", "ssl"],
+            "default": "tls",
+            "tab": "EspoDental"
+        },
+        "espoDentalSmtpFromAddress": {
+            "type": "varchar",
+            "maxLength": 255,
+            "tab": "EspoDental",
+            "tooltip": true
+        },
         "espoDentalReminderHoursBefore": {
             "type": "int",
             "default": 24,

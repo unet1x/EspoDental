@@ -2,6 +2,7 @@
     "labels": {
         "EspoDental": "EspoDental",
         "EspoDental Settings": "Ajustes de EspoDental",
+        "Integrations": "Integraciones",
         "Dictionaries": "Diccionarios"
     },
     "fields": {
@@ -12,6 +13,13 @@
         "espoDentalWhatsAppProvider": "Proveedor de WhatsApp",
         "espoDentalWhatsAppApiBase": "Endpoint API de WhatsApp",
         "espoDentalWhatsAppAccessToken": "Token de acceso WhatsApp",
+        "espoDentalSmtpEnabled": "SMTP activo",
+        "espoDentalSmtpHost": "Host SMTP",
+        "espoDentalSmtpPort": "Puerto SMTP",
+        "espoDentalSmtpUsername": "Usuario SMTP",
+        "espoDentalSmtpPassword": "Contrasena SMTP",
+        "espoDentalSmtpEncryption": "Cifrado SMTP",
+        "espoDentalSmtpFromAddress": "Remitente SMTP",
         "espoDentalReminderHoursBefore": "Horas antes del 1er recordatorio",
         "espoDentalReminderSecondHoursBefore": "Horas antes del 2do recordatorio",
         "espoDentalReminderWindowMinutes": "Ventana de disparo, min",
@@ -27,6 +35,9 @@
         "espoDentalReminderWindowMinutes": "Desviacion permitida del momento objetivo",
         "espoDentalWhatsAppProvider": "Etiqueta del proveedor guardada en el registro de notificaciones. Usa generic para un proxy o whatsapp-cloud para el payload de Meta Cloud API.",
         "espoDentalWhatsAppApiBase": "Endpoint HTTPS del adaptador. Para whatsapp-cloud, usa el endpoint Graph completo terminado en /{phone-number-id}/messages. Dejalo vacio para mantener WhatsApp desactivado.",
+        "espoDentalSmtpEnabled": "Activa el envio SMTP para notificaciones de la clinica. Las pruebas estructurales no hacen llamadas externas.",
+        "espoDentalSmtpHost": "Nombre del servidor SMTP usado por el adaptador de correo configurado.",
+        "espoDentalSmtpFromAddress": "Direccion remitente predeterminada para notificaciones odontologicas.",
         "espoDentalDefaultClinic": "Si se define, se asigna automaticamente a nuevos pacientes preliminares. Si esta vacia y solo hay una clinica activa, se usara automaticamente.",
         "espoDentalPaymentMethods": "Array JSON de objetos como {\"id\":\"cash\",\"label\":\"Efectivo\"}. Estos valores llenan la lista de metodos de pago.",
         "espoDentalToothChartConditions": "Array JSON de objetos como {\"id\":\"caries\",\"label\":\"Caries\",\"color\":\"#c83e58\"}. Estos valores llenan las listas de estados de superficie.",

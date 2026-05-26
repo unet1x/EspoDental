@@ -1,0 +1,20 @@
+{
+    "fields": {
+        "name": "Название",
+        "clinic": "Клиника",
+        "integrationType": "Тип интеграции",
+        "isEnabled": "Включена",
+        "settings": "Настройки",
+        "secretsReference": "Ссылка на секрет",
+        "updatedAt": "Обновлено",
+        "updatedBy": "Обновил"
+    },
+    "options": {
+        "integrationType": {
+            "smtp": "SMTP",
+            "whatsapp": "WhatsApp",
+            "telegram": "Telegram"
+        }
+    },
+    "links": {"clinic": "Клиника", "updatedBy": "Обновил"}
+}

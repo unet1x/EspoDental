@@ -28,6 +28,7 @@
         "revenueBasis": {"type": "currency", "default": 0, "readOnly": true},
         "visitsCount": {"type": "int", "default": 0, "readOnly": true},
         "hoursWorked": {"type": "float", "default": 0},
+        "sourceBreakdown": {"type": "jsonObject", "readOnly": true, "default": "{}"},
         "notes": {"type": "text"},
         "approvedAt": {"type": "datetime", "readOnly": true},
         "approvedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},

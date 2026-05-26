@@ -11,7 +11,7 @@
         "baseAmount": "Оклад/часы", "revenueAmount": "% врача", "assistantAmount": "% ассистента",
         "bonusAmount": "Бонусы", "deductionAmount": "Удержания", "totalAmount": "Итого",
         "currency": "Валюта", "revenueBasis": "База выручки", "visitsCount": "Приёмов",
-        "hoursWorked": "Часов", "status": "Статус",
+        "hoursWorked": "Часов", "sourceBreakdown": "Расшифровка источников", "status": "Статус",
         "approvedAt": "Утверждено", "approvedBy": "Утвердил",
         "paidAt": "Выплачено", "paidPayment": "Платёж выплаты", "notes": "Заметки"
     },

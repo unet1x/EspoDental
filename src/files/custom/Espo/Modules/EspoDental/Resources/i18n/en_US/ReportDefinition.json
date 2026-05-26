@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "name": "Name",
+        "description": "Description",
+        "source": "Source",
+        "filters": "Filters",
+        "columns": "Columns",
+        "groupings": "Groupings",
+        "metrics": "Metrics",
+        "sort": "Sort",
+        "ownerUser": "Owner",
+        "visibility": "Visibility",
+        "isActive": "Active"
+    },
+    "options": {
+        "source": {
+            "payments": "Payments",
+            "finance": "Finance",
+            "service_profitability": "Service profitability",
+            "material_finance": "Material finance",
+            "doctor_utilization": "Doctor utilization",
+            "cabinet_utilization": "Cabinet utilization",
+            "patient_funnel": "Patient funnel",
+            "appointments": "Appointments",
+            "inventory": "Inventory",
+            "payroll": "Payroll"
+        },
+        "visibility": {"private": "Private", "public": "Public"}
+    },
+    "links": {"ownerUser": "Owner"}
+}

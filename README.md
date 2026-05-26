@@ -199,6 +199,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   SimpleStom service catalog and lot-aware inventory contract
 - [docs/simple-stom-cash-desk.md](docs/simple-stom-cash-desk.md) —
   SimpleStom cash desk, advance and shift-closing contract
+- [docs/simple-stom-reports-payroll-integrations.md](docs/simple-stom-reports-payroll-integrations.md) —
+  SimpleStom report templates, payroll source breakdown and integration settings contract
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -351,6 +353,8 @@ EspoDental поставляется со вторым compose-стеком
   контракт каталога услуг и складского учета SimpleStom
 - [docs/simple-stom-cash-desk.md](docs/simple-stom-cash-desk.md) —
   контракт кассы SimpleStom, авансов и закрытия смены
+- [docs/simple-stom-reports-payroll-integrations.md](docs/simple-stom-reports-payroll-integrations.md) —
+  контракт шаблонов отчётов, расшифровки ЗП и настроек интеграций SimpleStom
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

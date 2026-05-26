@@ -1,0 +1,7 @@
+[
+    {"name": "name", "link": true},
+    {"name": "clinic", "link": true},
+    {"name": "secretKind"},
+    {"name": "valuePresent"},
+    {"name": "updatedAt"}
+]

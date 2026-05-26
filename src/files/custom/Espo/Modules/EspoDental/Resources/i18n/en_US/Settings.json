@@ -2,6 +2,7 @@
     "labels": {
         "EspoDental": "EspoDental",
         "EspoDental Settings": "EspoDental Settings",
+        "Integrations": "Integrations",
         "Dictionaries": "Dictionaries"
     },
     "fields": {
@@ -12,6 +13,13 @@
         "espoDentalWhatsAppProvider": "WhatsApp provider",
         "espoDentalWhatsAppApiBase": "WhatsApp API endpoint",
         "espoDentalWhatsAppAccessToken": "WhatsApp access token",
+        "espoDentalSmtpEnabled": "SMTP enabled",
+        "espoDentalSmtpHost": "SMTP host",
+        "espoDentalSmtpPort": "SMTP port",
+        "espoDentalSmtpUsername": "SMTP username",
+        "espoDentalSmtpPassword": "SMTP password",
+        "espoDentalSmtpEncryption": "SMTP encryption",
+        "espoDentalSmtpFromAddress": "SMTP from address",
         "espoDentalReminderHoursBefore": "First reminder hours before",
         "espoDentalReminderSecondHoursBefore": "Second reminder hours before",
         "espoDentalReminderWindowMinutes": "Trigger window, minutes",
@@ -27,6 +35,9 @@
         "espoDentalReminderWindowMinutes": "Allowed drift from the target moment",
         "espoDentalWhatsAppProvider": "Provider label saved into Notification Log for audit. Use generic for a proxy endpoint or whatsapp-cloud for the Meta Cloud API payload.",
         "espoDentalWhatsAppApiBase": "HTTPS endpoint used by the adapter. For whatsapp-cloud, use the full Graph endpoint ending in /{phone-number-id}/messages. Leave empty to keep WhatsApp disabled.",
+        "espoDentalSmtpEnabled": "Enables SMTP delivery for clinic email notifications. External delivery is not called by structural tests.",
+        "espoDentalSmtpHost": "SMTP server hostname used by the configured mail adapter.",
+        "espoDentalSmtpFromAddress": "Default sender address for dental notifications.",
         "espoDentalDefaultClinic": "If set, new preliminary patients get this clinic automatically. If empty and only one active clinic exists, it will be used automatically.",
         "espoDentalPaymentMethods": "JSON array of objects like {\"id\":\"cash\",\"label\":\"Cash\"}. These values populate the payment method dropdown.",
         "espoDentalToothChartConditions": "JSON array of objects like {\"id\":\"caries\",\"label\":\"Caries\",\"color\":\"#c83e58\"}. These values populate tooth surface condition dropdowns.",

@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "name": "Nombre",
+        "description": "Descripcion",
+        "source": "Origen",
+        "filters": "Filtros",
+        "columns": "Columnas",
+        "groupings": "Agrupaciones",
+        "metrics": "Metricas",
+        "sort": "Orden",
+        "ownerUser": "Propietario",
+        "visibility": "Visibilidad",
+        "isActive": "Activo"
+    },
+    "options": {
+        "source": {
+            "payments": "Pagos",
+            "finance": "Finanzas",
+            "service_profitability": "Rentabilidad de servicios",
+            "material_finance": "Finanzas de materiales",
+            "doctor_utilization": "Utilizacion de doctores",
+            "cabinet_utilization": "Utilizacion de gabinetes",
+            "patient_funnel": "Embudo de pacientes",
+            "appointments": "Citas",
+            "inventory": "Inventario",
+            "payroll": "Nomina"
+        },
+        "visibility": {"private": "Privada", "public": "Publica"}
+    },
+    "links": {"ownerUser": "Propietario"}
+}

@@ -34,6 +34,27 @@
         ]
     },
     {
+        "label": "Integrations",
+        "rows": [
+            [
+                {"name": "espoDentalSmtpEnabled"},
+                {"name": "espoDentalSmtpEncryption"}
+            ],
+            [
+                {"name": "espoDentalSmtpHost"},
+                {"name": "espoDentalSmtpPort"}
+            ],
+            [
+                {"name": "espoDentalSmtpUsername"},
+                {"name": "espoDentalSmtpPassword"}
+            ],
+            [
+                {"name": "espoDentalSmtpFromAddress"},
+                false
+            ]
+        ]
+    },
+    {
         "label": "Dictionaries",
         "rows": [
             [

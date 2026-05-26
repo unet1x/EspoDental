@@ -57,6 +57,8 @@ Stage 10 service and inventory rules are locked in
 [`docs/simple-stom-services-inventory.md`](simple-stom-services-inventory.md).
 Stage 11 cash desk rules are locked in
 [`docs/simple-stom-cash-desk.md`](simple-stom-cash-desk.md).
+Stage 12 reports, payroll and integrations rules are locked in
+[`docs/simple-stom-reports-payroll-integrations.md`](simple-stom-reports-payroll-integrations.md).
 
 Important visual reference order:
 
@@ -390,5 +392,5 @@ Verification:
 | 9. Tooth chart contract | Completed | Added whole-tooth state editing, veneer/sealant surface rules, bridge/removed-tooth visual behavior and in-place patient workspace snapshot history. |
 | 10. Services and inventory | Completed | Added material unit semantics, service material required/unit fields, warehouse and stock-lot entities, FEFO planning service and seeded main/cabinet warehouses. |
 | 11. Cash desk and shift closing | Completed | Added invoice-first cash desk workspace, advance application, cash-shift closing, financial adjustments and document-sequence metadata. |
-| 12. Reports, payroll and integrations | Pending | MCP/AI is excluded from this run. |
+| 12. Reports, payroll and integrations | Completed | Added saved report definitions, payroll source breakdown, SMTP/WhatsApp/Telegram integration settings and sanitized secret metadata. MCP/AI is excluded from this run. |
 | 13. Demo environment | Pending | Final local demo with seeded DB. |

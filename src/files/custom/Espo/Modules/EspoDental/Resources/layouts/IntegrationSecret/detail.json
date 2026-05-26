@@ -1,0 +1,8 @@
+[
+    {"rows": [
+        [{"name": "name"}, {"name": "clinic"}],
+        [{"name": "secretKind"}, {"name": "valuePresent"}],
+        [{"name": "secretValue", "fullWidth": true}],
+        [{"name": "updatedAt"}, {"name": "updatedBy"}]
+    ]}
+]

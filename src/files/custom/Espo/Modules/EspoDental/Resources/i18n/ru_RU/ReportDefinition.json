@@ -1,0 +1,31 @@
+{
+    "fields": {
+        "name": "Название",
+        "description": "Описание",
+        "source": "Источник",
+        "filters": "Фильтры",
+        "columns": "Колонки",
+        "groupings": "Группировки",
+        "metrics": "Метрики",
+        "sort": "Сортировка",
+        "ownerUser": "Владелец",
+        "visibility": "Видимость",
+        "isActive": "Активен"
+    },
+    "options": {
+        "source": {
+            "payments": "Платежи",
+            "finance": "Финансы",
+            "service_profitability": "Рентабельность услуг",
+            "material_finance": "Финансы материалов",
+            "doctor_utilization": "Загрузка врачей",
+            "cabinet_utilization": "Загрузка кабинетов",
+            "patient_funnel": "Воронка пациентов",
+            "appointments": "Записи",
+            "inventory": "Склад",
+            "payroll": "Зарплата"
+        },
+        "visibility": {"private": "Личный", "public": "Общий"}
+    },
+    "links": {"ownerUser": "Владелец"}
+}
