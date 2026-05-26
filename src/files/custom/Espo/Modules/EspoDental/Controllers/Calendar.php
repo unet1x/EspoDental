@@ -32,6 +32,8 @@ class Calendar
         $view = (string) ($request->getQueryParam('view') ?? 'day');
         $clinicId = $request->getQueryParam('clinicId');
         $cabinetId = $request->getQueryParam('cabinetId');
+        $doctorId = $request->getQueryParam('doctorId');
+        $serviceId = $request->getQueryParam('serviceId');
         if (!in_array($view, ['day', 'week'], true)) {
             $view = 'day';
         }
@@ -39,7 +41,9 @@ class Calendar
             $date,
             $clinicId !== null && $clinicId !== '' ? (string) $clinicId : null,
             $view,
-            $cabinetId !== null && $cabinetId !== '' ? (string) $cabinetId : null
+            $cabinetId !== null && $cabinetId !== '' ? (string) $cabinetId : null,
+            $doctorId !== null && $doctorId !== '' ? (string) $doctorId : null,
+            $serviceId !== null && $serviceId !== '' ? (string) $serviceId : null
         );
     }
 
@@ -58,6 +62,7 @@ class Calendar
         $doctorId = $request->getQueryParam('doctorId');
         $parentType = $request->getQueryParam('parentType');
         $parentId = $request->getQueryParam('parentId');
+        $serviceId = $request->getQueryParam('serviceId');
         $excludeAppointmentId = $request->getQueryParam('excludeAppointmentId');
         $workStart = (int) ($request->getQueryParam('workStartHour') ?? 8);
         $workEnd = (int) ($request->getQueryParam('workEndHour') ?? 21);
@@ -79,7 +84,8 @@ class Calendar
             $limit,
             $excludeAppointmentId !== null && $excludeAppointmentId !== '' ? (string) $excludeAppointmentId : null,
             $parentType !== null && $parentType !== '' ? (string) $parentType : null,
-            $parentId !== null && $parentId !== '' ? (string) $parentId : null
+            $parentId !== null && $parentId !== '' ? (string) $parentId : null,
+            $serviceId !== null && $serviceId !== '' ? (string) $serviceId : null
         );
         return ['slots' => $slots, 'count' => count($slots)];
     }
@@ -93,11 +99,15 @@ class Calendar
 
         $date = (string) ($request->getQueryParam('date') ?? (new DateTimeImmutable('today'))->format('Y-m-d'));
         $clinicId = $request->getQueryParam('clinicId');
+        $doctorId = $request->getQueryParam('doctorId');
+        $cabinetId = $request->getQueryParam('cabinetId');
 
         return $this->calendarFeedbackService->getFeedbackPanel(
             $date,
             $clinicId !== null && $clinicId !== '' ? (string) $clinicId : null,
-            (int) ($request->getQueryParam('limit') ?? 12)
+            (int) ($request->getQueryParam('limit') ?? 12),
+            $doctorId !== null && $doctorId !== '' ? (string) $doctorId : null,
+            $cabinetId !== null && $cabinetId !== '' ? (string) $cabinetId : null
         );
     }
 

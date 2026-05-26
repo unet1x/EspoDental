@@ -9,12 +9,15 @@ define('espo-dental:views/appointment/modals/slot-booking', [
         events: {
             'input [data-name="patientSearch"]': 'scheduleCandidateSearch',
             'click [data-action="selectCandidate"]': 'selectCandidate',
-            'change [data-name="bookingMode"]': 'toggleMode'
+            'change [data-name="bookingMode"]': 'toggleMode',
+            'change [data-name="serviceId"]': 'applySelectedServiceDuration'
         },
 
         setup: function () {
             this.headerText = this.options.title || 'Запись пациента';
             this.slot = this.options.slot || {};
+            this.serviceOptions = this.options.serviceOptions || [];
+            this.serviceId = this.options.serviceId || this.slot.serviceId || '';
             this.selectedCandidate = null;
             this.buttonList = [
                 {name: 'book', label: 'Записать', style: 'primary'},
@@ -24,11 +27,21 @@ define('espo-dental:views/appointment/modals/slot-booking', [
 
         afterRender: function () {
             SimpleStomUi.ensureStyles();
+            this.ensureContainer();
             this.renderForm();
+            this.applySelectedServiceDuration();
+        },
+
+        ensureContainer: function () {
+            if (this.$el.find('.espo-dental-slot-booking').length) {
+                return;
+            }
+
+            this.$el.find('.modal-body, .body').html('<div class="espo-dental-slot-booking"></div>');
         },
 
         renderForm: function () {
-            var durations = this.buildDurationOptions(this.slot.freeWindowMinutes || 180);
+            var durations = this.buildDurationOptions(this.slot.freeWindowMinutes);
             var html = '<div class="espo-dental-stom">' +
                 '<div class="espo-dental-stom-layout espo-dental-stom-layout--two">' +
                 '<div>' +
@@ -82,7 +95,8 @@ define('espo-dental:views/appointment/modals/slot-booking', [
                 SimpleStomUi.escapeHtml(this.options.doctorId || '') + '"></div>' +
                 '<div class="form-group"><label>Кабинет</label>' +
                 '<input type="text" class="form-control" data-name="cabinetId" value="' +
-                SimpleStomUi.escapeHtml(this.slot.cabinetId || '') + '"></div>';
+                SimpleStomUi.escapeHtml(this.slot.cabinetId || '') + '"></div>' +
+                this.renderServiceField();
 
             html += '<div class="form-group"><label>Длительность</label>' +
                 '<select class="form-control" data-name="durationMinutes">';
@@ -92,6 +106,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
             });
 
             html += '</select></div>' +
+                '<div class="text-muted small" data-name="durationHint" style="margin-top:-8px;margin-bottom:12px"></div>' +
                 '<div class="form-group"><label>С чем обратился</label>' +
                 '<input type="text" class="form-control" data-name="reason"></div>' +
                 '<div class="form-group"><label>Заметки</label>' +
@@ -100,15 +115,105 @@ define('espo-dental:views/appointment/modals/slot-booking', [
             return html;
         },
 
+        renderServiceField: function () {
+            var html = '<div class="form-group"><label>Услуга</label>';
+
+            if (!this.serviceOptions.length) {
+                html += '<input type="text" class="form-control" data-name="serviceId" value="' +
+                    SimpleStomUi.escapeHtml(this.serviceId || '') + '">';
+                return html + '</div>';
+            }
+
+            html += '<select class="form-control" data-name="serviceId">' +
+                '<option value="">Не выбрана</option>';
+
+            this.serviceOptions.forEach((function (service) {
+                var selected = String(service.id || '') === String(this.serviceId || '') ? ' selected' : '';
+                html += '<option value="' + SimpleStomUi.escapeHtml(service.id || '') + '"' + selected + '>' +
+                    SimpleStomUi.escapeHtml(service.name || service.id || '') +
+                    '</option>';
+            }).bind(this));
+
+            return html + '</select></div>';
+        },
+
         buildDurationOptions: function (freeWindowMinutes) {
-            var max = Math.max(15, Math.min(parseInt(freeWindowMinutes, 10) || 180, 180));
+            var max = this.getDurationLimitMinutes(freeWindowMinutes);
             var options = [];
+
+            if (max < 15) {
+                return options;
+            }
 
             for (var minutes = 15; minutes <= max; minutes += 15) {
                 options.push(minutes);
             }
 
             return options;
+        },
+
+        getDurationLimitMinutes: function (freeWindowMinutes) {
+            var parsed = parseInt(freeWindowMinutes, 10);
+
+            if (isNaN(parsed)) {
+                parsed = 180;
+            }
+
+            return Math.max(0, Math.min(parsed, 180));
+        },
+
+        applySelectedServiceDuration: function () {
+            var serviceId = this.$el.find('[data-name="serviceId"]').val() || '';
+            var service = null;
+            var freeWindowMinutes = this.getDurationLimitMinutes(this.slot.freeWindowMinutes);
+            var $duration = this.$el.find('[data-name="durationMinutes"]');
+
+            this.serviceOptions.forEach(function (row) {
+                if (String(row.id || '') === String(serviceId)) {
+                    service = row;
+                }
+            });
+
+            this.updateDurationHint(service, freeWindowMinutes);
+
+            if (!service || !service.duration) {
+                return;
+            }
+
+            var duration = parseInt(service.duration, 10);
+
+            if (duration > 0 && duration <= freeWindowMinutes && $duration.find('option[value="' + duration + '"]').length) {
+                $duration.val(String(duration));
+            }
+        },
+
+        updateDurationHint: function (service, freeWindowMinutes) {
+            var $hint = this.$el.find('[data-name="durationHint"]');
+            var serviceDuration = service && service.duration ? parseInt(service.duration, 10) : 0;
+            var hasWindow = freeWindowMinutes >= 15;
+            var message = hasWindow
+                ? 'В выбранном окне доступно до ' + freeWindowMinutes + ' мин.'
+                : 'В выбранном окне нет свободного времени для записи.';
+            var isError = !hasWindow;
+
+            if (serviceDuration > freeWindowMinutes) {
+                message = 'Для услуги нужно ' + serviceDuration +
+                    ' мин., а в выбранном окне доступно ' + freeWindowMinutes +
+                    ' мин. Выберите другое время или услугу.';
+                isError = true;
+            }
+
+            $hint
+                .toggleClass('text-danger', isError)
+                .toggleClass('text-muted', !isError)
+                .text(message);
+
+            if (isError) {
+                this.disableButton('book');
+                return;
+            }
+
+            this.enableButton('book');
         },
 
         scheduleCandidateSearch: function () {
@@ -210,16 +315,25 @@ define('espo-dental:views/appointment/modals/slot-booking', [
                 }).bind(this))
                 .catch((function (xhr) {
                     this.enableButton('book');
-                    Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось создать запись');
+                    this.applySelectedServiceDuration();
+                    Espo.Ui.error(this.getBookingErrorMessage(xhr));
                 }).bind(this));
         },
 
         buildPayload: function () {
             var mode = this.getMode();
+            var windowMessage = this.getDurationWindowErrorMessage();
+
+            if (windowMessage) {
+                Espo.Ui.warning(windowMessage);
+                return null;
+            }
+
             var payload = {
                 clinicId: this.$el.find('[data-name="clinicId"]').val() || this.slot.clinicId || '',
                 cabinetId: this.$el.find('[data-name="cabinetId"]').val() || this.slot.cabinetId || '',
                 doctorId: this.$el.find('[data-name="doctorId"]').val() || this.options.doctorId || '',
+                serviceId: this.$el.find('[data-name="serviceId"]').val() || this.serviceId || '',
                 localStart: this.$el.find('[data-name="localStart"]').val() || this.slot.localStart || '',
                 timezone: this.slot.timezone || '',
                 durationMinutes: parseInt(this.$el.find('[data-name="durationMinutes"]').val(), 10) || 30,
@@ -246,6 +360,87 @@ define('espo-dental:views/appointment/modals/slot-booking', [
             payload.emailAddress = this.$el.find('[data-name="emailAddress"]').val() || '';
 
             return payload;
+        },
+
+        getDurationWindowErrorMessage: function () {
+            var serviceId = this.$el.find('[data-name="serviceId"]').val() || '';
+            var freeWindowMinutes = this.getDurationLimitMinutes(this.slot.freeWindowMinutes);
+            var service = null;
+
+            this.serviceOptions.forEach(function (row) {
+                if (String(row.id || '') === String(serviceId)) {
+                    service = row;
+                }
+            });
+
+            if (freeWindowMinutes < 15) {
+                return 'В выбранном окне нет свободного времени для записи.';
+            }
+
+            if (service && service.duration && parseInt(service.duration, 10) > freeWindowMinutes) {
+                return 'Выбранная услуга не помещается в свободное окно. Выберите другое время или услугу.';
+            }
+
+            return '';
+        },
+
+        getBookingErrorMessage: function (xhr) {
+            var message = this.extractErrorMessage(xhr);
+            var knownMessages = {
+                'Selected cabinet does not match service requirements':
+                    'Этот кабинет не подходит для выбранной услуги. Выберите другой кабинет или другую услугу.',
+                'Selected service is inactive':
+                    'Эта услуга больше не активна. Выберите актуальную услугу.',
+                'durationMinutes must be between 15 and 180':
+                    'Длительность приема должна быть от 15 до 180 минут.',
+                'clinicId, cabinetId and doctorId are required':
+                    'Укажите клинику, кабинет и врача.',
+                'dateStart is required':
+                    'Укажите дату и время приема.',
+                'Doctor is already booked at this time.':
+                    'У врача уже есть запись на это время. Выберите другой слот.',
+                'Cabinet is already booked at this time.':
+                    'Кабинет уже занят на это время. Выберите другой слот или кабинет.',
+                'Patient is already booked at this time.':
+                    'У пациента уже есть запись на это время.',
+                'Cabinet is closed for this time.':
+                    'Кабинет закрыт на выбранное время.',
+                'Doctor is not available at this time.':
+                    'Врач не работает в выбранное время.',
+                'Time slot conflict.':
+                    'Выбранное время уже занято. Обновите календарь и выберите другой слот.',
+                'Booking parent not found':
+                    'Выбранный пациент не найден. Найдите пациента заново.',
+                'Valid parentType and parentId are required':
+                    'Сначала выберите пациента из поиска.',
+                'lastName and firstName are required':
+                    'Для нового предварительного пациента укажите фамилию и имя.',
+                'phone is required':
+                    'Для нового предварительного пациента укажите телефон.'
+            };
+
+            return knownMessages[message] || 'Не удалось создать запись. Проверьте слот и попробуйте еще раз.';
+        },
+
+        extractErrorMessage: function (xhr) {
+            var text = (xhr && xhr.responseText) || '';
+            var json;
+
+            if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                return xhr.responseJSON.message;
+            }
+
+            if (text) {
+                try {
+                    json = JSON.parse(text);
+
+                    if (json && json.message) {
+                        return json.message;
+                    }
+                } catch (e) {}
+            }
+
+            return text;
         }
     });
 });

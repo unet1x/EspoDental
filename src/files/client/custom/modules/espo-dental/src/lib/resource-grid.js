@@ -49,6 +49,9 @@ define('espo-dental:lib/resource-grid', [], function () {
         if (!d) return value;
         return fmt(new Date(d.getTime() + minutes * 60000));
     }
+    function sameDay(a, b) {
+        return a && b && ymd(a) === ymd(b);
+    }
 
     function ResourceGrid(host, payload, options) {
         this.host = host;
@@ -347,14 +350,62 @@ define('espo-dental:lib/resource-grid', [], function () {
                     var cabinetId = cell.getAttribute('data-cabinet-id');
                     var date = cell.getAttribute('data-date');
                     var startMinutes = self.startHour * 60 + row * self.rowMinutes;
+                    var start = localAt(date, startMinutes);
                     self.options.onCellClick && self.options.onCellClick(
                         cabinetId,
-                        localAt(date, startMinutes),
-                        self.timezone || ''
+                        start,
+                        self.timezone || '',
+                        self.calculateFreeWindowMinutes(cabinetId, start)
                     );
                 });
             })(cells[j]);
         }
+    };
+
+    ResourceGrid.prototype.calculateFreeWindowMinutes = function (cabinetId, localStart) {
+        var start = parseIso(localStart);
+        if (!start) return 180;
+
+        var end = new Date(start.getTime());
+        end.setHours(this.endHour, 0, 0, 0);
+
+        var endTs = end.getTime();
+        var appointments = this.payload.appointments || [];
+        var selectedDoctorId = this.options.doctorId || null;
+
+        for (var i = 0; i < appointments.length; i++) {
+            var appointment = appointments[i] || {};
+            var sameCabinet = String(appointment.cabinetId || '') === String(cabinetId || '');
+            var sameDoctor = selectedDoctorId &&
+                String(appointment.doctorId || '') === String(selectedDoctorId);
+
+            if (!sameCabinet && !sameDoctor) {
+                continue;
+            }
+
+            var appointmentStart = parseIso(appointment.localStart || appointment.dateStart);
+            var appointmentEnd = parseIso(appointment.localEnd || appointment.dateEnd);
+
+            if (
+                !appointmentStart ||
+                !appointmentEnd ||
+                (!sameDay(start, appointmentStart) && !sameDay(start, appointmentEnd))
+            ) {
+                continue;
+            }
+
+            if (appointmentEnd.getTime() <= start.getTime()) {
+                continue;
+            }
+
+            if (appointmentStart.getTime() <= start.getTime()) {
+                return 0;
+            }
+
+            endTs = Math.min(endTs, appointmentStart.getTime());
+        }
+
+        return Math.max(0, Math.floor((endTs - start.getTime()) / 60000));
     };
 
     ResourceGrid.prototype.dispose = function () {

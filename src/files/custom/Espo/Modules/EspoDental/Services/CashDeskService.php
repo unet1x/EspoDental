@@ -11,6 +11,7 @@ use Espo\Entities\User;
 use Espo\Modules\EspoDental\Entities\CashShift;
 use Espo\Modules\EspoDental\Entities\Invoice;
 use Espo\Modules\EspoDental\Entities\Payment;
+use Espo\Modules\EspoDental\Entities\Visit;
 
 class CashDeskService
 {
@@ -27,15 +28,20 @@ class CashDeskService
         ?string $clinicId = null,
         ?string $doctorId = null,
         bool $unpaidOnly = true,
-        int $limit = 40
+        int $limit = 40,
+        ?string $selectedInvoiceId = null
     ): array {
+        $invoices = $this->getInvoiceRows($clinicId, $doctorId, $unpaidOnly, $limit);
+
         return [
             'filters' => [
                 'clinicId' => $clinicId,
                 'doctorId' => $doctorId,
                 'unpaidOnly' => $unpaidOnly,
             ],
-            'invoices' => $this->getInvoiceRows($clinicId, $unpaidOnly, $limit),
+            'doctorOptions' => $this->getDoctorOptions($clinicId, $unpaidOnly),
+            'invoices' => $invoices,
+            'selectedInvoice' => $this->pickSelectedInvoice($invoices, $selectedInvoiceId),
             'closingPreview' => $clinicId ? $this->getClosingPreview($clinicId) : null,
         ];
     }
@@ -135,7 +141,7 @@ class CashDeskService
     /**
      * @return list<array<string, mixed>>
      */
-    private function getInvoiceRows(?string $clinicId, bool $unpaidOnly, int $limit): array
+    private function getInvoiceRows(?string $clinicId, ?string $doctorId, bool $unpaidOnly, int $limit): array
     {
         $where = ['deleted' => false];
         if ($clinicId) {
@@ -154,18 +160,13 @@ class CashDeskService
 
         $rows = [];
         foreach ($invoices as $invoice) {
-            $rows[] = [
-                'id' => (string) $invoice->getId(),
-                'number' => (string) ($invoice->get('number') ?? ''),
-                'patientId' => (string) ($invoice->get('patientId') ?? ''),
-                'patientName' => (string) ($invoice->get('patientName') ?? ''),
-                'visitId' => (string) ($invoice->get('visitId') ?? ''),
-                'status' => (string) ($invoice->getStatus() ?? ''),
-                'issuedAt' => (string) ($invoice->get('issuedAt') ?? ''),
-                'totalAmount' => $invoice->getTotalAmount(),
-                'paidAmount' => $invoice->getPaidAmount(),
-                'balance' => $invoice->getBalance(),
-            ];
+            $visit = $this->getInvoiceVisit($invoice);
+
+            if ($doctorId && (!$visit || (string) ($visit->get('doctorId') ?? '') !== $doctorId)) {
+                continue;
+            }
+
+            $rows[] = $this->buildInvoiceRow($invoice, $visit);
 
             if (count($rows) >= $limit) {
                 break;
@@ -173,5 +174,85 @@ class CashDeskService
         }
 
         return $rows;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $invoices
+     * @return array<string, mixed>|null
+     */
+    private function pickSelectedInvoice(array $invoices, ?string $selectedInvoiceId): ?array
+    {
+        foreach ($invoices as $invoice) {
+            if ($selectedInvoiceId && $invoice['id'] === $selectedInvoiceId) {
+                return $invoice;
+            }
+        }
+
+        return $invoices[0] ?? null;
+    }
+
+    /**
+     * @return list<array{id: string, name: string}>
+     */
+    private function getDoctorOptions(?string $clinicId, bool $unpaidOnly): array
+    {
+        $options = [];
+
+        foreach ($this->getInvoiceRows($clinicId, null, $unpaidOnly, 200) as $invoice) {
+            $doctorId = (string) ($invoice['doctorId'] ?? '');
+            if ($doctorId === '' || isset($options[$doctorId])) {
+                continue;
+            }
+
+            $options[$doctorId] = [
+                'id' => $doctorId,
+                'name' => (string) ($invoice['doctorName'] ?: $doctorId),
+            ];
+        }
+
+        usort($options, static fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
+
+        return array_values($options);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildInvoiceRow(Invoice $invoice, ?Visit $visit): array
+    {
+        $status = (string) ($invoice->getStatus() ?? '');
+        $balance = $invoice->getBalance();
+
+        return [
+            'id' => (string) $invoice->getId(),
+            'number' => (string) ($invoice->get('number') ?? ''),
+            'patientId' => (string) ($invoice->get('patientId') ?? ''),
+            'patientName' => (string) ($invoice->get('patientName') ?? ''),
+            'clinicId' => (string) ($invoice->get('clinicId') ?? ''),
+            'clinicName' => (string) ($invoice->get('clinicName') ?? ''),
+            'visitId' => (string) ($invoice->get('visitId') ?? ''),
+            'visitName' => $visit ? (string) ($visit->get('name') ?? '') : '',
+            'doctorId' => $visit ? (string) ($visit->get('doctorId') ?? '') : '',
+            'doctorName' => $visit ? (string) ($visit->get('doctorName') ?? '') : '',
+            'status' => $status,
+            'issuedAt' => (string) ($invoice->get('issuedAt') ?? ''),
+            'totalAmount' => $invoice->getTotalAmount(),
+            'paidAmount' => $invoice->getPaidAmount(),
+            'balance' => $balance,
+            'payable' => in_array($status, [Invoice::STATUS_ISSUED, Invoice::STATUS_PARTIAL_PAID], true)
+                && round($balance, 2) > 0.0,
+        ];
+    }
+
+    private function getInvoiceVisit(Invoice $invoice): ?Visit
+    {
+        $visitId = (string) ($invoice->get('visitId') ?? '');
+        if ($visitId === '') {
+            return null;
+        }
+
+        $visit = $this->entityManager->getEntityById(Visit::ENTITY_TYPE, $visitId);
+
+        return $visit instanceof Visit ? $visit : null;
     }
 }

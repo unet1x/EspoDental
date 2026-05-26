@@ -24,6 +24,9 @@
             "type": "link",
             "required": true
         },
+        "service": {
+            "type": "link"
+        },
         "clinic": {
             "type": "link",
             "required": true,
@@ -104,6 +107,7 @@
         "doctor": {"type": "belongsTo", "entity": "User"},
         "assistant": {"type": "belongsTo", "entity": "User"},
         "cabinet": {"type": "belongsTo", "entity": "Cabinet"},
+        "service": {"type": "belongsTo", "entity": "Service"},
         "clinic": {"type": "belongsTo", "entity": "Clinic"},
         "bookedBy": {"type": "belongsTo", "entity": "User"},
         "visit": {"type": "hasOne", "entity": "Visit", "foreign": "appointment"},
@@ -133,6 +137,7 @@
         "dateStart": {"columns": ["dateStart", "deleted"]},
         "doctor_date": {"columns": ["doctorId", "dateStart", "dateEnd"]},
         "cabinet_date": {"columns": ["cabinetId", "dateStart", "dateEnd"]},
+        "service": {"columns": ["serviceId"]},
         "status": {"columns": ["status", "deleted"]},
         "clinic": {"columns": ["clinicId"]}
     }

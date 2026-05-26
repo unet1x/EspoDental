@@ -10,9 +10,13 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
+use Espo\Entities\User;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\Cabinet;
 use Espo\Modules\EspoDental\Entities\Clinic;
+use Espo\Modules\EspoDental\Entities\DoctorShift;
+use Espo\Modules\EspoDental\Entities\Service;
+use Espo\Modules\EspoDental\Tools\CabinetRequirementMatcher;
 use Espo\Modules\EspoDental\Tools\DoctorShiftAvailability;
 
 class CalendarService
@@ -29,6 +33,12 @@ class CalendarService
      *     view: string,
      *     timezone: string,
      *     cabinets: list<array{id: string, name: string, clinicId: ?string, capacity: int}>,
+     *     doctors: list<array{id: string, name: string}>,
+     *     filters: array{
+     *         cabinets: list<array{id: string, name: string, clinicId: ?string, capacity: int}>,
+     *         doctors: list<array{id: string, name: string}>,
+     *         services: list<array{id: string, name: string, duration: int}>
+     *     },
      *     appointments: list<array{
      *         id: string, name: string, dateStart: string, dateEnd: string,
      *         localStart: string, localEnd: string, timezone: string,
@@ -41,7 +51,9 @@ class CalendarService
         string $date,
         ?string $clinicId,
         string $view = 'day',
-        ?string $cabinetId = null
+        ?string $cabinetId = null,
+        ?string $doctorId = null,
+        ?string $serviceId = null
     ): array {
         $timeZone = $this->resolveTimeZone($clinicId);
         $utc = new DateTimeZone('UTC');
@@ -61,12 +73,14 @@ class CalendarService
             $where['id'] = $cabinetId;
         }
 
+        $service = $this->loadService($serviceId);
         /** @var iterable<Cabinet> $cabinets */
         $cabinets = $this->entityManager
             ->getRDBRepository(Cabinet::ENTITY_TYPE)
             ->where($where)
             ->order('order', 'ASC')
             ->find();
+        $cabinets = $this->filterCabinetsByService($cabinets, $service);
 
         $cabinetData = [];
         foreach ($cabinets as $c) {
@@ -78,6 +92,12 @@ class CalendarService
             ];
         }
 
+        $filterCabinetData = $cabinetId
+            ? $this->loadCabinetFilterOptions($clinicId, $service)
+            : $cabinetData;
+        $doctorFilterData = $this->loadDoctorFilterOptions($startUtc, $endUtc, $clinicId);
+        $serviceFilterData = $this->loadServiceFilterOptions();
+
         $appointmentWhere = [
             'deleted' => false,
             'dateStart<' => $endUtc->format('Y-m-d H:i:s'),
@@ -88,6 +108,9 @@ class CalendarService
         }
         if ($cabinetId) {
             $appointmentWhere['cabinetId'] = $cabinetId;
+        }
+        if ($doctorId) {
+            $appointmentWhere['doctorId'] = $doctorId;
         }
 
         /** @var iterable<Appointment> $appointments */
@@ -137,8 +160,226 @@ class CalendarService
             'view' => $view,
             'timezone' => $timeZone->getName(),
             'cabinets' => $cabinetData,
+            'doctors' => $doctorFilterData,
+            'filters' => [
+                'cabinets' => $filterCabinetData,
+                'doctors' => $doctorFilterData,
+                'services' => $serviceFilterData,
+            ],
             'appointments' => $appData,
         ];
+    }
+
+    /**
+     * @return list<array{id: string, name: string, clinicId: ?string, capacity: int}>
+     */
+    private function loadCabinetFilterOptions(?string $clinicId, ?Service $service = null): array
+    {
+        $where = ['deleted' => false];
+
+        if ($clinicId) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<Cabinet> $cabinets */
+        $cabinets = $this->entityManager
+            ->getRDBRepository(Cabinet::ENTITY_TYPE)
+            ->where($where)
+            ->order('order', 'ASC')
+            ->find();
+        $cabinets = $this->filterCabinetsByService($cabinets, $service);
+
+        $rows = [];
+
+        foreach ($cabinets as $cabinet) {
+            $rows[] = [
+                'id' => (string) $cabinet->getId(),
+                'name' => (string) $cabinet->get('name'),
+                'clinicId' => $cabinet->get('clinicId'),
+                'capacity' => (int) ($cabinet->get('capacity') ?? 1),
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @return list<array{id: string, name: string, duration: int}>
+     */
+    private function loadServiceFilterOptions(): array
+    {
+        /** @var iterable<Service> $services */
+        $services = $this->entityManager
+            ->getRDBRepository(Service::ENTITY_TYPE)
+            ->where([
+                'deleted' => false,
+                'isActive' => true,
+            ])
+            ->order('name', 'ASC')
+            ->find();
+
+        $rows = [];
+
+        foreach ($services as $service) {
+            $rows[] = [
+                'id' => (string) $service->getId(),
+                'name' => (string) $service->get('name'),
+                'duration' => (int) ($service->get('duration') ?: 0),
+            ];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @return list<array{id: string, name: string}>
+     */
+    private function loadDoctorFilterOptions(
+        DateTimeImmutable $startUtc,
+        DateTimeImmutable $endUtc,
+        ?string $clinicId
+    ): array {
+        $doctors = [];
+        $where = [
+            'deleted' => false,
+            'status' => DoctorShift::STATUS_ACTIVE,
+            'type' => [DoctorShift::TYPE_REGULAR, DoctorShift::TYPE_ADDITIONAL],
+            'dateStart<' => $endUtc->format('Y-m-d H:i:s'),
+            'dateEnd>' => $startUtc->format('Y-m-d H:i:s'),
+        ];
+
+        if ($clinicId) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<DoctorShift> $shifts */
+        $shifts = $this->entityManager
+            ->getRDBRepository(DoctorShift::ENTITY_TYPE)
+            ->where($where)
+            ->find();
+
+        foreach ($shifts as $shift) {
+            $doctorId = (string) ($shift->getDoctorId() ?? '');
+
+            if ($doctorId === '') {
+                continue;
+            }
+
+            $this->addDoctorOption(
+                $doctors,
+                $doctorId,
+                (string) ($shift->get('doctorName') ?: $this->resolveUserName($doctorId))
+            );
+        }
+
+        $appointmentWhere = [
+            'deleted' => false,
+            'dateStart<' => $endUtc->format('Y-m-d H:i:s'),
+            'dateEnd>' => $startUtc->format('Y-m-d H:i:s'),
+        ];
+
+        if ($clinicId) {
+            $appointmentWhere['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<Appointment> $appointments */
+        $appointments = $this->entityManager
+            ->getRDBRepository(Appointment::ENTITY_TYPE)
+            ->where($appointmentWhere)
+            ->find();
+
+        foreach ($appointments as $appointment) {
+            $doctorId = (string) ($appointment->get('doctorId') ?? '');
+
+            if ($doctorId === '') {
+                continue;
+            }
+
+            $this->addDoctorOption(
+                $doctors,
+                $doctorId,
+                (string) ($appointment->get('doctorName') ?: $this->resolveUserName($doctorId))
+            );
+        }
+
+        $rows = array_values($doctors);
+        usort(
+            $rows,
+            static fn (array $a, array $b): int => strcasecmp((string) $a['name'], (string) $b['name'])
+        );
+
+        return $rows;
+    }
+
+    /**
+     * @param array<string, array{id: string, name: string}> $doctors
+     */
+    private function addDoctorOption(array &$doctors, string $doctorId, string $doctorName): void
+    {
+        if ($doctorId === '' || isset($doctors[$doctorId])) {
+            return;
+        }
+
+        $doctors[$doctorId] = [
+            'id' => $doctorId,
+            'name' => trim($doctorName) !== '' ? trim($doctorName) : $doctorId,
+        ];
+    }
+
+    private function resolveUserName(string $userId): string
+    {
+        if ($userId === '') {
+            return '';
+        }
+
+        try {
+            /** @var User|null $user */
+            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+        } catch (\Throwable) {
+            return '';
+        }
+
+        if (!$user) {
+            return '';
+        }
+
+        return (string) ($user->get('name') ?: '');
+    }
+
+    private function loadService(?string $serviceId): ?Service
+    {
+        if (!$serviceId) {
+            return null;
+        }
+
+        /** @var Service|null $service */
+        $service = $this->entityManager->getEntityById(Service::ENTITY_TYPE, $serviceId);
+
+        if (!$service || !$service->isActive()) {
+            return null;
+        }
+
+        return $service;
+    }
+
+    /**
+     * @param iterable<Cabinet> $cabinets
+     * @return list<Cabinet>
+     */
+    private function filterCabinetsByService(iterable $cabinets, ?Service $service): array
+    {
+        $matcher = new CabinetRequirementMatcher();
+        $rows = [];
+
+        foreach ($cabinets as $cabinet) {
+            if (!$matcher->matches($service, $cabinet)) {
+                continue;
+            }
+
+            $rows[] = $cabinet;
+        }
+
+        return $rows;
     }
 
     /**
@@ -163,7 +404,8 @@ class CalendarService
         int $limit = 50,
         ?string $excludeAppointmentId = null,
         ?string $parentType = null,
-        ?string $parentId = null
+        ?string $parentId = null,
+        ?string $serviceId = null
     ): array {
         if ($durationMinutes <= 0) {
             throw new BadRequest('durationMinutes must be positive');
@@ -188,12 +430,14 @@ class CalendarService
         if ($cabinetId) {
             $cabWhere['id'] = $cabinetId;
         }
+        $service = $this->loadService($serviceId);
         /** @var iterable<Cabinet> $cabinets */
         $cabinets = $this->entityManager
             ->getRDBRepository(Cabinet::ENTITY_TYPE)
             ->where($cabWhere)
             ->order('order', 'ASC')
             ->find();
+        $cabinets = $this->filterCabinetsByService($cabinets, $service);
 
         $appWhere = [
             'deleted' => false,

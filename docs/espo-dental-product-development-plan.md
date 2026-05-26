@@ -293,8 +293,8 @@ Status:
 - product decisions are locked in `docs/espo-dental-product-decisions.md`;
 - Stage B first operational language pass is complete for the active
   SimpleStom-style workspaces;
-- the next concrete work can start with Stage C calendar/booking and then the
-  deeper Stage D patient workspace refinements.
+- Stage C calendar/booking has started with visible doctor/cabinet filters and
+  a toggleable day-control panel.
 
 ### Stage B - UX Language And Visual Consistency
 
@@ -340,6 +340,27 @@ Done when:
 
 - admin can book a new patient from a free slot in one modal and conflicts are explained in human terms.
 
+Status:
+
+- first calendar-fidelity pass added visible doctor and cabinet filters to the
+  feedback calendar dashlet and `Appointment` list workspace;
+- the calendar and feedback-panel endpoints now accept matching doctor/cabinet
+  filters;
+- the right control panel can be hidden and switched between waitlist and
+  cancelled/no-show rows;
+- service/procedure requirement filtering now uses JSON-backed
+  `Service.cabinetRequirements` to narrow compatible cabinets and validate slot
+  booking;
+- slot booking now receives the actual free window from the calendar grid,
+  warns when a selected service duration does not fit and translates common
+  booking conflicts into operational Russian messages;
+- the right day-control panel now includes active reschedule requests as a
+  first-class `Переносы` mode on both calendar surfaces;
+- automated and browser verification passed for the service filter, booking
+  payload, calendar render path and free-cell slot modal on 2026-05-26;
+- remaining Stage C work is limited to larger calendar semantics such as the
+  deferred month view and request approval/rejection actions.
+
 ### Stage D - Patient Workspace
 
 Goal: make the patient card a real clinical/administrative workspace.
@@ -355,6 +376,18 @@ Deliverables:
 Done when:
 
 - admin and doctor can answer "who is this patient, what is next, what is risky, what is owed" from one workspace.
+
+Status:
+
+- first enrichment pass on 2026-05-27 added age, preferred communication
+  channel, next appointment, VIP/restriction/questionnaire/debt alert badges
+  and open invoice balance to the SimpleStom patient workspace endpoint and
+  dashlet;
+- patient workspace tabs now include direct links to source `Appointment`,
+  `Visit`, `HealthQuestionnaire`, open `Invoice` and `Payment` records while
+  preserving the clinical/finance separation;
+- browser smoke confirmed the enriched patient workspace and tab source links
+  render on the dashboard.
 
 ### Stage E - Questionnaire And Portal Hardening
 
@@ -422,6 +455,19 @@ Done when:
 
 - administrator can close the financial part after a visit and every correction is traceable.
 
+Status:
+
+- 2026-05-27 pass added selected-doctor filtering through the invoice-linked
+  visit, selected-invoice action panel and a cash-desk payment wizard entry
+  point that posts to `Payment/action/accept`;
+- browser smoke confirmed the dashboard cash desk renders the doctor selector,
+  selected invoice details and disabled payment state for already paid invoices;
+- demo seed now includes a payable open invoice so the cash desk payment wizard
+  can be accepted in browser smoke without depending on stale local data;
+- browser smoke with the refreshed demo seed confirmed the payment wizard opens
+  with the invoice balance and payment methods, then closes on cancel without
+  posting a payment.
+
 ### Stage I - Reports, Payroll And Management
 
 Goal: give the manager useful control without external spreadsheets.
@@ -472,10 +518,11 @@ Done when:
 
 ## 6. Suggested Immediate Next Step
 
-Start with Stage A and B together:
+Continue Pass 4:
 
-1. Close product decisions that affect data shape.
-2. Do one UI language/visual pass over the existing SimpleStom-style workspaces.
-3. Then move into Stage C calendar/booking, because it is the highest-frequency workflow and it unlocks the rest of the clinic day.
+1. Build the inventory workspace over warehouses, lots,
+   cabinet issue rows, expiry alerts and future-order candidates.
+2. Keep the existing inventory report dashlet as a manager summary, not as the
+   primary stock workspace.
 
 Do not start with reports or AI. They are valuable, but the core product value is still the daily operational chain: call, book, remind, arrive, questionnaire, visit, invoice, payment, stock, next appointment.

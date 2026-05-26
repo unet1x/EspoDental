@@ -25,6 +25,15 @@ final class SimpleStomServicesInventoryTest extends TestCase
         $this->assertArrayHasKey('unit', $serviceMaterial['fields']);
         $this->assertArrayHasKey('isRequired', $serviceMaterial['fields']);
         $this->assertTrue($serviceMaterial['fields']['isRequired']['default']);
+
+        $matcher = $this->readFile(self::MODULE_ROOT . '/Tools/CabinetRequirementMatcher.php');
+        $seeder = $this->readFile(self::MODULE_ROOT . '/Tools/Installer/WorkspaceSeeder.php');
+
+        $this->assertStringContainsString('class CabinetRequirementMatcher', $matcher);
+        $this->assertStringContainsString('equipmentAny', $matcher);
+        $this->assertStringContainsString('cabinetRequirements', $seeder);
+        $this->assertStringContainsString("'хирургия'", $seeder);
+        $this->assertStringContainsString("'ортодонтия'", $seeder);
     }
 
     public function testMaterialExposesPurchasingAndExpirationSemantics(): void

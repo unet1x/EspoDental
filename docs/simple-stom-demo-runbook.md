@@ -1,6 +1,6 @@
 # SimpleStom Demo Environment Runbook
 
-Last updated: 2026-05-26
+Last updated: 2026-05-27
 
 Stage 13 provides a local demo database for reviewing the migrated
 SimpleStom-style workflows inside EspoDental.
@@ -39,7 +39,8 @@ markers and can be re-run after rebuilds.
   pending reschedule request;
 - finished visit with service line, material consumption and tooth-chart
   snapshot;
-- invoice, card payment, advance payment and closed cash shift;
+- paid invoice, payable open invoice, card payment, advance payment and closed
+  cash shift;
 - FEFO lot, warehouse/cabinet stock movement, visit consumption and low-stock
   alert;
 - payroll profile, manual bonus and salary entry with `sourceBreakdown`;
@@ -60,7 +61,8 @@ out of scope for this migration run.
    questionnaire flags, tooth chart, clinical history and finance.
 5. Open the future appointment and review the pending portal reschedule request.
 6. Open the finished visit, service/material lines and tooth-chart snapshot.
-7. Open Cash Desk, review the invoice-first payment data and closed shift.
+7. Open Cash Desk, review the invoice-first payment data, select the payable
+   invoice, open the payment wizard and cancel it, then review the closed shift.
 8. Open Inventory, review the FEFO lot, cabinet issue, consumption and low-stock
    alert.
 9. Open Report Definitions and Payroll, then inspect the salary entry source

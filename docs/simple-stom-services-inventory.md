@@ -17,6 +17,19 @@ EspoDental keeps the existing catalog entities:
 `cabinetRequirements` JSON contract so booking and slot filtering can express
 equipment or room requirements without replacing the existing `Cabinet` model.
 
+The current JSON-backed requirement contract is intentionally small:
+
+- `equipmentAny`: at least one token must be found in cabinet name, code,
+  equipment or description;
+- `equipmentAll` / `requiredEquipment`: every token must be present;
+- `cabinetIds`: explicit compatible cabinet ids;
+- `cabinetCodes`: explicit compatible cabinet codes.
+
+The shared matcher is
+`src/files/custom/Espo/Modules/EspoDental/Tools/CabinetRequirementMatcher.php`.
+The bootstrap service catalog now seeds basic equipment requirements for
+orthodontics, hygiene, therapy, surgery, orthopedics and implant consultation.
+
 `ServiceMaterial` remains the service material norm table and now records:
 
 - required quantity;

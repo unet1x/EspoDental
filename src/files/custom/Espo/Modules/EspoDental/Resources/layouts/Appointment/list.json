@@ -3,6 +3,7 @@
     {"name": "parent", "link": true},
     {"name": "doctor"},
     {"name": "cabinet"},
+    {"name": "service"},
     {"name": "status"},
     {"name": "duration"}
 ]

@@ -39,15 +39,28 @@ class SyncMaterialLines
             return;
         }
 
-        $normMaterialIds = $this->syncNorms($entity, (string) $visitId, (string) $serviceId);
-        $this->removeStaleAutoLines($entity, $normMaterialIds);
+        $saveOptions = [];
+        if (!empty($options['espodentalAllowFinishedVisitCorrection'])) {
+            $saveOptions['espodentalAllowFinishedVisitCorrection'] = true;
+        }
+
+        $normMaterialIds = $this->syncNorms($entity, (string) $visitId, (string) $serviceId, $saveOptions);
+        $this->removeStaleAutoLines($entity, $normMaterialIds, $saveOptions);
     }
 
     /**
      * @return list<string>
      */
-    private function syncNorms(VisitServiceLine $line, string $visitId, string $serviceId): array
-    {
+    /**
+     * @param array<string, mixed> $saveOptions
+     * @return list<string>
+     */
+    private function syncNorms(
+        VisitServiceLine $line,
+        string $visitId,
+        string $serviceId,
+        array $saveOptions
+    ): array {
         /** @var iterable<ServiceMaterial> $norms */
         $norms = $this->entityManager
             ->getRDBRepository(ServiceMaterial::ENTITY_TYPE)
@@ -108,7 +121,7 @@ class SyncMaterialLines
                 $materialLine->set('quantity', $plannedQuantity);
             }
 
-            $this->entityManager->saveEntity($materialLine);
+            $this->entityManager->saveEntity($materialLine, $saveOptions);
         }
 
         return array_values(array_unique($materialIds));
@@ -116,9 +129,13 @@ class SyncMaterialLines
 
     /**
      * @param list<string> $currentMaterialIds
+     * @param array<string, mixed> $saveOptions
      */
-    private function removeStaleAutoLines(VisitServiceLine $line, array $currentMaterialIds): void
-    {
+    private function removeStaleAutoLines(
+        VisitServiceLine $line,
+        array $currentMaterialIds,
+        array $saveOptions
+    ): void {
         /** @var iterable<VisitMaterialLine> $lines */
         $lines = $this->entityManager
             ->getRDBRepository(VisitMaterialLine::ENTITY_TYPE)
@@ -134,7 +151,7 @@ class SyncMaterialLines
                 continue;
             }
 
-            $this->entityManager->removeEntity($materialLine);
+            $this->entityManager->removeEntity($materialLine, $saveOptions);
         }
     }
 }

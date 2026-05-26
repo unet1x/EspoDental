@@ -14,6 +14,7 @@
         "doctor": "Врач",
         "assistant": "Ассистент",
         "cabinet": "Кабинет",
+        "service": "Услуга",
         "clinic": "Клиника",
         "dateStart": "Дата и время",
         "dateEnd": "Окончание",
@@ -46,6 +47,7 @@
         "doctor": "Врач",
         "assistant": "Ассистент",
         "cabinet": "Кабинет",
+        "service": "Услуга",
         "clinic": "Клиника",
         "visit": "Приём",
         "statusLogs": "История статусов"

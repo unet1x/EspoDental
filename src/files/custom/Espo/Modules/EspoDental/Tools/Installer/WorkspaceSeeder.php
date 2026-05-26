@@ -56,16 +56,16 @@ class WorkspaceSeeder
         ['name' => 'Дуга NiTi', 'code' => 'ORTH-NITI', 'categoryCode' => 'ORTH', 'unit' => 'pcs', 'price' => 500, 'minStock' => 20, 'criticalStock' => 10, 'openingStock' => 60],
     ];
 
-    /** @var list<array{name: string, code: string, categoryCode: string, price: float, duration: int, color: string}> */
+    /** @var list<array{name: string, code: string, categoryCode: string, price: float, duration: int, color: string, cabinetRequirements?: array<string, mixed>}> */
     private const SERVICES = [
         ['name' => 'Первичная консультация', 'code' => 'DIA-001', 'categoryCode' => 'DIA', 'price' => 1500, 'duration' => 30, 'color' => '#9467BD'],
-        ['name' => 'Консультация ортодонта', 'code' => 'ORD-001', 'categoryCode' => 'ORD', 'price' => 2000, 'duration' => 30, 'color' => '#2CA02C'],
-        ['name' => 'Профессиональная гигиена', 'code' => 'HYG-001', 'categoryCode' => 'HYG', 'price' => 4500, 'duration' => 60, 'color' => '#17BECF'],
-        ['name' => 'Лечение кариеса', 'code' => 'THE-001', 'categoryCode' => 'THE', 'price' => 6000, 'duration' => 60, 'color' => '#1F77B4'],
-        ['name' => 'Временная пломба', 'code' => 'THE-002', 'categoryCode' => 'THE', 'price' => 1500, 'duration' => 30, 'color' => '#1F77B4'],
-        ['name' => 'Удаление зуба простое', 'code' => 'SUR-001', 'categoryCode' => 'SUR', 'price' => 4500, 'duration' => 45, 'color' => '#D62728'],
-        ['name' => 'Снятие слепков / сканирование', 'code' => 'ORP-001', 'categoryCode' => 'ORP', 'price' => 2500, 'duration' => 30, 'color' => '#FF7F0E'],
-        ['name' => 'Консультация имплантолога', 'code' => 'IMP-001', 'categoryCode' => 'IMP', 'price' => 2000, 'duration' => 30, 'color' => '#8C564B'],
+        ['name' => 'Консультация ортодонта', 'code' => 'ORD-001', 'categoryCode' => 'ORD', 'price' => 2000, 'duration' => 30, 'color' => '#2CA02C', 'cabinetRequirements' => ['equipmentAny' => ['ортодонтия']]],
+        ['name' => 'Профессиональная гигиена', 'code' => 'HYG-001', 'categoryCode' => 'HYG', 'price' => 4500, 'duration' => 60, 'color' => '#17BECF', 'cabinetRequirements' => ['equipmentAny' => ['гигиена']]],
+        ['name' => 'Лечение кариеса', 'code' => 'THE-001', 'categoryCode' => 'THE', 'price' => 6000, 'duration' => 60, 'color' => '#1F77B4', 'cabinetRequirements' => ['equipmentAny' => ['терапия']]],
+        ['name' => 'Временная пломба', 'code' => 'THE-002', 'categoryCode' => 'THE', 'price' => 1500, 'duration' => 30, 'color' => '#1F77B4', 'cabinetRequirements' => ['equipmentAny' => ['терапия']]],
+        ['name' => 'Удаление зуба простое', 'code' => 'SUR-001', 'categoryCode' => 'SUR', 'price' => 4500, 'duration' => 45, 'color' => '#D62728', 'cabinetRequirements' => ['equipmentAny' => ['хирургия']]],
+        ['name' => 'Снятие слепков / сканирование', 'code' => 'ORP-001', 'categoryCode' => 'ORP', 'price' => 2500, 'duration' => 30, 'color' => '#FF7F0E', 'cabinetRequirements' => ['equipmentAny' => ['ортопедия']]],
+        ['name' => 'Консультация имплантолога', 'code' => 'IMP-001', 'categoryCode' => 'IMP', 'price' => 2000, 'duration' => 30, 'color' => '#8C564B', 'cabinetRequirements' => ['equipmentAny' => ['хирургия', 'ортопедия']]],
         ['name' => 'Детский осмотр', 'code' => 'PED-001', 'categoryCode' => 'PED', 'price' => 1500, 'duration' => 30, 'color' => '#E377C2'],
     ];
 
@@ -483,7 +483,14 @@ class WorkspaceSeeder
         $created = 0;
 
         foreach (self::SERVICES as $cfg) {
-            if ($this->findOneByCode('Service', $cfg['code'])) {
+            $existing = $this->findOneByCode('Service', $cfg['code']);
+            if ($existing) {
+                if (($cfg['cabinetRequirements'] ?? []) !== [] && !$existing->get('cabinetRequirements')) {
+                    $existing->set('cabinetRequirements', $cfg['cabinetRequirements']);
+                    $this->entityManager->saveEntity($existing);
+                    $created++;
+                }
+
                 continue;
             }
 
@@ -501,6 +508,7 @@ class WorkspaceSeeder
                 'priceCurrency' => 'RUB',
                 'duration' => $cfg['duration'],
                 'color' => $cfg['color'],
+                'cabinetRequirements' => $cfg['cabinetRequirements'] ?? [],
                 'isActive' => true,
                 'vatRate' => 0,
             ]);

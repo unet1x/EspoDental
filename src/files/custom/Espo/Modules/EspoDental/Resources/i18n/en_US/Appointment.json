@@ -14,6 +14,7 @@
         "doctor": "Doctor",
         "assistant": "Assistant",
         "cabinet": "Cabinet",
+        "service": "Service",
         "clinic": "Clinic",
         "dateStart": "Date and time",
         "dateEnd": "End",
@@ -46,6 +47,7 @@
         "doctor": "Doctor",
         "assistant": "Assistant",
         "cabinet": "Cabinet",
+        "service": "Service",
         "clinic": "Clinic",
         "visit": "Visit",
         "statusLogs": "Status Logs"

@@ -84,6 +84,7 @@ define('espo-dental:views/dashlets/patient-workspace', [
                 patients.forEach((function (patient) {
                     var status = patient.status || 'patient';
                     var meta = [];
+                    var nextAppointment = this.formatAppointment(patient.nextAppointment);
 
                     if (patient.phone) {
                         meta.push(patient.phone);
@@ -91,8 +92,14 @@ define('espo-dental:views/dashlets/patient-workspace', [
                     if (patient.cardNumber) {
                         meta.push('карта ' + patient.cardNumber);
                     }
-                    if (patient.balance) {
-                        meta.push((patient.balance > 0 ? 'аванс ' : 'долг ') + patient.balance);
+                    if (patient.age !== null && typeof patient.age !== 'undefined') {
+                        meta.push(patient.age + ' лет');
+                    }
+                    if (patient.preferredChannel) {
+                        meta.push('связь: ' + this.formatChannel(patient.preferredChannel));
+                    }
+                    if (nextAppointment) {
+                        meta.push('следующая: ' + nextAppointment);
                     }
 
                     body += '<li class="espo-dental-stom-list__item">' +
@@ -105,7 +112,10 @@ define('espo-dental:views/dashlets/patient-workspace', [
                             SimpleStomUi.escapeHtml(meta.join(' · ')) +
                             '</span>' : '') +
                         '</span>' +
+                        '<span class="espo-dental-stom-toolbar" style="margin:0;justify-content:flex-end">' +
+                        this.renderAlertBadges(patient.alerts || [], 3) +
                         SimpleStomUi.badge(patient.id === this.selectedId ? 'выбран' : status, patient.id === this.selectedId ? 'primary' : status) +
+                        '</span>' +
                         '</li>';
                 }).bind(this));
                 body += '</ul>';
@@ -138,10 +148,10 @@ define('espo-dental:views/dashlets/patient-workspace', [
                 '</div>' +
                 '<div class="espo-dental-stom-toolbar" style="margin-top:8px">' +
                 SimpleStomUi.badge(patient.status || 'patient', patient.status || 'patient') +
-                (patient.isChild ? SimpleStomUi.badge('ребенок', 'info') : '') +
-                (patient.balance ? SimpleStomUi.badge(patient.balance > 0 ? 'аванс ' + patient.balance : 'долг ' + Math.abs(patient.balance), patient.balance > 0 ? 'success' : 'danger') : '') +
+                this.renderAlertBadges(patient.alerts || [], 8) +
                 '</div>' +
                 '</div>';
+            body += this.renderPatientHighlights(patient);
             body += this.renderTabs(patient.tabs || {});
 
             this.$el.find('[data-name="patientDetail"]').html(SimpleStomUi.panel({
@@ -176,20 +186,107 @@ define('espo-dental:views/dashlets/patient-workspace', [
             return html;
         },
 
+        renderPatientHighlights: function (patient) {
+            var rows = [
+                ['Возраст', patient.age !== null && typeof patient.age !== 'undefined' ? patient.age + ' лет' : ''],
+                ['Канал связи', this.formatChannel(patient.preferredChannel || '')],
+                ['Ближайшая запись', this.formatAppointment(patient.nextAppointment) || 'нет'],
+                ['Баланс', this.formatBalance(patient.balance)]
+            ];
+            var html = '<table class="espo-dental-stom-table" style="margin-bottom:10px"><tbody>';
+
+            rows.forEach(function (row) {
+                html += '<tr><th>' + SimpleStomUi.escapeHtml(row[0]) + '</th><td>' +
+                    SimpleStomUi.escapeHtml(row[1] || '') +
+                    '</td></tr>';
+            });
+
+            return html + '</tbody></table>';
+        },
+
         renderTabBody: function (tab, data) {
             if (tab === 'toothChart') {
                 return this.renderToothChartTab(data);
             }
 
             if (tab === 'clinicalHistory') {
-                return this.renderKeyValues('Только клиническая история, без оплат и финансовых сумм', data);
+                return this.renderClinicalHistoryTab(data);
+            }
+
+            if (tab === 'files') {
+                return this.renderFilesTab(data);
             }
 
             if (tab === 'finance') {
-                return this.renderKeyValues('Только расчеты и оплаты, без клинических записей', data);
+                return this.renderFinanceTab(data);
             }
 
             return this.renderKeyValues('', data);
+        },
+
+        renderClinicalHistoryTab: function (data) {
+            var html = this.renderKeyValues(
+                'Только клиническая история, без оплат и финансовых сумм',
+                this.pickSummary(data, ['nextAppointment', 'futureAppointmentCount', 'visitCount', 'latestVisitId'])
+            );
+
+            html += this.renderLinkedRows('Записи', data.recentAppointments || [], 'Записей нет.');
+            html += this.renderLinkedRows('Приемы', data.recentVisits || [], 'Приемов нет.');
+
+            return html;
+        },
+
+        renderFilesTab: function (data) {
+            var html = this.renderKeyValues('', this.pickSummary(data, ['visitPhotoCount', 'questionnaireCount']));
+
+            html += this.renderLinkedRows('Анкеты', data.recentQuestionnaires || [], 'Анкет нет.');
+
+            return html;
+        },
+
+        renderFinanceTab: function (data) {
+            var html = this.renderKeyValues(
+                'Только расчеты и оплаты, без клинических записей',
+                this.pickSummary(data, ['openInvoiceCount', 'openInvoiceBalance', 'paymentCount'])
+            );
+
+            html += this.renderLinkedRows('Открытые счета', data.openInvoices || [], 'Открытых счетов нет.');
+            html += this.renderLinkedRows('Платежи', data.recentPayments || [], 'Платежей нет.');
+
+            return html;
+        },
+
+        renderLinkedRows: function (title, rows, emptyMessage) {
+            var html = '<div class="espo-dental-stom-muted" style="font-weight:700;margin:10px 0 6px">' +
+                SimpleStomUi.escapeHtml(title) +
+                '</div>';
+
+            if (!rows.length) {
+                return html + SimpleStomUi.emptyState(emptyMessage);
+            }
+
+            html += '<table class="espo-dental-stom-table"><tbody>';
+            rows.forEach(function (row) {
+                var href = row.entityType && row.id
+                    ? '#' + encodeURIComponent(row.entityType) + '/view/' + encodeURIComponent(row.id)
+                    : '#';
+                var amount = row.amount || row.amount === 0 ? ' · ' + row.amount : '';
+
+                html += '<tr>' +
+                    '<td><a href="' + href + '">' + SimpleStomUi.escapeHtml(row.label || row.id || '') + '</a>' +
+                    '<div class="espo-dental-stom-muted">' +
+                    SimpleStomUi.escapeHtml(String(row.date || '').slice(0, 16)) +
+                    (row.doctorName ? ' · ' + SimpleStomUi.escapeHtml(row.doctorName) : '') +
+                    amount +
+                    '</div></td>' +
+                    '<td style="text-align:right">' +
+                    (row.status ? SimpleStomUi.badge(row.status, row.status) : '') +
+                    '</td>' +
+                    '</tr>';
+            });
+            html += '</tbody></table>';
+
+            return html;
         },
 
         renderToothChartTab: function (data) {
@@ -273,12 +370,92 @@ define('espo-dental:views/dashlets/patient-workspace', [
             html += '<table class="espo-dental-stom-table"><tbody>';
             Object.keys(data).forEach(function (key) {
                 html += '<tr><th>' + SimpleStomUi.escapeHtml(SimpleStomUi.label(key, 'field')) + '</th><td>' +
-                    SimpleStomUi.escapeHtml(SimpleStomUi.formatValue(data[key] === null ? '' : data[key])) +
+                    SimpleStomUi.escapeHtml(this.formatKeyValue(data[key])) +
                     '</td></tr>';
-            });
+            }, this);
             html += '</tbody></table>';
 
             return html;
+        },
+
+        renderAlertBadges: function (alerts, limit) {
+            var html = '';
+
+            (alerts || []).slice(0, limit || 3).forEach(function (alert) {
+                html += SimpleStomUi.badge(alert.label || alert.key || '', alert.tone || 'muted');
+            });
+
+            return html;
+        },
+
+        formatKeyValue: function (value) {
+            if (value === null || typeof value === 'undefined') {
+                return '';
+            }
+
+            if (typeof value === 'object') {
+                return this.formatAppointment(value);
+            }
+
+            return SimpleStomUi.formatValue(value);
+        },
+
+        formatAppointment: function (appointment) {
+            if (!appointment || !appointment.dateStart) {
+                return '';
+            }
+
+            var parts = [String(appointment.dateStart).slice(0, 16)];
+
+            if (appointment.serviceName) {
+                parts.push(appointment.serviceName);
+            }
+            if (appointment.doctorName) {
+                parts.push(appointment.doctorName);
+            }
+            if (appointment.cabinetName) {
+                parts.push(appointment.cabinetName);
+            }
+
+            return parts.join(' · ');
+        },
+
+        formatChannel: function (channel) {
+            var labels = {
+                email: 'email',
+                sms: 'SMS',
+                telegram: 'Telegram',
+                whatsapp: 'WhatsApp',
+                phone: 'телефон'
+            };
+
+            return labels[channel] || channel || '';
+        },
+
+        formatBalance: function (balance) {
+            balance = parseFloat(balance || 0);
+
+            if (balance > 0) {
+                return 'аванс ' + balance;
+            }
+
+            if (balance < 0) {
+                return 'долг ' + Math.abs(balance);
+            }
+
+            return '0';
+        },
+
+        pickSummary: function (data, keys) {
+            var out = {};
+
+            keys.forEach(function (key) {
+                if (Object.prototype.hasOwnProperty.call(data || {}, key)) {
+                    out[key] = data[key];
+                }
+            });
+
+            return out;
         },
 
         selectPatient: function (e) {

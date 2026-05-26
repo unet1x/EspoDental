@@ -254,6 +254,15 @@ class DemoSeeder
             'description' => 'DEMO SimpleStom finished appointment for visit, invoice and payroll.',
         ], $created);
 
+        $cashDeskPayable = $this->ensureAppointment('cash-desk-payable', 'Patient', $clinic, $users, $patients['adult'], $cabinet2, [
+            'dateStart' => (new DateTimeImmutable('yesterday 12:00:00'))->format('Y-m-d H:i:s'),
+            'dateEnd' => (new DateTimeImmutable('yesterday 12:30:00'))->format('Y-m-d H:i:s'),
+            'duration' => 1800,
+            'status' => 'finished',
+            'complaints' => 'Оплачиваемый демо-счет для проверки кассы.',
+            'description' => 'DEMO SimpleStom payable cash desk appointment.',
+        ], $created);
+
         $future = $this->ensureAppointment('future-reschedule', 'Patient', $clinic, $users, $patients['adult'], $cabinet1, [
             'dateStart' => (new DateTimeImmutable('tomorrow 11:00:00'))->format('Y-m-d H:i:s'),
             'dateEnd' => (new DateTimeImmutable('tomorrow 12:00:00'))->format('Y-m-d H:i:s'),
@@ -285,6 +294,7 @@ class DemoSeeder
             'created' => $created,
             'appointments' => [
                 'finished' => $finished,
+                'cashDeskPayable' => $cashDeskPayable,
                 'future' => $future,
                 'preliminary' => $preliminaryAppointment,
                 'cancelled' => $cancelled,
@@ -698,12 +708,122 @@ class DemoSeeder
             $createdPayments++;
         }
 
+        $payableResult = $this->ensurePayableCashDeskInvoice(
+            $clinic,
+            $users,
+            $patients,
+            $appointments['cashDeskPayable'],
+            $service
+        );
+
+        return [
+            'visits' => $createdVisits + $payableResult['visits'],
+            'clinicalLines' => $createdLines + $payableResult['clinicalLines'],
+            'invoices' => $createdInvoices + $payableResult['invoices'],
+            'payments' => $createdPayments,
+            'materialLine' => $materialLine,
+        ];
+    }
+
+    /**
+     * @return array{visits: int, clinicalLines: int, invoices: int}
+     */
+    private function ensurePayableCashDeskInvoice(
+        Entity $clinic,
+        array $users,
+        array $patients,
+        Entity $appointment,
+        ?Entity $service
+    ): array {
+        $createdVisits = 0;
+        $createdLines = 0;
+        $createdInvoices = 0;
+
+        $visit = $this->findOne('Visit', ['appointmentId' => $appointment->getId()]);
+        if (!$visit) {
+            $visit = $this->entityManager->getRDBRepository('Visit')->getNew();
+            $this->setValues($visit, [
+                'appointmentId' => $appointment->getId(),
+                'patientId' => $patients['adult']->getId(),
+                'doctorId' => $users['doctor']->getId(),
+                'assistantId' => $users['assistant']->getId(),
+                'cabinetId' => $appointment->get('cabinetId'),
+                'clinicId' => $clinic->getId(),
+                'status' => 'finished',
+                'complaints' => 'Оплачиваемый демо-счет для проверки кассы.',
+                'performed' => 'Контрольный прием для кассового wizard.',
+                'recommendations' => 'Оплатить счет на кассе.',
+                'startedAt' => $appointment->get('dateStart'),
+                'finishedAt' => $appointment->get('dateEnd'),
+            ]);
+            $this->entityManager->saveEntity($visit, ['espodentalAllowVisitCreate' => true]);
+            $createdVisits++;
+        }
+
+        $serviceLine = $service ? $this->findOne('VisitServiceLine', [
+            'visitId' => $visit->getId(),
+            'serviceId' => $service->getId(),
+            'notes' => 'DEMO SimpleStom payable cash desk service line.',
+        ]) : null;
+        if (!$serviceLine && $service) {
+            $serviceLine = $this->entityManager->getRDBRepository('VisitServiceLine')->getNew();
+            $this->setValues($serviceLine, [
+                'visitId' => $visit->getId(),
+                'serviceId' => $service->getId(),
+                'doctorId' => $users['doctor']->getId(),
+                'teethNumbers' => '16',
+                'quantity' => 1,
+                'discount' => 0,
+                'notes' => 'DEMO SimpleStom payable cash desk service line.',
+            ]);
+            $this->entityManager->saveEntity($serviceLine, ['espodentalAllowFinishedVisitCorrection' => true]);
+            $createdLines++;
+        }
+
+        $invoice = $this->findOne('Invoice', ['notes' => 'DEMO SimpleStom payable invoice for cash desk wizard.']);
+        if (!$invoice) {
+            $invoice = $this->entityManager->getRDBRepository('Invoice')->getNew();
+            $this->setValues($invoice, [
+                'patientId' => $patients['adult']->getId(),
+                'clinicId' => $clinic->getId(),
+                'visitId' => $visit->getId(),
+                'status' => 'issued',
+                'issuedAt' => $appointment->get('dateEnd'),
+                'dueDate' => (new DateTimeImmutable('+7 days'))->format('Y-m-d'),
+                'currency' => 'RUB',
+                'notes' => 'DEMO SimpleStom payable invoice for cash desk wizard.',
+            ]);
+            $this->entityManager->saveEntity($invoice, ['espodentalAllowInvoiceCreate' => true]);
+            $createdInvoices++;
+        }
+
+        $invoiceLine = $serviceLine ? $this->findOne('InvoiceLine', [
+            'invoiceId' => $invoice->getId(),
+            'sourceVisitServiceLineId' => $serviceLine->getId(),
+        ]) : null;
+        if (!$invoiceLine && $serviceLine && $service) {
+            $invoiceLine = $this->entityManager->getRDBRepository('InvoiceLine')->getNew();
+            $this->setValues($invoiceLine, [
+                'name' => (string) $service->get('name'),
+                'invoiceId' => $invoice->getId(),
+                'serviceId' => $service->getId(),
+                'doctorId' => $users['doctor']->getId(),
+                'teethNumbers' => '16',
+                'quantity' => 1,
+                'unitPrice' => (float) $service->get('price'),
+                'discount' => 0,
+                'vatRate' => 0,
+                'sourceVisitServiceLineId' => $serviceLine->getId(),
+                'notes' => 'DEMO SimpleStom payable invoice line.',
+            ]);
+            $this->entityManager->saveEntity($invoiceLine);
+            $createdInvoices++;
+        }
+
         return [
             'visits' => $createdVisits,
             'clinicalLines' => $createdLines,
             'invoices' => $createdInvoices,
-            'payments' => $createdPayments,
-            'materialLine' => $materialLine,
         ];
     }
 

@@ -1,6 +1,6 @@
 # EspoDental Current State
 
-Last updated: 2026-05-22
+Last updated: 2026-05-27
 
 This file is the handoff document for future development sessions. It describes
 what has been verified, what exists in metadata, and what still needs product
@@ -600,6 +600,94 @@ Verification completed after this slice:
   the past visit, `Patient/action/financials` showed balance/open debt/credit
   at zero, and the patient detail UI rendered the future appointment plus the
   completed payment row.
+- Post-parity calendar fidelity work on 2026-05-26 added visible doctor and
+  cabinet filters to the SimpleStom feedback calendar dashlet and the
+  `Appointment` list calendar workspace. `GET /EspoDental/Calendar/appointments`
+  now accepts `doctorId`, returns `filters.doctors` and `filters.cabinets`, and
+  still keeps drag/drop and resize delegated to the existing `ResourceGrid`.
+- Browser smoke on 2026-05-26 confirmed both calendar surfaces render the mini
+  date control, doctor filter, cabinet filter, resource grid and two-mode
+  day-control panel; the `Контроль дня` toggle hides the right column and
+  expands the grid area.
+- Verification on 2026-05-26 passed: PHP syntax checks for changed calendar
+  PHP files, JS syntax checks for changed calendar client views,
+  `vendor/bin/phpunit tests/SimpleStomCalendarFeedbackTest.php --no-coverage`,
+  related Phase 11/13/slot-booking tests, and the full
+  `vendor/bin/phpunit tests --no-coverage` suite with 420 tests and 5884
+  assertions.
+- The next Stage C slice on 2026-05-26 wired service/procedure filtering into
+  booking: `Appointment.service` stores the planned service,
+  `CalendarService` returns `filters.services`, free-slot and calendar requests
+  accept `serviceId`, and `CabinetRequirementMatcher` validates
+  `Service.cabinetRequirements` against cabinet id/code/equipment text.
+- The slot-booking modal now shows a service selector, applies the service
+  duration when possible and sends `serviceId` to
+  `POST /EspoDental/Appointment/bookFromSlot`; incompatible service/cabinet
+  combinations are rejected server-side.
+- Verification for the service/procedure filtering slice passed on 2026-05-26:
+  PHP syntax checks for the changed calendar/booking PHP files, JS syntax
+  checks for the changed client views, focused SimpleStom calendar/slot/service
+  tests, related Phase 11/13/20 checks, `git diff --check`, and the full
+  `vendor/bin/phpunit tests --no-coverage` suite with 421 tests and 5952
+  assertions.
+- Browser smoke on 2026-05-26 confirmed that both `Appointment` workspace and
+  dashboard calendar render the service filter, load service options from the
+  calendar payload and keep the resource calendar rendering after a service is
+  selected.
+- Stage C slot-booking polish on 2026-05-26 removed the fixed three-hour grid
+  assumption: `ResourceGrid` now passes the visible free window to the booking
+  modal, considering the next blocking appointment for the cabinet or selected
+  doctor and the configured calendar day end.
+- The slot-booking modal now guarantees its body container is rendered, shows
+  the available-window hint, disables booking when the selected service duration
+  does not fit and translates common backend booking conflicts into operational
+  Russian messages.
+- Browser smoke after `update-app-timestamp` confirmed that clicking a free
+  dashboard calendar cell opens the slot-booking modal with service options,
+  duration choices and the available-window hint.
+- The final Stage C panel pass on 2026-05-26 added active
+  `AppointmentRescheduleRequest` visibility to the feedback panel payload and a
+  third `Переносы` mode in both dashboard calendar and `Appointment` workspace.
+  The list is scoped to the selected date plus current clinic/doctor/cabinet
+  filters.
+- Browser smoke after the panel pass confirmed the `Переносы` mode appears and
+  switches correctly on both calendar surfaces.
+- Stage D patient workspace enrichment started on 2026-05-27. The
+  `PatientWorkspaceService` payload now includes patient age, preferred channel,
+  operational alert badges, next active future appointment and open invoice
+  balance. The dashboard patient workspace renders those fields in the list and
+  compact patient card while keeping clinical and finance tabs separate.
+- The Stage D tab pass added direct source-record links from the patient
+  workspace to recent `Appointment`, `Visit`, `HealthQuestionnaire`, open
+  `Invoice` and `Payment` records. Clinical source rows stay in the clinical
+  tab, questionnaire rows stay in files and invoice/payment rows stay in
+  finance.
+- Focused patient workspace and related patient panel tests passed, and browser
+  smoke after `update-app-timestamp` confirmed the dashboard workspace shows
+  channel, nearest appointment, alert markers and source links in the patient
+  tabs. The full `vendor/bin/phpunit tests --no-coverage` suite passed with 421
+  tests and 5977 assertions.
+- Cash desk Pass 3 work continued on 2026-05-27. `CashDeskService::getWorkspace`
+  now returns doctor options, filters invoice rows by the linked `Visit.doctor`
+  when `doctorId` is selected and returns a `selectedInvoice` payload. The
+  dashboard cash desk renders an explicit doctor selector, selected-invoice
+  action panel and direct payment wizard entry point through
+  `Payment/action/accept`.
+- Focused cash desk tests passed, and browser smoke after `update-app-timestamp`
+  confirmed the dashboard cash desk shows the doctor selector, filters the demo
+  invoices by doctor, highlights one selected invoice and disables payment for a
+  paid invoice. The full `vendor/bin/phpunit tests --no-coverage` suite passed
+  with 421 tests and 5993 assertions.
+- The local demo seed now creates a separate payable open invoice marked
+  `DEMO SimpleStom payable invoice for cash desk wizard.` so the cash desk
+  payment dialog can be browser-smoked by opening and cancelling it without
+  posting a payment. Rerunning `espo-dental-demo-seed` created the open demo
+  invoice, and browser smoke confirmed the unpaid-only cash desk selects it,
+  opens the payment wizard with balance `6000.00` and closes the dialog on
+  cancel. A related hook fix now propagates
+  `espodentalAllowFinishedVisitCorrection` from `VisitServiceLine` material norm
+  sync to child `VisitMaterialLine` saves/removes, preserving the finished-visit
+  guard for ordinary UI edits while keeping the demo seed idempotent.
 
 ## 6. Known Gaps Against Product Spec
 

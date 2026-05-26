@@ -1,6 +1,6 @@
 # SimpleStom Migration Plan
 
-Last updated: 2026-05-26
+Last updated: 2026-05-27
 
 This document tracks the read-only analysis of `/Users/unet1x/Codex/SimpleStom`
 and the step-by-step plan for moving its product behavior and visual language
@@ -450,6 +450,30 @@ Work:
 - add a compact mini-calendar/right-column toggle instead of rendering waiting
   and cancelled panels as two always-visible sections.
 
+Status:
+
+- visible doctor/cabinet filters were added to the feedback calendar dashlet and
+  the `Appointment` list calendar workspace;
+- `CalendarService::getDayData` and `CalendarFeedbackService::getFeedbackPanel`
+  now accept the same doctor/cabinet filter contract;
+- the right control panel is toggleable and switches between waitlist and
+  cancelled/no-show rows;
+- service filtering now uses `Service.cabinetRequirements` and
+  `CabinetRequirementMatcher` to narrow compatible cabinet columns and validate
+  slot booking payloads;
+- the slot-booking modal now receives the actual free window from the calendar
+  grid, warns when the selected service duration does not fit and translates
+  common booking conflicts into reception-facing Russian messages;
+- the day-control panel now has a third `Переносы` mode backed by
+  `AppointmentRescheduleRequest::ACTIVE_STATUSES` for the selected date and
+  current clinic/doctor/cabinet filters;
+- verification passed with focused SimpleStom calendar/slot/service tests,
+  related Phase 11/13/20 checks, full PHPUnit, JS/PHP syntax checks and browser
+  smoke for the service filter on both calendar surfaces and the free-cell
+  slot-booking modal path;
+- month view is still deferred by design until the selected-doctor shift rules
+  are represented in a month grid without misleading slot availability.
+
 ### Pass 3 - Patient And Cash Desk Workflows
 
 Goal: move beyond the shell views and make the workflows feel like the
@@ -462,6 +486,28 @@ Work:
 - make the cash desk select a doctor explicitly and show a selected-invoice
   action panel before opening payment actions;
 - implement a real payment wizard entry point from the cash desk dashlet.
+
+Status:
+
+- first Stage D patient-workspace enrichment pass is complete: rows and compact
+  patient card now show age, preferred channel, alert badges, next appointment
+  and open invoice balance while preserving the split clinical/finance tabs;
+- patient workspace tabs now expose direct links back to the source
+  `Appointment`, `Visit`, `HealthQuestionnaire`, `Invoice` and `Payment`
+  records without mixing clinical and finance data;
+- browser smoke confirmed the enriched dashboard patient workspace renders the
+  new summary data and tab source links after app timestamp refresh;
+- cash desk selected-doctor filtering and selected-invoice action panel are
+  implemented: the backend filters invoices through linked visit doctors, and
+  the dashlet shows the selected invoice with payment/open invoice/patient/visit
+  actions;
+- browser smoke confirmed the dashboard cash desk renders the doctor filter and
+  selected-invoice panel, and keeps payment disabled for already paid invoices;
+- demo seed now includes a payable open invoice for payment-wizard browser
+  acceptance without relying on stale local financial data;
+- after rerunning demo seed, browser smoke confirmed the cash desk payment
+  wizard opens for the payable invoice and can be cancelled without posting a
+  payment.
 
 ### Pass 4 - Inventory Workspace
 

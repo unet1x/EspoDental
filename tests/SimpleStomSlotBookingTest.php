@@ -47,6 +47,8 @@ final class SimpleStomSlotBookingTest extends TestCase
     {
         $modal = $this->readFile(self::CLIENT_ROOT . '/views/appointment/modals/slot-booking.js');
         $calendar = $this->readFile(self::CLIENT_ROOT . '/views/dashlets/resource-calendar-feedback.js');
+        $list = $this->readFile(self::CLIENT_ROOT . '/views/appointment/record/list.js');
+        $grid = $this->readFile(self::CLIENT_ROOT . '/lib/resource-grid.js');
 
         foreach (
             [
@@ -54,17 +56,80 @@ final class SimpleStomSlotBookingTest extends TestCase
                 'EspoDental/Appointment/bookFromSlot',
                 'buildDurationOptions',
                 'freeWindowMinutes',
+                'ensureContainer',
                 'selectCandidate',
                 'Новый предварительный пациент',
                 'durationMinutes',
+                'serviceId',
+                'applySelectedServiceDuration',
+                'Услуга',
+                'durationHint',
+                'getBookingErrorMessage',
+                'Этот кабинет не подходит для выбранной услуги',
+                'У врача уже есть запись на это время',
             ] as $needle
         ) {
             $this->assertStringContainsString($needle, $modal);
         }
 
+        $this->assertStringContainsString('calculateFreeWindowMinutes', $grid);
+        $this->assertStringContainsString('sameDoctor', $grid);
+        $this->assertStringContainsString('self.calculateFreeWindowMinutes(cabinetId, start)', $grid);
         $this->assertStringContainsString('espo-dental:views/appointment/modals/slot-booking', $calendar);
         $this->assertStringContainsString('createView', $calendar);
         $this->assertStringContainsString('openSlotBooking', $calendar);
+        $this->assertStringContainsString('serviceOptions', $calendar);
+        $this->assertStringContainsString('serviceId: this.serviceId', $calendar);
+        $this->assertStringContainsString('doctorId: self.doctorId', $calendar);
+        $this->assertStringContainsString('doctorId: self.doctorId', $list);
+        $this->assertStringNotContainsString('freeWindowMinutes: 180', $calendar);
+        $this->assertStringNotContainsString('freeWindowMinutes: 180', $list);
+    }
+
+    public function testSlotBookingRespectsServiceCabinetRequirements(): void
+    {
+        $service = $this->readFile(self::MODULE_ROOT . '/Services/AppointmentService.php');
+        $calendar = $this->readFile(self::MODULE_ROOT . '/Services/CalendarService.php');
+        $controller = $this->readFile(self::MODULE_ROOT . '/Controllers/Calendar.php');
+        $matcher = $this->readFile(self::MODULE_ROOT . '/Tools/CabinetRequirementMatcher.php');
+        $appointment = json_decode(
+            $this->readFile(self::MODULE_ROOT . '/Resources/metadata/entityDefs/Appointment.json'),
+            true,
+            flags: JSON_THROW_ON_ERROR
+        );
+
+        foreach (
+            [
+                'resolveBookingService',
+                'assertCabinetMatchesServiceRequirements',
+                'CabinetRequirementMatcher',
+                'Selected cabinet does not match service requirements',
+                "set('serviceId'",
+            ] as $needle
+        ) {
+            $this->assertStringContainsString($needle, $service);
+        }
+
+        foreach (
+            [
+                '?string $serviceId = null',
+                'loadServiceFilterOptions',
+                'filterCabinetsByService',
+                "'services' => \$serviceFilterData",
+                'CabinetRequirementMatcher',
+            ] as $needle
+        ) {
+            $this->assertStringContainsString($needle, $calendar);
+        }
+
+        $this->assertStringContainsString('getQueryParam(\'serviceId\')', $controller);
+        $this->assertStringContainsString('equipmentAny', $matcher);
+        $this->assertStringContainsString('cabinetCodes', $matcher);
+        $this->assertStringContainsString('cabinetIds', $matcher);
+
+        $this->assertSame('link', $appointment['fields']['service']['type']);
+        $this->assertSame('belongsTo', $appointment['links']['service']['type']);
+        $this->assertSame('Service', $appointment['links']['service']['entity']);
     }
 
     public function testDocsTrackSlotBookingStage(): void

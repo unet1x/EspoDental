@@ -11,10 +11,13 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
 use Espo\Modules\EspoDental\Entities\Appointment;
+use Espo\Modules\EspoDental\Entities\Cabinet;
 use Espo\Modules\EspoDental\Entities\Patient;
 use Espo\Modules\EspoDental\Entities\PreliminaryPatient;
+use Espo\Modules\EspoDental\Entities\Service;
 use Espo\Modules\EspoDental\Entities\ToothChartSnapshot;
 use Espo\Modules\EspoDental\Entities\Visit;
+use Espo\Modules\EspoDental\Tools\CabinetRequirementMatcher;
 use Espo\ORM\Entity;
 
 class AppointmentService
@@ -60,10 +63,13 @@ class AppointmentService
         $clinicId = trim((string) ($data['clinicId'] ?? ''));
         $cabinetId = trim((string) ($data['cabinetId'] ?? ''));
         $doctorId = trim((string) ($data['doctorId'] ?? ''));
+        $service = $this->resolveBookingService($data);
 
         if ($clinicId === '' || $cabinetId === '' || $doctorId === '') {
             throw new BadRequest('clinicId, cabinetId and doctorId are required');
         }
+
+        $this->assertCabinetMatchesServiceRequirements($service, $cabinetId);
 
         $start = $this->parseSlotStart(
             (string) ($data['localStart'] ?? $data['dateStart'] ?? ''),
@@ -79,6 +85,9 @@ class AppointmentService
         $appointment->set('clinicId', $clinicId);
         $appointment->set('cabinetId', $cabinetId);
         $appointment->set('doctorId', $doctorId);
+        if ($service) {
+            $appointment->set('serviceId', $service->getId());
+        }
         $appointment->set('dateStart', $start->format('Y-m-d H:i:s'));
         $appointment->set('duration', $durationMinutes * 60);
         $appointment->set('status', Appointment::STATUS_PLANNED);
@@ -93,6 +102,49 @@ class AppointmentService
             'parentId' => $parentId,
             'createdPreliminaryPatient' => $createdPreliminaryPatient,
         ];
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     */
+    private function resolveBookingService(array $data): ?Service
+    {
+        $serviceId = trim((string) ($data['serviceId'] ?? ''));
+
+        if ($serviceId === '') {
+            return null;
+        }
+
+        /** @var Service|null $service */
+        $service = $this->entityManager->getEntityById(Service::ENTITY_TYPE, $serviceId);
+
+        if (!$service) {
+            throw new NotFound('Service not found');
+        }
+
+        if (!$service->isActive()) {
+            throw new Conflict('Selected service is inactive');
+        }
+
+        return $service;
+    }
+
+    private function assertCabinetMatchesServiceRequirements(?Service $service, string $cabinetId): void
+    {
+        if (!$service) {
+            return;
+        }
+
+        /** @var Cabinet|null $cabinet */
+        $cabinet = $this->entityManager->getEntityById(Cabinet::ENTITY_TYPE, $cabinetId);
+
+        if (!$cabinet) {
+            throw new NotFound('Cabinet not found');
+        }
+
+        if (!(new CabinetRequirementMatcher())->matches($service, $cabinet)) {
+            throw new Conflict('Selected cabinet does not match service requirements');
+        }
     }
 
     /**

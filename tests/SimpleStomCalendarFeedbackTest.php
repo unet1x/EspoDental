@@ -64,6 +64,9 @@ final class SimpleStomCalendarFeedbackTest extends TestCase
                 'resolveParentName',
                 "'patientName' => \$parentName",
                 'AppointmentWaitlistEntry::STATUS_WAITING',
+                'AppointmentRescheduleRequest::ACTIVE_STATUSES',
+                'getRescheduleRequests',
+                "'rescheduleRequests'",
                 'Appointment::STATUS_CANCELLED',
                 'Appointment::STATUS_NO_SHOW',
             ] as $needle
@@ -90,6 +93,64 @@ final class SimpleStomCalendarFeedbackTest extends TestCase
         $this->assertStringContainsString('renderWaitlist', $view);
         $this->assertStringContainsString('renderCancelled', $view);
         $this->assertStringContainsString('openSlotBooking', $view);
+    }
+
+    public function testCalendarPostParityFiltersAndRightPanelToggleExist(): void
+    {
+        $service = $this->readFile(self::MODULE_ROOT . '/Services/CalendarService.php');
+        $feedbackService = $this->readFile(self::MODULE_ROOT . '/Services/CalendarFeedbackService.php');
+        $controller = $this->readFile(self::MODULE_ROOT . '/Controllers/Calendar.php');
+        $dashletView = $this->readFile(self::CLIENT_ROOT . '/views/dashlets/resource-calendar-feedback.js');
+        $listView = $this->readFile(self::CLIENT_ROOT . '/views/appointment/record/list.js');
+
+        foreach (
+            [
+                '?string $doctorId = null',
+                "\$appointmentWhere['doctorId'] = \$doctorId",
+                'loadDoctorFilterOptions',
+                "'filters' =>",
+                "'doctors' => \$doctorFilterData",
+            ] as $needle
+        ) {
+            $this->assertStringContainsString($needle, $service);
+        }
+
+        foreach (
+            [
+                'doctorId',
+                'cabinetId',
+                "\$where['requestedDoctorId'] = \$doctorId",
+                "\$where['preferredCabinetId'] = \$cabinetId",
+            ] as $needle
+        ) {
+            $this->assertStringContainsString($needle, $feedbackService);
+        }
+
+        foreach (['doctorId', 'cabinetId', 'getQueryParam', 'getFeedbackPanel('] as $needle) {
+            $this->assertStringContainsString($needle, $controller);
+        }
+
+        foreach ([$dashletView, $listView] as $view) {
+            foreach (
+                [
+                    'data-name="mini-calendar"',
+                    'doctor-filter',
+                    'cabinet-filter',
+                    'service-filter',
+                    'toggle-side-panel',
+                    'sidePanelVisible',
+                    'sidePanelMode',
+                    'calendar-panel-mode',
+                    'renderFeedbackModeButtons',
+                    'renderRescheduleRequests',
+                    'rescheduleRequests',
+                    'Заявки на перенос',
+                    'buildCalendarRequestData',
+                ] as $needle
+            ) {
+                $this->assertStringContainsString($needle, $view);
+            }
+        }
     }
 
     public function testAppointmentListOpensAsCalendarWorkspace(): void

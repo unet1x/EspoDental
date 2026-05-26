@@ -8,7 +8,7 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.listenTo(this.model, 'change:doctorId change:cabinetId change:clinicId change:duration', function (model, value, options) {
+            this.listenTo(this.model, 'change:doctorId change:cabinetId change:clinicId change:serviceId change:duration', function (model, value, options) {
                 if (!options || !options.espoDentalApplyingSlot) {
                     this.clearSelectedSlot();
                 }
@@ -154,6 +154,9 @@ define('espo-dental:views/appointment/fields/date-start-slot', [
 
             if (this.model.get('clinicId')) {
                 data.clinicId = this.model.get('clinicId');
+            }
+            if (this.model.get('serviceId')) {
+                data.serviceId = this.model.get('serviceId');
             }
 
             if (this.model.id) {

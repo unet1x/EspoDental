@@ -8,7 +8,9 @@ use DateTimeImmutable;
 use DateTimeZone;
 use Espo\Core\ORM\EntityManager;
 use Espo\Modules\EspoDental\Entities\Appointment;
+use Espo\Modules\EspoDental\Entities\AppointmentRescheduleRequest;
 use Espo\Modules\EspoDental\Entities\AppointmentWaitlistEntry;
+use Espo\Modules\EspoDental\Entities\Patient;
 
 class CalendarFeedbackService
 {
@@ -19,24 +21,37 @@ class CalendarFeedbackService
     /**
      * @return array<string, mixed>
      */
-    public function getFeedbackPanel(string $date, ?string $clinicId = null, int $limit = 12): array
-    {
+    public function getFeedbackPanel(
+        string $date,
+        ?string $clinicId = null,
+        int $limit = 12,
+        ?string $doctorId = null,
+        ?string $cabinetId = null
+    ): array {
         $day = $this->normalizeDate($date);
         $limit = max(1, min(30, $limit));
 
         return [
             'date' => $day->format('Y-m-d'),
             'clinicId' => $clinicId,
-            'waitlist' => $this->getWaitlist($day, $clinicId, $limit),
-            'cancelled' => $this->getCancelledAppointments($day, $clinicId, $limit),
+            'doctorId' => $doctorId,
+            'cabinetId' => $cabinetId,
+            'waitlist' => $this->getWaitlist($day, $clinicId, $limit, $doctorId, $cabinetId),
+            'cancelled' => $this->getCancelledAppointments($day, $clinicId, $limit, $doctorId, $cabinetId),
+            'rescheduleRequests' => $this->getRescheduleRequests($day, $clinicId, $limit, $doctorId, $cabinetId),
         ];
     }
 
     /**
      * @return list<array<string, mixed>>
      */
-    private function getWaitlist(DateTimeImmutable $day, ?string $clinicId, int $limit): array
-    {
+    private function getWaitlist(
+        DateTimeImmutable $day,
+        ?string $clinicId,
+        int $limit,
+        ?string $doctorId,
+        ?string $cabinetId
+    ): array {
         $where = [
             'deleted' => false,
             'status' => [
@@ -47,6 +62,12 @@ class CalendarFeedbackService
 
         if ($clinicId) {
             $where['clinicId'] = $clinicId;
+        }
+        if ($doctorId) {
+            $where['requestedDoctorId'] = $doctorId;
+        }
+        if ($cabinetId) {
+            $where['preferredCabinetId'] = $cabinetId;
         }
 
         /** @var iterable<AppointmentWaitlistEntry> $entries */
@@ -101,8 +122,82 @@ class CalendarFeedbackService
     /**
      * @return list<array<string, mixed>>
      */
-    private function getCancelledAppointments(DateTimeImmutable $day, ?string $clinicId, int $limit): array
-    {
+    private function getRescheduleRequests(
+        DateTimeImmutable $day,
+        ?string $clinicId,
+        int $limit,
+        ?string $doctorId,
+        ?string $cabinetId
+    ): array {
+        $from = $day->setTime(0, 0);
+        $to = $from->modify('+1 day');
+        $where = [
+            'deleted' => false,
+            'status' => AppointmentRescheduleRequest::ACTIVE_STATUSES,
+            'requestedStartAt>=' => $from->format('Y-m-d H:i:s'),
+            'requestedStartAt<' => $to->format('Y-m-d H:i:s'),
+        ];
+
+        if ($clinicId) {
+            $where['requestedClinicId'] = $clinicId;
+        }
+        if ($doctorId) {
+            $where['requestedDoctorId'] = $doctorId;
+        }
+        if ($cabinetId) {
+            $where['requestedCabinetId'] = $cabinetId;
+        }
+
+        /** @var iterable<AppointmentRescheduleRequest> $requests */
+        $requests = $this->entityManager
+            ->getRDBRepository(AppointmentRescheduleRequest::ENTITY_TYPE)
+            ->where($where)
+            ->order('createdAt', 'ASC')
+            ->find();
+
+        $rows = [];
+        foreach ($requests as $request) {
+            $patientName = $this->resolveParentName(
+                Patient::ENTITY_TYPE,
+                (string) ($request->get('patientId') ?? ''),
+                (string) ($request->get('patientName') ?: $request->get('name'))
+            );
+
+            $rows[] = [
+                'id' => (string) $request->getId(),
+                'name' => (string) ($request->get('name') ?? ''),
+                'status' => (string) ($request->get('status') ?? ''),
+                'appointmentId' => (string) ($request->get('appointmentId') ?? ''),
+                'patientId' => (string) ($request->get('patientId') ?? ''),
+                'patientName' => $patientName,
+                'requestedStartAt' => (string) ($request->get('requestedStartAt') ?? ''),
+                'requestedEndAt' => (string) ($request->get('requestedEndAt') ?? ''),
+                'requestedDoctorId' => (string) ($request->get('requestedDoctorId') ?? ''),
+                'requestedDoctorName' => (string) ($request->get('requestedDoctorName') ?? ''),
+                'requestedCabinetId' => (string) ($request->get('requestedCabinetId') ?? ''),
+                'requestedCabinetName' => (string) ($request->get('requestedCabinetName') ?? ''),
+                'source' => (string) ($request->get('source') ?? ''),
+                'patientComment' => (string) ($request->get('patientComment') ?? ''),
+            ];
+
+            if (count($rows) >= $limit) {
+                break;
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function getCancelledAppointments(
+        DateTimeImmutable $day,
+        ?string $clinicId,
+        int $limit,
+        ?string $doctorId,
+        ?string $cabinetId
+    ): array {
         $from = $day->setTime(0, 0);
         $to = $from->modify('+1 day');
 
@@ -115,6 +210,12 @@ class CalendarFeedbackService
 
         if ($clinicId) {
             $where['clinicId'] = $clinicId;
+        }
+        if ($doctorId) {
+            $where['doctorId'] = $doctorId;
+        }
+        if ($cabinetId) {
+            $where['cabinetId'] = $cabinetId;
         }
 
         /** @var iterable<Appointment> $appointments */

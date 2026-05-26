@@ -53,6 +53,8 @@ final class SimpleStomDemoEnvironmentTest extends TestCase
                 'ToothChartSnapshot',
                 'InvoiceLine',
                 'Payment',
+                'DEMO SimpleStom payable invoice for cash desk wizard.',
+                'DEMO SimpleStom payable cash desk appointment.',
                 'CashShift',
                 'InventoryStockLot',
                 'StockMovement',

@@ -70,6 +70,9 @@ final class Phase18ClinicalVisitMaterialFlowTest extends TestCase
         $this->assertStringContainsString('plannedQuantity', $code);
         $this->assertStringContainsString('isAutoCreated', $code);
         $this->assertStringContainsString('removeStaleAutoLines', $code);
+        $this->assertStringContainsString('$saveOptions[\'espodentalAllowFinishedVisitCorrection\'] = true;', $code);
+        $this->assertStringContainsString('$this->entityManager->saveEntity($materialLine, $saveOptions);', $code);
+        $this->assertStringContainsString('$this->entityManager->removeEntity($materialLine, $saveOptions);', $code);
     }
 
     public function testServiceLinePriceAlwaysFollowsCatalog(): void

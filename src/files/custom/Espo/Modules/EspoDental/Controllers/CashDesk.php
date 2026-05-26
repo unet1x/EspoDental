@@ -29,7 +29,8 @@ class CashDesk
             $request->getQueryParam('clinicId') ? (string) $request->getQueryParam('clinicId') : null,
             $request->getQueryParam('doctorId') ? (string) $request->getQueryParam('doctorId') : null,
             $request->getQueryParam('unpaidOnly') !== 'false',
-            (int) ($request->getQueryParam('limit') ?? 40)
+            (int) ($request->getQueryParam('limit') ?? 40),
+            $request->getQueryParam('selectedInvoiceId') ? (string) $request->getQueryParam('selectedInvoiceId') : null
         );
     }
 
