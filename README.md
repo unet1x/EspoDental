@@ -175,6 +175,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   local LLM assistant boundary, prompt contract and approval workflow
 - [docs/proxmox-vm-migration.md](docs/proxmox-vm-migration.md) — AOOSTAR WTR
   MAX / Proxmox VM migration and backup/restore runbook
+- [docs/simple-stom-migration-plan.md](docs/simple-stom-migration-plan.md) —
+  SimpleStom feature and visual migration plan
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
