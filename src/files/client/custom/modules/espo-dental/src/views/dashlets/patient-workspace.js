@@ -163,6 +163,10 @@ define('espo-dental:views/dashlets/patient-workspace', [
         },
 
         renderTabBody: function (tab, data) {
+            if (tab === 'toothChart') {
+                return this.renderToothChartTab(data);
+            }
+
             if (tab === 'clinicalHistory') {
                 return this.renderKeyValues('Clinical only', data);
             }
@@ -172,6 +176,80 @@ define('espo-dental:views/dashlets/patient-workspace', [
             }
 
             return this.renderKeyValues('', data);
+        },
+
+        renderToothChartTab: function (data) {
+            data = data || {};
+
+            if (!data.snapshotCount) {
+                return SimpleStomUi.emptyState('No tooth chart snapshots.');
+            }
+
+            var current = data.currentSnapshot || {};
+            var html = '<div class="espo-dental-stom-toolbar" style="margin-bottom:8px">' +
+                '<span class="espo-dental-stom-badge espo-dental-stom-badge--primary">' +
+                SimpleStomUi.escapeHtml(current.dentitionType || 'adult') +
+                '</span>' +
+                '<span class="espo-dental-stom-muted">' +
+                SimpleStomUi.escapeHtml(current.recordedAt || '') +
+                (current.doctorName ? ' · ' + SimpleStomUi.escapeHtml(current.doctorName) : '') +
+                '</span>' +
+                '</div>';
+
+            html += '<div style="margin-bottom:10px">';
+            html += this.renderSnapshotSummary(current);
+            html += '</div>';
+            html += this.renderRecentSnapshots(data.recentSnapshots || []);
+
+            return html;
+        },
+
+        renderSnapshotSummary: function (snapshot) {
+            var summary = snapshot.summary || [];
+
+            if (!summary.length) {
+                return SimpleStomUi.emptyState('Current snapshot has no marked conditions.');
+            }
+
+            var html = '<table class="espo-dental-stom-table"><thead><tr>' +
+                '<th>Tooth</th><th>Surface</th><th>State</th><th>Note</th>' +
+                '</tr></thead><tbody>';
+
+            summary.forEach(function (row) {
+                html += '<tr>' +
+                    '<td>' + SimpleStomUi.escapeHtml(row.tooth || '') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(row.surface || 'whole') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(row.condition || '') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(row.note || '') + '</td>' +
+                    '</tr>';
+            });
+            html += '</tbody></table>';
+
+            return html;
+        },
+
+        renderRecentSnapshots: function (snapshots) {
+            if (!snapshots.length) {
+                return '';
+            }
+
+            var html = '<div class="espo-dental-stom-muted" style="margin-bottom:6px">History</div>' +
+                '<table class="espo-dental-stom-table"><thead><tr>' +
+                '<th>Date</th><th>Dentition</th><th>Visit</th><th>Doctor</th><th>Annotated</th>' +
+                '</tr></thead><tbody>';
+
+            snapshots.forEach(function (snapshot) {
+                html += '<tr data-tooth-chart-snapshot="' + SimpleStomUi.escapeHtml(snapshot.id || '') + '">' +
+                    '<td>' + SimpleStomUi.escapeHtml(snapshot.recordedAt || '') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(snapshot.dentitionType || '') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(snapshot.visitName || '') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(snapshot.doctorName || '') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(snapshot.annotatedTeeth || 0) + '</td>' +
+                    '</tr>';
+            });
+            html += '</tbody></table>';
+
+            return html;
         },
 
         renderKeyValues: function (prefix, data) {

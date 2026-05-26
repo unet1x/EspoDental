@@ -51,6 +51,8 @@ Stage 7 questionnaire and portal rules are locked in
 [`docs/simple-stom-questionnaire-portal.md`](simple-stom-questionnaire-portal.md).
 Stage 8 doctor reception workspace rules are locked in
 [`docs/simple-stom-reception-workspace.md`](simple-stom-reception-workspace.md).
+Stage 9 tooth chart rules are locked in
+[`docs/simple-stom-tooth-chart-contract.md`](simple-stom-tooth-chart-contract.md).
 
 Important visual reference order:
 
@@ -381,7 +383,7 @@ Verification:
 | 6. Patients workspace | Completed | Added `PatientWorkspaceService`, `GET /EspoDental/Patient/workspace`, a scoped split patient workspace dashlet and role dashboard placement. |
 | 7. Questionnaire and portal | Completed | Added child-aware questionnaire schema, client-side RU/EN/ES language switching, ES/RU PDF rules, portal sessions/events and public future-appointment/reschedule request endpoints. |
 | 8. Doctor reception workspace | Completed | Added reception workspace API, autosave, `VisitNoteTemplate`, SimpleStom-style Visit detail panel and locked finished-visit editing rules. |
-| 9. Tooth chart contract | Pending | Existing renderer is the target baseline. |
+| 9. Tooth chart contract | Completed | Added whole-tooth state editing, veneer/sealant surface rules, bridge/removed-tooth visual behavior and in-place patient workspace snapshot history. |
 | 10. Services and inventory | Pending | Warehouse/lot model is the largest data gap. |
 | 11. Cash desk and shift closing | Pending | Cash shift likely needs a new entity. |
 | 12. Reports, payroll and integrations | Pending | MCP/AI is excluded from this run. |

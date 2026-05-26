@@ -33,6 +33,20 @@ define('espo-dental:tooth-chart/renderer', [], function () {
         'sealant'
     ];
 
+    var WHOLE_TOOTH_CONDITIONS = [
+        'healthy',
+        'crown',
+        'bridge',
+        'implant',
+        'extracted',
+        'missing'
+    ];
+
+    var SURFACE_CONDITION_RULES = {
+        veneer: ['b'],
+        sealant: ['o']
+    };
+
     var SURFACES = [
         {key: 'o', label: 'surface_o', fallback: 'Occlusal / Incisal'},
         {key: 'm', label: 'surface_m', fallback: 'Mesial'},
@@ -168,6 +182,40 @@ define('espo-dental:tooth-chart/renderer', [], function () {
         return map;
     }
 
+    function isWholeToothCondition(condition) {
+        return WHOLE_TOOTH_CONDITIONS.indexOf(condition) !== -1;
+    }
+
+    function isSurfaceConditionAllowed(condition, surface) {
+        if (condition === 'healthy') {
+            return true;
+        }
+
+        if (SURFACE_CONDITION_RULES[condition]) {
+            return SURFACE_CONDITION_RULES[condition].indexOf(surface) !== -1;
+        }
+
+        return !isWholeToothCondition(condition);
+    }
+
+    function normalizeSurfaceCondition(condition, surface) {
+        condition = condition || 'healthy';
+
+        return isSurfaceConditionAllowed(condition, surface) ? condition : 'healthy';
+    }
+
+    function getWholeToothConditionItems(opts) {
+        return getConditionItems(opts).filter(function (condition) {
+            return isWholeToothCondition(condition.id);
+        });
+    }
+
+    function getSurfaceConditionItems(surface, opts) {
+        return getConditionItems(opts).filter(function (condition) {
+            return isSurfaceConditionAllowed(condition.id, surface);
+        });
+    }
+
     function getSurfaceItems(opts) {
         if (opts && opts._surfaceItems) {
             return opts._surfaceItems;
@@ -229,7 +277,7 @@ define('espo-dental:tooth-chart/renderer', [], function () {
             return state.surfaces[surface];
         }
 
-        if (surface === 'o' && state.c) {
+        if (surface === 'o' && state.c && !isWholeToothCondition(state.c)) {
             return {c: state.c, n: state.n || ''};
         }
 
@@ -237,7 +285,7 @@ define('espo-dental:tooth-chart/renderer', [], function () {
     }
 
     function surfaceCondition(state, surface) {
-        return surfaceState(state, surface).c || 'healthy';
+        return normalizeSurfaceCondition(surfaceState(state, surface).c || 'healthy', surface);
     }
 
     function dominantCondition(state, opts) {
@@ -337,6 +385,8 @@ define('espo-dental:tooth-chart/renderer', [], function () {
             'data-tooth': number
         });
         addClick(g, opts, number);
+        var condition = dominantCondition(state, opts);
+        var isRemoved = condition === 'extracted' || condition === 'missing';
 
         var d;
         var pulpD;
@@ -369,7 +419,8 @@ define('espo-dental:tooth-chart/renderer', [], function () {
             fill: '#fff',
             stroke: '#9dafba',
             'stroke-width': '1.6',
-            'stroke-linejoin': 'round'
+            'stroke-linejoin': 'round',
+            opacity: isRemoved ? '0.42' : '1'
         });
         g.appendChild(outline);
 
@@ -378,18 +429,23 @@ define('espo-dental:tooth-chart/renderer', [], function () {
             transform: 'translate(' + x + ' ' + y + ')',
             fill: '#ff6fa8',
             stroke: 'none',
-            opacity: '0.9'
+            opacity: isRemoved ? '0.22' : '0.9'
         });
         g.appendChild(pulp);
 
-        var condition = dominantCondition(state, opts);
+        if (condition === 'bridge') {
+            outline.setAttribute('stroke', conditionColor(condition, opts));
+            outline.setAttribute('stroke-width', '2.4');
+            outline.setAttribute('stroke-dasharray', '5 3');
+        }
+
         if (condition !== 'healthy') {
             var overlay = svg('circle', {
                 cx: x + 24,
                 cy: y + (upper ? 53 : 25),
                 r: isMolar(number) ? 12 : 10,
                 fill: conditionColor(condition, opts),
-                opacity: condition === 'missing' ? '0.55' : '0.9',
+                opacity: isRemoved ? '0.55' : '0.9',
                 stroke: condition === 'missing' ? '#8ea1ad' : 'none'
             });
             g.appendChild(overlay);
@@ -548,20 +604,44 @@ define('espo-dental:tooth-chart/renderer', [], function () {
         return [{top: ADULT_TOP, bottom: ADULT_BOTTOM}];
     }
 
+    function allowedTeeth(dentition) {
+        var layouts = chartLayouts(dentition);
+        var teeth = [];
+
+        layouts.forEach(function (layout) {
+            teeth = teeth.concat(layout.top, layout.bottom);
+        });
+
+        return teeth;
+    }
+
     function openEditor(opts, toothNumber) {
         var state = toothState(normalizeTeeth(opts.teeth), toothNumber);
         var toothNote = state.n || '';
         var surfaces = getSurfaceItems(opts);
-        var conditions = getConditionItems(opts);
+        var wholeCondition = isWholeToothCondition(state.c) ? state.c : 'healthy';
+        var wholeConditions = getWholeToothConditionItems(opts);
         var html = '<div class="espo-dental-tooth-editor" style="padding:12px">' +
             '<div style="margin-bottom:10px"><b>' +
             escapeHtml(translate(opts, 'Tooth', 'labels')) + ' ' + escapeHtml(toothNumber) +
             '</b></div>' +
             '<table class="table table-condensed" style="margin-bottom:10px"><tbody>';
 
+        html += '<tr>' +
+            '<td style="vertical-align:middle;width:28%">' + escapeHtml(translate(opts, 'Whole Tooth', 'labels')) + '</td>' +
+            '<td colspan="2"><select class="form-control input-sm" name="tooth-condition">';
+        wholeConditions.forEach(function (condition) {
+            var selected = condition.id === wholeCondition ? ' selected' : '';
+            html += '<option value="' + escapeHtml(condition.id) + '"' + selected + '>' +
+                escapeHtml(translateCondition(opts, condition.id)) +
+                '</option>';
+        });
+        html += '</select></td></tr>';
+
         surfaces.forEach(function (surface) {
-            var current = surfaceCondition(state, surface.key);
+            var current = normalizeSurfaceCondition(surfaceCondition(state, surface.key), surface.key);
             var note = surfaceState(state, surface.key).n || '';
+            var conditions = getSurfaceConditionItems(surface.key, opts);
             html += '<tr>' +
                 '<td style="vertical-align:middle;width:28%">' + escapeHtml(translateSurface(opts, surface)) + '</td>' +
                 '<td><select class="form-control input-sm" name="surface-' + surface.key + '-condition">';
@@ -722,9 +802,17 @@ define('espo-dental:tooth-chart/renderer', [], function () {
     function applyEditorChange(opts, toothNumber, $root) {
         var next = window.jQuery.extend(true, {}, normalizeTeeth(opts.teeth));
         var surfaces = {};
+        var toothCondition = $root.find('[name="tooth-condition"]').val() || 'healthy';
+
+        if (!isWholeToothCondition(toothCondition)) {
+            toothCondition = 'healthy';
+        }
 
         getSurfaceItems(opts).forEach(function (surface) {
-            var condition = $root.find('[name="surface-' + surface.key + '-condition"]').val() || 'healthy';
+            var condition = normalizeSurfaceCondition(
+                $root.find('[name="surface-' + surface.key + '-condition"]').val() || 'healthy',
+                surface.key
+            );
             var note = ($root.find('[name="surface-' + surface.key + '-note"]').val() || '').trim();
             if (condition !== 'healthy' || note !== '') {
                 surfaces[surface.key] = note !== '' ? {c: condition, n: note} : {c: condition};
@@ -733,6 +821,9 @@ define('espo-dental:tooth-chart/renderer', [], function () {
 
         var toothNote = ($root.find('[name="tooth-note"]').val() || '').trim();
         var state = {};
+        if (toothCondition !== 'healthy') {
+            state.c = toothCondition;
+        }
         if (Object.keys(surfaces).length) {
             state.surfaces = surfaces;
         }
@@ -813,6 +904,10 @@ define('espo-dental:tooth-chart/renderer', [], function () {
     }
 
     return {
+        allowedTeeth: allowedTeeth,
+        isSurfaceConditionAllowed: isSurfaceConditionAllowed,
+        wholeToothConditions: WHOLE_TOOTH_CONDITIONS,
+        surfaceConditionRules: SURFACE_CONDITION_RULES,
         render: function (container, opts) {
             opts = opts || {};
             opts._container = container;

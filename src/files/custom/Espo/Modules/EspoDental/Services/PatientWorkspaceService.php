@@ -137,10 +137,158 @@ class PatientWorkspaceService
      */
     private function getToothChartSummary(string $patientId): array
     {
+        $recentSnapshots = $this->getRecentToothChartSnapshots($patientId);
+
         return [
             'snapshotCount' => $this->countByPatient(ToothChartSnapshot::ENTITY_TYPE, $patientId),
-            'latestSnapshotId' => $this->latestId(ToothChartSnapshot::ENTITY_TYPE, $patientId, 'recordedAt'),
+            'latestSnapshotId' => $recentSnapshots[0]['id'] ?? null,
+            'currentSnapshot' => $recentSnapshots[0] ?? null,
+            'recentSnapshots' => $recentSnapshots,
         ];
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function getRecentToothChartSnapshots(string $patientId, int $limit = 5): array
+    {
+        /** @var iterable<ToothChartSnapshot> $snapshots */
+        $snapshots = $this->entityManager
+            ->getRDBRepository(ToothChartSnapshot::ENTITY_TYPE)
+            ->where([
+                'deleted' => false,
+                'patientId' => $patientId,
+            ])
+            ->order('recordedAt', 'DESC')
+            ->find();
+
+        $rows = [];
+        foreach ($snapshots as $snapshot) {
+            $rows[] = $this->summarizeToothChartSnapshot($snapshot);
+
+            if (count($rows) >= $limit) {
+                break;
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function summarizeToothChartSnapshot(ToothChartSnapshot $snapshot): array
+    {
+        $teeth = $snapshot->getTeeth();
+
+        return [
+            'id' => (string) $snapshot->getId(),
+            'name' => (string) ($snapshot->get('name') ?? ''),
+            'recordedAt' => (string) ($snapshot->get('recordedAt') ?? ''),
+            'dentitionType' => (string) ($snapshot->get('dentitionType') ?? ToothChartSnapshot::DENTITION_ADULT),
+            'visitId' => (string) ($snapshot->get('visitId') ?? ''),
+            'visitName' => (string) ($snapshot->get('visitName') ?? ''),
+            'doctorName' => (string) ($snapshot->get('doctorName') ?? ''),
+            'notes' => (string) ($snapshot->get('notes') ?? ''),
+            'annotatedTeeth' => $this->countAnnotatedTeeth($teeth),
+            'summary' => $this->summarizeTeeth($teeth),
+        ];
+    }
+
+    /**
+     * @param array<string, mixed> $teeth
+     * @return list<array{tooth: string, surface: string, condition: string, note: string}>
+     */
+    private function summarizeTeeth(array $teeth): array
+    {
+        $rows = [];
+        $surfaces = ['o', 'm', 'd', 'b', 'l'];
+
+        foreach ($teeth as $number => $state) {
+            if (is_object($state)) {
+                $state = (array) $state;
+            }
+            if (!is_array($state)) {
+                continue;
+            }
+
+            $wholeCondition = (string) ($state['c'] ?? 'healthy');
+            if ($wholeCondition !== '' && $wholeCondition !== 'healthy') {
+                $rows[] = [
+                    'tooth' => (string) $number,
+                    'surface' => '',
+                    'condition' => $wholeCondition,
+                    'note' => (string) ($state['n'] ?? ''),
+                ];
+            }
+
+            $surfaceStates = $state['surfaces'] ?? [];
+            if (is_object($surfaceStates)) {
+                $surfaceStates = (array) $surfaceStates;
+            }
+            if (!is_array($surfaceStates)) {
+                $surfaceStates = [];
+            }
+
+            foreach ($surfaces as $surface) {
+                $surfaceState = $surfaceStates[$surface] ?? null;
+                if (is_object($surfaceState)) {
+                    $surfaceState = (array) $surfaceState;
+                }
+                if (!is_array($surfaceState)) {
+                    continue;
+                }
+
+                $condition = (string) ($surfaceState['c'] ?? 'healthy');
+                $note = (string) ($surfaceState['n'] ?? '');
+                if ($condition === 'healthy' && $note === '') {
+                    continue;
+                }
+
+                $rows[] = [
+                    'tooth' => (string) $number,
+                    'surface' => strtoupper($surface),
+                    'condition' => $condition,
+                    'note' => $note,
+                ];
+
+                if (count($rows) >= 6) {
+                    return $rows;
+                }
+            }
+
+            if (count($rows) >= 6) {
+                return $rows;
+            }
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @param array<string, mixed> $teeth
+     */
+    private function countAnnotatedTeeth(array $teeth): int
+    {
+        $count = 0;
+
+        foreach ($teeth as $value) {
+            if (is_array($value) && $value !== []) {
+                $count++;
+                continue;
+            }
+
+            if (is_object($value) && (array) $value !== []) {
+                $count++;
+                continue;
+            }
+
+            if (is_string($value) && trim($value) !== '') {
+                $count++;
+            }
+        }
+
+        return $count;
     }
 
     /**
