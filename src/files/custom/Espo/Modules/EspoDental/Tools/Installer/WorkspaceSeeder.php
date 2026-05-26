@@ -768,6 +768,7 @@ class WorkspaceSeeder
             'PreliminaryPatient',
             'Patient',
             'Appointment',
+            'AppointmentWaitlistEntry',
             'DoctorShiftTemplate',
             'DoctorShift',
             'Visit',

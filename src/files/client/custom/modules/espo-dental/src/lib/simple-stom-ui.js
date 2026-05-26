@@ -31,6 +31,9 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         cancelled: 'espo-dental-stom-badge--muted',
         noShow: 'espo-dental-stom-badge--danger',
         no_show: 'espo-dental-stom-badge--danger',
+        normal: 'espo-dental-stom-badge--muted',
+        high: 'espo-dental-stom-badge--warning',
+        urgent: 'espo-dental-stom-badge--danger',
         low: 'espo-dental-stom-badge--warning',
         critical: 'espo-dental-stom-badge--danger'
     };

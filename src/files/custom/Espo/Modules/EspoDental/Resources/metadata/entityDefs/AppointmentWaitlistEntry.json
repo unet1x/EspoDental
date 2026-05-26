@@ -1,0 +1,73 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "required": true, "maxLength": 255},
+        "parent": {
+            "type": "linkParent",
+            "required": true,
+            "entityList": ["Patient", "PreliminaryPatient"]
+        },
+        "clinic": {"type": "link"},
+        "requestedDoctor": {"type": "link", "view": "views/fields/user"},
+        "preferredCabinet": {"type": "link"},
+        "appointment": {"type": "link", "readOnly": true},
+        "requestedDate": {"type": "date"},
+        "earliestDate": {"type": "date"},
+        "latestDate": {"type": "date"},
+        "status": {
+            "type": "enum",
+            "options": ["waiting", "offered", "booked", "cancelled", "expired"],
+            "default": "waiting",
+            "required": true,
+            "audited": true,
+            "style": {
+                "waiting": "warning",
+                "offered": "info",
+                "booked": "success",
+                "cancelled": "muted",
+                "expired": "danger"
+            }
+        },
+        "priority": {
+            "type": "enum",
+            "options": ["normal", "high", "urgent"],
+            "default": "normal",
+            "required": true,
+            "style": {
+                "normal": "default",
+                "high": "warning",
+                "urgent": "danger"
+            }
+        },
+        "reason": {"type": "text"},
+        "notes": {"type": "text"},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "assignedUser": {"type": "link", "view": "views/fields/assigned-user"},
+        "teams": {"type": "linkMultiple", "view": "views/fields/teams"}
+    },
+    "links": {
+        "parent": {"type": "belongsToParent", "foreign": "waitlistEntries"},
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "requestedDoctor": {"type": "belongsTo", "entity": "User"},
+        "preferredCabinet": {"type": "belongsTo", "entity": "Cabinet"},
+        "appointment": {"type": "belongsTo", "entity": "Appointment", "foreign": "waitlistEntries"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"},
+        "assignedUser": {"type": "belongsTo", "entity": "User"},
+        "teams": {"type": "hasMany", "entity": "Team", "relationName": "entityTeam", "layoutRelationshipsDisabled": true}
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc"
+    },
+    "indexes": {
+        "status": {"columns": ["status", "deleted"]},
+        "priority": {"columns": ["priority", "deleted"]},
+        "clinic_status": {"columns": ["clinicId", "status"]},
+        "requestedDoctor_status": {"columns": ["requestedDoctorId", "status"]},
+        "requestedDate": {"columns": ["requestedDate", "deleted"]},
+        "parent": {"columns": ["parentType", "parentId"]}
+    }
+}

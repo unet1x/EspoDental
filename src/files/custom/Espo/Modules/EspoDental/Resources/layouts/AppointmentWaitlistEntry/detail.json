@@ -1,0 +1,15 @@
+[
+    {
+        "label": "Overview",
+        "rows": [
+            [{"name": "name"}, {"name": "status"}],
+            [{"name": "parent"}, {"name": "priority"}],
+            [{"name": "clinic"}, {"name": "requestedDoctor"}],
+            [{"name": "preferredCabinet"}, {"name": "appointment"}],
+            [{"name": "requestedDate"}, {"name": "earliestDate"}],
+            [{"name": "latestDate"}, false],
+            [{"name": "reason", "fullWidth": true}],
+            [{"name": "notes", "fullWidth": true}]
+        ]
+    }
+]

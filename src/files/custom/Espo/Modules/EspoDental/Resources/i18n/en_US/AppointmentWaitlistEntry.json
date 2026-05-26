@@ -1,0 +1,47 @@
+{
+    "labels": {
+        "Create AppointmentWaitlistEntry": "Add to Waitlist",
+        "Overview": "Overview"
+    },
+    "fields": {
+        "name": "Name",
+        "parent": "Patient",
+        "clinic": "Clinic",
+        "requestedDoctor": "Requested Doctor",
+        "preferredCabinet": "Preferred Cabinet",
+        "appointment": "Booked Appointment",
+        "requestedDate": "Requested Date",
+        "earliestDate": "Earliest Date",
+        "latestDate": "Latest Date",
+        "status": "Status",
+        "priority": "Priority",
+        "reason": "Reason",
+        "notes": "Notes",
+        "assignedUser": "Assigned User",
+        "teams": "Teams"
+    },
+    "options": {
+        "status": {
+            "waiting": "Waiting",
+            "offered": "Offered",
+            "booked": "Booked",
+            "cancelled": "Cancelled",
+            "expired": "Expired"
+        },
+        "priority": {
+            "normal": "Normal",
+            "high": "High",
+            "urgent": "Urgent"
+        }
+    },
+    "links": {
+        "parent": "Patient",
+        "clinic": "Clinic",
+        "requestedDoctor": "Requested Doctor",
+        "preferredCabinet": "Preferred Cabinet",
+        "appointment": "Booked Appointment"
+    },
+    "boolFilters": {
+        "open": "Open"
+    }
+}

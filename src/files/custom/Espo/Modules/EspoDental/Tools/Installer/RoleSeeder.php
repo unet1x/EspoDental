@@ -28,7 +28,7 @@ class RoleSeeder
     public const SCOPES = [
         'Clinic', 'Cabinet',
         'PreliminaryPatient', 'Patient',
-        'Appointment', 'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog',
+        'Appointment', 'AppointmentWaitlistEntry', 'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog',
         'Visit', 'ServiceCategory', 'Service', 'VisitServiceLine', 'VisitMaterialLine',
         'ToothChartSnapshot', 'VisitPhoto',
         'Invoice', 'InvoiceLine', 'Payment',
@@ -201,6 +201,7 @@ class RoleSeeder
             $manager[$scope] = $row('yes', 'all', 'all', 'all', 'all');
         }
         $manager['AppointmentStatusLog'] = $row('no', 'all', 'no', 'no', 'no');
+        $manager['AppointmentWaitlistEntry'] = $row('yes', 'all', 'all', 'all', 'all');
         $manager['DoctorShiftTemplate']  = $row('yes', 'all', 'all', 'all', 'no');
         $manager['DoctorShift']          = $row('yes', 'all', 'all', 'all', 'no');
         $manager['ServiceCategory']      = $row('yes', 'all', 'all', 'all', 'no');
@@ -228,6 +229,7 @@ class RoleSeeder
             'PreliminaryPatient'   => $row('yes', 'team', 'team', 'no', 'team'),
             'Patient'              => $row('yes', 'team', 'team', 'no', 'team'),
             'Appointment'          => $row('yes', 'team', 'team', 'no', 'team'),
+            'AppointmentWaitlistEntry' => $row('no', 'team', 'no', 'no', 'team'),
             'DoctorShiftTemplate'  => $row('no', 'all', 'no', 'no', 'no'),
             'DoctorShift'          => $row('no', 'all', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
@@ -264,6 +266,7 @@ class RoleSeeder
             'PreliminaryPatient'   => $row('no', 'team', 'no', 'no', 'team'),
             'Patient'              => $row('no', 'team', 'no', 'no', 'team'),
             'Appointment'          => $row('no', 'team', 'no', 'no', 'team'),
+            'AppointmentWaitlistEntry' => $row('no', 'team', 'no', 'no', 'team'),
             'DoctorShiftTemplate'  => $row('no', 'all', 'no', 'no', 'no'),
             'DoctorShift'          => $row('no', 'all', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
@@ -300,6 +303,7 @@ class RoleSeeder
             'PreliminaryPatient'   => $row('yes', 'team', 'team', 'team', 'team'),
             'Patient'              => $row('yes', 'team', 'team', 'no', 'team'),
             'Appointment'          => $row('yes', 'team', 'team', 'team', 'team'),
+            'AppointmentWaitlistEntry' => $row('yes', 'team', 'team', 'team', 'team'),
             'DoctorShiftTemplate'  => $row('yes', 'all', 'all', 'no', 'no'),
             'DoctorShift'          => $row('yes', 'all', 'all', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'team', 'no', 'no', 'no'),
@@ -336,6 +340,7 @@ class RoleSeeder
             'PreliminaryPatient'   => $row('no', 'no', 'no', 'no', 'no'),
             'Patient'              => $row('no', 'no', 'no', 'no', 'no'),
             'Appointment'          => $row('no', 'no', 'no', 'no', 'no'),
+            'AppointmentWaitlistEntry' => $row('no', 'no', 'no', 'no', 'no'),
             'DoctorShiftTemplate'  => $row('no', 'no', 'no', 'no', 'no'),
             'DoctorShift'          => $row('no', 'no', 'no', 'no', 'no'),
             'AppointmentStatusLog' => $row('no', 'no', 'no', 'no', 'no'),

@@ -1,0 +1,47 @@
+{
+    "labels": {
+        "Create AppointmentWaitlistEntry": "Добавить в лист ожидания",
+        "Overview": "Обзор"
+    },
+    "fields": {
+        "name": "Название",
+        "parent": "Пациент",
+        "clinic": "Клиника",
+        "requestedDoctor": "Желаемый врач",
+        "preferredCabinet": "Предпочтительный кабинет",
+        "appointment": "Созданная запись",
+        "requestedDate": "Желаемая дата",
+        "earliestDate": "Не раньше",
+        "latestDate": "Не позже",
+        "status": "Статус",
+        "priority": "Приоритет",
+        "reason": "Причина",
+        "notes": "Заметки",
+        "assignedUser": "Ответственный",
+        "teams": "Команды"
+    },
+    "options": {
+        "status": {
+            "waiting": "Ожидает",
+            "offered": "Предложен слот",
+            "booked": "Записан",
+            "cancelled": "Отменён",
+            "expired": "Истёк"
+        },
+        "priority": {
+            "normal": "Обычный",
+            "high": "Высокий",
+            "urgent": "Срочный"
+        }
+    },
+    "links": {
+        "parent": "Пациент",
+        "clinic": "Клиника",
+        "requestedDoctor": "Желаемый врач",
+        "preferredCabinet": "Предпочтительный кабинет",
+        "appointment": "Созданная запись"
+    },
+    "boolFilters": {
+        "open": "Открытые"
+    }
+}

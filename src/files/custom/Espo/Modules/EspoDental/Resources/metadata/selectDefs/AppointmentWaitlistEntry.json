@@ -1,0 +1,5 @@
+{
+    "boolFilterClassNameMap": {
+        "open": "Espo\\Modules\\EspoDental\\Classes\\Select\\AppointmentWaitlistEntry\\BoolFilters\\Open"
+    }
+}

@@ -84,6 +84,11 @@
         "params": {"controller": "Calendar", "action": "freeSlots"}
     },
     {
+        "route": "/EspoDental/Calendar/feedbackPanel",
+        "method": "get",
+        "params": {"controller": "Calendar", "action": "feedbackPanel"}
+    },
+    {
         "route": "/EspoDental/Integration/tools",
         "method": "get",
         "params": {"controller": "Integration", "action": "tools"}

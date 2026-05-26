@@ -1,0 +1,7 @@
+[
+    {"name": "open", "type": "bool"},
+    {"name": "status", "type": "enum"},
+    {"name": "priority", "type": "enum"},
+    {"name": "requestedDoctor", "type": "link"},
+    {"name": "clinic", "type": "link"}
+]

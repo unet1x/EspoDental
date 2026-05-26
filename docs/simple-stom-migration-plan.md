@@ -41,6 +41,8 @@ Stage 2 visual rules are locked in
 [`docs/simple-stom-visual-system.md`](simple-stom-visual-system.md).
 Stage 3 dashboard action-center rules are locked in
 [`docs/simple-stom-dashboard-action-center.md`](simple-stom-dashboard-action-center.md).
+Stage 4 calendar feedback rules are locked in
+[`docs/simple-stom-calendar-feedback.md`](simple-stom-calendar-feedback.md).
 
 Important visual reference order:
 
@@ -194,6 +196,7 @@ Verification:
 
 - Calendar service tests for move/resize, timezone persistence and conflicts.
 - Client smoke for slot click, move and resize.
+- `tests/SimpleStomCalendarFeedbackTest.php`
 
 ### Stage 5 - Slot Booking Wizard
 
@@ -361,7 +364,7 @@ Verification:
 | 1. Gap matrix and acceptance scope | Completed | Gap matrix added in `docs/simple-stom-gap-matrix.md`; structural test added for migration docs and acceptance scope. |
 | 2. Visual system foundation | Completed | Added scoped UI-kit `simple-stom-ui.js`, documented tokens in `docs/simple-stom-visual-system.md`, and locked the contract with `tests/SimpleStomVisualSystemTest.php`. |
 | 3. Dashboard actions and tasks | Completed | Added `DashboardActionCenterService`, `GET /EspoDental/Dashboard/actionCenter`, scoped action-center dashlet and role dashboard template placement; native EspoCRM `Task` is the first-pass task model. |
-| 4. Calendar feedback UX | Pending | Depends on stage 1 conflict/waitlist decisions. |
+| 4. Calendar feedback UX | Completed | Added `AppointmentWaitlistEntry`, `CalendarFeedbackService`, `GET /EspoDental/Calendar/feedbackPanel`, and a new `resource-calendar-feedback` dashlet view with right-side waitlist/cancelled panels. |
 | 5. Slot booking wizard | Pending | Depends on stage 4 slot model. |
 | 6. Patients workspace | Pending | Can run after visual foundation. |
 | 7. Questionnaire and portal | Pending | Requires questionnaire gap check. |

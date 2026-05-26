@@ -183,6 +183,8 @@ the same tag in `/volume1/espomodule-prod` and re-run `rebuild.php` +
   scoped SimpleStom visual tokens and UI-kit rules
 - [docs/simple-stom-dashboard-action-center.md](docs/simple-stom-dashboard-action-center.md) —
   SimpleStom-style dashboard action center contract
+- [docs/simple-stom-calendar-feedback.md](docs/simple-stom-calendar-feedback.md) —
+  feedback calendar UX and waitlist contract
 - [docs/admin-guide.md](docs/admin-guide.md) — installation, upgrade, backup,
   multi-clinic setup, staging + nightly pipeline (§9)
 - [docs/user-guide.md](docs/user-guide.md) — day-to-day workflows for reception / doctors / managers
@@ -319,6 +321,8 @@ EspoDental поставляется со вторым compose-стеком
   визуальные токены и правила UI-kit для экранов SimpleStom
 - [docs/simple-stom-dashboard-action-center.md](docs/simple-stom-dashboard-action-center.md) —
   контракт dashboard-центра действий SimpleStom
+- [docs/simple-stom-calendar-feedback.md](docs/simple-stom-calendar-feedback.md) —
+  календарь по feedback-макету и контракт листа ожидания
 - [docs/release-notes.md](docs/release-notes.md) — история версий
 
 ### Лицензия

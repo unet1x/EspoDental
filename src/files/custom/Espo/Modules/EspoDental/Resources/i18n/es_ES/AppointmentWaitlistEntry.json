@@ -1,0 +1,47 @@
+{
+    "labels": {
+        "Create AppointmentWaitlistEntry": "Agregar a lista de espera",
+        "Overview": "Resumen"
+    },
+    "fields": {
+        "name": "Nombre",
+        "parent": "Paciente",
+        "clinic": "Clinica",
+        "requestedDoctor": "Doctor solicitado",
+        "preferredCabinet": "Gabinete preferido",
+        "appointment": "Cita creada",
+        "requestedDate": "Fecha solicitada",
+        "earliestDate": "No antes de",
+        "latestDate": "No despues de",
+        "status": "Estado",
+        "priority": "Prioridad",
+        "reason": "Motivo",
+        "notes": "Notas",
+        "assignedUser": "Responsable",
+        "teams": "Equipos"
+    },
+    "options": {
+        "status": {
+            "waiting": "En espera",
+            "offered": "Hueco ofrecido",
+            "booked": "Reservado",
+            "cancelled": "Cancelado",
+            "expired": "Caducado"
+        },
+        "priority": {
+            "normal": "Normal",
+            "high": "Alta",
+            "urgent": "Urgente"
+        }
+    },
+    "links": {
+        "parent": "Paciente",
+        "clinic": "Clinica",
+        "requestedDoctor": "Doctor solicitado",
+        "preferredCabinet": "Gabinete preferido",
+        "appointment": "Cita creada"
+    },
+    "boolFilters": {
+        "open": "Abiertas"
+    }
+}

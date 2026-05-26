@@ -9,6 +9,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Entities\User;
+use Espo\Modules\EspoDental\Services\CalendarFeedbackService;
 use Espo\Modules\EspoDental\Services\CalendarService;
 use stdClass;
 
@@ -16,6 +17,7 @@ class Calendar
 {
     public function __construct(
         private readonly CalendarService $calendarService,
+        private readonly CalendarFeedbackService $calendarFeedbackService,
         private readonly User $user
     ) {
     }
@@ -80,6 +82,23 @@ class Calendar
             $parentId !== null && $parentId !== '' ? (string) $parentId : null
         );
         return ['slots' => $slots, 'count' => count($slots)];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    public function getActionFeedbackPanel(Request $request): array
+    {
+        $this->assertAccess();
+
+        $date = (string) ($request->getQueryParam('date') ?? (new DateTimeImmutable('today'))->format('Y-m-d'));
+        $clinicId = $request->getQueryParam('clinicId');
+
+        return $this->calendarFeedbackService->getFeedbackPanel(
+            $date,
+            $clinicId !== null && $clinicId !== '' ? (string) $clinicId : null,
+            (int) ($request->getQueryParam('limit') ?? 12)
+        );
     }
 
     public function postActionMove(Request $request): stdClass

@@ -200,6 +200,7 @@
         "healthQuestionnaires": {"type": "hasMany", "entity": "HealthQuestionnaire", "foreign": "patient"},
         "questionnaireTokens": {"type": "hasMany", "entity": "QuestionnaireToken", "foreign": "patient"},
         "appointments": {"type": "hasChildren", "entity": "Appointment", "foreign": "parent"},
+        "waitlistEntries": {"type": "hasChildren", "entity": "AppointmentWaitlistEntry", "foreign": "parent"},
         "visits": {"type": "hasMany", "entity": "Visit", "foreign": "patient"},
         "toothChartSnapshots": {"type": "hasMany", "entity": "ToothChartSnapshot", "foreign": "patient"},
         "photos": {"type": "hasMany", "entity": "VisitPhoto", "foreign": "patient"},

@@ -106,6 +106,7 @@
         "healthQuestionnaires": {"type": "hasMany", "entity": "HealthQuestionnaire", "foreign": "preliminaryPatient"},
         "questionnaireTokens": {"type": "hasMany", "entity": "QuestionnaireToken", "foreign": "preliminaryPatient"},
         "appointments": {"type": "hasChildren", "entity": "Appointment", "foreign": "parent"},
+        "waitlistEntries": {"type": "hasChildren", "entity": "AppointmentWaitlistEntry", "foreign": "parent"},
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"},
         "assignedUser": {"type": "belongsTo", "entity": "User"},
