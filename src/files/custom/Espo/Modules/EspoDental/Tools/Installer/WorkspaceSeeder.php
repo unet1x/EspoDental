@@ -1305,8 +1305,9 @@ class WorkspaceSeeder
                 'name' => 'Склад',
                 'layout' => [
                     $this->dashlet('ed-stock-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
-                    $this->dashlet('ed-stock-low-stock', 'LowStockMaterials', 0, 4, 2, 5),
-                    $this->dashlet('ed-stock-inventory-status', 'InventoryStatus', 0, 9, 4, 5),
+                    $this->dashlet('ed-stock-inventory-workspace', 'InventoryWorkspace', 0, 4, 4, 7),
+                    $this->dashlet('ed-stock-low-stock', 'LowStockMaterials', 0, 11, 2, 5),
+                    $this->dashlet('ed-stock-inventory-status', 'InventoryStatus', 2, 11, 2, 5),
                 ],
             ],
         ];
@@ -1316,6 +1317,11 @@ class WorkspaceSeeder
     {
         $options = new stdClass();
         $options->{'ed-stock-action-center'} = $this->actionCenterDashletOptions('Складские действия', 10);
+        $options->{'ed-stock-inventory-workspace'} = (object) [
+            'title' => 'Рабочее место склада',
+            'displayRecords' => 20,
+            'autorefreshInterval' => 1,
+        ];
         $options->{'ed-stock-low-stock'} = (object) [
             'title' => 'Низкий остаток',
             'displayRecords' => 15,

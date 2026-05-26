@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/inventory-workspace",
+    "aclScope": "InventoryWarehouse",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Inventory Workspace"},
+            "displayRecords": {"type": "int", "default": 20, "min": 5, "max": 50}
+        }
+    }
+}

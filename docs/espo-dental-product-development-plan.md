@@ -438,6 +438,16 @@ Done when:
 
 - material movement can be shown from purchase to cabinet issue to visit consumption to reorder alert.
 
+Status:
+
+- 2026-05-27 first Pass 4 slice added the read-only `InventoryWorkspace`
+  stock operator dashlet over `GET /EspoDental/Inventory/workspace`;
+- the workspace surfaces active warehouses, selected-warehouse lots, expiring
+  lots, low-stock rows, future-order candidates, cabinet issue movements and
+  recent immutable stock movements;
+- the stock-role dashboard now uses the workspace as its primary surface while
+  keeping `InventoryStatus` as a manager summary.
+
 ### Stage H - Cash Desk And Finance
 
 Goal: make the cash desk safe and fast.
@@ -520,9 +530,11 @@ Done when:
 
 Continue Pass 4:
 
-1. Build the inventory workspace over warehouses, lots,
-   cabinet issue rows, expiry alerts and future-order candidates.
-2. Keep the existing inventory report dashlet as a manager summary, not as the
-   primary stock workspace.
+1. Add the inventory write flows from the workspace: receipt, transfer,
+   write-off and adjustment actions.
+2. Keep stock movements immutable: every correction must create a new movement
+   with reason and source context instead of editing posted movement rows.
+3. Browser-check the stock dashboard after the route/UI refresh so the operator
+   can move from warehouse state to a concrete stock action.
 
 Do not start with reports or AI. They are valuable, but the core product value is still the daily operational chain: call, book, remind, arrive, questionnaire, visit, invoice, payment, stock, next appointment.

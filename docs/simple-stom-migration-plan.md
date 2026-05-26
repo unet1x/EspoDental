@@ -519,3 +519,16 @@ Work:
   cabinet issue rows, expiry alerts and future-order candidates;
 - keep the current inventory report dashlet as a manager summary, not as the
   primary stock workspace.
+
+Status:
+
+- first read-only workspace slice is implemented: `InventoryWorkspace` is added
+  to the stock dashboard, backed by `GET /EspoDental/Inventory/workspace` and
+  `InventoryService::getWorkspace`;
+- the workspace shows active warehouses, selected-warehouse lots, expiry risks,
+  low-stock rows, future-order candidates, cabinet issue movements and recent
+  immutable stock movements;
+- browser/API smoke on 2026-05-27 confirmed the endpoint returns the seeded
+  warehouse/lot summary after route rebuild;
+- `InventoryStatus` remains available as a manager summary instead of being the
+  primary stock operator surface.

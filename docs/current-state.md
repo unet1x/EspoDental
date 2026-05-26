@@ -688,6 +688,18 @@ Verification completed after this slice:
   `espodentalAllowFinishedVisitCorrection` from `VisitServiceLine` material norm
   sync to child `VisitMaterialLine` saves/removes, preserving the finished-visit
   guard for ordinary UI edits while keeping the demo seed idempotent.
+- Pass 4 inventory workspace started on 2026-05-27. The stock-role dashboard now
+  uses `InventoryWorkspace` as its primary operating surface while keeping
+  `InventoryStatus` as a manager summary. `GET /EspoDental/Inventory/workspace`
+  returns active warehouses, selected-warehouse lots, expiry risks, low-stock
+  rows, future-order candidates, cabinet issue movements and recent immutable
+  stock movements.
+- Browser/API smoke after route rebuild confirmed the inventory workspace
+  endpoint returns the seeded warehouse and lot payload: 6 warehouses, selected
+  main warehouse and 8 active lots, with no browser console errors. Verification
+  passed with PHP/JS syntax checks, focused inventory and material-flow tests,
+  and the full `vendor/bin/phpunit tests --no-coverage` suite with 425 tests and
+  6067 assertions.
 
 ## 6. Known Gaps Against Product Spec
 

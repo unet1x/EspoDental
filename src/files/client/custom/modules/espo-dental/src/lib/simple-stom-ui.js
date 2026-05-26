@@ -59,7 +59,19 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         ok: 'espo-dental-stom-badge--success',
         low: 'espo-dental-stom-badge--warning',
         out: 'espo-dental-stom-badge--danger',
-        critical: 'espo-dental-stom-badge--danger'
+        critical: 'espo-dental-stom-badge--danger',
+        main: 'espo-dental-stom-badge--primary',
+        satellite: 'espo-dental-stom-badge--info',
+        receipt: 'espo-dental-stom-badge--success',
+        transfer_out: 'espo-dental-stom-badge--warning',
+        transfer_in: 'espo-dental-stom-badge--info',
+        consumption: 'espo-dental-stom-badge--warning',
+        writeoff: 'espo-dental-stom-badge--danger',
+        adjustment: 'espo-dental-stom-badge--info',
+        inventory_count: 'espo-dental-stom-badge--primary',
+        reception_usage: 'espo-dental-stom-badge--warning',
+        expiring: 'espo-dental-stom-badge--warning',
+        expired: 'espo-dental-stom-badge--danger'
     };
 
     var riskClasses = {
@@ -109,7 +121,23 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         open: 'открыто',
         done: 'выполнено',
         task: 'задача',
-        selected: 'выбран'
+        selected: 'выбран',
+        main: 'основной',
+        satellite: 'кабинетный',
+        receipt: 'приход',
+        consumption: 'расход',
+        writeoff: 'списание',
+        transfer_out: 'выдача',
+        transfer_in: 'прием',
+        adjustment: 'коррекция',
+        return: 'возврат',
+        manual_increase: 'ручной плюс',
+        manual_decrease: 'ручной минус',
+        manual_set: 'инвентаризация',
+        inventory_count: 'инвентаризация',
+        reception_usage: 'расход приема',
+        expired: 'просрочено',
+        expiring: 'срок подходит'
     };
 
     var labelGroups = {
@@ -119,7 +147,12 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
             Appointment: 'запись',
             Visit: 'прием',
             Invoice: 'счет',
-            Payment: 'платеж'
+            Payment: 'платеж',
+            Material: 'материал',
+            InventoryWarehouse: 'склад',
+            InventoryStockLot: 'партия',
+            StockMovement: 'движение склада',
+            LowStockAlert: 'складской алерт'
         },
         field: {
             lastName: 'Фамилия',
@@ -389,6 +422,13 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
             '</button>';
     }
 
+    function kpi(value, label) {
+        return '<div class="espo-dental-stom-kpi">' +
+            '<div class="espo-dental-stom-kpi__value">' + escapeHtml(value) + '</div>' +
+            '<div class="espo-dental-stom-kpi__label">' + escapeHtml(label) + '</div>' +
+            '</div>';
+    }
+
     function emptyState(message) {
         return '<div class="espo-dental-stom-empty">' + escapeHtml(message) + '</div>';
     }
@@ -406,6 +446,7 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         panel: panel,
         badge: badge,
         button: button,
+        kpi: kpi,
         label: translateLabel,
         formatValue: formatValue,
         emptyState: emptyState

@@ -1,6 +1,6 @@
 # SimpleStom Services And Inventory Contract
 
-Last updated: 2026-05-26
+Last updated: 2026-05-27
 
 Stage 10 brings the SimpleStom service catalog and lot-aware inventory contract
 into the EspoDental module.
@@ -78,3 +78,30 @@ Receipt validation blocks missing expiration dates for materials that track
 expiration. Manual corrections and write-offs require a reason. Posted
 stock-movement immutability remains unchanged: fixes are represented by a new
 correction movement, not by editing the old movement.
+
+## Inventory Workspace
+
+Pass 4 starts the dedicated operational stock surface from
+`16-feedback-inventory.png`.
+
+Runtime pieces:
+
+- dashlet: `InventoryWorkspace`;
+- endpoint: `GET /EspoDental/Inventory/workspace`;
+- service payload: `InventoryService::getWorkspace`.
+
+The first inventory workspace slice is read-only by design. It keeps the existing
+`InventoryStatus` report dashlet as a manager summary, while the stock-role
+dashboard gets a primary workspace that shows:
+
+- active main and cabinet warehouses;
+- active lots for the selected warehouse;
+- expiring and expired lots;
+- low-stock rows with open alert counts;
+- future-order candidates from low stock, max stock and reorder URL;
+- cabinet issue movements;
+- recent immutable stock movements.
+
+Receipt, transfer, write-off and adjustment write flows stay in the next
+inventory slice so the first pass can be verified safely against current stock
+data.
