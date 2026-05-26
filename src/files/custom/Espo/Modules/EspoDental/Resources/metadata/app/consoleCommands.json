@@ -6,5 +6,9 @@
     "espoDentalBootstrap": {
         "className": "Espo\\Modules\\EspoDental\\Tools\\Console\\SeedRolesCommand",
         "listed": true
+    },
+    "espoDentalDemoSeed": {
+        "className": "Espo\\Modules\\EspoDental\\Tools\\Console\\DemoSeedCommand",
+        "listed": true
     }
 }

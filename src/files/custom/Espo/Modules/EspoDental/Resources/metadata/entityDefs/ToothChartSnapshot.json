@@ -10,7 +10,7 @@
             "default": "adult",
             "required": true
         },
-        "teeth": {"type": "jsonObject", "default": "{}"},
+        "teeth": {"type": "jsonObject"},
         "recordedAt": {"type": "datetime", "required": true},
         "notes": {"type": "text"},
         "createdAt": {"type": "datetime", "readOnly": true},

@@ -43,7 +43,7 @@ final class Phase11MetadataTest extends TestCase
         $path = self::MODULE_ROOT . '/Resources/metadata/dashlets/ResourceCalendar.json';
         $this->assertFileExists($path);
         $def = json_decode((string) file_get_contents($path), true);
-        $this->assertSame('espo-dental:views/dashlets/resource-calendar', $def['view']);
+        $this->assertSame('espo-dental:views/dashlets/resource-calendar-feedback', $def['view']);
         $this->assertArrayHasKey('rowMinutes', $def['options']['fields']);
         $this->assertArrayHasKey('startHour', $def['options']['fields']);
         $this->assertArrayHasKey('endHour', $def['options']['fields']);

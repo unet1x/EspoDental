@@ -28,9 +28,9 @@ class RoleSeeder
     public const SCOPES = [
         'Clinic', 'Cabinet',
         'PreliminaryPatient', 'Patient',
-        'Appointment', 'AppointmentWaitlistEntry', 'AppointmentRescheduleRequest',
+        'Appointment', 'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog',
+        'AppointmentWaitlistEntry', 'AppointmentRescheduleRequest',
         'PatientPortalSession', 'PatientPortalEvent',
-        'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog',
         'Visit', 'VisitNoteTemplate', 'ServiceCategory', 'Service', 'VisitServiceLine', 'VisitMaterialLine',
         'ToothChartSnapshot', 'VisitPhoto',
         'Invoice', 'InvoiceLine', 'Payment', 'CashShift',

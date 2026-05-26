@@ -18,11 +18,11 @@
             ],
             "required": true
         },
-        "filters": {"type": "jsonObject", "default": "{}"},
-        "columns": {"type": "jsonObject", "default": "{}"},
-        "groupings": {"type": "jsonObject", "default": "{}"},
-        "metrics": {"type": "jsonObject", "default": "{}"},
-        "sort": {"type": "jsonObject", "default": "{}"},
+        "filters": {"type": "jsonObject"},
+        "columns": {"type": "jsonObject"},
+        "groupings": {"type": "jsonObject"},
+        "metrics": {"type": "jsonObject"},
+        "sort": {"type": "jsonObject"},
         "ownerUser": {"type": "link", "view": "views/fields/user"},
         "visibility": {
             "type": "enum",

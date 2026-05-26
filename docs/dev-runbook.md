@@ -1,6 +1,6 @@
 # EspoDental Developer Runbook
 
-Last updated: 2026-05-14
+Last updated: 2026-05-26
 
 This is the short operational guide for continuing development from a fresh
 chat/session.
@@ -44,9 +44,11 @@ After metadata, PHP or layout changes:
 ```bash
 docker compose -f deploy/local/docker-compose.yml exec -T espocrm php rebuild.php
 docker compose -f deploy/local/docker-compose.yml exec -T espocrm php command.php espo-dental-bootstrap
+docker compose -f deploy/local/docker-compose.yml exec -T espocrm php command.php espo-dental-demo-seed
 ```
 
-The bootstrap command is idempotent.
+The bootstrap and demo seed commands are idempotent. The demo seed creates
+local-only `DEMO SimpleStom` records for acceptance review.
 
 ## 4. Fast Verification
 
@@ -86,6 +88,12 @@ Revenue report API:
 
 ```bash
 curl -fsS -u admin:espodental-admin "http://localhost:18080/api/v1/EspoDental/Report/monthlyRevenue?monthsBack=3"
+```
+
+SimpleStom demo runbook:
+
+```bash
+sed -n '1,220p' docs/simple-stom-demo-runbook.md
 ```
 
 ## 5. Development Discipline

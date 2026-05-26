@@ -8,7 +8,7 @@
             "required": true
         },
         "isEnabled": {"type": "bool", "default": false},
-        "settings": {"type": "jsonObject", "default": "{}"},
+        "settings": {"type": "jsonObject"},
         "secretsReference": {"type": "varchar", "maxLength": 255},
         "updatedAt": {"type": "datetime", "readOnly": true},
         "updatedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},

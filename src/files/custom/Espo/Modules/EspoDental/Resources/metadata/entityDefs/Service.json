@@ -6,7 +6,7 @@
         "price": {"type": "currency", "default": "0.00", "required": true},
         "duration": {"type": "int", "default": 30, "min": 0, "max": 600},
         "color": {"type": "varchar", "maxLength": 9, "view": "views/fields/colorpicker"},
-        "cabinetRequirements": {"type": "jsonObject", "default": "{}"},
+        "cabinetRequirements": {"type": "jsonObject"},
         "perTooth": {"type": "bool", "default": false, "tooltip": true},
         "icd10": {"type": "varchar", "maxLength": 16},
         "description": {"type": "text"},

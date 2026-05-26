@@ -174,17 +174,62 @@ define('espo-dental:views/visit/record/detail', [
             var section = this.activeReceptionField || 'performed';
             var $field = this.ensureReceptionWorkspaceHost().find('[data-reception-field="' + section + '"]');
             var body = $field.val() || '';
-            var name = window.prompt('Template name');
 
-            if (!name || !body) {
+            if (!body) {
+                this.notify('Template body is empty.', 'warning');
                 return;
             }
 
-            Espo.Ajax.postRequest('EspoDental/Visit/noteTemplate', {
-                name: name,
-                section: section,
-                body: body
-            }).then(this.renderReceptionWorkspace.bind(this));
+            this.promptTemplateName((function (name) {
+                if (!name) {
+                    return;
+                }
+
+                Espo.Ajax.postRequest('EspoDental/Visit/noteTemplate', {
+                    name: name,
+                    section: section,
+                    body: body
+                }).then(this.renderReceptionWorkspace.bind(this));
+            }).bind(this));
+        },
+
+        promptTemplateName: function (callback) {
+            var modalId = 'espoDentalVisitTemplateName';
+            $('#' + modalId).remove();
+
+            var $modal = $('<div class="modal fade" tabindex="-1" role="dialog" id="' + modalId + '">' +
+                '<div class="modal-dialog" role="document">' +
+                    '<div class="modal-content">' +
+                        '<div class="modal-header">' +
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                            '<h4 class="modal-title">Template name</h4>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                            '<input type="text" class="form-control" data-name="templateName" maxlength="200">' +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                            '<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>' +
+                            '<button type="button" class="btn btn-primary" data-action="applyTemplateName">Save</button>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</div>');
+
+            $('body').append($modal);
+            $modal.on('click', '[data-action="applyTemplateName"]', function () {
+                var name = String($modal.find('[data-name="templateName"]').val() || '').trim();
+                $modal.modal('hide');
+                callback(name);
+            });
+            $modal.on('shown.bs.modal', function () {
+                $modal.find('[data-name="templateName"]').trigger('focus');
+            });
+            $modal.on('hidden.bs.modal', function () {
+                $modal.remove();
+            });
+            $modal.modal('show');
         },
 
         ensureReceptionWorkspaceHost: function () {

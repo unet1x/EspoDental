@@ -59,6 +59,8 @@ Stage 11 cash desk rules are locked in
 [`docs/simple-stom-cash-desk.md`](simple-stom-cash-desk.md).
 Stage 12 reports, payroll and integrations rules are locked in
 [`docs/simple-stom-reports-payroll-integrations.md`](simple-stom-reports-payroll-integrations.md).
+Stage 13 local demo rules are locked in
+[`docs/simple-stom-demo-runbook.md`](simple-stom-demo-runbook.md).
 
 Important visual reference order:
 
@@ -393,4 +395,4 @@ Verification:
 | 10. Services and inventory | Completed | Added material unit semantics, service material required/unit fields, warehouse and stock-lot entities, FEFO planning service and seeded main/cabinet warehouses. |
 | 11. Cash desk and shift closing | Completed | Added invoice-first cash desk workspace, advance application, cash-shift closing, financial adjustments and document-sequence metadata. |
 | 12. Reports, payroll and integrations | Completed | Added saved report definitions, payroll source breakdown, SMTP/WhatsApp/Telegram integration settings and sanitized secret metadata. MCP/AI is excluded from this run. |
-| 13. Demo environment | Pending | Final local demo with seeded DB. |
+| 13. Demo environment | Completed | Added optional `espo-dental-demo-seed`, local demo runbook and seeded SimpleStom acceptance data for patients, calendar, portal, visit, cash desk, inventory, reports and payroll. |

@@ -22,7 +22,12 @@ After the first boot, register module metadata and seed roles:
 ```bash
 docker compose -f deploy/local/docker-compose.yml exec espocrm php rebuild.php
 docker compose -f deploy/local/docker-compose.yml exec espocrm php command.php espo-dental-bootstrap
+docker compose -f deploy/local/docker-compose.yml exec espocrm php command.php espo-dental-demo-seed
 ```
+
+`espo-dental-demo-seed` is optional and local-only. It creates `DEMO SimpleStom`
+patients, appointments, visit, invoice, inventory, payroll and integration
+settings for manual review. See `docs/simple-stom-demo-runbook.md`.
 
 ## Stop
 
