@@ -11,7 +11,7 @@ define('espo-dental:views/dashlets/no-show-cancellations', ['views/dashlets/abst
             var limit = parseInt(this.getOption('displayRecords')) || 8;
 
             this.$el.find('.espo-dental-no-show-cancellations')
-                .html('<div class="text-muted small">Loading...</div>');
+                .html('<div class="text-muted small">Загрузка отчета...</div>');
 
             Espo.Ajax.getRequest('EspoDental/Report/noShowCancellations', {limit: limit})
                 .then((function (data) {
@@ -19,7 +19,7 @@ define('espo-dental:views/dashlets/no-show-cancellations', ['views/dashlets/abst
                 }).bind(this))
                 .catch((function () {
                     this.$el.find('.espo-dental-no-show-cancellations')
-                        .html('<div class="text-danger small">Failed to load.</div>');
+                        .html('<div class="text-danger small">Не удалось загрузить отчет.</div>');
                 }).bind(this));
         },
 
@@ -27,22 +27,22 @@ define('espo-dental:views/dashlets/no-show-cancellations', ['views/dashlets/abst
             var $host = this.$el.find('.espo-dental-no-show-cancellations');
 
             if (!rows.length) {
-                $host.html('<div class="text-muted small">No data.</div>');
+                $host.html('<div class="text-muted small">Данных пока нет.</div>');
                 return;
             }
 
             var html = '<div class="small text-muted" style="margin-bottom:6px">' +
-                'Total: ' + (summary.appointmentCount || 0) +
-                ' | No-show: ' + (summary.noShowCount || 0) +
-                ' | Cancelled: ' + (summary.cancellationCount || 0) +
-                ' | Issue rate: ' + this.formatPercent(summary.issueRate) +
+                'Всего: ' + (summary.appointmentCount || 0) +
+                ' | Неявки: ' + (summary.noShowCount || 0) +
+                ' | Отмены: ' + (summary.cancellationCount || 0) +
+                ' | Проблемные: ' + this.formatPercent(summary.issueRate) +
                 '</div>';
 
             html += '<div class="table-responsive"><table class="table table-condensed table-striped">' +
                 '<thead><tr>' +
-                '<th>Doctor</th><th class="text-right">Total</th>' +
-                '<th class="text-right">No-show</th><th class="text-right">Cancelled</th>' +
-                '<th class="text-right">Issue %</th>' +
+                '<th>Врач</th><th class="text-right">Всего</th>' +
+                '<th class="text-right">Неявки</th><th class="text-right">Отмены</th>' +
+                '<th class="text-right">Проблемные, %</th>' +
                 '</tr></thead><tbody>';
 
             rows.forEach((function (row) {

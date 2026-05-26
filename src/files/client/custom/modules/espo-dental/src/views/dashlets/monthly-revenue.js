@@ -15,7 +15,7 @@ define('espo-dental:views/dashlets/monthly-revenue', ['views/dashlets/abstract/b
         fetchData: function () {
             var months = parseInt(this.getOption('monthsBack')) || 12;
             this.$el.find('.espo-dental-monthly-revenue')
-                .html('<div class="text-muted small">Loading...</div>');
+                .html('<div class="text-muted small">Загрузка отчета...</div>');
             Espo.Ajax.getRequest('EspoDental/Report/monthlyRevenue', {monthsBack: months})
                 .then((function (data) {
                     this.rows = data || [];
@@ -23,7 +23,7 @@ define('espo-dental:views/dashlets/monthly-revenue', ['views/dashlets/abstract/b
                 }).bind(this))
                 .catch((function () {
                     this.$el.find('.espo-dental-monthly-revenue')
-                        .html('<div class="text-danger small">Failed to load.</div>');
+                        .html('<div class="text-danger small">Не удалось загрузить отчет.</div>');
                 }).bind(this));
         },
 
@@ -31,7 +31,7 @@ define('espo-dental:views/dashlets/monthly-revenue', ['views/dashlets/abstract/b
             var rows = this.rows;
             var $host = this.$el.find('.espo-dental-monthly-revenue');
             if (!rows.length) {
-                $host.html('<div class="text-muted small">No data.</div>');
+                $host.html('<div class="text-muted small">Данных пока нет.</div>');
                 return;
             }
             var max = 0;

@@ -11,7 +11,7 @@ define('espo-dental:views/dashlets/doctor-productivity', ['views/dashlets/abstra
             var limit = parseInt(this.getOption('displayRecords')) || 8;
 
             this.$el.find('.espo-dental-doctor-productivity')
-                .html('<div class="text-muted small">Loading...</div>');
+                .html('<div class="text-muted small">Загрузка отчета...</div>');
 
             Espo.Ajax.getRequest('EspoDental/Report/doctorProductivity', {limit: limit})
                 .then((function (data) {
@@ -19,7 +19,7 @@ define('espo-dental:views/dashlets/doctor-productivity', ['views/dashlets/abstra
                 }).bind(this))
                 .catch((function () {
                     this.$el.find('.espo-dental-doctor-productivity')
-                        .html('<div class="text-danger small">Failed to load.</div>');
+                        .html('<div class="text-danger small">Не удалось загрузить отчет.</div>');
                 }).bind(this));
         },
 
@@ -27,15 +27,15 @@ define('espo-dental:views/dashlets/doctor-productivity', ['views/dashlets/abstra
             var $host = this.$el.find('.espo-dental-doctor-productivity');
 
             if (!rows.length) {
-                $host.html('<div class="text-muted small">No data.</div>');
+                $host.html('<div class="text-muted small">Данных пока нет.</div>');
                 return;
             }
 
             var html = '<div class="table-responsive"><table class="table table-condensed table-striped">' +
                 '<thead><tr>' +
-                '<th>Doctor</th><th class="text-right">Visits</th>' +
-                '<th class="text-right">Services</th><th class="text-right">Amount</th>' +
-                '<th class="text-right">Avg</th>' +
+                '<th>Врач</th><th class="text-right">Приемы</th>' +
+                '<th class="text-right">Услуги</th><th class="text-right">Сумма</th>' +
+                '<th class="text-right">Средний чек</th>' +
                 '</tr></thead><tbody>';
 
             rows.forEach((function (row) {

@@ -21,6 +21,12 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
     };
 
     var statusClasses = {
+        primary: 'espo-dental-stom-badge--primary',
+        success: 'espo-dental-stom-badge--success',
+        warning: 'espo-dental-stom-badge--warning',
+        danger: 'espo-dental-stom-badge--danger',
+        info: 'espo-dental-stom-badge--info',
+        muted: 'espo-dental-stom-badge--muted',
         planned: 'espo-dental-stom-badge--info',
         waiting: 'espo-dental-stom-badge--warning',
         arrived: 'espo-dental-stom-badge--success',
@@ -31,10 +37,27 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         cancelled: 'espo-dental-stom-badge--muted',
         noShow: 'espo-dental-stom-badge--danger',
         no_show: 'espo-dental-stom-badge--danger',
+        waiting_confirmation: 'espo-dental-stom-badge--warning',
+        reschedule_requested: 'espo-dental-stom-badge--warning',
+        entered: 'espo-dental-stom-badge--info',
+        booked: 'espo-dental-stom-badge--primary',
+        processed: 'espo-dental-stom-badge--success',
+        patient: 'espo-dental-stom-badge--primary',
+        active: 'espo-dental-stom-badge--success',
+        inactive: 'espo-dental-stom-badge--muted',
+        draft: 'espo-dental-stom-badge--muted',
+        issued: 'espo-dental-stom-badge--warning',
+        partially_paid: 'espo-dental-stom-badge--warning',
+        partial_paid: 'espo-dental-stom-badge--warning',
+        paid: 'espo-dental-stom-badge--success',
+        storno: 'espo-dental-stom-badge--danger',
+        reversed: 'espo-dental-stom-badge--danger',
         normal: 'espo-dental-stom-badge--muted',
         high: 'espo-dental-stom-badge--warning',
         urgent: 'espo-dental-stom-badge--danger',
+        ok: 'espo-dental-stom-badge--success',
         low: 'espo-dental-stom-badge--warning',
+        out: 'espo-dental-stom-badge--danger',
         critical: 'espo-dental-stom-badge--danger'
     };
 
@@ -58,15 +81,112 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         cancelled: 'отменено',
         noShow: 'неявка',
         no_show: 'неявка',
-        normal: 'обычно',
+        waiting_confirmation: 'ждет подтверждения',
+        reschedule_requested: 'запрошен перенос',
+        entered: 'предварительный',
+        booked: 'записан',
+        processed: 'обработан',
+        patient: 'карта пациента',
+        active: 'активен',
+        inactive: 'неактивен',
+        draft: 'черновик',
+        issued: 'выставлен',
+        partially_paid: 'частично оплачен',
+        partial_paid: 'частично оплачен',
+        paid: 'оплачен',
+        storno: 'сторно',
+        reversed: 'сторнирован',
+        normal: 'обычная',
         high: 'важно',
         urgent: 'срочно',
+        ok: 'норма',
         low: 'низкий',
         medium: 'средний',
         critical: 'критично',
+        out: 'нет остатка',
         open: 'открыто',
         done: 'выполнено',
-        task: 'задача'
+        task: 'задача',
+        selected: 'выбран'
+    };
+
+    var labelGroups = {
+        entity: {
+            Patient: 'карта пациента',
+            PreliminaryPatient: 'предварительный пациент',
+            Appointment: 'запись',
+            Visit: 'прием',
+            Invoice: 'счет',
+            Payment: 'платеж'
+        },
+        field: {
+            lastName: 'Фамилия',
+            firstName: 'Имя',
+            middleName: 'Отчество',
+            gender: 'Пол',
+            dateOfBirth: 'Дата рождения',
+            phone: 'Телефон',
+            emailAddress: 'Email',
+            cardNumber: 'Номер карты',
+            status: 'Статус',
+            balance: 'Баланс',
+            isChild: 'Ребенок',
+            lastQuestionnaireAt: 'Последняя анкета',
+            questionnaireExpired: 'Анкета устарела',
+            futureAppointmentCount: 'Будущие записи',
+            visitCount: 'Завершенные приемы',
+            latestVisitId: 'Последний прием',
+            visitPhotoCount: 'Фотографии приемов',
+            questionnaireCount: 'Анкеты',
+            openInvoiceCount: 'Открытые счета',
+            paymentCount: 'Платежи',
+            parentPatientId: 'ID представителя',
+            parentPatientName: 'Представитель',
+            childCount: 'Связанные дети'
+        },
+        dentition: {
+            adult: 'взрослый',
+            child: 'детский',
+            mixed: 'смешанный'
+        },
+        surface: {
+            '': 'весь зуб',
+            whole: 'весь зуб',
+            O: 'окклюзионная',
+            M: 'мезиальная',
+            D: 'дистальная',
+            B: 'вестибулярная',
+            L: 'язычная',
+            o: 'окклюзионная',
+            m: 'мезиальная',
+            d: 'дистальная',
+            b: 'вестибулярная',
+            l: 'язычная'
+        },
+        condition: {
+            healthy: 'здоров',
+            caries: 'кариес',
+            filling: 'пломба',
+            filling_caries: 'пломба + кариес',
+            root_canal: 'канал',
+            crown: 'коронка',
+            bridge: 'мост',
+            bridge_pontic: 'промежуточная часть моста',
+            veneer: 'винир',
+            implant: 'имплант',
+            implant_crown: 'коронка на импланте',
+            removed: 'удален',
+            missing: 'отсутствует',
+            sealant: 'герметик',
+            foreign_filling: 'чужая пломба'
+        },
+        paymentMethod: {
+            cash: 'наличные',
+            card: 'карта',
+            bank_transfer: 'банковский перевод',
+            crypto: 'криптовалюта',
+            advance: 'аванс'
+        }
     };
 
     function ensureStyles(doc) {
@@ -208,11 +328,41 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
 
     function badge(label, tone, attrs) {
         var toneClass = statusClasses[tone] || riskClasses[tone] || 'espo-dental-stom-badge--muted';
-        var displayLabel = badgeLabels[label] || badgeLabels[tone] || label;
+        var displayLabel = translateLabel(label) || translateLabel(tone) || label;
 
         return '<span class="espo-dental-stom-badge ' + toneClass + '"' + renderAttributes(attrs) + '>' +
             escapeHtml(displayLabel) +
             '</span>';
+    }
+
+    function translateLabel(value, group) {
+        if (value === null || typeof value === 'undefined') {
+            return '';
+        }
+
+        var key = String(value);
+
+        if (group && labelGroups[group] && Object.prototype.hasOwnProperty.call(labelGroups[group], key)) {
+            return labelGroups[group][key];
+        }
+
+        return badgeLabels[key] || key;
+    }
+
+    function formatValue(value, group) {
+        if (value === null || typeof value === 'undefined' || value === '') {
+            return '';
+        }
+
+        if (typeof value === 'boolean') {
+            return value ? 'Да' : 'Нет';
+        }
+
+        if (group) {
+            return translateLabel(value, group);
+        }
+
+        return translateLabel(value);
     }
 
     function button(label, options) {
@@ -240,12 +390,15 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         statusClasses: statusClasses,
         riskClasses: riskClasses,
         badgeLabels: badgeLabels,
+        labelGroups: labelGroups,
         ensureStyles: ensureStyles,
         escapeHtml: escapeHtml,
         workspace: workspace,
         panel: panel,
         badge: badge,
         button: button,
+        label: translateLabel,
+        formatValue: formatValue,
         emptyState: emptyState
     };
 });

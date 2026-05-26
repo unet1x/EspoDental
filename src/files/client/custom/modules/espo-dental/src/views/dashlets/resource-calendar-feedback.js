@@ -259,7 +259,7 @@ define('espo-dental:views/dashlets/resource-calendar-feedback', [
                     self.fetchAndRender();
                 })
                 .catch(function (xhr) {
-                    Espo.Ui.error((xhr && xhr.responseText) || 'Update failed');
+                    Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось обновить запись.');
                     self.fetchAndRender();
                 });
         },

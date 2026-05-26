@@ -21,7 +21,7 @@ define('espo-dental:views/dashlets/cabinet-utilization', ['views/dashlets/abstra
             }
 
             this.$el.find('.espo-dental-cabinet-utilization')
-                .html('<div class="text-muted small">Loading...</div>');
+                .html('<div class="text-muted small">Загрузка отчета...</div>');
 
             Espo.Ajax.getRequest('EspoDental/Report/cabinetUtilization', {
                 limit: limit,
@@ -33,7 +33,7 @@ define('espo-dental:views/dashlets/cabinet-utilization', ['views/dashlets/abstra
                 }).bind(this))
                 .catch((function () {
                     this.$el.find('.espo-dental-cabinet-utilization')
-                        .html('<div class="text-danger small">Failed to load.</div>');
+                        .html('<div class="text-danger small">Не удалось загрузить отчет.</div>');
                 }).bind(this));
         },
 
@@ -41,15 +41,15 @@ define('espo-dental:views/dashlets/cabinet-utilization', ['views/dashlets/abstra
             var $host = this.$el.find('.espo-dental-cabinet-utilization');
 
             if (!rows.length) {
-                $host.html('<div class="text-muted small">No data.</div>');
+                $host.html('<div class="text-muted small">Данных пока нет.</div>');
                 return;
             }
 
             var html = '<div class="table-responsive"><table class="table table-condensed table-striped">' +
                 '<thead><tr>' +
-                '<th>Cabinet</th><th class="text-right">Appointments</th>' +
-                '<th class="text-right">Occupied</th><th class="text-right">Available</th>' +
-                '<th class="text-right">Utilization</th>' +
+                '<th>Кабинет</th><th class="text-right">Записи</th>' +
+                '<th class="text-right">Занято</th><th class="text-right">Доступно</th>' +
+                '<th class="text-right">Загрузка</th>' +
                 '</tr></thead><tbody>';
 
             rows.forEach((function (row) {

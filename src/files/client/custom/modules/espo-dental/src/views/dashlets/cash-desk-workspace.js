@@ -60,8 +60,7 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
 
         renderInvoices: function (invoices, closingPreview) {
             var html = '<div class="espo-dental-stom-toolbar" style="margin-bottom:8px">' +
-                SimpleStomUi.button('Новая оплата', {tone: 'primary', attrs: {'data-action': 'newPayment'}}) +
-                SimpleStomUi.button('Закрытие смены', {tone: 'quiet', attrs: {'data-action': 'closeShift'}}) +
+                SimpleStomUi.button('Закрыть смену', {tone: 'primary', attrs: {'data-action': 'closeShift'}}) +
                 '</div>';
 
             html += this.renderClosingPreview(closingPreview);
@@ -72,7 +71,7 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
                 html += '<tr data-invoice-id="' + SimpleStomUi.escapeHtml(invoice.id || '') + '">' +
                     '<td>' + SimpleStomUi.escapeHtml(invoice.number || invoice.id || '') + '</td>' +
                     '<td>' + SimpleStomUi.escapeHtml(invoice.patientName || invoice.patientId || '') + '</td>' +
-                    '<td>' + SimpleStomUi.escapeHtml(invoice.status || '') + '</td>' +
+                    '<td>' + SimpleStomUi.badge(invoice.status || 'issued', invoice.status || 'issued') + '</td>' +
                     '<td>' + SimpleStomUi.escapeHtml(invoice.totalAmount || 0) + '</td>' +
                     '<td>' + SimpleStomUi.escapeHtml(invoice.paidAmount || 0) + '</td>' +
                     '<td>' + SimpleStomUi.escapeHtml(invoice.balance || 0) + '</td>' +
@@ -81,7 +80,7 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
             html += '</tbody></table>';
 
             this.$el.find('[data-name="cashBody"]').html(SimpleStomUi.panel({
-                title: 'Неоплаченные счета',
+                title: 'Счета к оплате',
                 body: invoices.length ? html : SimpleStomUi.emptyState('Счетов для оплаты нет.')
             }));
         },
@@ -94,7 +93,7 @@ define('espo-dental:views/dashlets/cash-desk-workspace', [
             return '<div class="espo-dental-stom-toolbar" style="margin-bottom:8px">' +
                 SimpleStomUi.badge('Наличные ' + (preview.cashTotal || 0), 'primary') +
                 SimpleStomUi.badge('Карта ' + (preview.cardTotal || 0)) +
-                SimpleStomUi.badge('Крипто ' + (preview.cryptoTotal || 0)) +
+                SimpleStomUi.badge('Криптовалюта ' + (preview.cryptoTotal || 0)) +
                 SimpleStomUi.badge('Аванс ' + (preview.advanceTotal || 0)) +
                 '</div>';
         },

@@ -1,9 +1,13 @@
-define('espo-dental:views/dashlets/inventory-status', ['views/dashlets/abstract/base'], function (Dep) {
+define('espo-dental:views/dashlets/inventory-status', [
+    'views/dashlets/abstract/base',
+    'espo-dental:lib/simple-stom-ui'
+], function (Dep, SimpleStomUi) {
     return Dep.extend({
         name: 'InventoryStatus',
         templateContent: '<div class="espo-dental-inventory-status" style="padding:8px"></div>',
 
         afterRender: function () {
+            SimpleStomUi.ensureStyles();
             this.fetchData();
         },
 
@@ -49,7 +53,7 @@ define('espo-dental:views/dashlets/inventory-status', ['views/dashlets/abstract/
             rows.forEach((function (row) {
                 html += '<tr>' +
                     '<td>' + this.escapeHtml(row.materialName || row.materialId || '') + '</td>' +
-                    '<td>' + this.escapeHtml(row.stockLevel || '') + '</td>' +
+                    '<td>' + SimpleStomUi.badge(row.stockLevel || 'normal', row.stockLevel || 'normal') + '</td>' +
                     '<td class="text-right">' + this.formatQuantity(row.currentStock) + ' ' +
                     this.escapeHtml(row.unit || '') + '</td>' +
                     '<td class="text-right">' + this.formatQuantity(row.outboundQuantity) + '</td>' +

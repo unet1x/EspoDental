@@ -9,7 +9,6 @@ define('espo-dental:views/dashlets/patient-workspace', [
         events: {
             'input [data-name="patientSearch"]': 'scheduleSearch',
             'click [data-action="selectPatient"]': 'selectPatient',
-            'click [data-action="openPatient"]': 'openPatient',
             'click [data-action="bookAppointment"]': 'bookAppointment',
             'click [data-action="uploadFile"]': 'uploadFile',
             'click [data-tab]': 'selectTab'
@@ -83,20 +82,30 @@ define('espo-dental:views/dashlets/patient-workspace', [
             if (patients.length) {
                 body = '<ul class="espo-dental-stom-list">';
                 patients.forEach((function (patient) {
-                    var selected = patient.id === this.selectedId ? ' espo-dental-stom-badge--primary' : '';
+                    var status = patient.status || 'patient';
+                    var meta = [];
+
+                    if (patient.phone) {
+                        meta.push(patient.phone);
+                    }
+                    if (patient.cardNumber) {
+                        meta.push('карта ' + patient.cardNumber);
+                    }
+                    if (patient.balance) {
+                        meta.push((patient.balance > 0 ? 'аванс ' : 'долг ') + patient.balance);
+                    }
+
                     body += '<li class="espo-dental-stom-list__item">' +
                         '<span>' +
                         '<button type="button" class="btn btn-link btn-sm" data-action="selectPatient" ' +
                         'data-id="' + SimpleStomUi.escapeHtml(patient.id) + '" style="padding:0;text-align:left">' +
                         SimpleStomUi.escapeHtml(patient.name || patient.id) +
                         '</button>' +
-                        '<span class="espo-dental-stom-muted"> · ' +
-                        SimpleStomUi.escapeHtml(patient.phone || patient.cardNumber || '') +
+                        (meta.length ? '<span class="espo-dental-stom-muted"> · ' +
+                            SimpleStomUi.escapeHtml(meta.join(' · ')) +
+                            '</span>' : '') +
                         '</span>' +
-                        '</span>' +
-                        '<span class="espo-dental-stom-badge' + selected + '">' +
-                        SimpleStomUi.escapeHtml(patient.status || 'patient') +
-                        '</span>' +
+                        SimpleStomUi.badge(patient.id === this.selectedId ? 'выбран' : status, patient.id === this.selectedId ? 'primary' : status) +
                         '</li>';
                 }).bind(this));
                 body += '</ul>';
@@ -125,6 +134,12 @@ define('espo-dental:views/dashlets/patient-workspace', [
                 '<div class="espo-dental-stom-muted">' +
                 SimpleStomUi.escapeHtml(patient.phone || '') +
                 (patient.emailAddress ? ' · ' + SimpleStomUi.escapeHtml(patient.emailAddress) : '') +
+                (patient.cardNumber ? ' · карта ' + SimpleStomUi.escapeHtml(patient.cardNumber) : '') +
+                '</div>' +
+                '<div class="espo-dental-stom-toolbar" style="margin-top:8px">' +
+                SimpleStomUi.badge(patient.status || 'patient', patient.status || 'patient') +
+                (patient.isChild ? SimpleStomUi.badge('ребенок', 'info') : '') +
+                (patient.balance ? SimpleStomUi.badge(patient.balance > 0 ? 'аванс ' + patient.balance : 'долг ' + Math.abs(patient.balance), patient.balance > 0 ? 'success' : 'danger') : '') +
                 '</div>' +
                 '</div>';
             body += this.renderTabs(patient.tabs || {});
@@ -187,7 +202,7 @@ define('espo-dental:views/dashlets/patient-workspace', [
             var current = data.currentSnapshot || {};
             var html = '<div class="espo-dental-stom-toolbar" style="margin-bottom:8px">' +
                 '<span class="espo-dental-stom-badge espo-dental-stom-badge--primary">' +
-                SimpleStomUi.escapeHtml(current.dentitionType || 'adult') +
+                SimpleStomUi.escapeHtml(SimpleStomUi.label(current.dentitionType || 'adult', 'dentition')) +
                 '</span>' +
                 '<span class="espo-dental-stom-muted">' +
                 SimpleStomUi.escapeHtml(current.recordedAt || '') +
@@ -217,8 +232,8 @@ define('espo-dental:views/dashlets/patient-workspace', [
             summary.forEach(function (row) {
                 html += '<tr>' +
                     '<td>' + SimpleStomUi.escapeHtml(row.tooth || '') + '</td>' +
-                    '<td>' + SimpleStomUi.escapeHtml(row.surface || 'whole') + '</td>' +
-                    '<td>' + SimpleStomUi.escapeHtml(row.condition || '') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(SimpleStomUi.label(row.surface || 'whole', 'surface')) + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(SimpleStomUi.label(row.condition || '', 'condition')) + '</td>' +
                     '<td>' + SimpleStomUi.escapeHtml(row.note || '') + '</td>' +
                     '</tr>';
             });
@@ -240,7 +255,7 @@ define('espo-dental:views/dashlets/patient-workspace', [
             snapshots.forEach(function (snapshot) {
                 html += '<tr data-tooth-chart-snapshot="' + SimpleStomUi.escapeHtml(snapshot.id || '') + '">' +
                     '<td>' + SimpleStomUi.escapeHtml(snapshot.recordedAt || '') + '</td>' +
-                    '<td>' + SimpleStomUi.escapeHtml(snapshot.dentitionType || '') + '</td>' +
+                    '<td>' + SimpleStomUi.escapeHtml(SimpleStomUi.label(snapshot.dentitionType || '', 'dentition')) + '</td>' +
                     '<td>' + SimpleStomUi.escapeHtml(snapshot.visitName || '') + '</td>' +
                     '<td>' + SimpleStomUi.escapeHtml(snapshot.doctorName || '') + '</td>' +
                     '<td>' + SimpleStomUi.escapeHtml(snapshot.annotatedTeeth || 0) + '</td>' +
@@ -257,8 +272,8 @@ define('espo-dental:views/dashlets/patient-workspace', [
 
             html += '<table class="espo-dental-stom-table"><tbody>';
             Object.keys(data).forEach(function (key) {
-                html += '<tr><th>' + SimpleStomUi.escapeHtml(key) + '</th><td>' +
-                    SimpleStomUi.escapeHtml(data[key] === null ? '' : data[key]) +
+                html += '<tr><th>' + SimpleStomUi.escapeHtml(SimpleStomUi.label(key, 'field')) + '</th><td>' +
+                    SimpleStomUi.escapeHtml(SimpleStomUi.formatValue(data[key] === null ? '' : data[key])) +
                     '</td></tr>';
             });
             html += '</tbody></table>';
@@ -274,12 +289,6 @@ define('espo-dental:views/dashlets/patient-workspace', [
         selectTab: function (e) {
             this.activeTab = $(e.currentTarget).attr('data-tab') || 'basicData';
             this.fetchWorkspace();
-        },
-
-        openPatient: function () {
-            if (this.selectedId) {
-                this.getRouter().navigate('#Patient/view/' + this.selectedId, {trigger: true});
-            }
         },
 
         bookAppointment: function () {

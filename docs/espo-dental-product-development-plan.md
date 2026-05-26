@@ -291,7 +291,10 @@ Done when:
 Status:
 
 - product decisions are locked in `docs/espo-dental-product-decisions.md`;
-- the next concrete work can start with Stage B and Stage C.
+- Stage B first operational language pass is complete for the active
+  SimpleStom-style workspaces;
+- the next concrete work can start with Stage C calendar/booking and then the
+  deeper Stage D patient workspace refinements.
 
 ### Stage B - UX Language And Visual Consistency
 
@@ -307,6 +310,17 @@ Deliverables:
 Done when:
 
 - receptionist can understand the main workflow without seeing English/internal labels.
+
+Status:
+
+- centralized Russian labels and badges were added to the scoped SimpleStom UI
+  helper;
+- patient workspace rows/header, tooth chart values, questionnaire tables, slot
+  booking candidates, cash desk actions, inventory levels and legacy calendar
+  fallback text now use receptionist-facing Russian wording;
+- manager report dashlets now use Russian loading, empty, error and table header
+  text;
+- focused automated coverage is in `tests/Phase50OperationalLanguageTest.php`.
 
 ### Stage C - Calendar And Slot Booking
 

@@ -152,7 +152,7 @@ define('espo-dental:views/appointment/modals/slot-booking', [
                     '<span>' +
                     SimpleStomUi.escapeHtml(row.name || row.id) +
                     '<span class="espo-dental-stom-muted"> · ' +
-                    SimpleStomUi.escapeHtml(row.entityType || '') +
+                    SimpleStomUi.escapeHtml(SimpleStomUi.label(row.entityType || '', 'entity')) +
                     (row.phone ? ' · ' + SimpleStomUi.escapeHtml(row.phone) : '') +
                     '</span>' +
                     '</span>' +

@@ -39,13 +39,13 @@ define('espo-dental:views/dashlets/resource-calendar', [
             var step = (this.view === 'week') ? 7 : 1;
             var $prev = $('<button type="button" class="btn btn-default btn-xs">&#9664;</button>');
             var $next = $('<button type="button" class="btn btn-default btn-xs">&#9654;</button>');
-            var $today = $('<button type="button" class="btn btn-default btn-xs">Today</button>');
+            var $today = $('<button type="button" class="btn btn-default btn-xs">Сегодня</button>');
             var $date = $('<input type="date" class="form-control input-sm" style="width:140px">').val(this.currentDate);
             var $viewSelect = $('<select class="form-control input-sm" style="width:110px"></select>')
-                .append('<option value="day">Day</option><option value="week">Week</option>')
+                .append('<option value="day">День</option><option value="week">Неделя</option>')
                 .val(this.view);
             var $reload = $('<button type="button" class="btn btn-default btn-xs">&#x21bb;</button>');
-            var $find = $('<button type="button" class="btn btn-success btn-xs">Find slot</button>');
+            var $find = $('<button type="button" class="btn btn-success btn-xs">Найти слот</button>');
             $prev.on('click', function () { self.shiftDate(-step); });
             $next.on('click', function () { self.shiftDate(+step); });
             $today.on('click', function () {
@@ -69,7 +69,7 @@ define('espo-dental:views/dashlets/resource-calendar', [
         fetchAndRender: function () {
             var self = this;
             var $host = this.$el.find('.resource-calendar-host');
-            $host.html('<div class="text-muted small" style="padding:10px">Loading...</div>');
+            $host.html('<div class="text-muted small" style="padding:10px">Загрузка календаря...</div>');
             var data = {date: this.currentDate, view: this.view};
             if (this.clinicId) data.clinicId = this.clinicId;
             if (this.cabinetId) data.cabinetId = this.cabinetId;
@@ -88,7 +88,7 @@ define('espo-dental:views/dashlets/resource-calendar', [
                     self.grid.render();
                 })
                 .catch(function () {
-                    $host.html('<div class="text-danger small" style="padding:10px">Failed to load.</div>');
+                    $host.html('<div class="text-danger small" style="padding:10px">Не удалось загрузить календарь.</div>');
                 });
         },
 
@@ -119,13 +119,13 @@ define('espo-dental:views/dashlets/resource-calendar', [
             Espo.Ajax.postRequest('EspoDental/Calendar/move', payload)
                 .then(function () { self.fetchAndRender(); })
                 .catch(function (xhr) {
-                    Espo.Ui.error((xhr && xhr.responseText) || 'Update failed');
+                    Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось обновить запись.');
                     self.fetchAndRender();
                 });
         },
 
         handleCellClick: function () {
-            Espo.Ui.warning('Open a patient card and use Book Appointment.');
+            Espo.Ui.warning('Откройте карточку пациента и нажмите "Записать на прием".');
         },
 
         handleAppointmentClick: function (id) {
@@ -135,7 +135,7 @@ define('espo-dental:views/dashlets/resource-calendar', [
         openFindSlot: function () {
             var self = this;
             Dialogs.prompt(this, {
-                title: 'Slot duration (minutes)',
+                title: 'Длительность слота, минут',
                 value: '30',
                 inputType: 'number'
             }).then(function (value) {
@@ -159,14 +159,14 @@ define('espo-dental:views/dashlets/resource-calendar', [
                 Espo.Ajax.getRequest('EspoDental/Calendar/freeSlots', data).then(function (resp) {
                     var slots = (resp && resp.slots) || [];
                     if (!slots.length) {
-                        Espo.Ui.warning('No free slots');
+                        Espo.Ui.warning('Свободных слотов нет.');
                         return;
                     }
                     var msg = slots.slice(0, 10).map(function (s) {
                         return (s.localStart || s.start) + ' / ' + s.cabinetName;
                     }).join('\n');
-                    Espo.Ui.info('Free slots:\n' + msg);
-                }).catch(function () { Espo.Ui.error('Find slot failed'); });
+                    Espo.Ui.info('Свободные слоты:\n' + msg);
+                }).catch(function () { Espo.Ui.error('Не удалось найти слот.'); });
             });
         }
     });

@@ -427,6 +427,16 @@ Verification:
 - browser smoke of the local dashboard and at least one calendar/patient/cash
   workspace.
 
+Status:
+
+- first automated pass completed: shared Russian labels/badges now cover patient,
+  appointment, invoice, payment, stock, tooth chart and common field values;
+- patient workspace, slot booking, cash desk, inventory summary and legacy
+  calendar strings were aligned with Russian operational wording;
+- manager report dashlets no longer show English loading, empty or error text;
+- `tests/Phase50OperationalLanguageTest.php` locks the language contract for the
+  changed workspaces.
+
 ### Pass 2 - Calendar Fidelity
 
 Goal: close the remaining difference between the feedback render and the

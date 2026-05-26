@@ -98,6 +98,7 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
             return this.renderPanelList('Нужно действие', rows, function (row) {
                 var href = row.id ? '#AssistantActionProposal/view/' + encodeURIComponent(row.id) : '#';
                 var label = row.summary || row.name || row.actionType || 'Действие';
+                var riskTone = row.riskLevel === 'low' ? 'success' : (row.riskLevel || 'medium');
 
                 return '<li class="espo-dental-stom-list__item">' +
                     '<span>' +
@@ -106,7 +107,7 @@ define('espo-dental:views/dashlets/dashboard-action-center', [
                     SimpleStomUi.escapeHtml(row.actionType || '') +
                     '</span>' +
                     '</span>' +
-                    SimpleStomUi.badge(row.riskLevel || 'medium', row.riskLevel || 'medium') +
+                    SimpleStomUi.badge(row.riskLevel || 'medium', riskTone) +
                     '</li>';
             }, 'Нет действий, требующих реакции.');
         },
