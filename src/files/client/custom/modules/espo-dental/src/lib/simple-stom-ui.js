@@ -25,9 +25,12 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         waiting: 'espo-dental-stom-badge--warning',
         arrived: 'espo-dental-stom-badge--success',
         inProgress: 'espo-dental-stom-badge--primary',
+        in_progress: 'espo-dental-stom-badge--primary',
         completed: 'espo-dental-stom-badge--success',
+        finished: 'espo-dental-stom-badge--success',
         cancelled: 'espo-dental-stom-badge--muted',
         noShow: 'espo-dental-stom-badge--danger',
+        no_show: 'espo-dental-stom-badge--danger',
         low: 'espo-dental-stom-badge--warning',
         critical: 'espo-dental-stom-badge--danger'
     };

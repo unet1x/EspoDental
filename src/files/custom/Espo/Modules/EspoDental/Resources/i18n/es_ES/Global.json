@@ -91,7 +91,8 @@
         "InventoryStatus": "Estado del inventario",
         "PayrollThisMonth": "Nomina del mes",
         "ResourceCalendar": "Calendario de recursos",
-        "ActiveOrthoCases": "Casos ortodoncicos activos"
+        "ActiveOrthoCases": "Casos ortodoncicos activos",
+        "DashboardActionCenter": "Centro de acciones"
     },
     "calendar": {
         "Day": "Dia", "Week": "Semana", "Today": "Hoy",

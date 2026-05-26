@@ -91,7 +91,8 @@
         "InventoryStatus": "Состояние склада",
         "PayrollThisMonth": "ЗП за месяц",
         "ResourceCalendar": "Календарь ресурсов",
-        "ActiveOrthoCases": "Активные ортодонтические случаи"
+        "ActiveOrthoCases": "Активные ортодонтические случаи",
+        "DashboardActionCenter": "Центр действий"
     },
     "calendar": {
         "Day": "День", "Week": "Неделя", "Today": "Сегодня",

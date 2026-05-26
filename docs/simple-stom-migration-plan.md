@@ -39,6 +39,8 @@ Stage 1 scope is locked in
 [`docs/simple-stom-gap-matrix.md`](simple-stom-gap-matrix.md).
 Stage 2 visual rules are locked in
 [`docs/simple-stom-visual-system.md`](simple-stom-visual-system.md).
+Stage 3 dashboard action-center rules are locked in
+[`docs/simple-stom-dashboard-action-center.md`](simple-stom-dashboard-action-center.md).
 
 Important visual reference order:
 
@@ -174,6 +176,7 @@ Verification:
 
 - Service tests for task status transitions and dashboard aggregates.
 - Role/template metadata tests.
+- `tests/SimpleStomDashboardActionCenterTest.php`
 
 ### Stage 4 - Calendar Feedback UX
 
@@ -357,7 +360,7 @@ Verification:
 | 0. Migration contract | Completed | Plan added and linked from README; `git diff --check` passed. |
 | 1. Gap matrix and acceptance scope | Completed | Gap matrix added in `docs/simple-stom-gap-matrix.md`; structural test added for migration docs and acceptance scope. |
 | 2. Visual system foundation | Completed | Added scoped UI-kit `simple-stom-ui.js`, documented tokens in `docs/simple-stom-visual-system.md`, and locked the contract with `tests/SimpleStomVisualSystemTest.php`. |
-| 3. Dashboard actions and tasks | Pending | Depends on visual foundation and task decision. |
+| 3. Dashboard actions and tasks | Completed | Added `DashboardActionCenterService`, `GET /EspoDental/Dashboard/actionCenter`, scoped action-center dashlet and role dashboard template placement; native EspoCRM `Task` is the first-pass task model. |
 | 4. Calendar feedback UX | Pending | Depends on stage 1 conflict/waitlist decisions. |
 | 5. Slot booking wizard | Pending | Depends on stage 4 slot model. |
 | 6. Patients workspace | Pending | Can run after visual foundation. |

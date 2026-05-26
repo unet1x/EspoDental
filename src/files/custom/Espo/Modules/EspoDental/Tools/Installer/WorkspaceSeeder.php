@@ -850,14 +850,15 @@ class WorkspaceSeeder
             (object) [
                 'name' => 'Клиника',
                 'layout' => [
-                    $this->dashlet('ed-resource-calendar', 'ResourceCalendar', 0, 0, 4, 6),
-                    $this->dashlet('ed-today', 'TodaysAppointments', 0, 6, 2, 4),
-                    $this->dashlet('ed-open-invoices', 'OpenInvoices', 2, 6, 2, 4),
-                    $this->dashlet('ed-recent-visits', 'RecentVisits', 0, 10, 2, 4),
-                    $this->dashlet('ed-low-stock', 'LowStockMaterials', 2, 10, 2, 4),
-                    $this->dashlet('ed-monthly-revenue', 'MonthlyRevenue', 0, 14, 2, 4),
-                    $this->dashlet('ed-ortho-cases', 'ActiveOrthoCases', 2, 14, 1, 4),
-                    $this->dashlet('ed-payroll', 'PayrollThisMonth', 3, 14, 1, 4),
+                    $this->dashlet('ed-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
+                    $this->dashlet('ed-resource-calendar', 'ResourceCalendar', 0, 4, 4, 6),
+                    $this->dashlet('ed-today', 'TodaysAppointments', 0, 10, 2, 4),
+                    $this->dashlet('ed-open-invoices', 'OpenInvoices', 2, 10, 2, 4),
+                    $this->dashlet('ed-recent-visits', 'RecentVisits', 0, 14, 2, 4),
+                    $this->dashlet('ed-low-stock', 'LowStockMaterials', 2, 14, 2, 4),
+                    $this->dashlet('ed-monthly-revenue', 'MonthlyRevenue', 0, 18, 2, 4),
+                    $this->dashlet('ed-ortho-cases', 'ActiveOrthoCases', 2, 18, 1, 4),
+                    $this->dashlet('ed-payroll', 'PayrollThisMonth', 3, 18, 1, 4),
                 ],
             ],
         ];
@@ -871,6 +872,7 @@ class WorkspaceSeeder
     private function clinicDashletsOptions(): stdClass
     {
         $options = new stdClass();
+        $options->{'ed-action-center'} = $this->actionCenterDashletOptions('Центр действий', 8);
         $options->{'ed-resource-calendar'} = (object) [
             'title' => 'Календарь ресурсов',
             'defaultView' => 'day',
@@ -899,10 +901,11 @@ class WorkspaceSeeder
             (object) [
                 'name' => 'Администратор',
                 'layout' => [
-                    $this->dashlet('ed-admin-calendar', 'ResourceCalendar', 0, 0, 4, 6),
-                    $this->dashlet('ed-admin-today', 'TodaysAppointments', 0, 6, 2, 4),
-                    $this->dashlet('ed-admin-open-invoices', 'OpenInvoices', 2, 6, 2, 4),
-                    $this->dashlet('ed-admin-recent-visits', 'RecentVisits', 0, 10, 2, 4),
+                    $this->dashlet('ed-admin-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
+                    $this->dashlet('ed-admin-calendar', 'ResourceCalendar', 0, 4, 4, 6),
+                    $this->dashlet('ed-admin-today', 'TodaysAppointments', 0, 10, 2, 4),
+                    $this->dashlet('ed-admin-open-invoices', 'OpenInvoices', 2, 10, 2, 4),
+                    $this->dashlet('ed-admin-recent-visits', 'RecentVisits', 0, 14, 2, 4),
                 ],
             ],
         ];
@@ -911,6 +914,7 @@ class WorkspaceSeeder
     private function administratorDashletsOptions(): stdClass
     {
         $options = new stdClass();
+        $options->{'ed-admin-action-center'} = $this->actionCenterDashletOptions('Центр действий администратора', 10);
         $options->{'ed-admin-calendar'} = (object) [
             'title' => 'Календарь ресурсов',
             'defaultView' => 'day',
@@ -935,9 +939,10 @@ class WorkspaceSeeder
             (object) [
                 'name' => 'Врач',
                 'layout' => [
-                    $this->dashlet('ed-doctor-today', 'TodaysAppointments', 0, 0, 2, 5),
-                    $this->dashlet('ed-doctor-recent-visits', 'RecentVisits', 2, 0, 2, 5),
-                    $this->dashlet('ed-doctor-ortho-cases', 'ActiveOrthoCases', 0, 5, 2, 4),
+                    $this->dashlet('ed-doctor-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
+                    $this->dashlet('ed-doctor-today', 'TodaysAppointments', 0, 4, 2, 5),
+                    $this->dashlet('ed-doctor-recent-visits', 'RecentVisits', 2, 4, 2, 5),
+                    $this->dashlet('ed-doctor-ortho-cases', 'ActiveOrthoCases', 0, 9, 2, 4),
                 ],
             ],
         ];
@@ -946,6 +951,7 @@ class WorkspaceSeeder
     private function doctorDashletsOptions(): stdClass
     {
         $options = new stdClass();
+        $options->{'ed-doctor-action-center'} = $this->actionCenterDashletOptions('Мои действия', 8);
         $options->{'ed-doctor-today'} = (object) ['title' => 'Мои приёмы сегодня', 'displayRecords' => 10, 'autorefreshInterval' => 1];
         $options->{'ed-doctor-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 10];
         $options->{'ed-doctor-ortho-cases'} = (object) ['title' => 'Активная ортодонтия', 'displayRecords' => 8];
@@ -962,9 +968,10 @@ class WorkspaceSeeder
             (object) [
                 'name' => 'Ассистент',
                 'layout' => [
-                    $this->dashlet('ed-assistant-today', 'TodaysAppointments', 0, 0, 2, 5),
-                    $this->dashlet('ed-assistant-recent-visits', 'RecentVisits', 2, 0, 2, 5),
-                    $this->dashlet('ed-assistant-low-stock', 'LowStockMaterials', 0, 5, 2, 4),
+                    $this->dashlet('ed-assistant-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
+                    $this->dashlet('ed-assistant-today', 'TodaysAppointments', 0, 4, 2, 5),
+                    $this->dashlet('ed-assistant-recent-visits', 'RecentVisits', 2, 4, 2, 5),
+                    $this->dashlet('ed-assistant-low-stock', 'LowStockMaterials', 0, 9, 2, 4),
                 ],
             ],
         ];
@@ -973,6 +980,7 @@ class WorkspaceSeeder
     private function assistantDashletsOptions(): stdClass
     {
         $options = new stdClass();
+        $options->{'ed-assistant-action-center'} = $this->actionCenterDashletOptions('Действия ассистента', 8);
         $options->{'ed-assistant-today'} = (object) ['title' => 'Сегодняшние приёмы', 'displayRecords' => 10, 'autorefreshInterval' => 1];
         $options->{'ed-assistant-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 10];
         $options->{'ed-assistant-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 8];
@@ -989,15 +997,16 @@ class WorkspaceSeeder
             (object) [
                 'name' => 'Менеджер',
                 'layout' => [
-                    $this->dashlet('ed-manager-revenue', 'MonthlyRevenue', 0, 0, 2, 5),
-                    $this->dashlet('ed-manager-open-invoices', 'OpenInvoices', 2, 0, 2, 5),
-                    $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 5, 4, 4),
-                    $this->dashlet('ed-manager-cabinet-utilization', 'CabinetUtilization', 0, 9, 4, 4),
-                    $this->dashlet('ed-manager-no-show-cancellations', 'NoShowCancellations', 0, 13, 4, 4),
-                    $this->dashlet('ed-manager-inventory-status', 'InventoryStatus', 0, 17, 4, 4),
-                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 21, 2, 4),
-                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 21, 2, 4),
-                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 25, 2, 4),
+                    $this->dashlet('ed-manager-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
+                    $this->dashlet('ed-manager-revenue', 'MonthlyRevenue', 0, 4, 2, 5),
+                    $this->dashlet('ed-manager-open-invoices', 'OpenInvoices', 2, 4, 2, 5),
+                    $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 9, 4, 4),
+                    $this->dashlet('ed-manager-cabinet-utilization', 'CabinetUtilization', 0, 13, 4, 4),
+                    $this->dashlet('ed-manager-no-show-cancellations', 'NoShowCancellations', 0, 17, 4, 4),
+                    $this->dashlet('ed-manager-inventory-status', 'InventoryStatus', 0, 21, 4, 4),
+                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 25, 2, 4),
+                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 25, 2, 4),
+                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 29, 2, 4),
                 ],
             ],
         ];
@@ -1006,6 +1015,7 @@ class WorkspaceSeeder
     private function managerDashletsOptions(): stdClass
     {
         $options = new stdClass();
+        $options->{'ed-manager-action-center'} = $this->actionCenterDashletOptions('Центр действий менеджера', 10);
         $options->{'ed-manager-revenue'} = (object) ['title' => 'Выручка по месяцам', 'monthsBack' => 12];
         $options->{'ed-manager-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 10];
         $options->{'ed-manager-doctor-productivity'} = (object) ['title' => 'Продуктивность врачей', 'displayRecords' => 8];
@@ -1039,8 +1049,9 @@ class WorkspaceSeeder
             (object) [
                 'name' => 'Склад',
                 'layout' => [
-                    $this->dashlet('ed-stock-low-stock', 'LowStockMaterials', 0, 0, 2, 5),
-                    $this->dashlet('ed-stock-inventory-status', 'InventoryStatus', 0, 5, 4, 5),
+                    $this->dashlet('ed-stock-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
+                    $this->dashlet('ed-stock-low-stock', 'LowStockMaterials', 0, 4, 2, 5),
+                    $this->dashlet('ed-stock-inventory-status', 'InventoryStatus', 0, 9, 4, 5),
                 ],
             ],
         ];
@@ -1049,6 +1060,7 @@ class WorkspaceSeeder
     private function stockDashletsOptions(): stdClass
     {
         $options = new stdClass();
+        $options->{'ed-stock-action-center'} = $this->actionCenterDashletOptions('Складские действия', 10);
         $options->{'ed-stock-low-stock'} = (object) [
             'title' => 'Низкий остаток',
             'displayRecords' => 15,
@@ -1060,6 +1072,15 @@ class WorkspaceSeeder
         ];
 
         return $options;
+    }
+
+    private function actionCenterDashletOptions(string $title, int $displayRecords): stdClass
+    {
+        return (object) [
+            'title' => $title,
+            'displayRecords' => $displayRecords,
+            'autorefreshInterval' => 1,
+        ];
     }
 
     private function findOneByCode(string $entityType, string $code): ?Entity

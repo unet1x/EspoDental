@@ -1,0 +1,11 @@
+{
+    "view": "espo-dental:views/dashlets/dashboard-action-center",
+    "aclScope": "Appointment",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Action Center"},
+            "displayRecords": {"type": "int", "default": 8, "min": 1, "max": 20},
+            "clinicId": {"type": "varchar"}
+        }
+    }
+}
