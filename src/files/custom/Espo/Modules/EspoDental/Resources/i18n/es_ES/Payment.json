@@ -14,6 +14,14 @@
         "paidAt": "Pagado el",
         "receivedBy": "Recibido por",
         "refundOf": "Reembolso de",
+        "isReversed": "Revertido",
+        "reversedAt": "Revertido el",
+        "reversedBy": "Revertido por",
+        "reverseReason": "Motivo de reversion",
+        "externalReference": "Referencia externa",
+        "cryptoAsset": "Criptoactivo",
+        "cryptoAmount": "Importe cripto",
+        "cashShift": "Turno de caja",
         "notes": "Notas"
     },
     "options": {
@@ -24,6 +32,7 @@
             "online": "Online",
             "terminal": "Terminal",
             "crypto": "Criptomoneda",
+            "advance": "Anticipo",
             "other": "Otro"
         },
         "status": {

@@ -1,0 +1,12 @@
+[
+    {"rows": [
+        [{"name": "clinic"}, {"name": "cashier"}],
+        [{"name": "status"}, {"name": "openedAt"}],
+        [{"name": "closedAt"}, {"name": "periodFrom"}],
+        [{"name": "periodTo"}, false],
+        [{"name": "cashTotal"}, {"name": "cardTotal"}],
+        [{"name": "cryptoTotal"}, {"name": "advanceTotal"}],
+        [{"name": "invoiceTotal"}, false],
+        [{"name": "notes", "fullWidth": true}]
+    ]}
+]

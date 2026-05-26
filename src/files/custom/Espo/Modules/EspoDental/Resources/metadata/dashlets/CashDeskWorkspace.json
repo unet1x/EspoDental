@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/cash-desk-workspace",
+    "aclScope": "Invoice",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Cash Desk"},
+            "displayRecords": {"type": "int", "default": 30}
+        }
+    }
+}

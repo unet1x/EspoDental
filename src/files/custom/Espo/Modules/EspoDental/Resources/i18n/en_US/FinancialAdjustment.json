@@ -1,0 +1,1 @@
+{"fields": {"name": "Name", "invoice": "Invoice", "patient": "Patient", "clinic": "Clinic", "type": "Type", "amount": "Amount", "signedAmount": "Signed Amount", "reason": "Reason"}, "options": {"type": {"write_off": "Write-off", "complaint": "Complaint", "manual_charge": "Manual Charge"}}, "links": {"invoice": "Invoice", "patient": "Patient", "clinic": "Clinic"}}

@@ -7,6 +7,11 @@
             [{"name": "direction"}, {"name": "amount"}],
             [{"name": "currency"}, {"name": "paidAt"}],
             [{"name": "receivedBy"}, {"name": "refundOf"}],
+            [{"name": "cashShift"}, {"name": "externalReference"}],
+            [{"name": "cryptoAsset"}, {"name": "cryptoAmount"}],
+            [{"name": "isReversed"}, {"name": "reversedAt"}],
+            [{"name": "reversedBy"}, false],
+            [{"name": "reverseReason", "fullWidth": true}],
             [{"name": "notes", "fullWidth": true}],
             [{"name": "assignedUser"}, {"name": "teams"}],
             [{"name": "createdAt"}, {"name": "modifiedAt"}]

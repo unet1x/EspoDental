@@ -85,6 +85,16 @@
         "params": {"controller": "Dashboard", "action": "actionCenter"}
     },
     {
+        "route": "/EspoDental/CashDesk/workspace",
+        "method": "get",
+        "params": {"controller": "CashDesk", "action": "workspace"}
+    },
+    {
+        "route": "/EspoDental/CashDesk/closeShift",
+        "method": "post",
+        "params": {"controller": "CashDesk", "action": "closeShift"}
+    },
+    {
         "route": "/EspoDental/SalaryEntry/build",
         "method": "post",
         "params": {"controller": "SalaryEntry", "action": "build"}

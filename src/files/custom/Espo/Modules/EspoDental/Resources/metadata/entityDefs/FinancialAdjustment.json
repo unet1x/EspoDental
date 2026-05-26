@@ -1,0 +1,33 @@
+{
+    "fields": {
+        "name": {"type": "varchar", "readOnly": true, "maxLength": 255},
+        "invoice": {"type": "link"},
+        "patient": {"type": "link", "required": true},
+        "clinic": {"type": "link", "required": true},
+        "type": {
+            "type": "enum",
+            "options": ["write_off", "complaint", "manual_charge"],
+            "required": true,
+            "style": {"write_off": "danger", "complaint": "warning", "manual_charge": "primary"}
+        },
+        "amount": {"type": "currency", "required": true, "default": "0.00"},
+        "signedAmount": {"type": "currency", "readOnly": true, "default": "0.00"},
+        "reason": {"type": "text", "required": true},
+        "createdAt": {"type": "datetime", "readOnly": true},
+        "modifiedAt": {"type": "datetime", "readOnly": true},
+        "createdBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "modifiedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"}
+    },
+    "links": {
+        "invoice": {"type": "belongsTo", "entity": "Invoice"},
+        "patient": {"type": "belongsTo", "entity": "Patient"},
+        "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "createdBy": {"type": "belongsTo", "entity": "User"},
+        "modifiedBy": {"type": "belongsTo", "entity": "User"}
+    },
+    "collection": {"orderBy": "createdAt", "order": "desc"},
+    "indexes": {
+        "invoice": {"columns": ["invoiceId"]},
+        "patient_created": {"columns": ["patientId", "createdAt"]}
+    }
+}

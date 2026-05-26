@@ -2,6 +2,7 @@
     {"name": "number", "link": true},
     {"name": "paidAt"},
     {"name": "patient"},
+    {"name": "invoice"},
     {"name": "method"},
     {"name": "direction"},
     {"name": "amount"},

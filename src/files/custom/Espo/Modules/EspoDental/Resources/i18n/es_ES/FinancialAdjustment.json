@@ -1,0 +1,1 @@
+{"fields": {"name": "Nombre", "invoice": "Factura", "patient": "Paciente", "clinic": "Clinica", "type": "Tipo", "amount": "Importe", "signedAmount": "Importe con signo", "reason": "Motivo"}, "options": {"type": {"write_off": "Baja", "complaint": "Reclamacion", "manual_charge": "Cargo manual"}}, "links": {"invoice": "Factura", "patient": "Paciente", "clinic": "Clinica"}}

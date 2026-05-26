@@ -33,7 +33,8 @@ class RoleSeeder
         'DoctorShiftTemplate', 'DoctorShift', 'AppointmentStatusLog',
         'Visit', 'VisitNoteTemplate', 'ServiceCategory', 'Service', 'VisitServiceLine', 'VisitMaterialLine',
         'ToothChartSnapshot', 'VisitPhoto',
-        'Invoice', 'InvoiceLine', 'Payment',
+        'Invoice', 'InvoiceLine', 'Payment', 'CashShift',
+        'FinancialAdjustment', 'FinancialDocumentSequence',
         'MaterialCategory', 'Material', 'InventoryWarehouse', 'InventoryStockLot',
         'StockMovement', 'ServiceMaterial',
         'LowStockAlert', 'NotificationLog', 'AssistantActionProposal',
@@ -218,6 +219,9 @@ class RoleSeeder
         $manager['ToothChartSnapshot']   = $row('yes', 'all', 'all', 'all', 'no');
         $manager['VisitPhoto']           = $row('yes', 'all', 'all', 'all', 'no');
         $manager['InvoiceLine']          = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['CashShift']            = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['FinancialAdjustment']  = $row('yes', 'all', 'all', 'all', 'no');
+        $manager['FinancialDocumentSequence'] = $row('yes', 'all', 'all', 'all', 'no');
         $manager['MaterialCategory']     = $row('yes', 'all', 'all', 'all', 'no');
         $manager['InventoryWarehouse']   = $row('yes', 'all', 'all', 'all', 'no');
         $manager['InventoryStockLot']    = $row('yes', 'all', 'all', 'all', 'no');
@@ -256,6 +260,9 @@ class RoleSeeder
             'Invoice'              => $row('no', 'team', 'no', 'no', 'team'),
             'InvoiceLine'          => $row('no', 'team', 'no', 'no', 'no'),
             'Payment'              => $row('no', 'team', 'no', 'no', 'team'),
+            'CashShift'            => $row('no', 'team', 'no', 'no', 'no'),
+            'FinancialAdjustment'  => $row('no', 'team', 'no', 'no', 'no'),
+            'FinancialDocumentSequence' => $row('no', 'all', 'no', 'no', 'no'),
             'MaterialCategory'     => $row('no', 'all', 'no', 'no', 'no'),
             'Material'             => $row('no', 'all', 'no', 'no', 'no'),
             'InventoryWarehouse'   => $row('no', 'team', 'no', 'no', 'no'),
@@ -299,6 +306,9 @@ class RoleSeeder
             'Invoice'              => $row('no', 'team', 'no', 'no', 'no'),
             'InvoiceLine'          => $row('no', 'team', 'no', 'no', 'no'),
             'Payment'              => $row('no', 'team', 'no', 'no', 'no'),
+            'CashShift'            => $row('no', 'team', 'no', 'no', 'no'),
+            'FinancialAdjustment'  => $row('no', 'team', 'no', 'no', 'no'),
+            'FinancialDocumentSequence' => $row('no', 'all', 'no', 'no', 'no'),
             'MaterialCategory'     => $row('no', 'all', 'no', 'no', 'no'),
             'Material'             => $row('no', 'all', 'no', 'no', 'no'),
             'InventoryWarehouse'   => $row('no', 'team', 'no', 'no', 'no'),
@@ -342,6 +352,9 @@ class RoleSeeder
             'Invoice'              => $row('yes', 'team', 'team', 'no', 'team'),
             'InvoiceLine'          => $row('yes', 'team', 'team', 'team', 'no'),
             'Payment'              => $row('yes', 'team', 'team', 'no', 'team'),
+            'CashShift'            => $row('yes', 'team', 'team', 'no', 'team'),
+            'FinancialAdjustment'  => $row('yes', 'team', 'team', 'no', 'team'),
+            'FinancialDocumentSequence' => $row('no', 'all', 'no', 'no', 'no'),
             'MaterialCategory'     => $row('no', 'all', 'no', 'no', 'no'),
             'Material'             => $row('no', 'all', 'no', 'no', 'no'),
             'InventoryWarehouse'   => $row('no', 'team', 'no', 'no', 'no'),
@@ -385,6 +398,9 @@ class RoleSeeder
             'Invoice'              => $row('no', 'no', 'no', 'no', 'no'),
             'InvoiceLine'          => $row('no', 'no', 'no', 'no', 'no'),
             'Payment'              => $row('no', 'no', 'no', 'no', 'no'),
+            'CashShift'            => $row('no', 'no', 'no', 'no', 'no'),
+            'FinancialAdjustment'  => $row('no', 'no', 'no', 'no', 'no'),
+            'FinancialDocumentSequence' => $row('no', 'all', 'no', 'no', 'no'),
             'MaterialCategory'     => $row('yes', 'all', 'all', 'all', 'no'),
             'Material'             => $row('yes', 'all', 'all', 'all', 'all'),
             'InventoryWarehouse'   => $row('yes', 'all', 'all', 'all', 'no'),

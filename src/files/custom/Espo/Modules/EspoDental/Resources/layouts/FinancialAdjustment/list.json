@@ -1,0 +1,8 @@
+[
+    {"name": "createdAt"},
+    {"name": "patient", "link": true},
+    {"name": "invoice", "link": true},
+    {"name": "type"},
+    {"name": "signedAmount"},
+    {"name": "reason"}
+]

@@ -1,0 +1,8 @@
+[
+    {"rows": [
+        [{"name": "clinic"}, {"name": "documentType"}],
+        [{"name": "prefix"}, {"name": "nextNumber"}],
+        [{"name": "digits"}, {"name": "year"}],
+        [{"name": "isActive"}, false]
+    ]}
+]

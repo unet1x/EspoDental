@@ -1,0 +1,1 @@
+{"fields": {"name": "Название", "clinic": "Клиника", "documentType": "Тип документа", "prefix": "Префикс", "nextNumber": "Следующий номер", "digits": "Разрядов", "year": "Год", "isActive": "Активна"}, "options": {"documentType": {"invoice": "Счет", "act": "Акт", "receipt": "Квитанция"}}, "links": {"clinic": "Клиника"}}

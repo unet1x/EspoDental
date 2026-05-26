@@ -14,6 +14,14 @@
         "paidAt": "Дата",
         "receivedBy": "Принял",
         "refundOf": "Возврат для",
+        "isReversed": "Сторнирован",
+        "reversedAt": "Дата сторно",
+        "reversedBy": "Кто сторнировал",
+        "reverseReason": "Причина сторно",
+        "externalReference": "Внешняя ссылка",
+        "cryptoAsset": "Криптоактив",
+        "cryptoAmount": "Криптосумма",
+        "cashShift": "Кассовая смена",
         "notes": "Заметки"
     },
     "options": {
@@ -24,6 +32,7 @@
             "online": "Онлайн",
             "terminal": "Терминал",
             "crypto": "Криптовалюта",
+            "advance": "Аванс",
             "other": "Другое"
         },
         "status": {

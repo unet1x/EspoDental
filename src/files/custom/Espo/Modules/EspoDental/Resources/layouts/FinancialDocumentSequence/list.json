@@ -1,0 +1,9 @@
+[
+    {"name": "clinic", "link": true},
+    {"name": "documentType"},
+    {"name": "prefix"},
+    {"name": "nextNumber"},
+    {"name": "digits"},
+    {"name": "year"},
+    {"name": "isActive"}
+]

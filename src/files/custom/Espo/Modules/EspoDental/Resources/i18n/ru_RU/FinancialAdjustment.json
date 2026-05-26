@@ -1,0 +1,1 @@
+{"fields": {"name": "Название", "invoice": "Счет", "patient": "Пациент", "clinic": "Клиника", "type": "Тип", "amount": "Сумма", "signedAmount": "Сумма со знаком", "reason": "Причина"}, "options": {"type": {"write_off": "Списание", "complaint": "Рекламация", "manual_charge": "Начисление"}}, "links": {"invoice": "Счет", "patient": "Пациент", "clinic": "Клиника"}}

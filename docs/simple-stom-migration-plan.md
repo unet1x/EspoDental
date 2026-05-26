@@ -55,6 +55,8 @@ Stage 9 tooth chart rules are locked in
 [`docs/simple-stom-tooth-chart-contract.md`](simple-stom-tooth-chart-contract.md).
 Stage 10 service and inventory rules are locked in
 [`docs/simple-stom-services-inventory.md`](simple-stom-services-inventory.md).
+Stage 11 cash desk rules are locked in
+[`docs/simple-stom-cash-desk.md`](simple-stom-cash-desk.md).
 
 Important visual reference order:
 
@@ -387,6 +389,6 @@ Verification:
 | 8. Doctor reception workspace | Completed | Added reception workspace API, autosave, `VisitNoteTemplate`, SimpleStom-style Visit detail panel and locked finished-visit editing rules. |
 | 9. Tooth chart contract | Completed | Added whole-tooth state editing, veneer/sealant surface rules, bridge/removed-tooth visual behavior and in-place patient workspace snapshot history. |
 | 10. Services and inventory | Completed | Added material unit semantics, service material required/unit fields, warehouse and stock-lot entities, FEFO planning service and seeded main/cabinet warehouses. |
-| 11. Cash desk and shift closing | Pending | Cash shift likely needs a new entity. |
+| 11. Cash desk and shift closing | Completed | Added invoice-first cash desk workspace, advance application, cash-shift closing, financial adjustments and document-sequence metadata. |
 | 12. Reports, payroll and integrations | Pending | MCP/AI is excluded from this run. |
 | 13. Demo environment | Pending | Final local demo with seeded DB. |

@@ -31,7 +31,10 @@ class PaymentService
      *     method?: string,
      *     paidAt?: ?string,
      *     notes?: ?string,
-     *     clinicId?: ?string
+     *     clinicId?: ?string,
+     *     externalReference?: ?string,
+     *     cryptoAsset?: ?string,
+     *     cryptoAmount?: ?float
      * } $data
      * @return array{paymentId: string, number: string}
      */
@@ -83,11 +86,65 @@ class PaymentService
         if (!empty($data['notes'])) {
             $payment->set('notes', (string) $data['notes']);
         }
+        foreach (['externalReference', 'cryptoAsset', 'cryptoAmount'] as $field) {
+            if (array_key_exists($field, $data) && $data[$field] !== null && $data[$field] !== '') {
+                $payment->set($field, $data[$field]);
+            }
+        }
         $this->entityManager->saveEntity($payment);
 
         return [
             'paymentId' => (string) $payment->getId(),
             'number' => (string) $payment->get('number'),
+        ];
+    }
+
+    /**
+     * @return array{invoicePaymentId: string, advanceDebitPaymentId: string}
+     */
+    public function applyAdvance(string $invoiceId, float $amount, string $reason = ''): array
+    {
+        /** @var Invoice|null $invoice */
+        $invoice = $this->entityManager->getEntityById(Invoice::ENTITY_TYPE, $invoiceId);
+        if (!$invoice) {
+            throw new NotFound('Invoice not found');
+        }
+        if (!$invoice->getPatientId()) {
+            throw new BadRequest('Invoice patient is required');
+        }
+
+        $this->assertInvoicePayable($invoice, (string) $invoice->getPatientId(), null, $amount);
+
+        $availableAdvance = $this->getAvailableAdvance((string) $invoice->getPatientId());
+        if (round($amount, 2) > $availableAdvance) {
+            throw new BadRequest('Advance balance is insufficient');
+        }
+
+        $paidAt = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+        $invoicePayment = $this->createPayment([
+            'patientId' => (string) $invoice->getPatientId(),
+            'clinicId' => (string) $invoice->get('clinicId'),
+            'invoiceId' => (string) $invoice->getId(),
+            'amount' => $amount,
+            'method' => Payment::METHOD_ADVANCE,
+            'direction' => Payment::DIRECTION_IN,
+            'paidAt' => $paidAt,
+            'notes' => $reason !== '' ? $reason : 'Advance applied to invoice',
+        ]);
+        $advanceDebit = $this->createPayment([
+            'patientId' => (string) $invoice->getPatientId(),
+            'clinicId' => (string) $invoice->get('clinicId'),
+            'invoiceId' => null,
+            'amount' => $amount,
+            'method' => Payment::METHOD_ADVANCE,
+            'direction' => Payment::DIRECTION_OUT,
+            'paidAt' => $paidAt,
+            'notes' => 'Advance balance applied to invoice #' . (string) $invoice->get('number'),
+        ]);
+
+        return [
+            'invoicePaymentId' => (string) $invoicePayment->getId(),
+            'advanceDebitPaymentId' => (string) $advanceDebit->getId(),
         ];
     }
 
@@ -194,6 +251,58 @@ class PaymentService
         return round($sum, 2);
     }
 
+    private function getAvailableAdvance(string $patientId): float
+    {
+        /** @var iterable<Payment> $payments */
+        $payments = $this->entityManager
+            ->getRDBRepository(Payment::ENTITY_TYPE)
+            ->where([
+                'patientId' => $patientId,
+                'invoiceId' => null,
+                'status' => Payment::STATUS_COMPLETED,
+            ])
+            ->find();
+
+        $sum = 0.0;
+        foreach ($payments as $payment) {
+            $sign = $payment->getDirection() === Payment::DIRECTION_OUT ? -1.0 : 1.0;
+            $sum += $sign * $payment->getAmount();
+        }
+
+        return round($sum, 2);
+    }
+
+    /**
+     * @param array{
+     *     patientId: string,
+     *     clinicId: string,
+     *     invoiceId: ?string,
+     *     amount: float,
+     *     method: string,
+     *     direction: string,
+     *     paidAt: string,
+     *     notes: string
+     * } $data
+     */
+    private function createPayment(array $data): Payment
+    {
+        /** @var Payment $payment */
+        $payment = $this->entityManager->getNewEntity(Payment::ENTITY_TYPE);
+        $payment->set('patientId', $data['patientId']);
+        $payment->set('clinicId', $data['clinicId']);
+        $payment->set('invoiceId', $data['invoiceId']);
+        $payment->set('amount', $data['amount']);
+        $payment->set('method', $data['method']);
+        $payment->set('direction', $data['direction']);
+        $payment->set('status', Payment::STATUS_COMPLETED);
+        $payment->set('paidAt', $data['paidAt']);
+        $payment->set('receivedById', $this->user->getId());
+        $payment->set('notes', $data['notes']);
+        $this->entityManager->saveEntity($payment);
+
+        return $payment;
+    }
+
     /**
      * @return list<string>
      */
@@ -230,6 +339,9 @@ class PaymentService
 
         if (!in_array(Payment::METHOD_CASH, $methods, true)) {
             array_unshift($methods, Payment::METHOD_CASH);
+        }
+        if (!in_array(Payment::METHOD_ADVANCE, $methods, true)) {
+            $methods[] = Payment::METHOD_ADVANCE;
         }
 
         return array_values(array_unique($methods));

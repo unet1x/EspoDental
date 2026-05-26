@@ -1,0 +1,1 @@
+{"fields": {"name": "Nombre", "clinic": "Clinica", "documentType": "Tipo de documento", "prefix": "Prefijo", "nextNumber": "Siguiente numero", "digits": "Digitos", "year": "Ano", "isActive": "Activa"}, "options": {"documentType": {"invoice": "Factura", "act": "Acta", "receipt": "Recibo"}}, "links": {"clinic": "Clinica"}}

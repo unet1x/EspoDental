@@ -1,0 +1,1 @@
+{"fields": {"name": "Name", "clinic": "Clinic", "documentType": "Document Type", "prefix": "Prefix", "nextNumber": "Next Number", "digits": "Digits", "year": "Year", "isActive": "Active"}, "options": {"documentType": {"invoice": "Invoice", "act": "Act", "receipt": "Receipt"}}, "links": {"clinic": "Clinic"}}

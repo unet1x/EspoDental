@@ -890,6 +890,9 @@ class WorkspaceSeeder
             $this->divider('ed-cashdesk', 'Касса'),
             'Invoice',
             'Payment',
+            'CashShift',
+            'FinancialAdjustment',
+            'FinancialDocumentSequence',
             $this->divider('ed-catalogs', 'Прайс и склад'),
             'ServiceCategory',
             'MaterialCategory',
@@ -971,12 +974,13 @@ class WorkspaceSeeder
                     $this->dashlet('ed-resource-calendar', 'ResourceCalendar', 0, 4, 4, 6),
                     $this->dashlet('ed-today', 'TodaysAppointments', 0, 10, 2, 4),
                     $this->dashlet('ed-open-invoices', 'OpenInvoices', 2, 10, 2, 4),
-                    $this->dashlet('ed-recent-visits', 'RecentVisits', 0, 14, 2, 4),
-                    $this->dashlet('ed-low-stock', 'LowStockMaterials', 2, 14, 2, 4),
-                    $this->dashlet('ed-monthly-revenue', 'MonthlyRevenue', 0, 18, 2, 4),
-                    $this->dashlet('ed-ortho-cases', 'ActiveOrthoCases', 2, 18, 1, 4),
-                    $this->dashlet('ed-payroll', 'PayrollThisMonth', 3, 18, 1, 4),
-                    $this->dashlet('ed-patient-workspace', 'PatientWorkspace', 0, 22, 4, 6),
+                    $this->dashlet('ed-cash-desk', 'CashDeskWorkspace', 0, 14, 4, 4),
+                    $this->dashlet('ed-recent-visits', 'RecentVisits', 0, 18, 2, 4),
+                    $this->dashlet('ed-low-stock', 'LowStockMaterials', 2, 18, 2, 4),
+                    $this->dashlet('ed-monthly-revenue', 'MonthlyRevenue', 0, 22, 2, 4),
+                    $this->dashlet('ed-ortho-cases', 'ActiveOrthoCases', 2, 22, 1, 4),
+                    $this->dashlet('ed-payroll', 'PayrollThisMonth', 3, 22, 1, 4),
+                    $this->dashlet('ed-patient-workspace', 'PatientWorkspace', 0, 26, 4, 6),
                 ],
             ],
         ];
@@ -1001,6 +1005,7 @@ class WorkspaceSeeder
         ];
         $options->{'ed-today'} = (object) ['title' => 'Сегодняшние приёмы', 'displayRecords' => 8, 'autorefreshInterval' => 1];
         $options->{'ed-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 8];
+        $options->{'ed-cash-desk'} = (object) ['title' => 'Касса', 'displayRecords' => 30];
         $options->{'ed-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 8];
         $options->{'ed-low-stock'} = (object) ['title' => 'Низкий остаток', 'displayRecords' => 8];
         $options->{'ed-monthly-revenue'} = (object) ['title' => 'Выручка по месяцам', 'monthsBack' => 12];
@@ -1024,8 +1029,9 @@ class WorkspaceSeeder
                     $this->dashlet('ed-admin-calendar', 'ResourceCalendar', 0, 4, 4, 6),
                     $this->dashlet('ed-admin-today', 'TodaysAppointments', 0, 10, 2, 4),
                     $this->dashlet('ed-admin-open-invoices', 'OpenInvoices', 2, 10, 2, 4),
-                    $this->dashlet('ed-admin-recent-visits', 'RecentVisits', 0, 14, 2, 4),
-                    $this->dashlet('ed-admin-patient-workspace', 'PatientWorkspace', 0, 18, 4, 6),
+                    $this->dashlet('ed-admin-cash-desk', 'CashDeskWorkspace', 0, 14, 4, 4),
+                    $this->dashlet('ed-admin-recent-visits', 'RecentVisits', 0, 18, 2, 4),
+                    $this->dashlet('ed-admin-patient-workspace', 'PatientWorkspace', 0, 22, 4, 6),
                 ],
             ],
         ];
@@ -1045,6 +1051,7 @@ class WorkspaceSeeder
         ];
         $options->{'ed-admin-today'} = (object) ['title' => 'Сегодняшние приёмы', 'displayRecords' => 10, 'autorefreshInterval' => 1];
         $options->{'ed-admin-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 10];
+        $options->{'ed-admin-cash-desk'} = (object) ['title' => 'Касса', 'displayRecords' => 30];
         $options->{'ed-admin-recent-visits'} = (object) ['title' => 'Недавние приёмы', 'displayRecords' => 8];
         $options->{'ed-admin-patient-workspace'} = (object) ['title' => 'Пациенты', 'displayRecords' => 20];
 
@@ -1125,13 +1132,14 @@ class WorkspaceSeeder
                     $this->dashlet('ed-manager-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
                     $this->dashlet('ed-manager-revenue', 'MonthlyRevenue', 0, 4, 2, 5),
                     $this->dashlet('ed-manager-open-invoices', 'OpenInvoices', 2, 4, 2, 5),
-                    $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 9, 4, 4),
-                    $this->dashlet('ed-manager-cabinet-utilization', 'CabinetUtilization', 0, 13, 4, 4),
-                    $this->dashlet('ed-manager-no-show-cancellations', 'NoShowCancellations', 0, 17, 4, 4),
-                    $this->dashlet('ed-manager-inventory-status', 'InventoryStatus', 0, 21, 4, 4),
-                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 25, 2, 4),
-                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 25, 2, 4),
-                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 29, 2, 4),
+                    $this->dashlet('ed-manager-cash-desk', 'CashDeskWorkspace', 0, 9, 4, 4),
+                    $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 13, 4, 4),
+                    $this->dashlet('ed-manager-cabinet-utilization', 'CabinetUtilization', 0, 17, 4, 4),
+                    $this->dashlet('ed-manager-no-show-cancellations', 'NoShowCancellations', 0, 21, 4, 4),
+                    $this->dashlet('ed-manager-inventory-status', 'InventoryStatus', 0, 25, 4, 4),
+                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 29, 2, 4),
+                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 29, 2, 4),
+                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 33, 2, 4),
                 ],
             ],
         ];
@@ -1143,6 +1151,7 @@ class WorkspaceSeeder
         $options->{'ed-manager-action-center'} = $this->actionCenterDashletOptions('Центр действий менеджера', 10);
         $options->{'ed-manager-revenue'} = (object) ['title' => 'Выручка по месяцам', 'monthsBack' => 12];
         $options->{'ed-manager-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 10];
+        $options->{'ed-manager-cash-desk'} = (object) ['title' => 'Касса', 'displayRecords' => 30];
         $options->{'ed-manager-doctor-productivity'} = (object) ['title' => 'Продуктивность врачей', 'displayRecords' => 8];
         $options->{'ed-manager-cabinet-utilization'} = (object) [
             'title' => 'Загрузка кабинетов',

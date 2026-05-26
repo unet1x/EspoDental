@@ -24,6 +24,7 @@ class Payment extends Entity
     public const METHOD_ONLINE = 'online';
     public const METHOD_TERMINAL = 'terminal';
     public const METHOD_CRYPTO = 'crypto';
+    public const METHOD_ADVANCE = 'advance';
     public const METHOD_OTHER = 'other';
 
     public const METHOD_LIST = [
@@ -33,6 +34,7 @@ class Payment extends Entity
         self::METHOD_ONLINE,
         self::METHOD_TERMINAL,
         self::METHOD_CRYPTO,
+        self::METHOD_ADVANCE,
         self::METHOD_OTHER,
     ];
 

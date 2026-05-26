@@ -1,0 +1,8 @@
+[
+    {"rows": [
+        [{"name": "patient"}, {"name": "invoice"}],
+        [{"name": "clinic"}, {"name": "type"}],
+        [{"name": "amount"}, {"name": "signedAmount"}],
+        [{"name": "reason", "fullWidth": true}]
+    ]}
+]

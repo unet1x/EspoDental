@@ -1,0 +1,10 @@
+[
+    {"name": "openedAt"},
+    {"name": "closedAt"},
+    {"name": "clinic", "link": true},
+    {"name": "cashier", "link": true},
+    {"name": "status"},
+    {"name": "cashTotal"},
+    {"name": "cardTotal"},
+    {"name": "invoiceTotal"}
+]
