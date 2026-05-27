@@ -559,7 +559,14 @@ Status:
   SMTP, Telegram and WhatsApp row now exposes settings, runtime configuration,
   secret-reference and credential-acceptance checks without leaking secret
   values. `pending_acceptance` means the channel is ready for staff credential
-  acceptance, not that live provider smoke is allowed automatically.
+  acceptance, not that live provider smoke is allowed automatically;
+- sixth Stage J slice added the staff-only provider credential acceptance gate.
+  `POST /EspoDental/Integration/acceptProviderCredentials` records accepted
+  credentials on `IntegrationSettings` only after the readiness checklist is
+  complete, and the route is deliberately not an MCP tool. The message delivery
+  gateway now returns `provider_acceptance_required` for SMTP, Telegram and
+  WhatsApp until provider credential acceptance is recorded, so checklist status
+  is enforced before any external provider call.
 
 ### Stage K - Demo And Release Readiness
 
@@ -595,7 +602,9 @@ Continue Stage J acceptance:
    `payload.requeueHistory`.
 5. Browser-check the provider readiness checklist in `IntegrationOpsCenter`
    and confirm enabled channels with complete runtime settings show
-   `pending_acceptance` while live provider smoke remains manual.
+   `pending_acceptance` while live provider smoke remains manual. Then use the
+   staff provider credential acceptance action on a safe demo channel and
+   confirm `provider_acceptance_required` disappears only after acceptance.
 6. Keep all external provider sends and risky assistant actions behind existing
    delivery/proposal boundaries.
 

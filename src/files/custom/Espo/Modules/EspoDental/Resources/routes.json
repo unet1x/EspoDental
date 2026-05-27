@@ -220,6 +220,11 @@
         "params": {"controller": "Integration", "action": "proposeAction"}
     },
     {
+        "route": "/EspoDental/Integration/acceptProviderCredentials",
+        "method": "post",
+        "params": {"controller": "Integration", "action": "acceptProviderCredentials"}
+    },
+    {
         "route": "/EspoDental/AssistantActionProposal/approve",
         "method": "post",
         "params": {"controller": "AssistantActionProposal", "action": "approve"}

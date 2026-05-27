@@ -196,6 +196,11 @@
   Telegram and WhatsApp. It verifies settings, runtime config, secret
   references and credential acceptance gates without exposing secrets;
   `pending_acceptance` still requires a staff-approved live provider smoke.
+- The provider credential acceptance gate is now enforced before external sends:
+  `Integration/acceptProviderCredentials` records staff acceptance on
+  `IntegrationSettings`, and `MessageDeliveryGateway` returns
+  `provider_acceptance_required` until SMTP, Telegram or WhatsApp credentials
+  are accepted. Changing accepted channel settings revokes the acceptance.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

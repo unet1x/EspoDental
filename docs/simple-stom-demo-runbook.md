@@ -78,10 +78,13 @@ out of scope for this migration run.
     `AssistantActionProposal` from the dashlet or action center and verify the
     approve/reject controls affect only review status, notes and reviewer
     metadata. Use one failed `NotificationLog` retry candidate to verify
-    requeue moves it to `queued` without sending a live provider message. Run
-    `NotificationLog/processQueue` only in a credential-accepted environment;
-    then confirm `NotificationDeliveryService` audits the delivery result on
-    the same row.
+    requeue moves it to `queued` without sending a live provider message. Before
+    provider credential acceptance, `NotificationLog/processQueue` should audit
+    or surface `provider_acceptance_required` instead of sending externally.
+    Use `Integration/acceptProviderCredentials` only on a safe demo channel with
+    accepted credentials; after that, run `NotificationLog/processQueue` only in
+    the credential-accepted environment and confirm `NotificationDeliveryService`
+    audits the delivery result on the same row.
 11. Open Report Definitions and Payroll, then inspect the salary entry source
     breakdown.
 

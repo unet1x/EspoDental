@@ -13,4 +13,8 @@ class IntegrationSettings extends Entity
     public const TYPE_SMTP = 'smtp';
     public const TYPE_WHATSAPP = 'whatsapp';
     public const TYPE_TELEGRAM = 'telegram';
+
+    public const ACCEPTANCE_PENDING = 'pending_acceptance';
+    public const ACCEPTANCE_ACCEPTED = 'accepted';
+    public const ACCEPTANCE_REVOKED = 'revoked';
 }

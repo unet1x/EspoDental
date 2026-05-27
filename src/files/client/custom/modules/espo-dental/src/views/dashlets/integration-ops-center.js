@@ -9,7 +9,8 @@ define('espo-dental:views/dashlets/integration-ops-center', [
 
         events: {
             'click [data-action="requeueNotification"]': 'requeueNotification',
-            'click [data-action="processNotificationQueue"]': 'processNotificationQueue'
+            'click [data-action="processNotificationQueue"]': 'processNotificationQueue',
+            'click [data-action="acceptProviderCredentials"]': 'acceptProviderCredentials'
         },
 
         afterRender: function () {
@@ -71,7 +72,8 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                 ['Нужны секреты', integrationSummary.needsSecretCount || 0],
                 ['Runtime gaps', integrationSummary.runtimeMissingCount || 0],
                 ['Dry-run ready', integrationSummary.dryRunReadyCount || 0],
-                ['Acceptance', integrationSummary.acceptancePendingCount || 0]
+                ['Acceptance', integrationSummary.acceptancePendingCount || 0],
+                ['Accepted', integrationSummary.acceptedCount || 0]
             ];
             var html = '<div class="espo-dental-stom-layout" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin-bottom:10px">';
 
@@ -120,6 +122,7 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                     '<div class="espo-dental-stom-toolbar" style="margin:0 0 6px">' +
                         '<strong>' + SimpleStomUi.escapeHtml(row.type || '') + '</strong>' +
                         SimpleStomUi.badge(liveStatus, liveStatus) +
+                        this.renderProviderAcceptanceAction(row, liveStatus) +
                     '</div>' +
                     this.renderTable(checklist, ['check', 'status', 'required'], function (item) {
                         var itemStatus = item.status || 'missing';
@@ -140,6 +143,21 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                 title: 'Provider readiness',
                 body: html,
                 classes: ['espo-dental-stom-panel--compact']
+            });
+        },
+
+        renderProviderAcceptanceAction: function (row, liveStatus) {
+            if (liveStatus !== 'pending_acceptance' || !row.id) {
+                return '';
+            }
+
+            return SimpleStomUi.button('Принять', {
+                tone: 'primary',
+                attrs: {
+                    'data-action': 'acceptProviderCredentials',
+                    'data-id': row.id || '',
+                    'data-type': row.type || ''
+                }
             });
         },
 
@@ -318,6 +336,39 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                     }).bind(this))
                     .catch(function (xhr) {
                         Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось обработать очередь уведомлений.');
+                    });
+            }).bind(this));
+        },
+
+        acceptProviderCredentials: function (e) {
+            e.preventDefault();
+
+            var id = $(e.currentTarget).attr('data-id') || '';
+            var type = $(e.currentTarget).attr('data-type') || '';
+            if (!id) {
+                return;
+            }
+
+            Dialogs.prompt(this, {
+                title: 'Принять credentials провайдера',
+                message: 'Фиксируется только staff acceptance для ' + type + '. Живая отправка этим действием не выполняется.',
+                value: '',
+                submitLabel: 'Принять'
+            }).then((function (note) {
+                if (note === null) {
+                    return;
+                }
+
+                Espo.Ajax.postRequest('EspoDental/Integration/acceptProviderCredentials', {
+                    id: id,
+                    note: note || ''
+                })
+                    .then((function () {
+                        Espo.Ui.success('Credentials провайдера приняты.');
+                        this.fetchData();
+                    }).bind(this))
+                    .catch(function (xhr) {
+                        Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось принять credentials провайдера.');
                     });
             }).bind(this));
         }

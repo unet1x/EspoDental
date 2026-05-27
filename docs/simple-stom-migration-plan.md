@@ -681,3 +681,24 @@ Status:
 - managers can see exactly which channel checklist item blocks live acceptance;
 - `pending_acceptance` means the dry-run checklist is complete, not that an
   assistant or background job may send live provider messages.
+
+### Pass 11 - Provider Credential Acceptance Gate
+
+Goal: enforce the live-channel acceptance decision before any external provider
+send.
+
+Work:
+
+- add provider credential acceptance fields to `IntegrationSettings`;
+- add staff-only `POST /EspoDental/Integration/acceptProviderCredentials`;
+- keep the acceptance action outside the MCP tool list;
+- make `MessageDeliveryGateway` return `provider_acceptance_required` for SMTP,
+  Telegram and WhatsApp until accepted credentials are recorded;
+- expose the acceptance action in `IntegrationOpsCenter` only when the
+  readiness checklist is complete.
+
+Status:
+
+- `pending_acceptance` can now be resolved by staff without sending a message;
+- queued processing and reminders cannot call external providers before
+  provider credential acceptance is recorded.

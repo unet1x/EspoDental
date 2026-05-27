@@ -25,11 +25,12 @@ final class Phase58IntegrationProviderReadinessTest extends TestCase
                 'configValuePresent',
                 'provider_acceptance',
                 'pending_acceptance',
-                "'liveTestAllowed' => false",
+                'liveTestAllowed',
                 'runtimeConfigured',
                 'runtimeMissingCount',
                 'dryRunReadyCount',
                 'acceptancePendingCount',
+                'acceptedCount',
                 'blockedLiveTestCount',
                 "'sensitive' => true",
             ] as $needle

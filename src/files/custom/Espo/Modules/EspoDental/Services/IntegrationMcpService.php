@@ -6,6 +6,7 @@ namespace Espo\Modules\EspoDental\Services;
 
 use DateTimeImmutable;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
@@ -175,6 +176,49 @@ class IntegrationMcpService
     }
 
     /**
+     * @return array{id: string, type: string, status: string, acceptedAt: string, acceptedById: string}
+     */
+    public function acceptProviderCredentials(string $id, string $note, string $userId): array
+    {
+        /** @var IntegrationSettings|null $setting */
+        $setting = $this->entityManager->getEntityById(IntegrationSettings::ENTITY_TYPE, $id);
+        if (!$setting) {
+            throw new NotFound('Integration settings not found');
+        }
+
+        $enabled = (bool) $setting->get('isEnabled');
+        $secretsReference = trim((string) ($setting->get('secretsReference') ?? ''));
+        $checklist = $this->buildProviderChecklist(
+            (string) ($setting->get('integrationType') ?? ''),
+            $setting,
+            $enabled,
+            $secretsReference
+        );
+        $readiness = $this->buildLiveDeliveryReadiness($checklist, false);
+
+        if (!$readiness['dryRunReady']) {
+            throw new Conflict('Provider readiness checklist is not ready for acceptance');
+        }
+
+        $acceptedAt = (new DateTimeImmutable())->format('Y-m-d H:i:s');
+
+        $setting->set('credentialAcceptanceStatus', IntegrationSettings::ACCEPTANCE_ACCEPTED);
+        $setting->set('credentialAcceptedAt', $acceptedAt);
+        $setting->set('credentialAcceptedById', $userId);
+        $setting->set('credentialAcceptanceNote', $note);
+
+        $this->entityManager->saveEntity($setting);
+
+        return [
+            'id' => (string) $setting->getId(),
+            'type' => (string) ($setting->get('integrationType') ?? ''),
+            'status' => IntegrationSettings::ACCEPTANCE_ACCEPTED,
+            'acceptedAt' => $acceptedAt,
+            'acceptedById' => $userId,
+        ];
+    }
+
+    /**
      * @param list<array<string, mixed>> $tools
      * @return array{toolCount: int, safeToolCount: int, directMutationToolCount: int}
      */
@@ -230,16 +274,18 @@ class IntegrationMcpService
             $enabled = $setting ? (bool) $setting->get('isEnabled') : false;
             $secretsReference = $setting ? trim((string) ($setting->get('secretsReference') ?? '')) : '';
             $status = $this->resolveIntegrationStatus($setting !== null, $enabled, $secretsReference);
+            $accepted = $this->isCredentialAccepted($setting);
             $checklist = $this->buildProviderChecklist($type, $setting, $enabled, $secretsReference);
-            $liveDelivery = $this->buildLiveDeliveryReadiness($checklist);
+            $liveDelivery = $this->buildLiveDeliveryReadiness($checklist, $accepted);
             $checklist[] = $this->checklistItem(
                 'provider_acceptance',
                 'Clinic credentials accepted before controlled live smoke',
-                $liveDelivery['status'] === 'pending_acceptance' ? 'pending_acceptance' : 'blocked',
+                $liveDelivery['dryRunReady'] ? $liveDelivery['status'] : 'blocked',
                 true
             );
 
             $rows[] = [
+                'id' => $setting ? (string) $setting->getId() : '',
                 'type' => $type,
                 'configured' => $setting !== null,
                 'enabled' => $enabled,
@@ -247,6 +293,9 @@ class IntegrationMcpService
                 'clinicId' => $setting ? (string) ($setting->get('clinicId') ?? '') : '',
                 'updatedAt' => $setting ? (string) ($setting->get('updatedAt') ?? '') : '',
                 'status' => $status,
+                'credentialAcceptanceStatus' => $this->credentialAcceptanceStatus($setting),
+                'credentialAcceptedAt' => $setting ? (string) ($setting->get('credentialAcceptedAt') ?? '') : '',
+                'credentialAcceptedById' => $setting ? (string) ($setting->get('credentialAcceptedById') ?? '') : '',
                 'runtimeConfigured' => $this->isRuntimeConfigured($checklist),
                 'checklist' => $checklist,
                 'liveDelivery' => $liveDelivery,
@@ -262,6 +311,8 @@ class IntegrationMcpService
             'runtimeMissingCount' => 0,
             'dryRunReadyCount' => 0,
             'acceptancePendingCount' => 0,
+            'acceptedCount' => 0,
+            'liveTestAllowedCount' => 0,
             'blockedLiveTestCount' => 0,
         ];
 
@@ -274,6 +325,8 @@ class IntegrationMcpService
             $summary['runtimeMissingCount'] += $row['enabled'] && !$row['runtimeConfigured'] ? 1 : 0;
             $summary['dryRunReadyCount'] += $row['liveDelivery']['dryRunReady'] ? 1 : 0;
             $summary['acceptancePendingCount'] += $row['liveDelivery']['status'] === 'pending_acceptance' ? 1 : 0;
+            $summary['acceptedCount'] += $row['liveDelivery']['status'] === 'accepted' ? 1 : 0;
+            $summary['liveTestAllowedCount'] += $row['liveDelivery']['liveTestAllowed'] ? 1 : 0;
             $summary['blockedLiveTestCount'] += $row['liveDelivery']['status'] === 'blocked' ? 1 : 0;
         }
 
@@ -345,7 +398,7 @@ class IntegrationMcpService
      * @param list<array<string, mixed>> $checklist
      * @return array{status: string, dryRunReady: bool, liveTestAllowed: bool, blockers: list<string>, nextStep: string}
      */
-    private function buildLiveDeliveryReadiness(array $checklist): array
+    private function buildLiveDeliveryReadiness(array $checklist, bool $accepted): array
     {
         $blockers = [];
 
@@ -360,16 +413,50 @@ class IntegrationMcpService
         }
 
         $dryRunReady = count($blockers) === 0;
+        $status = 'blocked';
+        $liveTestAllowed = false;
+        $nextStep = 'Complete blocking checklist items before provider credential acceptance.';
+
+        if ($dryRunReady && $accepted) {
+            $status = IntegrationSettings::ACCEPTANCE_ACCEPTED;
+            $liveTestAllowed = true;
+            $nextStep = 'Provider credentials accepted; live smoke remains an explicit staff action.';
+        } elseif ($dryRunReady) {
+            $status = IntegrationSettings::ACCEPTANCE_PENDING;
+            $nextStep = 'Credential checklist is ready for staff acceptance; run live provider smoke only after explicit approval.';
+        }
 
         return [
-            'status' => $dryRunReady ? 'pending_acceptance' : 'blocked',
+            'status' => $status,
             'dryRunReady' => $dryRunReady,
-            'liveTestAllowed' => false,
+            'liveTestAllowed' => $liveTestAllowed,
             'blockers' => array_values(array_filter($blockers)),
-            'nextStep' => $dryRunReady
-                ? 'Credential checklist is ready for staff acceptance; run live provider smoke only after explicit approval.'
-                : 'Complete blocking checklist items before provider credential acceptance.',
+            'nextStep' => $nextStep,
         ];
+    }
+
+    private function isCredentialAccepted(?IntegrationSettings $setting): bool
+    {
+        return $this->credentialAcceptanceStatus($setting) === IntegrationSettings::ACCEPTANCE_ACCEPTED;
+    }
+
+    private function credentialAcceptanceStatus(?IntegrationSettings $setting): string
+    {
+        if (!$setting) {
+            return IntegrationSettings::ACCEPTANCE_PENDING;
+        }
+
+        $status = (string) ($setting->get('credentialAcceptanceStatus') ?? '');
+
+        return in_array(
+            $status,
+            [
+                IntegrationSettings::ACCEPTANCE_PENDING,
+                IntegrationSettings::ACCEPTANCE_ACCEPTED,
+                IntegrationSettings::ACCEPTANCE_REVOKED,
+            ],
+            true
+        ) ? $status : IntegrationSettings::ACCEPTANCE_PENDING;
     }
 
     /**

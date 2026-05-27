@@ -562,6 +562,15 @@ Verification completed after this slice:
   credential-acceptance status for SMTP, Telegram and WhatsApp without exposing
   secret values; `pending_acceptance` still blocks automatic live provider
   smoke until staff explicitly accepts credentials.
+- Stage J now enforces provider credential acceptance before external sends.
+  `POST /EspoDental/Integration/acceptProviderCredentials` is a staff-only CRM
+  action, not an MCP tool, and records acceptance metadata on
+  `IntegrationSettings`. `MessageDeliveryGateway` returns
+  `provider_acceptance_required` for SMTP, Telegram and WhatsApp until the
+  channel has accepted credentials, preventing accidental provider calls.
+  Editing the channel type, enabled flag, secret reference or settings after
+  acceptance revokes the accepted status so staff must re-accept the new
+  credential set.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and
@@ -748,7 +757,9 @@ The following requirements still need implementation or explicit verification:
 - WhatsApp live delivery still needs provider-specific browser or API
   acceptance once clinic credentials exist. The provider readiness checklist
   now makes that gap visible as `pending_acceptance` instead of silently
-  treating settings as live-ready.
+  treating settings as live-ready; the provider credential acceptance gate
+  blocks delivery with `provider_acceptance_required` until staff records that
+  acceptance.
 
 ## 7. Development Rule
 

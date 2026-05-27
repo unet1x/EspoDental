@@ -10,6 +10,19 @@
         "isEnabled": {"type": "bool", "default": false},
         "settings": {"type": "jsonObject"},
         "secretsReference": {"type": "varchar", "maxLength": 255},
+        "credentialAcceptanceStatus": {
+            "type": "enum",
+            "options": ["pending_acceptance", "accepted", "revoked"],
+            "default": "pending_acceptance",
+            "style": {
+                "pending_acceptance": "warning",
+                "accepted": "success",
+                "revoked": "danger"
+            }
+        },
+        "credentialAcceptedAt": {"type": "datetime", "readOnly": true},
+        "credentialAcceptedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
+        "credentialAcceptanceNote": {"type": "text"},
         "updatedAt": {"type": "datetime", "readOnly": true},
         "updatedBy": {"type": "link", "readOnly": true, "view": "views/fields/user"},
         "createdAt": {"type": "datetime", "readOnly": true},
@@ -19,6 +32,7 @@
     },
     "links": {
         "clinic": {"type": "belongsTo", "entity": "Clinic"},
+        "credentialAcceptedBy": {"type": "belongsTo", "entity": "User"},
         "updatedBy": {"type": "belongsTo", "entity": "User"},
         "createdBy": {"type": "belongsTo", "entity": "User"},
         "modifiedBy": {"type": "belongsTo", "entity": "User"}

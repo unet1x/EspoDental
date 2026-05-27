@@ -161,6 +161,17 @@ When those checks pass the row moves to `pending_acceptance`, which is still a
 manual gate: staff must explicitly accept clinic credentials before any live
 provider smoke is run.
 
+The provider credential acceptance decision is stored on `IntegrationSettings` through the
+staff-only `Integration/acceptProviderCredentials` action. The action is not an
+MCP tool and does not send a message; it only records the accepted status,
+timestamp, reviewer and note after the checklist is complete. The
+`MessageDeliveryGateway` enforces the gate and returns
+`provider_acceptance_required` for SMTP, Telegram and WhatsApp until acceptance
+is recorded, so queued processing and reminders cannot call external providers
+by accident. If accepted channel settings, enabled state or secret reference
+change later, the acceptance is revoked and staff must accept the new
+credential set before live sends are allowed again.
+
 ## 8. Virtual Administrator
 
 The local LLM design is documented in

@@ -6,6 +6,10 @@
         "isEnabled": "Enabled",
         "settings": "Settings",
         "secretsReference": "Secrets reference",
+        "credentialAcceptanceStatus": "Credential acceptance",
+        "credentialAcceptedAt": "Accepted at",
+        "credentialAcceptedBy": "Accepted by",
+        "credentialAcceptanceNote": "Acceptance note",
         "updatedAt": "Updated at",
         "updatedBy": "Updated by"
     },
@@ -14,7 +18,23 @@
             "smtp": "SMTP",
             "whatsapp": "WhatsApp",
             "telegram": "Telegram"
+        },
+        "credentialAcceptanceStatus": {
+            "pending_acceptance": "Pending acceptance",
+            "accepted": "Accepted",
+            "revoked": "Revoked"
         }
     },
-    "links": {"clinic": "Clinic", "updatedBy": "Updated by"}
+    "labels": {
+        "Accept Provider Credentials": "Accept provider credentials"
+    },
+    "messages": {
+        "Provider credentials accepted": "Provider credentials accepted. Live sends remain staff-triggered.",
+        "Provider credentials acceptance failed": "Could not accept provider credentials."
+    },
+    "links": {
+        "clinic": "Clinic",
+        "credentialAcceptedBy": "Accepted by",
+        "updatedBy": "Updated by"
+    }
 }

@@ -40,6 +40,13 @@ credential-acceptance gate without returning any secret values. A
 `pending_acceptance` row is still blocked from live provider smoke until staff
 approves the clinic credentials outside the MCP contract.
 
+The provider credential acceptance gate is a separate CRM staff action:
+`POST /EspoDental/Integration/acceptProviderCredentials`. It is intentionally
+not listed in `tools.list`, because MCP clients may not approve live-channel
+credentials. Until a channel has accepted credentials,
+`MessageDeliveryGateway` returns `provider_acceptance_required` for SMTP,
+Telegram and WhatsApp instead of calling an external provider.
+
 ## 2. Allowed Tool Behavior
 
 Allowed MCP behavior:

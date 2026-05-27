@@ -2,6 +2,8 @@
     {"rows": [
         [{"name": "integrationType"}, {"name": "clinic"}],
         [{"name": "isEnabled"}, {"name": "secretsReference"}],
+        [{"name": "credentialAcceptanceStatus"}, {"name": "credentialAcceptedAt"}],
+        [{"name": "credentialAcceptedBy"}, {"name": "credentialAcceptanceNote"}],
         [{"name": "settings", "fullWidth": true}],
         [{"name": "updatedAt"}, {"name": "updatedBy"}]
     ]}

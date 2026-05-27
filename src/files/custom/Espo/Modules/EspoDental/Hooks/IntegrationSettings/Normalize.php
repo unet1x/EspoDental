@@ -23,5 +23,30 @@ class Normalize
 
         $entity->set('name', (string) $entity->get('integrationType'));
         $entity->set('updatedAt', (new DateTimeImmutable())->format('Y-m-d H:i:s'));
+
+        if ($this->shouldRevokeAcceptedCredentials($entity)) {
+            $entity->set('credentialAcceptanceStatus', IntegrationSettings::ACCEPTANCE_REVOKED);
+            $entity->set('credentialAcceptedAt', null);
+            $entity->set('credentialAcceptedById', null);
+        }
+    }
+
+    private function shouldRevokeAcceptedCredentials(IntegrationSettings $entity): bool
+    {
+        if ($entity->isNew()) {
+            return false;
+        }
+
+        if ((string) ($entity->getFetched('credentialAcceptanceStatus') ?? '') !== IntegrationSettings::ACCEPTANCE_ACCEPTED) {
+            return false;
+        }
+
+        foreach (['integrationType', 'isEnabled', 'secretsReference', 'settings'] as $field) {
+            if ($entity->get($field) !== $entity->getFetched($field)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

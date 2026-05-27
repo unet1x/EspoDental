@@ -100,6 +100,39 @@ class Integration extends Record
         return $service->createActionProposal((array) $body);
     }
 
+    /**
+     * POST /EspoDental/Integration/acceptProviderCredentials
+     *
+     * @return array{id: string, type: string, status: string, acceptedAt: string, acceptedById: string}
+     */
+    public function postActionAcceptProviderCredentials(Request $request): array
+    {
+        $this->assertRegularUser();
+
+        if (!$this->getAcl()->checkScope('IntegrationSettings', 'edit')) {
+            throw new Forbidden();
+        }
+
+        $body = $request->getParsedBody();
+        if (!is_object($body)) {
+            throw new BadRequest('Invalid payload');
+        }
+
+        $id = isset($body->id) ? (string) $body->id : '';
+        if ($id === '') {
+            throw new BadRequest('id is required');
+        }
+
+        /** @var IntegrationMcpService $service */
+        $service = $this->injectableFactory->create(IntegrationMcpService::class);
+
+        return $service->acceptProviderCredentials(
+            $id,
+            property_exists($body, 'note') ? trim((string) $body->note) : '',
+            (string) $this->getUser()->getId()
+        );
+    }
+
     private function assertRegularUser(): void
     {
         $user = $this->getUser();

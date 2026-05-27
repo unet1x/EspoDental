@@ -8,6 +8,7 @@ use Espo\Core\Mail\Email;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
+use Espo\Modules\EspoDental\Entities\IntegrationSettings;
 use Espo\Modules\EspoDental\Entities\NotificationLog;
 use Espo\Modules\EspoDental\Tools\TelegramSender;
 
@@ -52,6 +53,16 @@ class MessageDeliveryGateway
         $subject = (string) $log->get('subject');
         $text = (string) $log->get('messageText');
         $provider = $this->providerFor($channel);
+        $integrationType = $this->integrationTypeForChannel($channel);
+
+        if ($integrationType !== '' && !$this->isProviderAccepted($integrationType)) {
+            return [
+                'ok' => false,
+                'error' => 'provider_acceptance_required',
+                'provider' => $provider,
+                'externalMessageId' => null,
+            ];
+        }
 
         return match ($channel) {
             NotificationLog::CHANNEL_TELEGRAM => $this->sendTelegram($recipient, $text, $provider),
@@ -64,6 +75,32 @@ class MessageDeliveryGateway
                 'externalMessageId' => null,
             ],
         };
+    }
+
+    private function integrationTypeForChannel(string $channel): string
+    {
+        return match ($channel) {
+            NotificationLog::CHANNEL_EMAIL => IntegrationSettings::TYPE_SMTP,
+            NotificationLog::CHANNEL_TELEGRAM => IntegrationSettings::TYPE_TELEGRAM,
+            NotificationLog::CHANNEL_WHATSAPP => IntegrationSettings::TYPE_WHATSAPP,
+            default => '',
+        };
+    }
+
+    private function isProviderAccepted(string $type): bool
+    {
+        /** @var IntegrationSettings|null $setting */
+        $setting = $this->entityManager
+            ->getRDBRepository(IntegrationSettings::ENTITY_TYPE)
+            ->where([
+                'deleted' => false,
+                'integrationType' => $type,
+                'isEnabled' => true,
+                'credentialAcceptanceStatus' => IntegrationSettings::ACCEPTANCE_ACCEPTED,
+            ])
+            ->findOne();
+
+        return $setting !== null;
     }
 
     /**

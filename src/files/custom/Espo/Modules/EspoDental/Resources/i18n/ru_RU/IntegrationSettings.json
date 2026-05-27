@@ -6,6 +6,10 @@
         "isEnabled": "Включена",
         "settings": "Настройки",
         "secretsReference": "Ссылка на секрет",
+        "credentialAcceptanceStatus": "Приемка credentials",
+        "credentialAcceptedAt": "Принято",
+        "credentialAcceptedBy": "Принял",
+        "credentialAcceptanceNote": "Заметка приемки",
         "updatedAt": "Обновлено",
         "updatedBy": "Обновил"
     },
@@ -14,7 +18,23 @@
             "smtp": "SMTP",
             "whatsapp": "WhatsApp",
             "telegram": "Telegram"
+        },
+        "credentialAcceptanceStatus": {
+            "pending_acceptance": "Ждет acceptance",
+            "accepted": "Принято",
+            "revoked": "Отозвано"
         }
     },
-    "links": {"clinic": "Клиника", "updatedBy": "Обновил"}
+    "labels": {
+        "Accept Provider Credentials": "Принять credentials провайдера"
+    },
+    "messages": {
+        "Provider credentials accepted": "Credentials провайдера приняты. Живые отправки остаются ручным действием персонала.",
+        "Provider credentials acceptance failed": "Не удалось принять credentials провайдера."
+    },
+    "links": {
+        "clinic": "Клиника",
+        "credentialAcceptedBy": "Принял",
+        "updatedBy": "Обновил"
+    }
 }
