@@ -529,6 +529,11 @@ Verification completed after this slice:
   and cabinet utilization into one structured control surface. Local smoke on
   2026-05-27 returned a complete seeded snapshot after route rebuild; known
   material cost remains limited to outbound non-transfer stock movements.
+- Stage I report export is available at `GET /EspoDental/Report/export`.
+  It returns CSV/JSON metadata and content for seeded report sources, including
+  finance, payments, service profitability, material finance, doctor/cabinet
+  utilization, patient funnel, appointments, inventory and payroll. The manager
+  `ManagementSnapshot` dashlet exposes the finance CSV export action.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

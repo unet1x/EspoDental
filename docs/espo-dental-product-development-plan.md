@@ -507,7 +507,11 @@ Status:
   no-show/cancellation rates, doctor productivity, cabinet utilization and
   payroll source rows without adding a broad custom report builder;
 - local API smoke on 2026-05-27 confirmed the endpoint returns seeded finance,
-  payroll, stock, doctor and cabinet sections after EspoCRM route rebuild.
+  payroll, stock, doctor and cabinet sections after EspoCRM route rebuild;
+- second Stage I slice added `GET /EspoDental/Report/export` for CSV/JSON
+  exports over the seeded report sources. The manager snapshot dashlet can
+  download its finance export as CSV, while the broad report builder remains
+  deferred until manager-demo feedback identifies a concrete gap.
 
 ### Stage J - Integrations And Virtual Administrator
 
@@ -547,9 +551,10 @@ Continue Stage I acceptance:
 
 1. Browser-check the manager dashboard after bootstrap so
    `ManagementSnapshot` renders above the existing revenue, cash, doctor,
-   cabinet, no-show, inventory and payroll dashlets.
-2. Compare the snapshot against demo source records and decide which gaps need
-   saved report export versus small drill-down links.
+   cabinet, no-show, inventory and payroll dashlets, and verify `Экспорт CSV`
+   downloads data from `Report/export`.
+2. Compare exported rows against demo source records and decide which gaps need
+   small drill-down links or extra columns.
 3. Keep a broad report builder deferred until manager-demo feedback proves a
    concrete reporting gap.
 

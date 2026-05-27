@@ -85,6 +85,11 @@
         "params": {"controller": "Report", "action": "managementSnapshot"}
     },
     {
+        "route": "/EspoDental/Report/export",
+        "method": "get",
+        "params": {"controller": "Report", "action": "export"}
+    },
+    {
         "route": "/EspoDental/Inventory/workspace",
         "method": "get",
         "params": {"controller": "Inventory", "action": "workspace"}

@@ -168,6 +168,9 @@
   stock risks, appointment quality, doctor productivity and cabinet utilization.
   The local demo smoke on 2026-05-27 verified a seeded `200 OK` response after
   EspoCRM route rebuild.
+- Report export is available at `EspoDental/Report/export` with CSV/JSON
+  content for seeded report sources. The manager snapshot dashlet can download
+  its finance export as CSV without adding a broad custom report builder.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

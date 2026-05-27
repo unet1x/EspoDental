@@ -549,6 +549,8 @@ Work:
 - add a structured snapshot endpoint over existing report, invoice, inventory
   and payroll data;
 - place a `ManagementSnapshot` dashlet at the top of the manager dashboard;
+- add `GET /EspoDental/Report/export` for CSV/JSON exports over seeded report
+  sources;
 - keep the existing detailed report dashlets below it for drill-down and demo
   comparison.
 
@@ -562,4 +564,9 @@ Status:
 - local API smoke on 2026-05-27 returned a seeded `200 OK` response after
   EspoCRM route rebuild;
 - `materialCost` is documented as a known-cost signal from outbound
-  non-transfer stock movements, not as a complete P&L model.
+  non-transfer stock movements, not as a complete P&L model;
+- report export slice added CSV/JSON content for `payments`, `finance`,
+  `service_profitability`, `material_finance`, `doctor_utilization`,
+  `cabinet_utilization`, `patient_funnel`, `appointments`, `inventory` and
+  `payroll`. `ManagementSnapshot` exposes the finance CSV download from the
+  manager dashboard.

@@ -210,6 +210,24 @@ class Report
 
     /**
      * @throws Forbidden
+     * @return array<string, mixed>
+     */
+    public function getActionExport(Request $request): array
+    {
+        $this->assertReportAccess();
+
+        return $this->reportService->exportReport(
+            (string) ($request->getQueryParam('source') ?? 'finance'),
+            (string) ($request->getQueryParam('format') ?? 'csv'),
+            $request->getQueryParam('dateFrom'),
+            $request->getQueryParam('dateTo'),
+            $request->getQueryParam('clinicId'),
+            (int) ($request->getQueryParam('limit') ?? 100)
+        );
+    }
+
+    /**
+     * @throws Forbidden
      */
     private function assertReportAccess(): void
     {

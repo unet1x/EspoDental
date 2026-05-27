@@ -5,20 +5,34 @@ declare(strict_types=1);
 namespace Espo\Modules\EspoDental\Services;
 
 use DateTimeImmutable;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\ORM\EntityManager;
 use Espo\Modules\EspoDental\Entities\Appointment;
 use Espo\Modules\EspoDental\Entities\Cabinet;
 use Espo\Modules\EspoDental\Entities\Invoice;
 use Espo\Modules\EspoDental\Entities\LowStockAlert;
 use Espo\Modules\EspoDental\Entities\Material;
+use Espo\Modules\EspoDental\Entities\Patient;
 use Espo\Modules\EspoDental\Entities\Payment;
+use Espo\Modules\EspoDental\Entities\PreliminaryPatient;
 use Espo\Modules\EspoDental\Entities\SalaryEntry;
 use Espo\Modules\EspoDental\Entities\StockMovement;
 use Espo\Modules\EspoDental\Entities\Visit;
+use Espo\Modules\EspoDental\Entities\VisitMaterialLine;
 use Espo\Modules\EspoDental\Entities\VisitServiceLine;
 
 class ReportService
 {
+    /** @var array<string, string> */
+    private const EXPORT_SOURCE_ALIASES = [
+        'managementSnapshot' => 'finance',
+        'management_snapshot' => 'finance',
+        'doctorProductivity' => 'doctor_utilization',
+        'cabinetUtilization' => 'cabinet_utilization',
+        'noShowCancellations' => 'appointments',
+        'inventoryStatus' => 'inventory',
+    ];
+
     public function __construct(private readonly EntityManager $entityManager)
     {
     }
@@ -172,6 +186,70 @@ class ReportService
             'doctorRows' => $doctorProductivity['rows'],
             'cabinetRows' => $cabinetUtilization['rows'],
             'stockRows' => $inventory['rows'],
+        ];
+    }
+
+    /**
+     * @return array{
+     *     source: string,
+     *     format: string,
+     *     filename: string,
+     *     mimeType: string,
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     columns: list<array{key: string, label: string}>,
+     *     rows: list<array<string, mixed>>,
+     *     content: string
+     * }
+     */
+    public function exportReport(
+        string $source,
+        string $format = 'csv',
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
+        ?string $clinicId = null,
+        int $limit = 100
+    ): array {
+        $source = $this->normalizeExportSource($source);
+        $format = $this->normalizeExportFormat($format);
+        $period = $this->normalizePeriod($dateFrom, $dateTo);
+        $clinicId = $this->normalizeOptionalId($clinicId);
+        $limit = max(1, min(500, $limit));
+
+        [$columns, $rows] = match ($source) {
+            'payments' => $this->buildPaymentsExport($period, $clinicId, $limit),
+            'finance' => $this->buildFinanceExport($period, $clinicId, $limit),
+            'service_profitability' => $this->buildServiceProfitabilityExport($period, $clinicId, $limit),
+            'material_finance' => $this->buildMaterialFinanceExport($period, $clinicId, $limit),
+            'doctor_utilization' => $this->buildDoctorUtilizationExport($period, $limit),
+            'cabinet_utilization' => $this->buildCabinetUtilizationExport($period, $clinicId, $limit),
+            'patient_funnel' => $this->buildPatientFunnelExport($clinicId),
+            'appointments' => $this->buildAppointmentsExport($period, $clinicId, $limit),
+            'inventory' => $this->buildInventoryExport($period, $clinicId, $limit),
+            'payroll' => $this->buildPayrollExport($period, $clinicId, $limit),
+        };
+
+        $filename = sprintf(
+            'espo-dental-%s-%s-%s.%s',
+            str_replace('_', '-', $source),
+            substr($period['from'], 0, 10),
+            substr($period['to'], 0, 10),
+            $format
+        );
+        $content = $format === 'json'
+            ? $this->renderExportJson($source, $period, $columns, $rows)
+            : $this->renderExportCsv($columns, $rows);
+
+        return [
+            'source' => $source,
+            'format' => $format,
+            'filename' => $filename,
+            'mimeType' => $format === 'json' ? 'application/json; charset=utf-8' : 'text/csv; charset=utf-8',
+            'dateFrom' => $period['from'],
+            'dateTo' => $period['to'],
+            'columns' => $columns,
+            'rows' => $rows,
+            'content' => $content,
         ];
     }
 
@@ -713,6 +791,664 @@ class ReportService
             'summary' => $summary,
             'rows' => array_slice(array_values($rows), 0, $limit),
         ];
+    }
+
+    private function normalizeExportSource(string $source): string
+    {
+        $source = trim($source) ?: 'finance';
+        $source = self::EXPORT_SOURCE_ALIASES[$source] ?? $source;
+        $supported = [
+            'payments',
+            'finance',
+            'service_profitability',
+            'material_finance',
+            'doctor_utilization',
+            'cabinet_utilization',
+            'patient_funnel',
+            'appointments',
+            'inventory',
+            'payroll',
+        ];
+
+        if (!in_array($source, $supported, true)) {
+            throw new BadRequest('Unsupported report export source');
+        }
+
+        return $source;
+    }
+
+    private function normalizeExportFormat(string $format): string
+    {
+        $format = strtolower(trim($format)) ?: 'csv';
+
+        if (!in_array($format, ['csv', 'json'], true)) {
+            throw new BadRequest('Unsupported report export format');
+        }
+
+        return $format;
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildPaymentsExport(array $period, ?string $clinicId, int $limit): array
+    {
+        $where = [
+            'deleted' => false,
+            'paidAt>=' => $period['from'],
+            'paidAt<' => $period['to'],
+        ];
+
+        if ($clinicId !== null) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<Payment> $payments */
+        $payments = $this->entityManager
+            ->getRDBRepository(Payment::ENTITY_TYPE)
+            ->where($where)
+            ->order('paidAt', 'DESC')
+            ->find();
+
+        $rows = [];
+        foreach ($payments as $payment) {
+            $rows[] = [
+                'paidAt' => (string) ($payment->get('paidAt') ?? ''),
+                'method' => (string) ($payment->get('method') ?? ''),
+                'direction' => (string) ($payment->get('direction') ?? ''),
+                'status' => (string) ($payment->get('status') ?? ''),
+                'amount' => round($payment->getAmount(), 2),
+                'currency' => (string) ($payment->get('currency') ?? ''),
+                'invoiceId' => (string) ($payment->get('invoiceId') ?? ''),
+                'patientId' => (string) ($payment->get('patientId') ?? ''),
+            ];
+
+            if (count($rows) >= $limit) {
+                break;
+            }
+        }
+
+        return [
+            $this->columns([
+                'paidAt' => 'Дата оплаты',
+                'method' => 'Метод',
+                'direction' => 'Направление',
+                'status' => 'Статус',
+                'amount' => 'Сумма',
+                'currency' => 'Валюта',
+                'invoiceId' => 'Счет',
+                'patientId' => 'Пациент',
+            ]),
+            $rows,
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildFinanceExport(array $period, ?string $clinicId, int $limit): array
+    {
+        $snapshot = $this->getManagementSnapshot($period['from'], $period['to'], $clinicId, min(12, $limit));
+        $rows = [];
+
+        foreach ($snapshot['finance'] as $key => $value) {
+            $rows[] = [
+                'section' => 'finance',
+                'item' => $key,
+                'metric' => $key,
+                'value' => $value,
+                'extra' => '',
+            ];
+        }
+
+        foreach ($snapshot['appointmentQuality'] as $key => $value) {
+            $rows[] = [
+                'section' => 'appointment_quality',
+                'item' => $key,
+                'metric' => $key,
+                'value' => $value,
+                'extra' => '',
+            ];
+        }
+
+        foreach ($snapshot['stock'] as $key => $value) {
+            $rows[] = [
+                'section' => 'stock',
+                'item' => $key,
+                'metric' => $key,
+                'value' => $value,
+                'extra' => '',
+            ];
+        }
+
+        foreach ($snapshot['doctorRows'] as $row) {
+            $rows[] = [
+                'section' => 'doctor',
+                'item' => $row['doctorName'] ?? $row['doctorId'] ?? '',
+                'metric' => 'grossAmount',
+                'value' => $row['grossAmount'] ?? 0,
+                'extra' => 'visits=' . (string) ($row['visitCount'] ?? 0),
+            ];
+        }
+
+        foreach ($snapshot['cabinetRows'] as $row) {
+            $rows[] = [
+                'section' => 'cabinet',
+                'item' => $row['cabinetName'] ?? $row['cabinetId'] ?? '',
+                'metric' => 'utilizationPercent',
+                'value' => $row['utilizationPercent'] ?? 0,
+                'extra' => 'occupiedMinutes=' . (string) ($row['occupiedMinutes'] ?? 0),
+            ];
+        }
+
+        foreach (($snapshot['payroll']['rows'] ?? []) as $row) {
+            $rows[] = [
+                'section' => 'payroll',
+                'item' => $row['userName'] ?? $row['userId'] ?? '',
+                'metric' => (string) ($row['status'] ?? ''),
+                'value' => $row['totalAmount'] ?? 0,
+                'extra' => trim((string) ($row['periodFrom'] ?? '') . ' ' . (string) ($row['periodTo'] ?? '')),
+            ];
+        }
+
+        return [
+            $this->columns([
+                'section' => 'Раздел',
+                'item' => 'Объект',
+                'metric' => 'Показатель',
+                'value' => 'Значение',
+                'extra' => 'Детали',
+            ]),
+            $rows,
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildServiceProfitabilityExport(array $period, ?string $clinicId, int $limit): array
+    {
+        $visitIds = $this->getFinishedVisitIds($period, $clinicId);
+        $rows = [];
+
+        if ($visitIds !== []) {
+            $materialCostByServiceLine = $this->getMaterialCostByServiceLine($visitIds);
+            /** @var iterable<VisitServiceLine> $lines */
+            $lines = $this->entityManager
+                ->getRDBRepository(VisitServiceLine::ENTITY_TYPE)
+                ->where(['deleted' => false, 'visitId' => $visitIds])
+                ->find();
+
+            foreach ($lines as $line) {
+                $serviceId = (string) ($line->get('serviceId') ?? '');
+                $key = $serviceId !== '' ? $serviceId : (string) $line->getId();
+
+                if (!isset($rows[$key])) {
+                    $rows[$key] = [
+                        'serviceId' => $serviceId,
+                        'serviceName' => (string) ($line->get('serviceName') ?: $serviceId ?: $line->getId()),
+                        'quantity' => 0,
+                        'revenue' => 0.0,
+                        'materialCost' => 0.0,
+                        'profit' => 0.0,
+                    ];
+                }
+
+                $rows[$key]['quantity'] += $line->getQuantity();
+                $rows[$key]['revenue'] += $line->getAmount();
+                $rows[$key]['materialCost'] += $materialCostByServiceLine[(string) $line->getId()] ?? 0.0;
+            }
+        }
+
+        foreach ($rows as &$row) {
+            $row['revenue'] = round($row['revenue'], 2);
+            $row['materialCost'] = round($row['materialCost'], 2);
+            $row['profit'] = round($row['revenue'] - $row['materialCost'], 2);
+        }
+        unset($row);
+
+        usort($rows, static fn (array $a, array $b): int => [$b['profit'], $b['revenue']]
+            <=> [$a['profit'], $a['revenue']]);
+
+        return [
+            $this->columns([
+                'serviceName' => 'Услуга',
+                'quantity' => 'Количество',
+                'revenue' => 'Выручка',
+                'materialCost' => 'Материалы',
+                'profit' => 'Маржа',
+                'serviceId' => 'ID услуги',
+            ]),
+            array_slice(array_values($rows), 0, $limit),
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildMaterialFinanceExport(array $period, ?string $clinicId, int $limit): array
+    {
+        $where = [
+            'deleted' => false,
+            'performedAt>=' => $period['from'],
+            'performedAt<' => $period['to'],
+        ];
+
+        if ($clinicId !== null) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<StockMovement> $movements */
+        $movements = $this->entityManager
+            ->getRDBRepository(StockMovement::ENTITY_TYPE)
+            ->where($where)
+            ->order('performedAt', 'DESC')
+            ->find();
+
+        $rows = [];
+        foreach ($movements as $movement) {
+            $rows[] = [
+                'performedAt' => (string) ($movement->get('performedAt') ?? ''),
+                'materialName' => (string) ($movement->get('materialName') ?: $movement->get('materialId') ?: ''),
+                'type' => (string) ($movement->get('type') ?? ''),
+                'quantity' => round((float) ($movement->get('quantity') ?? 0), 3),
+                'signedQuantity' => round($movement->getSignedQuantity(), 3),
+                'unitPrice' => round((float) ($movement->get('unitPrice') ?? 0), 2),
+                'totalCost' => round((float) ($movement->get('totalCost') ?? 0), 2),
+                'sourceWarehouseName' => (string) ($movement->get('sourceWarehouseName') ?? ''),
+                'targetWarehouseName' => (string) ($movement->get('targetWarehouseName') ?? ''),
+            ];
+
+            if (count($rows) >= $limit) {
+                break;
+            }
+        }
+
+        return [
+            $this->columns([
+                'performedAt' => 'Дата',
+                'materialName' => 'Материал',
+                'type' => 'Тип движения',
+                'quantity' => 'Количество',
+                'signedQuantity' => 'Знак. количество',
+                'unitPrice' => 'Цена',
+                'totalCost' => 'Стоимость',
+                'sourceWarehouseName' => 'Откуда',
+                'targetWarehouseName' => 'Куда',
+            ]),
+            $rows,
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildDoctorUtilizationExport(array $period, int $limit): array
+    {
+        return [
+            $this->columns([
+                'doctorName' => 'Врач',
+                'visitCount' => 'Приемы',
+                'serviceLineCount' => 'Услуги',
+                'grossAmount' => 'Выручка',
+                'averageVisitAmount' => 'Средний чек',
+                'doctorId' => 'ID врача',
+            ]),
+            $this->getDoctorProductivity($period['from'], $period['to'], $limit)['rows'],
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildCabinetUtilizationExport(array $period, ?string $clinicId, int $limit): array
+    {
+        return [
+            $this->columns([
+                'cabinetName' => 'Кабинет',
+                'appointmentCount' => 'Записи',
+                'finishedCount' => 'Завершено',
+                'occupiedMinutes' => 'Занято, мин',
+                'availableMinutes' => 'Доступно, мин',
+                'utilizationPercent' => 'Загрузка, %',
+                'cabinetId' => 'ID кабинета',
+            ]),
+            $this->getCabinetUtilization($period['from'], $period['to'], 8, 21, $clinicId, $limit)['rows'],
+        ];
+    }
+
+    /**
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildPatientFunnelExport(?string $clinicId): array
+    {
+        $preliminaryWhere = ['deleted' => false];
+        $patientWhere = ['deleted' => false];
+
+        if ($clinicId !== null) {
+            $preliminaryWhere['clinicId'] = $clinicId;
+            $patientWhere['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<PreliminaryPatient> $preliminaryPatients */
+        $preliminaryPatients = $this->entityManager
+            ->getRDBRepository(PreliminaryPatient::ENTITY_TYPE)
+            ->where($preliminaryWhere)
+            ->find();
+
+        $leadCounts = [
+            PreliminaryPatient::STATUS_ENTERED => 0,
+            PreliminaryPatient::STATUS_BOOKED => 0,
+            PreliminaryPatient::STATUS_PROCESSED => 0,
+            PreliminaryPatient::STATUS_NO_SHOW => 0,
+        ];
+        $convertedCount = 0;
+
+        foreach ($preliminaryPatients as $patient) {
+            $status = (string) ($patient->getStatus() ?: PreliminaryPatient::STATUS_ENTERED);
+            $leadCounts[$status] = ($leadCounts[$status] ?? 0) + 1;
+
+            if ($patient->isConverted()) {
+                $convertedCount++;
+            }
+        }
+
+        $totalLeads = array_sum($leadCounts);
+        $rows = [];
+
+        foreach ($leadCounts as $stage => $count) {
+            $rows[] = [
+                'stage' => $stage,
+                'patientCount' => $count,
+                'conversionPercent' => $totalLeads > 0 ? round($count / $totalLeads * 100, 1) : 0.0,
+            ];
+        }
+
+        $rows[] = [
+            'stage' => 'converted',
+            'patientCount' => $convertedCount,
+            'conversionPercent' => $totalLeads > 0 ? round($convertedCount / $totalLeads * 100, 1) : 0.0,
+        ];
+
+        /** @var iterable<Patient> $patients */
+        $patients = $this->entityManager
+            ->getRDBRepository(Patient::ENTITY_TYPE)
+            ->where($patientWhere)
+            ->find();
+
+        $activePatients = 0;
+        foreach ($patients as $patient) {
+            if ($patient->getStatus() === Patient::STATUS_ACTIVE) {
+                $activePatients++;
+            }
+        }
+
+        $rows[] = [
+            'stage' => 'active_patient',
+            'patientCount' => $activePatients,
+            'conversionPercent' => 0.0,
+        ];
+
+        return [
+            $this->columns([
+                'stage' => 'Этап',
+                'patientCount' => 'Пациенты',
+                'conversionPercent' => 'Доля, %',
+            ]),
+            $rows,
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildAppointmentsExport(array $period, ?string $clinicId, int $limit): array
+    {
+        return [
+            $this->columns([
+                'doctorName' => 'Врач',
+                'appointmentCount' => 'Записи',
+                'noShowCount' => 'Неявки',
+                'cancellationCount' => 'Отмены',
+                'issueCount' => 'Проблемы',
+                'noShowRate' => 'Неявки, %',
+                'cancellationRate' => 'Отмены, %',
+                'issueRate' => 'Проблемы, %',
+                'doctorId' => 'ID врача',
+            ]),
+            $this->getNoShowCancellations($period['from'], $period['to'], $clinicId, $limit)['rows'],
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildInventoryExport(array $period, ?string $clinicId, int $limit): array
+    {
+        return [
+            $this->columns([
+                'materialName' => 'Материал',
+                'categoryName' => 'Категория',
+                'unit' => 'Ед.',
+                'stockLevel' => 'Уровень',
+                'currentStock' => 'Остаток',
+                'minStock' => 'Мин.',
+                'criticalStock' => 'Крит.',
+                'inventoryValue' => 'Стоимость',
+                'inboundQuantity' => 'Приход',
+                'outboundQuantity' => 'Расход',
+                'netQuantity' => 'Нетто',
+                'materialId' => 'ID материала',
+            ]),
+            $this->getInventoryStatus($period['from'], $period['to'], $clinicId, $limit)['rows'],
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{0: list<array{key: string, label: string}>, 1: list<array<string, mixed>>}
+     */
+    private function buildPayrollExport(array $period, ?string $clinicId, int $limit): array
+    {
+        $where = [
+            'deleted' => false,
+            'periodFrom<' => substr($period['to'], 0, 10),
+            'periodTo>=' => substr($period['from'], 0, 10),
+        ];
+
+        if ($clinicId !== null) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<SalaryEntry> $entries */
+        $entries = $this->entityManager
+            ->getRDBRepository(SalaryEntry::ENTITY_TYPE)
+            ->where($where)
+            ->order('totalAmount', 'DESC')
+            ->find();
+
+        $rows = [];
+        foreach ($entries as $entry) {
+            if ($entry->getStatus() === SalaryEntry::STATUS_CANCELLED) {
+                continue;
+            }
+
+            $rows[] = [
+                'userName' => (string) ($entry->get('userName') ?: $entry->get('userId') ?: ''),
+                'status' => $entry->getStatus(),
+                'totalAmount' => round($entry->getTotalAmount(), 2),
+                'baseAmount' => round($entry->getBaseAmount(), 2),
+                'revenueAmount' => round($entry->getRevenueAmount(), 2),
+                'assistantAmount' => round($entry->getAssistantAmount(), 2),
+                'bonusAmount' => round($entry->getBonusAmount(), 2),
+                'deductionAmount' => round($entry->getDeductionAmount(), 2),
+                'periodFrom' => (string) ($entry->get('periodFrom') ?? ''),
+                'periodTo' => (string) ($entry->get('periodTo') ?? ''),
+                'sourceBreakdown' => $entry->get('sourceBreakdown'),
+            ];
+
+            if (count($rows) >= $limit) {
+                break;
+            }
+        }
+
+        return [
+            $this->columns([
+                'userName' => 'Сотрудник',
+                'status' => 'Статус',
+                'totalAmount' => 'Итого',
+                'baseAmount' => 'База',
+                'revenueAmount' => 'Процент врача',
+                'assistantAmount' => 'Ассистент',
+                'bonusAmount' => 'Бонус',
+                'deductionAmount' => 'Удержание',
+                'periodFrom' => 'Период с',
+                'periodTo' => 'Период по',
+                'sourceBreakdown' => 'Источник',
+            ]),
+            $rows,
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return list<string>
+     */
+    private function getFinishedVisitIds(array $period, ?string $clinicId): array
+    {
+        $where = [
+            'deleted' => false,
+            'status' => Visit::STATUS_FINISHED,
+            'startedAt>=' => $period['from'],
+            'startedAt<' => $period['to'],
+        ];
+
+        if ($clinicId !== null) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<Visit> $visits */
+        $visits = $this->entityManager
+            ->getRDBRepository(Visit::ENTITY_TYPE)
+            ->where($where)
+            ->find();
+
+        $ids = [];
+        foreach ($visits as $visit) {
+            $ids[] = (string) $visit->getId();
+        }
+
+        return $ids;
+    }
+
+    /**
+     * @param list<string> $visitIds
+     * @return array<string, float>
+     */
+    private function getMaterialCostByServiceLine(array $visitIds): array
+    {
+        /** @var iterable<VisitMaterialLine> $materialLines */
+        $materialLines = $this->entityManager
+            ->getRDBRepository(VisitMaterialLine::ENTITY_TYPE)
+            ->where(['deleted' => false, 'visitId' => $visitIds])
+            ->find();
+
+        $costs = [];
+        foreach ($materialLines as $line) {
+            $serviceLineId = (string) ($line->get('visitServiceLineId') ?? '');
+
+            if ($serviceLineId === '') {
+                continue;
+            }
+
+            $costs[$serviceLineId] = ($costs[$serviceLineId] ?? 0.0) + (float) ($line->get('totalCost') ?? 0.0);
+        }
+
+        return $costs;
+    }
+
+    /**
+     * @param array<string, string> $columns
+     * @return list<array{key: string, label: string}>
+     */
+    private function columns(array $columns): array
+    {
+        $rows = [];
+
+        foreach ($columns as $key => $label) {
+            $rows[] = ['key' => $key, 'label' => $label];
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @param list<array{key: string, label: string}> $columns
+     * @param list<array<string, mixed>> $rows
+     */
+    private function renderExportCsv(array $columns, array $rows): string
+    {
+        $lines = [$this->renderCsvLine(array_column($columns, 'label'))];
+
+        foreach ($rows as $row) {
+            $values = [];
+
+            foreach ($columns as $column) {
+                $values[] = $row[$column['key']] ?? '';
+            }
+
+            $lines[] = $this->renderCsvLine($values);
+        }
+
+        return "\xEF\xBB\xBF" . implode("\r\n", $lines) . "\r\n";
+    }
+
+    /**
+     * @param list<mixed> $values
+     */
+    private function renderCsvLine(array $values): string
+    {
+        return implode(',', array_map(fn (mixed $value): string => $this->renderCsvValue($value), $values));
+    }
+
+    private function renderCsvValue(mixed $value): string
+    {
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        } elseif (is_array($value) || is_object($value)) {
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        }
+
+        $value = str_replace(["\r\n", "\r"], "\n", (string) $value);
+
+        return '"' . str_replace('"', '""', $value) . '"';
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @param list<array{key: string, label: string}> $columns
+     * @param list<array<string, mixed>> $rows
+     */
+    private function renderExportJson(string $source, array $period, array $columns, array $rows): string
+    {
+        return (string) json_encode(
+            [
+                'source' => $source,
+                'dateFrom' => $period['from'],
+                'dateTo' => $period['to'],
+                'columns' => $columns,
+                'rows' => $rows,
+            ],
+            JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT
+        );
     }
 
     /**

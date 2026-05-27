@@ -5,6 +5,9 @@ define('espo-dental:views/dashlets/management-snapshot', [
     return Dep.extend({
         name: 'ManagementSnapshot',
         templateContent: '<div class="espo-dental-management-snapshot"></div>',
+        events: {
+            'click [data-action="exportManagementSnapshot"]': 'exportSnapshot'
+        },
 
         afterRender: function () {
             SimpleStomUi.ensureStyles();
@@ -32,7 +35,7 @@ define('espo-dental:views/dashlets/management-snapshot', [
             var stock = data.stock || {};
             var quality = data.appointmentQuality || {};
             var payroll = data.payroll || {};
-            var html = this.renderKpis(finance, stock, quality, payroll);
+            var html = this.renderToolbar() + this.renderKpis(finance, stock, quality, payroll);
 
             html += '<div class="espo-dental-stom-layout espo-dental-stom-layout--two">' +
                 '<div>' +
@@ -47,6 +50,55 @@ define('espo-dental:views/dashlets/management-snapshot', [
                 '</div>';
 
             this.$el.find('.espo-dental-management-snapshot').html(SimpleStomUi.workspace(html));
+        },
+
+        renderToolbar: function () {
+            return '<div class="espo-dental-stom-toolbar">' +
+                '<strong>Управленческий срез</strong>' +
+                '<span class="espo-dental-stom-toolbar__spacer"></span>' +
+                SimpleStomUi.button('Экспорт CSV', {
+                    tone: 'quiet',
+                    attrs: {'data-action': 'exportManagementSnapshot'}
+                }) +
+                '</div>';
+        },
+
+        exportSnapshot: function () {
+            var limit = parseInt(this.getOption('displayRecords'), 10) || 5;
+            var $button = this.$el.find('[data-action="exportManagementSnapshot"]');
+
+            $button.prop('disabled', true);
+
+            Espo.Ajax.getRequest('EspoDental/Report/export', {
+                source: 'finance',
+                format: 'csv',
+                limit: limit
+            }).then((function (data) {
+                this.downloadExport(data || {});
+                $button.prop('disabled', false);
+            }).bind(this)).catch((function () {
+                this.notify('Не удалось подготовить экспорт.', 'error');
+                $button.prop('disabled', false);
+            }).bind(this));
+        },
+
+        downloadExport: function (data) {
+            if (!data.content) {
+                this.notify('Экспорт вернулся без данных.', 'warning');
+                return;
+            }
+
+            var blob = new Blob([data.content], {type: data.mimeType || 'text/csv;charset=utf-8'});
+            var url = window.URL.createObjectURL(blob);
+            var link = document.createElement('a');
+
+            link.href = url;
+            link.download = data.filename || 'espo-dental-management-snapshot.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            this.notify('Экспорт CSV подготовлен.', 'success');
         },
 
         renderKpis: function (finance, stock, quality, payroll) {
