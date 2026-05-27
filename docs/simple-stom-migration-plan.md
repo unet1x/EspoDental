@@ -574,3 +574,25 @@ Status:
 - `ReportExportCenter` now sits below `ManagementSnapshot` in the manager
   dashboard and provides source selection, optional date range, preview rows,
   CSV download and JSON download without adding a broad report builder.
+
+### Pass 6 - Integration Ops Center
+
+Goal: start Stage J acceptance with a passive control surface before any live
+provider credentials are used.
+
+Work:
+
+- add a read-only `GET /EspoDental/Integration/healthcheck` endpoint;
+- audit the MCP tool contract for direct-mutation tools;
+- surface SMTP, Telegram and WhatsApp settings readiness;
+- show failed notification rows, retry candidates and pending assistant
+  proposals on the manager dashboard.
+
+Status:
+
+- `IntegrationOpsCenter` is placed below `ReportExportCenter` in the manager
+  dashboard template;
+- the endpoint returns MCP tool audit, integration readiness, notification
+  health and assistant proposal health without external network calls;
+- retry remains a reviewed staff workflow: this slice identifies retry
+  candidates but does not resend messages automatically.

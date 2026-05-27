@@ -70,7 +70,10 @@ out of scope for this migration run.
    revenue/cash/report dashlets with finance, risks, doctors, cabinets and
    payroll panels. Confirm `ReportExportCenter` is directly below it, preview a
    report source, then download CSV and JSON from `EspoDental/Report/export`.
-10. Open Report Definitions and Payroll, then inspect the salary entry source
+10. Confirm `IntegrationOpsCenter` shows MCP tool audit, disabled integration
+    settings, failed notification status and pending assistant proposals without
+    sending live messages.
+11. Open Report Definitions and Payroll, then inspect the salary entry source
     breakdown.
 
 ## Reset

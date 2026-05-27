@@ -1253,16 +1253,17 @@ class WorkspaceSeeder
                     $this->dashlet('ed-manager-action-center', 'DashboardActionCenter', 0, 0, 4, 4),
                     $this->dashlet('ed-manager-management-snapshot', 'ManagementSnapshot', 0, 4, 4, 4),
                     $this->dashlet('ed-manager-report-export', 'ReportExportCenter', 0, 8, 4, 4),
-                    $this->dashlet('ed-manager-revenue', 'MonthlyRevenue', 0, 12, 2, 5),
-                    $this->dashlet('ed-manager-open-invoices', 'OpenInvoices', 2, 12, 2, 5),
-                    $this->dashlet('ed-manager-cash-desk', 'CashDeskWorkspace', 0, 17, 4, 4),
-                    $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 21, 4, 4),
-                    $this->dashlet('ed-manager-cabinet-utilization', 'CabinetUtilization', 0, 25, 4, 4),
-                    $this->dashlet('ed-manager-no-show-cancellations', 'NoShowCancellations', 0, 29, 4, 4),
-                    $this->dashlet('ed-manager-inventory-status', 'InventoryStatus', 0, 33, 4, 4),
-                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 37, 2, 4),
-                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 37, 2, 4),
-                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 41, 2, 4),
+                    $this->dashlet('ed-manager-integration-ops', 'IntegrationOpsCenter', 0, 12, 4, 4),
+                    $this->dashlet('ed-manager-revenue', 'MonthlyRevenue', 0, 16, 2, 5),
+                    $this->dashlet('ed-manager-open-invoices', 'OpenInvoices', 2, 16, 2, 5),
+                    $this->dashlet('ed-manager-cash-desk', 'CashDeskWorkspace', 0, 21, 4, 4),
+                    $this->dashlet('ed-manager-doctor-productivity', 'DoctorProductivity', 0, 25, 4, 4),
+                    $this->dashlet('ed-manager-cabinet-utilization', 'CabinetUtilization', 0, 29, 4, 4),
+                    $this->dashlet('ed-manager-no-show-cancellations', 'NoShowCancellations', 0, 33, 4, 4),
+                    $this->dashlet('ed-manager-inventory-status', 'InventoryStatus', 0, 37, 4, 4),
+                    $this->dashlet('ed-manager-payroll', 'PayrollThisMonth', 0, 41, 2, 4),
+                    $this->dashlet('ed-manager-low-stock', 'LowStockMaterials', 2, 41, 2, 4),
+                    $this->dashlet('ed-manager-ortho-cases', 'ActiveOrthoCases', 0, 45, 2, 4),
                 ],
             ],
         ];
@@ -1279,6 +1280,10 @@ class WorkspaceSeeder
         $options->{'ed-manager-report-export'} = (object) [
             'title' => 'Экспорт отчетов',
             'displayRecords' => 50,
+        ];
+        $options->{'ed-manager-integration-ops'} = (object) [
+            'title' => 'Контроль интеграций',
+            'displayRecords' => 8,
         ];
         $options->{'ed-manager-revenue'} = (object) ['title' => 'Выручка по месяцам', 'monthsBack' => 12];
         $options->{'ed-manager-open-invoices'} = (object) ['title' => 'Открытые счета', 'displayRecords' => 10];

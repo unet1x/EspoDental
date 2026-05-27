@@ -532,6 +532,14 @@ Done when:
 
 - assistant can draft or propose actions, but medical/financial mutations remain controlled.
 
+Status:
+
+- first Stage J slice added `GET /EspoDental/Integration/healthcheck` and an
+  `IntegrationOpsCenter` manager dashlet. The endpoint audits MCP tools,
+  integration settings readiness, failed notification rows, retry candidates and
+  pending assistant proposals without calling external providers or applying
+  risky actions.
+
 ### Stage K - Demo And Release Readiness
 
 Goal: make the product demonstrable and installable.
@@ -550,16 +558,16 @@ Done when:
 
 ## 6. Suggested Immediate Next Step
 
-Continue Stage I acceptance:
+Continue Stage J acceptance:
 
 1. Browser-check the manager dashboard after bootstrap so
-   `ManagementSnapshot` renders above the existing revenue, cash, doctor,
-   cabinet, no-show, inventory and payroll dashlets, verify `ReportExportCenter`
-   renders under it, and confirm CSV/JSON downloads from `Report/export`.
-2. Compare exported rows against demo source records and decide which gaps need
-   small drill-down links or extra columns.
-3. Keep a broad report builder deferred until manager-demo feedback proves a
-   concrete reporting gap.
+   `IntegrationOpsCenter` renders under the report export center and shows
+   MCP tool audit, channel readiness, failed notifications and pending proposals.
+2. Use demo failed/pending rows to decide whether the next Stage J slice should
+   be a requeue action, a proposal review shortcut or provider credential
+   acceptance.
+3. Keep all external provider sends and risky assistant actions behind existing
+   delivery/proposal boundaries.
 
 Do not start AI automation before the daily operational chain and manager
 control surfaces are accepted end to end.

@@ -13,12 +13,18 @@ The module exposes three controlled integration routes:
 | Tool | Method | Route | Purpose |
 | --- | --- | --- | --- |
 | `tools.list` | `GET` | `/EspoDental/Integration/tools` | Returns the supported integration tool contract. |
+| `integration.healthcheck` | `GET` | `/EspoDental/Integration/healthcheck` | Returns MCP tool audit, integration readiness, failed notification and pending proposal status. |
 | `patient_context.read` | `GET` | `/EspoDental/Integration/patientContext` | Reads bounded patient context for drafting. |
 | `assistant_action.propose` | `POST` | `/EspoDental/Integration/proposeAction` | Creates `AssistantActionProposal` for human review. |
 
 The routes require an authenticated regular/admin user and still use EspoCRM
 ACL checks. Patient context requires `Patient` read access. Proposals require
 `AssistantActionProposal` create access.
+
+`integration.healthcheck` is read-only and intended for `IntegrationOpsCenter`.
+It requires read access to `NotificationLog`, `AssistantActionProposal` and
+`IntegrationSettings`. It never performs external network calls and never
+retries messages directly; it surfaces retry candidates for staff review.
 
 ## 2. Allowed Tool Behavior
 
@@ -73,6 +79,6 @@ before the proposal can be marked `applied`.
 The first external MCP server should be a thin adapter:
 
 1. Authenticate to EspoCRM as a dedicated low-privilege integration user.
-2. Expose only the three routes above as MCP tools.
+2. Expose only the four routes above as MCP tools.
 3. Never expose generic REST write access to entity records.
 4. Show returned proposal ids to the operator for audit and follow-up.

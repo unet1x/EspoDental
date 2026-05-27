@@ -28,6 +28,27 @@ class Integration extends Record
     }
 
     /**
+     * GET /EspoDental/Integration/healthcheck
+     *
+     * @return array<string, mixed>
+     */
+    public function getActionHealthcheck(Request $request): array
+    {
+        $this->assertRegularUser();
+
+        foreach (['NotificationLog', 'AssistantActionProposal', 'IntegrationSettings'] as $scope) {
+            if (!$this->getAcl()->checkScope($scope, 'read')) {
+                throw new Forbidden();
+            }
+        }
+
+        /** @var IntegrationMcpService $service */
+        $service = $this->injectableFactory->create(IntegrationMcpService::class);
+
+        return $service->getHealthcheck((int) ($request->getQueryParam('limit') ?? 8));
+    }
+
+    /**
      * GET /EspoDental/Integration/patientContext?patientId=...
      *
      * @return array<string, mixed>

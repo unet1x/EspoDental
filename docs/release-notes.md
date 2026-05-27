@@ -173,6 +173,11 @@
   its finance export as CSV, and the `ReportExportCenter` dashlet provides
   source selection, preview, CSV download and JSON download without adding a
   broad custom report builder.
+- Integration healthcheck is available at
+  `EspoDental/Integration/healthcheck` and as the `IntegrationOpsCenter`
+  manager dashlet. It shows MCP tool audit, channel readiness, failed
+  notifications, retry candidates and pending assistant proposals without
+  calling external providers.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

@@ -205,6 +205,11 @@
         "params": {"controller": "Integration", "action": "tools"}
     },
     {
+        "route": "/EspoDental/Integration/healthcheck",
+        "method": "get",
+        "params": {"controller": "Integration", "action": "healthcheck"}
+    },
+    {
         "route": "/EspoDental/Integration/patientContext",
         "method": "get",
         "params": {"controller": "Integration", "action": "patientContext"}

@@ -1,0 +1,10 @@
+{
+    "view": "espo-dental:views/dashlets/integration-ops-center",
+    "aclScope": "IntegrationSettings",
+    "options": {
+        "fields": {
+            "title": {"type": "varchar", "default": "Integration Ops Center"},
+            "displayRecords": {"type": "int", "default": 8, "min": 1, "max": 25}
+        }
+    }
+}

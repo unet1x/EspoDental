@@ -116,6 +116,7 @@
         "NoShowCancellations": "No-show & Cancellations",
         "ManagementSnapshot": "Management Snapshot",
         "ReportExportCenter": "Report Export Center",
+        "IntegrationOpsCenter": "Integration Ops Center",
         "InventoryStatus": "Inventory Status",
         "InventoryWorkspace": "Inventory Workspace",
         "PayrollThisMonth": "Payroll This Month",

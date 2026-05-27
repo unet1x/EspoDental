@@ -30,11 +30,14 @@ final class Phase38McpIntegrationContractTest extends TestCase
             $routeMap[$route['route']] = $route;
         }
 
-        foreach ([
-            '/EspoDental/Integration/tools' => 'get',
-            '/EspoDental/Integration/patientContext' => 'get',
-            '/EspoDental/Integration/proposeAction' => 'post',
-        ] as $route => $method) {
+        foreach (
+            [
+                '/EspoDental/Integration/tools' => 'get',
+                '/EspoDental/Integration/healthcheck' => 'get',
+                '/EspoDental/Integration/patientContext' => 'get',
+                '/EspoDental/Integration/proposeAction' => 'post',
+            ] as $route => $method
+        ) {
             $this->assertArrayHasKey($route, $routeMap);
             $this->assertSame($method, $routeMap[$route]['method']);
             $this->assertSame('Integration', $routeMap[$route]['params']['controller']);
@@ -53,6 +56,7 @@ final class Phase38McpIntegrationContractTest extends TestCase
         $controller = (string) file_get_contents(self::MODULE_ROOT . '/Controllers/Integration.php');
 
         $this->assertStringContainsString('getActionTools', $controller);
+        $this->assertStringContainsString('getActionHealthcheck', $controller);
         $this->assertStringContainsString('getActionPatientContext', $controller);
         $this->assertStringContainsString('postActionProposeAction', $controller);
         $this->assertStringContainsString("checkScope('Patient', 'read')", $controller);
@@ -89,11 +93,14 @@ final class Phase38McpIntegrationContractTest extends TestCase
         $current = (string) file_get_contents(__DIR__ . '/../docs/current-state.md');
         $release = (string) file_get_contents(__DIR__ . '/../docs/release-notes.md');
 
-        foreach ([
-            '/EspoDental/Integration/tools',
-            '/EspoDental/Integration/patientContext',
-            '/EspoDental/Integration/proposeAction',
-        ] as $route) {
+        foreach (
+            [
+                '/EspoDental/Integration/tools',
+                '/EspoDental/Integration/healthcheck',
+                '/EspoDental/Integration/patientContext',
+                '/EspoDental/Integration/proposeAction',
+            ] as $route
+        ) {
             $this->assertStringContainsString($route, $design);
             $this->assertStringContainsString($route, $architecture);
         }

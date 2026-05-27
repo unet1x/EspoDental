@@ -536,6 +536,12 @@ Verification completed after this slice:
   `ManagementSnapshot` dashlet exposes the finance CSV export action, and
   `ReportExportCenter` gives managers source selection, preview, CSV download
   and JSON download directly below the management snapshot.
+- Stage J integration operations now start with
+  `GET /EspoDental/Integration/healthcheck` and the manager
+  `IntegrationOpsCenter` dashlet. The endpoint audits MCP tools, channel
+  settings readiness, failed `NotificationLog` rows, retry candidates and
+  pending `AssistantActionProposal` rows without sending external messages or
+  applying assistant proposals.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

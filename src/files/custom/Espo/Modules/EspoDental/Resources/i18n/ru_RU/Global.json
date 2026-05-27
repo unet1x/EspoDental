@@ -116,6 +116,7 @@
         "NoShowCancellations": "Неявки и отмены",
         "ManagementSnapshot": "Управленческий срез",
         "ReportExportCenter": "Экспорт отчётов",
+        "IntegrationOpsCenter": "Контроль интеграций",
         "InventoryStatus": "Состояние склада",
         "InventoryWorkspace": "Рабочее место склада",
         "PayrollThisMonth": "ЗП за месяц",

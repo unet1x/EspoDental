@@ -107,14 +107,30 @@ The first MCP server should wrap the CRM-side routes documented in
 `docs/mcp-server-design.md`:
 
 - `GET /EspoDental/Integration/tools`;
+- `GET /EspoDental/Integration/healthcheck`;
 - `GET /EspoDental/Integration/patientContext`;
 - `POST /EspoDental/Integration/proposeAction`.
 
 These routes are intentionally narrow. They expose tool discovery, bounded
-patient context and proposal creation only. They do not expose generic entity
-write access or direct clinical/financial mutations.
+patient context, proposal creation and read-only operational health only. They
+do not expose generic entity write access or direct clinical/financial
+mutations.
 
-## 7. Virtual Administrator
+## 7. Integration Ops Center
+
+`IntegrationOpsCenter` is the first Stage J manager dashboard surface. It reads
+`GET /EspoDental/Integration/healthcheck` and shows:
+
+- MCP tool audit, including direct-mutation tool count;
+- SMTP, Telegram and WhatsApp settings readiness;
+- failed `NotificationLog` rows and retry candidates;
+- pending `AssistantActionProposal` rows, including high-risk pending count.
+
+The endpoint is deliberately passive. It does not call external providers and
+does not resend messages; retry candidates are shown for staff review while the
+existing reminder and messaging services remain the delivery boundary.
+
+## 8. Virtual Administrator
 
 The local LLM design is documented in
 `docs/virtual-administrator-design.md`. The virtual administrator is an
