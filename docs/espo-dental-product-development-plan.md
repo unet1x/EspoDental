@@ -543,7 +543,11 @@ Status:
   `AssistantActionProposal` records. The actions require edit ACL, only accept
   `pending_review` proposals, stamp reviewer metadata and deliberately do not
   apply the proposal payload. `IntegrationOpsCenter` now links failed
-  notifications and pending proposals to their review records.
+  notifications and pending proposals to their review records;
+- third Stage J slice added a reviewed `NotificationLog` requeue action.
+  Staff can return failed retry candidates to `queued`, with requeue history
+  stored in the payload, but the action does not call external providers or
+  bypass the existing reminder/delivery boundary.
 
 ### Stage K - Demo And Release Readiness
 
@@ -571,9 +575,12 @@ Continue Stage J acceptance:
 2. Use a demo `AssistantActionProposal` to verify approve/reject buttons update
    only review status and reviewer metadata; applying proposal payloads remains
    out of scope until a concrete safe action executor is designed.
-3. Decide whether the next Stage J slice should be a reviewed notification
-   requeue action or provider credential acceptance.
-4. Keep all external provider sends and risky assistant actions behind existing
+3. Verify that requeued notifications leave failed status, appear as queued in
+   `IntegrationOpsCenter`, and preserve the original failure in
+   `payload.requeueHistory`.
+4. Decide whether the next Stage J slice should process queued retries through
+   the existing delivery gateway or wait for provider credential acceptance.
+5. Keep all external provider sends and risky assistant actions behind existing
    delivery/proposal boundaries.
 
 Do not start AI automation before the daily operational chain and manager

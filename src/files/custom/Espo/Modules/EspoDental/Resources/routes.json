@@ -230,6 +230,11 @@
         "params": {"controller": "AssistantActionProposal", "action": "reject"}
     },
     {
+        "route": "/EspoDental/NotificationLog/requeue",
+        "method": "post",
+        "params": {"controller": "NotificationLog", "action": "requeue"}
+    },
+    {
         "route": "/EspoDental/OrthodonticCard/close",
         "method": "post",
         "params": {"controller": "OrthodonticCard", "action": "close"}

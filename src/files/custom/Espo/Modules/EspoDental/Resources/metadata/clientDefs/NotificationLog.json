@@ -2,5 +2,19 @@
     "controller": "controllers/record",
     "color": "#7F7F7F",
     "iconClass": "fas fa-paper-plane",
-    "boolFilterList": ["onlyFailed", "today"]
+    "boolFilterList": ["onlyFailed", "today"],
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "requeue",
+                    "label": "Requeue",
+                    "style": "primary",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/notification-log/requeue",
+                    "actionFunction": "actionRequeue"
+                }
+            ]
+        }
+    }
 }

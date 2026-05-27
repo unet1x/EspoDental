@@ -1,10 +1,15 @@
 define('espo-dental:views/dashlets/integration-ops-center', [
     'views/dashlets/abstract/base',
-    'espo-dental:lib/simple-stom-ui'
-], function (Dep, SimpleStomUi) {
+    'espo-dental:lib/simple-stom-ui',
+    'espo-dental:utils/dialogs'
+], function (Dep, SimpleStomUi, Dialogs) {
     return Dep.extend({
         name: 'IntegrationOpsCenter',
         templateContent: '<div class="espo-dental-integration-ops-center"></div>',
+
+        events: {
+            'click [data-action="requeueNotification"]': 'requeueNotification'
+        },
 
         afterRender: function () {
             SimpleStomUi.ensureStyles();
@@ -103,12 +108,12 @@ define('espo-dental:views/dashlets/integration-ops-center', [
         },
 
         renderFailedNotifications: function (rows) {
-            var body = this.renderTable(rows, ['channel', 'error', 'retry', 'open'], (function (row) {
+            var body = this.renderTable(rows, ['channel', 'error', 'retry', 'action'], (function (row) {
                 return [
                     row.channel || '',
                     row.errorMessage || row.provider || '',
                     row.retryCandidate ? 'retry' : 'hold',
-                    this.renderRecordLink('NotificationLog', row.id, 'Открыть')
+                    this.renderNotificationActions(row)
                 ];
             }).bind(this), {rawColumns: [3]});
 
@@ -171,6 +176,55 @@ define('espo-dental:views/dashlets/integration-ops-center', [
             return '<a href="#' + encodeURIComponent(entityType) + '/view/' + encodeURIComponent(id) + '">' +
                 SimpleStomUi.escapeHtml(label) +
                 '</a>';
+        },
+
+        renderNotificationActions: function (row) {
+            var html = '<span class="espo-dental-stom-toolbar" style="margin:0;gap:6px">' +
+                this.renderRecordLink('NotificationLog', row.id, 'Открыть');
+
+            if (row.retryCandidate) {
+                html += SimpleStomUi.button('В очередь', {
+                    tone: 'primary',
+                    attrs: {
+                        'data-action': 'requeueNotification',
+                        'data-id': row.id || ''
+                    }
+                });
+            }
+
+            return html + '</span>';
+        },
+
+        requeueNotification: function (e) {
+            e.preventDefault();
+
+            var id = $(e.currentTarget).attr('data-id') || '';
+            if (!id) {
+                return;
+            }
+
+            Dialogs.prompt(this, {
+                title: 'Вернуть уведомление в очередь',
+                message: 'Заметка необязательна. Отправка провайдеру этим действием не выполняется.',
+                value: '',
+                submitLabel: 'В очередь'
+            }).then((function (note) {
+                if (note === null) {
+                    return;
+                }
+
+                Espo.Ajax.postRequest('EspoDental/NotificationLog/requeue', {
+                    id: id,
+                    note: note || ''
+                })
+                    .then((function () {
+                        Espo.Ui.success('Уведомление возвращено в очередь.');
+                        this.fetchData();
+                    }).bind(this))
+                    .catch(function (xhr) {
+                        Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось вернуть уведомление в очередь.');
+                    });
+            }).bind(this));
         }
     });
 });

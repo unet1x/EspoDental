@@ -74,7 +74,9 @@ out of scope for this migration run.
     settings, failed notification status and pending assistant proposals without
     sending live messages. Open the pending `AssistantActionProposal` from the
     dashlet or action center and verify the approve/reject controls affect only
-    review status, notes and reviewer metadata.
+    review status, notes and reviewer metadata. Use one failed `NotificationLog`
+    retry candidate to verify requeue moves it to `queued` without sending a
+    live provider message.
 11. Open Report Definitions and Payroll, then inspect the salary entry source
     breakdown.
 

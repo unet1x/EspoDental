@@ -1,5 +1,9 @@
 {
-    "labels": {"Create NotificationLog": "Crear notificacion"},
+    "labels": {
+        "Create NotificationLog": "Crear notificacion",
+        "Requeue": "Reencolar",
+        "Requeue notification": "Reencolar notificacion"
+    },
     "fields": {
         "name": "Nombre", "patient": "Paciente", "appointment": "Cita",
         "channel": "Canal", "direction": "Direccion", "provider": "Proveedor",
@@ -22,5 +26,11 @@
         "status": {"queued": "En cola", "sent": "Enviada", "failed": "Fallida", "skipped": "Omitida"}
     },
     "links": {"patient": "Paciente", "appointment": "Cita"},
-    "boolFilters": {"onlyFailed": "Solo fallidas", "today": "Hoy"}
+    "boolFilters": {"onlyFailed": "Solo fallidas", "today": "Hoy"},
+    "messages": {
+        "Only failed notifications can be requeued": "Solo las notificaciones fallidas pueden reencolarse",
+        "Requeue note is optional": "La nota es opcional. Esta accion no envia al proveedor.",
+        "Notification requeued": "Notificacion reencolada",
+        "Requeue failed": "No se pudo reencolar la notificacion"
+    }
 }

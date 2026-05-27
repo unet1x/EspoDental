@@ -25,6 +25,9 @@ ACL checks. Patient context requires `Patient` read access. Proposals require
 It requires read access to `NotificationLog`, `AssistantActionProposal` and
 `IntegrationSettings`. It never performs external network calls and never
 retries messages directly; it surfaces retry candidates for staff review.
+Staff-triggered `NotificationLog` requeue is a separate CRM action, not an MCP
+tool. It only moves failed audit rows back to `queued` and records
+`payload.requeueHistory`; provider delivery remains outside the MCP contract.
 
 ## 2. Allowed Tool Behavior
 

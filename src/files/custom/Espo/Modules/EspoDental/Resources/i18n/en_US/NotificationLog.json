@@ -1,5 +1,9 @@
 {
-    "labels": {"Create NotificationLog": "Create Notification"},
+    "labels": {
+        "Create NotificationLog": "Create Notification",
+        "Requeue": "Requeue",
+        "Requeue notification": "Requeue notification"
+    },
     "fields": {
         "name": "Name", "patient": "Patient", "appointment": "Appointment",
         "channel": "Channel", "direction": "Direction", "provider": "Provider",
@@ -22,5 +26,11 @@
         "status": {"queued": "Queued", "sent": "Sent", "failed": "Failed", "skipped": "Skipped"}
     },
     "links": {"patient": "Patient", "appointment": "Appointment"},
-    "boolFilters": {"onlyFailed": "Only failed", "today": "Today"}
+    "boolFilters": {"onlyFailed": "Only failed", "today": "Today"},
+    "messages": {
+        "Only failed notifications can be requeued": "Only failed notifications can be requeued",
+        "Requeue note is optional": "Requeue note is optional. This action does not send to the provider.",
+        "Notification requeued": "Notification requeued",
+        "Requeue failed": "Requeue failed"
+    }
 }

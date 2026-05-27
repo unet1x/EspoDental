@@ -183,6 +183,10 @@
   `pending_review` proposals, stamp reviewer metadata and review notes, and do
   not apply the proposal payload. `IntegrationOpsCenter` links pending
   proposals and failed notifications to their CRM records.
+- Failed notification review now has a `NotificationLog` requeue action. It
+  returns failed retry candidates to `queued`, stores
+  `payload.requeueHistory` and does not call external providers; actual
+  delivery remains behind the existing reminder/message gateway boundary.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

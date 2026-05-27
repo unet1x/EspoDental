@@ -547,6 +547,10 @@ Verification completed after this slice:
   `pending_review` proposals, stamp reviewer metadata and review notes, and do
   not apply proposal payloads. `IntegrationOpsCenter` links failed
   notifications and pending proposals to their CRM records for staff review.
+- Stage J notification review now has a `NotificationLog` requeue action.
+  Staff can move failed retry candidates back to `queued`; the action stores
+  `payload.requeueHistory`, clears the active error fields and does not call
+  `MessageDeliveryGateway` or external providers.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

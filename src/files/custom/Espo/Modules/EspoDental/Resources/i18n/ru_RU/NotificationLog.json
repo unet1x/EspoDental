@@ -1,5 +1,9 @@
 {
-    "labels": {"Create NotificationLog": "Создать уведомление"},
+    "labels": {
+        "Create NotificationLog": "Создать уведомление",
+        "Requeue": "В очередь",
+        "Requeue notification": "Вернуть уведомление в очередь"
+    },
     "fields": {
         "name": "Название", "patient": "Пациент", "appointment": "Приём",
         "channel": "Канал", "direction": "Направление", "provider": "Провайдер",
@@ -22,5 +26,11 @@
         "status": {"queued": "В очереди", "sent": "Отправлено", "failed": "Ошибка", "skipped": "Пропущено"}
     },
     "links": {"patient": "Пациент", "appointment": "Приём"},
-    "boolFilters": {"onlyFailed": "Только с ошибкой", "today": "Сегодня"}
+    "boolFilters": {"onlyFailed": "Только с ошибкой", "today": "Сегодня"},
+    "messages": {
+        "Only failed notifications can be requeued": "В очередь можно вернуть только уведомления с ошибкой",
+        "Requeue note is optional": "Заметка необязательна. Отправка провайдеру этим действием не выполняется.",
+        "Notification requeued": "Уведомление возвращено в очередь",
+        "Requeue failed": "Не удалось вернуть уведомление в очередь"
+    }
 }

@@ -616,3 +616,24 @@ Status:
 - proposal review can approve/reject audit records from the CRM detail view;
 - the review actions do not post payments, finish visits, edit notes, cancel
   invoices or call external messaging providers.
+
+### Pass 8 - Notification Requeue Review
+
+Goal: let staff triage failed notification audit rows without sending live
+messages automatically.
+
+Work:
+
+- add a `NotificationLog` requeue action for failed retry candidates;
+- require edit ACL and reject rows outside failed status or above retry limit;
+- move the row back to `queued`, clear active delivery error fields and store
+  `payload.requeueHistory`;
+- expose the action from the `NotificationLog` detail view and
+  `IntegrationOpsCenter`;
+- keep `MessageDeliveryGateway` and provider calls out of the requeue action.
+
+Status:
+
+- failed notification rows can be returned to queue by staff review;
+- requeue prepares the outbox row for a later delivery pass but does not send
+  email, Telegram or WhatsApp messages by itself.

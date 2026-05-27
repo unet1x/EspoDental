@@ -62,6 +62,12 @@ Before delivery, the reminder creates a queued `NotificationLog` row. Delivery
 updates the same row with provider, external id, status, attempts, sent time or
 error text.
 
+Failed notification rows can be reviewed by staff and returned to `queued` with
+the `NotificationLog` requeue action. Requeue is a passive outbox operation: it
+requires edit ACL, only accepts failed rows below the retry limit, stores a
+`payload.requeueHistory` entry with reviewer context and the previous error,
+and does not call `MessageDeliveryGateway` or any external provider.
+
 ## 4. MCP And LLM Guardrails
 
 Future MCP and local LLM work should use the same pattern:
@@ -133,7 +139,10 @@ does not resend messages; retry candidates are shown for staff review while the
 existing reminder and messaging services remain the delivery boundary. Failed
 notifications and pending proposals link to their CRM records so staff can open
 the proposal review screen and use the human approve/reject workflow without
-giving the assistant direct write authority.
+giving the assistant direct write authority. Failed notification retry
+candidates can also be requeued from the dashlet; the requeue action only moves
+the audit row back to `queued` and leaves actual provider delivery to the
+existing delivery boundary.
 
 ## 8. Virtual Administrator
 
