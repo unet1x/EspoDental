@@ -64,9 +64,13 @@ out of scope for this migration run.
 7. Open Cash Desk, review the invoice-first payment data, select the payable
    invoice, open the payment wizard and cancel it, then review the closed shift.
 8. Open Inventory, review the FEFO lot, cabinet issue, consumption and low-stock
-   alert.
-9. Open Report Definitions and Payroll, then inspect the salary entry source
-   breakdown.
+   alert, then open the receipt/transfer/write-off/adjustment dialogs from the
+   inventory workspace without saving destructive demo changes.
+9. Open the manager dashboard and confirm `Управленческий срез` is above the
+   revenue/cash/report dashlets with finance, risks, doctors, cabinets and
+   payroll panels.
+10. Open Report Definitions and Payroll, then inspect the salary entry source
+    breakdown.
 
 ## Reset
 

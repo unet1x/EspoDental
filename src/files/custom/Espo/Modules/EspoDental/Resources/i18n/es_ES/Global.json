@@ -114,6 +114,7 @@
         "DoctorProductivity": "Productividad de doctores",
         "CabinetUtilization": "Utilizacion de gabinetes",
         "NoShowCancellations": "No asistencias y cancelaciones",
+        "ManagementSnapshot": "Resumen de gestion",
         "InventoryStatus": "Estado del inventario",
         "InventoryWorkspace": "Espacio de inventario",
         "PayrollThisMonth": "Nomina del mes",

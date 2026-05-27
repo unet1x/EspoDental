@@ -114,6 +114,7 @@
         "DoctorProductivity": "Продуктивность врачей",
         "CabinetUtilization": "Загрузка кабинетов",
         "NoShowCancellations": "Неявки и отмены",
+        "ManagementSnapshot": "Управленческий срез",
         "InventoryStatus": "Состояние склада",
         "InventoryWorkspace": "Рабочее место склада",
         "PayrollThisMonth": "ЗП за месяц",

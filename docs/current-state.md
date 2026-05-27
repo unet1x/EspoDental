@@ -522,6 +522,13 @@ Verification completed after this slice:
   stock level, current stock, calculated inventory value and period movement
   totals for inbound, outbound and net quantity. Manager and stock dashboard
   templates include the `InventoryStatus` dashlet.
+- Stage I management snapshot is available at
+  `GET /EspoDental/Report/managementSnapshot` and as the top manager dashboard
+  dashlet. It combines revenue, open invoice balance, known material cost,
+  payroll accrual, stock risks, no-show/cancellation rates, doctor productivity
+  and cabinet utilization into one structured control surface. Local smoke on
+  2026-05-27 returned a complete seeded snapshot after route rebuild; known
+  material cost remains limited to outbound non-transfer stock movements.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

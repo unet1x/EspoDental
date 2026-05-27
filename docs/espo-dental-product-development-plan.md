@@ -446,7 +446,11 @@ Status:
   lots, low-stock rows, future-order candidates, cabinet issue movements and
   recent immutable stock movements;
 - the stock-role dashboard now uses the workspace as its primary surface while
-  keeping `InventoryStatus` as a manager summary.
+  keeping `InventoryStatus` as a manager summary;
+- second Pass 4 slice added receipt, transfer, write-off and adjustment actions
+  from the workspace. Receipt creates a linked lot, transfer creates paired
+  outbound/inbound stock movements, and write-off/adjustment use reasoned new
+  movements instead of editing posted movement rows.
 
 ### Stage H - Cash Desk And Finance
 
@@ -494,6 +498,17 @@ Done when:
 
 - manager can review clinic state, stock risks, payroll and profitability from structured data.
 
+Status:
+
+- first Stage I slice added `GET /EspoDental/Report/managementSnapshot` and a
+  `ManagementSnapshot` dashlet at the top of the manager dashboard;
+- the snapshot combines revenue, open invoice debt, known material cost,
+  payroll accrual, gross after known costs, stock risk counts,
+  no-show/cancellation rates, doctor productivity, cabinet utilization and
+  payroll source rows without adding a broad custom report builder;
+- local API smoke on 2026-05-27 confirmed the endpoint returns seeded finance,
+  payroll, stock, doctor and cabinet sections after EspoCRM route rebuild.
+
 ### Stage J - Integrations And Virtual Administrator
 
 Goal: prepare automation without letting AI mutate risky data directly.
@@ -528,13 +543,15 @@ Done when:
 
 ## 6. Suggested Immediate Next Step
 
-Continue Pass 4:
+Continue Stage I acceptance:
 
-1. Add the inventory write flows from the workspace: receipt, transfer,
-   write-off and adjustment actions.
-2. Keep stock movements immutable: every correction must create a new movement
-   with reason and source context instead of editing posted movement rows.
-3. Browser-check the stock dashboard after the route/UI refresh so the operator
-   can move from warehouse state to a concrete stock action.
+1. Browser-check the manager dashboard after bootstrap so
+   `ManagementSnapshot` renders above the existing revenue, cash, doctor,
+   cabinet, no-show, inventory and payroll dashlets.
+2. Compare the snapshot against demo source records and decide which gaps need
+   saved report export versus small drill-down links.
+3. Keep a broad report builder deferred until manager-demo feedback proves a
+   concrete reporting gap.
 
-Do not start with reports or AI. They are valuable, but the core product value is still the daily operational chain: call, book, remind, arrive, questionnaire, visit, invoice, payment, stock, next appointment.
+Do not start AI automation before the daily operational chain and manager
+control surfaces are accepted end to end.

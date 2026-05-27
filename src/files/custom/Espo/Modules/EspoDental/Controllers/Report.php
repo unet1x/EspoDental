@@ -194,6 +194,22 @@ class Report
 
     /**
      * @throws Forbidden
+     * @return array<string, mixed>
+     */
+    public function getActionManagementSnapshot(Request $request): array
+    {
+        $this->assertReportAccess();
+
+        return $this->reportService->getManagementSnapshot(
+            $request->getQueryParam('dateFrom'),
+            $request->getQueryParam('dateTo'),
+            $request->getQueryParam('clinicId'),
+            (int) ($request->getQueryParam('limit') ?? 5)
+        );
+    }
+
+    /**
+     * @throws Forbidden
      */
     private function assertReportAccess(): void
     {

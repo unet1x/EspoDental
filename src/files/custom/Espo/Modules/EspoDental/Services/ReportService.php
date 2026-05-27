@@ -12,6 +12,7 @@ use Espo\Modules\EspoDental\Entities\Invoice;
 use Espo\Modules\EspoDental\Entities\LowStockAlert;
 use Espo\Modules\EspoDental\Entities\Material;
 use Espo\Modules\EspoDental\Entities\Payment;
+use Espo\Modules\EspoDental\Entities\SalaryEntry;
 use Espo\Modules\EspoDental\Entities\StockMovement;
 use Espo\Modules\EspoDental\Entities\Visit;
 use Espo\Modules\EspoDental\Entities\VisitServiceLine;
@@ -43,19 +44,25 @@ class ReportService
         return $rows;
     }
 
-    private function sumPaymentsBetween(string $from, string $to): float
+    private function sumPaymentsBetween(string $from, string $to, ?string $clinicId = null): float
     {
+        $where = [
+            'paidAt>=' => $from,
+            'paidAt<' => $to,
+            'direction' => Payment::DIRECTION_IN,
+            'status' => Payment::STATUS_COMPLETED,
+            'deleted' => false,
+        ];
+
+        if ($clinicId !== null && trim($clinicId) !== '') {
+            $where['clinicId'] = trim($clinicId);
+        }
+
         $qb = $this->entityManager
             ->getQueryBuilder()
             ->select(['SUM:amount'])
             ->from(Payment::ENTITY_TYPE)
-            ->where([
-                'paidAt>=' => $from,
-                'paidAt<' => $to,
-                'direction' => Payment::DIRECTION_IN,
-                'status' => Payment::STATUS_COMPLETED,
-                'deleted' => false,
-            ])
+            ->where($where)
             ->build();
         $row = $this->entityManager->getQueryExecutor()->execute($qb)->fetch();
         if (!$row) {
@@ -88,6 +95,84 @@ class ReportService
         $paidThisMonth = $this->sumPaymentsBetween($from, $to);
 
         return ['open' => $open, 'overdue' => $overdue, 'paidThisMonth' => $paidThisMonth];
+    }
+
+    /**
+     * @return array{
+     *     dateFrom: string,
+     *     dateTo: string,
+     *     finance: array{
+     *         revenue: float,
+     *         openInvoiceCount: int,
+     *         overdueInvoiceCount: int,
+     *         openInvoiceBalance: float,
+     *         materialCost: float,
+     *         payrollAccrued: float,
+     *         grossAfterKnownCosts: float
+     *     },
+     *     appointmentQuality: array{
+     *         appointmentCount: int,
+     *         noShowCount: int,
+     *         cancellationCount: int,
+     *         issueCount: int,
+     *         noShowRate: float,
+     *         cancellationRate: float,
+     *         issueRate: float
+     *     },
+     *     stock: array<string, mixed>,
+     *     payroll: array<string, mixed>,
+     *     doctorRows: list<array<string, mixed>>,
+     *     cabinetRows: list<array<string, mixed>>,
+     *     stockRows: list<array<string, mixed>>
+     * }
+     */
+    public function getManagementSnapshot(
+        ?string $dateFrom = null,
+        ?string $dateTo = null,
+        ?string $clinicId = null,
+        int $limit = 5
+    ): array {
+        $period = $this->normalizePeriod($dateFrom, $dateTo);
+        $clinicId = $this->normalizeOptionalId($clinicId);
+        $limit = max(1, min(12, $limit));
+
+        $revenue = $this->sumPaymentsBetween($period['from'], $period['to'], $clinicId);
+        $invoiceRisk = $this->getInvoiceRisk($clinicId);
+        $materialCost = $this->getMaterialCost($period, $clinicId);
+        $payroll = $this->getPayrollSnapshot($period, $clinicId, $limit);
+        $appointmentQuality = $this->getNoShowCancellations($period['from'], $period['to'], $clinicId, $limit);
+        $inventory = $this->getInventoryStatus($period['from'], $period['to'], $clinicId, $limit);
+        $doctorProductivity = $this->getDoctorProductivity($period['from'], $period['to'], $limit);
+        $cabinetUtilization = $this->getCabinetUtilization(
+            $period['from'],
+            $period['to'],
+            8,
+            21,
+            $clinicId,
+            $limit
+        );
+
+        $grossAfterKnownCosts = round($revenue - $materialCost - (float) $payroll['totalAmount'], 2);
+
+        return [
+            'dateFrom' => $period['from'],
+            'dateTo' => $period['to'],
+            'finance' => [
+                'revenue' => round($revenue, 2),
+                'openInvoiceCount' => $invoiceRisk['openInvoiceCount'],
+                'overdueInvoiceCount' => $invoiceRisk['overdueInvoiceCount'],
+                'openInvoiceBalance' => $invoiceRisk['openInvoiceBalance'],
+                'materialCost' => $materialCost,
+                'payrollAccrued' => (float) $payroll['totalAmount'],
+                'grossAfterKnownCosts' => $grossAfterKnownCosts,
+            ],
+            'appointmentQuality' => $appointmentQuality['summary'],
+            'stock' => $inventory['summary'],
+            'payroll' => $payroll,
+            'doctorRows' => $doctorProductivity['rows'],
+            'cabinetRows' => $cabinetUtilization['rows'],
+            'stockRows' => $inventory['rows'],
+        ];
     }
 
     /**
@@ -628,6 +713,172 @@ class ReportService
             'summary' => $summary,
             'rows' => array_slice(array_values($rows), 0, $limit),
         ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     */
+    private function getMaterialCost(array $period, ?string $clinicId): float
+    {
+        $where = [
+            'deleted' => false,
+            'performedAt>=' => $period['from'],
+            'performedAt<' => $period['to'],
+            'type' => [
+                StockMovement::TYPE_CONSUMPTION,
+                StockMovement::TYPE_WRITEOFF,
+                StockMovement::TYPE_RECEPTION_USAGE,
+                StockMovement::TYPE_MANUAL_DECREASE,
+            ],
+        ];
+
+        if ($clinicId !== null) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<StockMovement> $movements */
+        $movements = $this->entityManager
+            ->getRDBRepository(StockMovement::ENTITY_TYPE)
+            ->where($where)
+            ->find();
+
+        $sum = 0.0;
+        foreach ($movements as $movement) {
+            $sum += (float) ($movement->get('totalCost') ?? 0.0);
+        }
+
+        return round($sum, 2);
+    }
+
+    /**
+     * @return array{openInvoiceCount: int, overdueInvoiceCount: int, openInvoiceBalance: float}
+     */
+    private function getInvoiceRisk(?string $clinicId): array
+    {
+        $where = [
+            'deleted' => false,
+            'status' => [Invoice::STATUS_ISSUED, Invoice::STATUS_PARTIAL_PAID],
+        ];
+
+        if ($clinicId !== null) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<Invoice> $invoices */
+        $invoices = $this->entityManager
+            ->getRDBRepository(Invoice::ENTITY_TYPE)
+            ->where($where)
+            ->find();
+
+        $today = (new DateTimeImmutable('today'))->format('Y-m-d');
+        $openCount = 0;
+        $overdueCount = 0;
+        $balance = 0.0;
+
+        foreach ($invoices as $invoice) {
+            $openCount++;
+            $balance += max(0.0, $invoice->getBalance());
+
+            $dueDate = (string) ($invoice->get('dueDate') ?? '');
+            if ($dueDate !== '' && $dueDate < $today) {
+                $overdueCount++;
+            }
+        }
+
+        return [
+            'openInvoiceCount' => $openCount,
+            'overdueInvoiceCount' => $overdueCount,
+            'openInvoiceBalance' => round($balance, 2),
+        ];
+    }
+
+    /**
+     * @param array{from: string, to: string} $period
+     * @return array{
+     *     totalAmount: float,
+     *     draftAmount: float,
+     *     approvedAmount: float,
+     *     paidAmount: float,
+     *     entryCount: int,
+     *     rows: list<array{
+     *         id: string,
+     *         userId: string,
+     *         userName: string,
+     *         status: string,
+     *         totalAmount: float,
+     *         periodFrom: string,
+     *         periodTo: string,
+     *         sourceBreakdown: mixed
+     *     }>
+     * }
+     */
+    private function getPayrollSnapshot(array $period, ?string $clinicId, int $limit): array
+    {
+        $where = [
+            'deleted' => false,
+            'periodFrom<' => substr($period['to'], 0, 10),
+            'periodTo>=' => substr($period['from'], 0, 10),
+        ];
+
+        if ($clinicId !== null) {
+            $where['clinicId'] = $clinicId;
+        }
+
+        /** @var iterable<SalaryEntry> $entries */
+        $entries = $this->entityManager
+            ->getRDBRepository(SalaryEntry::ENTITY_TYPE)
+            ->where($where)
+            ->order('totalAmount', 'DESC')
+            ->find();
+
+        $summary = [
+            'totalAmount' => 0.0,
+            'draftAmount' => 0.0,
+            'approvedAmount' => 0.0,
+            'paidAmount' => 0.0,
+            'entryCount' => 0,
+            'rows' => [],
+        ];
+
+        foreach ($entries as $entry) {
+            $status = $entry->getStatus();
+
+            if ($status === SalaryEntry::STATUS_CANCELLED) {
+                continue;
+            }
+
+            $amount = round($entry->getTotalAmount(), 2);
+            $summary['totalAmount'] += $amount;
+            $summary['entryCount']++;
+
+            if ($status === SalaryEntry::STATUS_DRAFT) {
+                $summary['draftAmount'] += $amount;
+            } elseif ($status === SalaryEntry::STATUS_APPROVED) {
+                $summary['approvedAmount'] += $amount;
+            } elseif ($status === SalaryEntry::STATUS_PAID) {
+                $summary['paidAmount'] += $amount;
+            }
+
+            if (count($summary['rows']) < $limit) {
+                $summary['rows'][] = [
+                    'id' => (string) $entry->getId(),
+                    'userId' => (string) ($entry->get('userId') ?? ''),
+                    'userName' => (string) ($entry->get('userName') ?: $entry->get('userId') ?: ''),
+                    'status' => $status,
+                    'totalAmount' => $amount,
+                    'periodFrom' => (string) ($entry->get('periodFrom') ?? ''),
+                    'periodTo' => (string) ($entry->get('periodTo') ?? ''),
+                    'sourceBreakdown' => $entry->get('sourceBreakdown'),
+                ];
+            }
+        }
+
+        $summary['totalAmount'] = round($summary['totalAmount'], 2);
+        $summary['draftAmount'] = round($summary['draftAmount'], 2);
+        $summary['approvedAmount'] = round($summary['approvedAmount'], 2);
+        $summary['paidAmount'] = round($summary['paidAmount'], 2);
+
+        return $summary;
     }
 
     /**

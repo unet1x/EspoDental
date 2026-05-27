@@ -42,6 +42,80 @@ final class SimpleStomInventoryWorkspaceTest extends TestCase
         }
     }
 
+    public function testInventoryWorkspaceWriteActionsCreateImmutableMovements(): void
+    {
+        $routes = $this->readJson(self::MODULE_ROOT . '/Resources/routes.json');
+        $paths = array_column($routes, 'route');
+        $controller = $this->readFile(self::MODULE_ROOT . '/Controllers/Inventory.php');
+        $service = $this->readFile(self::MODULE_ROOT . '/Services/InventoryService.php');
+        $view = $this->readFile(self::CLIENT_ROOT . '/views/dashlets/inventory-workspace.js');
+
+        foreach (
+            [
+                '/EspoDental/Inventory/receipt',
+                '/EspoDental/Inventory/transfer',
+                '/EspoDental/Inventory/writeOff',
+                '/EspoDental/Inventory/adjustment',
+            ] as $path
+        ) {
+            $this->assertContains($path, $paths);
+        }
+
+        foreach (
+            [
+                'postActionReceipt',
+                'postActionTransfer',
+                'postActionWriteOff',
+                'postActionAdjustment',
+            ] as $needle
+        ) {
+            $this->assertStringContainsString($needle, $controller);
+        }
+
+        foreach (
+            [
+                'public function receive',
+                'public function transfer',
+                'public function writeOff',
+                'public function adjust',
+                'getTransactionManager()->run',
+                'createMovement',
+                'createStockLot',
+                'decreaseLotQuantity',
+                'increaseLotQuantity',
+                'StockMovement::TYPE_RECEIPT',
+                'StockMovement::TYPE_TRANSFER_OUT',
+                'StockMovement::TYPE_TRANSFER_IN',
+                'StockMovement::TYPE_WRITEOFF',
+                'StockMovement::TYPE_MANUAL_INCREASE',
+                'StockMovement::TYPE_MANUAL_DECREASE',
+                "'actionOptions'",
+                'getMaterialOptions',
+            ] as $needle
+        ) {
+            $this->assertStringContainsString($needle, $service);
+        }
+
+        foreach (
+            [
+                "'data-action': 'inventoryReceipt'",
+                "'data-action': 'inventoryTransfer'",
+                "'data-action': 'inventoryWriteOff'",
+                "'data-action': 'inventoryAdjustment'",
+                'EspoDental/Inventory/receipt',
+                'EspoDental/Inventory/transfer',
+                'EspoDental/Inventory/writeOff',
+                'EspoDental/Inventory/adjustment',
+                'Поступление',
+                'Переместить',
+                'Списать',
+                'Корректировка',
+            ] as $needle
+        ) {
+            $this->assertStringContainsString($needle, $view);
+        }
+    }
+
     public function testInventoryWorkspaceDashletRendersOperationalSections(): void
     {
         $dashlet = $this->readJson(self::MODULE_ROOT . '/Resources/metadata/dashlets/InventoryWorkspace.json');

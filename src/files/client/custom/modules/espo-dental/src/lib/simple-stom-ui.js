@@ -104,6 +104,7 @@ define('espo-dental:lib/simple-stom-ui', [], function () {
         active: 'активен',
         inactive: 'неактивен',
         draft: 'черновик',
+        approved: 'утверждено',
         issued: 'выставлен',
         partially_paid: 'частично оплачен',
         partial_paid: 'частично оплачен',

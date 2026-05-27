@@ -394,7 +394,7 @@ Verification:
 | 9. Tooth chart contract | Completed | Added whole-tooth state editing, veneer/sealant surface rules, bridge/removed-tooth visual behavior and in-place patient workspace snapshot history. |
 | 10. Services and inventory | Completed | Added material unit semantics, service material required/unit fields, warehouse and stock-lot entities, FEFO planning service and seeded main/cabinet warehouses. |
 | 11. Cash desk and shift closing | Completed | Added invoice-first cash desk workspace, advance application, cash-shift closing, financial adjustments and document-sequence metadata. |
-| 12. Reports, payroll and integrations | Completed | Added saved report definitions, payroll source breakdown, SMTP/WhatsApp/Telegram integration settings and sanitized secret metadata. MCP/AI is excluded from this run. |
+| 12. Reports, payroll and integrations | Completed | Added saved report definitions, payroll source breakdown, the management snapshot, SMTP/WhatsApp/Telegram integration settings and sanitized secret metadata. MCP/AI is excluded from this run. |
 | 13. Demo environment | Completed | Added optional `espo-dental-demo-seed`, local demo runbook and seeded SimpleStom acceptance data for patients, calendar, portal, visit, cash desk, inventory, reports and payroll. |
 
 ## Post-Parity Improvement Pass
@@ -519,6 +519,8 @@ Work:
   cabinet issue rows, expiry alerts and future-order candidates;
 - keep the current inventory report dashlet as a manager summary, not as the
   primary stock workspace.
+- add receipt, transfer, write-off and adjustment write flows from the
+  workspace while preserving immutable posted stock movements.
 
 Status:
 
@@ -531,4 +533,33 @@ Status:
 - browser/API smoke on 2026-05-27 confirmed the endpoint returns the seeded
   warehouse/lot summary after route rebuild;
 - `InventoryStatus` remains available as a manager summary instead of being the
-  primary stock operator surface.
+  primary stock operator surface;
+- second write-flow slice added workspace actions for receipt, transfer,
+  write-off and adjustment: receipt creates a linked lot, transfer creates
+  paired outbound/inbound movements, and write-off/adjustment require reasoned
+  correction movements instead of editing posted `StockMovement` records.
+
+### Pass 5 - Management Snapshot
+
+Goal: give the manager a compact control surface before investing in a broad
+custom report builder.
+
+Work:
+
+- add a structured snapshot endpoint over existing report, invoice, inventory
+  and payroll data;
+- place a `ManagementSnapshot` dashlet at the top of the manager dashboard;
+- keep the existing detailed report dashlets below it for drill-down and demo
+  comparison.
+
+Status:
+
+- first Stage I slice is implemented: `GET /EspoDental/Report/managementSnapshot`
+  returns finance, appointment quality, stock, payroll, doctor productivity and
+  cabinet utilization sections;
+- manager dashboard seed places `ManagementSnapshot` immediately after the
+  action center;
+- local API smoke on 2026-05-27 returned a seeded `200 OK` response after
+  EspoCRM route rebuild;
+- `materialCost` is documented as a known-cost signal from outbound
+  non-transfer stock movements, not as a complete P&L model.

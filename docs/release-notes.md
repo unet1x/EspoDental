@@ -162,6 +162,12 @@
   `EspoDental/Report/inventoryStatus` and as manager/stock dashboard dashlets,
   summarizing active-material stock level, current stock, period movement
   totals and calculated inventory value.
+- Management snapshot is available at
+  `EspoDental/Report/managementSnapshot` and as the first manager dashboard
+  control surface, combining revenue, debt, material cost, payroll accrual,
+  stock risks, appointment quality, doctor productivity and cabinet utilization.
+  The local demo smoke on 2026-05-27 verified a seeded `200 OK` response after
+  EspoCRM route rebuild.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

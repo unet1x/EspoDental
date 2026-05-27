@@ -88,11 +88,15 @@ Runtime pieces:
 
 - dashlet: `InventoryWorkspace`;
 - endpoint: `GET /EspoDental/Inventory/workspace`;
+- write endpoints:
+  - `POST /EspoDental/Inventory/receipt`;
+  - `POST /EspoDental/Inventory/transfer`;
+  - `POST /EspoDental/Inventory/writeOff`;
+  - `POST /EspoDental/Inventory/adjustment`;
 - service payload: `InventoryService::getWorkspace`.
 
-The first inventory workspace slice is read-only by design. It keeps the existing
-`InventoryStatus` report dashlet as a manager summary, while the stock-role
-dashboard gets a primary workspace that shows:
+It keeps the existing `InventoryStatus` report dashlet as a manager summary,
+while the stock-role dashboard gets a primary workspace that shows:
 
 - active main and cabinet warehouses;
 - active lots for the selected warehouse;
@@ -102,6 +106,35 @@ dashboard gets a primary workspace that shows:
 - cabinet issue movements;
 - recent immutable stock movements.
 
-Receipt, transfer, write-off and adjustment write flows stay in the next
-inventory slice so the first pass can be verified safely against current stock
-data.
+The second inventory workspace slice adds write flows from the same workspace:
+
+- receipt creates a `receipt` movement and a linked `InventoryStockLot`;
+- transfer creates paired `transfer_out` and `transfer_in` movements so clinic
+  material stock is not distorted by moving goods between warehouses;
+- write-off decrements a lot and creates a reasoned `writeoff` movement;
+- adjustment supports inventory count, manual increase and manual decrease by
+  creating new correction movements.
+
+Posted `StockMovement` rows remain immutable. Workspace write actions update
+current lot balances where needed, but corrections are represented by new
+movement rows with reason and source warehouse/lot context.
+
+Write request contracts:
+
+- receipt requires `warehouseId`, `materialId` and positive `quantity`; it also
+  accepts `lotNumber`, `expiresAt`, `receivedAt`, `unitPrice`, `reason` and
+  optional `clinicId`. Materials with expiration tracking require `expiresAt`.
+- transfer requires `stockLotId`, `targetWarehouseId` and positive `quantity`.
+  The source and target warehouses must be different and belong to the same
+  clinic.
+- write-off requires `stockLotId`, positive `quantity` and a non-empty
+  `reason`.
+- adjustment requires a non-empty `reason`. `adjustmentType`/`mode` can be
+  `set`, `increase`, `decrease`, `manual_increase` or `manual_decrease`.
+  `set` uses `stockLotId` plus `countedQuantity`; increase uses
+  `warehouseId`, `materialId` and positive `quantity`; decrease uses
+  `stockLotId` and positive `quantity`.
+
+Every write response returns the affected movement/lot ids and a refreshed
+`workspace` payload for the relevant warehouse so the dashlet can redraw without
+editing historical movement rows client-side.

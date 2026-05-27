@@ -80,9 +80,34 @@
         "params": {"controller": "Report", "action": "inventoryStatus"}
     },
     {
+        "route": "/EspoDental/Report/managementSnapshot",
+        "method": "get",
+        "params": {"controller": "Report", "action": "managementSnapshot"}
+    },
+    {
         "route": "/EspoDental/Inventory/workspace",
         "method": "get",
         "params": {"controller": "Inventory", "action": "workspace"}
+    },
+    {
+        "route": "/EspoDental/Inventory/receipt",
+        "method": "post",
+        "params": {"controller": "Inventory", "action": "receipt"}
+    },
+    {
+        "route": "/EspoDental/Inventory/transfer",
+        "method": "post",
+        "params": {"controller": "Inventory", "action": "transfer"}
+    },
+    {
+        "route": "/EspoDental/Inventory/writeOff",
+        "method": "post",
+        "params": {"controller": "Inventory", "action": "writeOff"}
+    },
+    {
+        "route": "/EspoDental/Inventory/adjustment",
+        "method": "post",
+        "params": {"controller": "Inventory", "action": "adjustment"}
     },
     {
         "route": "/EspoDental/Dashboard/actionCenter",
