@@ -28,6 +28,10 @@ retries messages directly; it surfaces retry candidates for staff review.
 Staff-triggered `NotificationLog` requeue is a separate CRM action, not an MCP
 tool. It only moves failed audit rows back to `queued` and records
 `payload.requeueHistory`; provider delivery remains outside the MCP contract.
+Queued retry delivery through `NotificationLog/processQueue` is also a separate
+staff action. It uses `NotificationDeliveryService` and `MessageDeliveryGateway`
+to process queued rows and audit provider results; MCP still receives no direct
+send tool.
 
 ## 2. Allowed Tool Behavior
 

@@ -551,6 +551,11 @@ Verification completed after this slice:
   Staff can move failed retry candidates back to `queued`; the action stores
   `payload.requeueHistory`, clears the active error fields and does not call
   `MessageDeliveryGateway` or external providers.
+- Stage J queued notification delivery now has `NotificationDeliveryService`
+  and `POST /EspoDental/NotificationLog/processQueue`. Staff can explicitly
+  process queued retries through `MessageDeliveryGateway`; the same
+  `NotificationLog` row records attempts, sent/failed status, provider errors
+  and `payload.deliveryHistory`.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

@@ -187,6 +187,11 @@
   returns failed retry candidates to `queued`, stores
   `payload.requeueHistory` and does not call external providers; actual
   delivery remains behind the existing reminder/message gateway boundary.
+- Queued notification retry delivery is available through
+  `NotificationDeliveryService` and
+  `EspoDental/NotificationLog/processQueue`. The action processes queued rows
+  through `MessageDeliveryGateway`, increments attempts and records sent/failed
+  provider results in `payload.deliveryHistory`.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

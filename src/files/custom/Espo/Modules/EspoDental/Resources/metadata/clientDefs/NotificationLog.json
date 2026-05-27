@@ -13,6 +13,14 @@
                     "acl": "edit",
                     "handler": "espo-dental:handlers/notification-log/requeue",
                     "actionFunction": "actionRequeue"
+                },
+                {
+                    "name": "processQueued",
+                    "label": "Process Queued",
+                    "style": "success",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/notification-log/process-queued",
+                    "actionFunction": "actionProcessQueued"
                 }
             ]
         }

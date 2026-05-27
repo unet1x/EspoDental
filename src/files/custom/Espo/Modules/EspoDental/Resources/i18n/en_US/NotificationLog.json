@@ -2,7 +2,8 @@
     "labels": {
         "Create NotificationLog": "Create Notification",
         "Requeue": "Requeue",
-        "Requeue notification": "Requeue notification"
+        "Requeue notification": "Requeue notification",
+        "Process Queued": "Process Queued"
     },
     "fields": {
         "name": "Name", "patient": "Patient", "appointment": "Appointment",
@@ -29,8 +30,12 @@
     "boolFilters": {"onlyFailed": "Only failed", "today": "Today"},
     "messages": {
         "Only failed notifications can be requeued": "Only failed notifications can be requeued",
+        "Only queued notifications can be processed": "Only queued notifications can be processed",
         "Requeue note is optional": "Requeue note is optional. This action does not send to the provider.",
+        "Process queued notification confirmation": "The notification will be sent through the configured delivery gateway.",
         "Notification requeued": "Notification requeued",
-        "Requeue failed": "Requeue failed"
+        "Queued notification processed": "Queued notification processed",
+        "Requeue failed": "Requeue failed",
+        "Process queued failed": "Process queued failed"
     }
 }

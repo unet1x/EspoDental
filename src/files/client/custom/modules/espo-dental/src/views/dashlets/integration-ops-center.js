@@ -8,7 +8,8 @@ define('espo-dental:views/dashlets/integration-ops-center', [
         templateContent: '<div class="espo-dental-integration-ops-center"></div>',
 
         events: {
-            'click [data-action="requeueNotification"]': 'requeueNotification'
+            'click [data-action="requeueNotification"]': 'requeueNotification',
+            'click [data-action="processNotificationQueue"]': 'processNotificationQueue'
         },
 
         afterRender: function () {
@@ -49,6 +50,7 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                     this.renderToolRows((mcp && mcp.tools) || []) +
                 '</div>' +
                 '<div>' +
+                    this.renderQueueControls(notificationSummary) +
                     this.renderFailedNotifications(notifications.failedRows || []) +
                     this.renderProposalRows(proposals.rows || []) +
                 '</div>' +
@@ -61,6 +63,7 @@ define('espo-dental:views/dashlets/integration-ops-center', [
             var rows = [
                 ['Статус', SimpleStomUi.label(status)],
                 ['MCP tools', (toolAudit.safeToolCount || 0) + ' / ' + (toolAudit.toolCount || 0)],
+                ['В очереди', notificationSummary.queuedCount || 0],
                 ['Ошибки уведомлений', notificationSummary.failedCount || 0],
                 ['Кандидаты retry', notificationSummary.retryCandidateCount || 0],
                 ['На ревью', proposalSummary.pendingReviewCount || 0],
@@ -103,6 +106,24 @@ define('espo-dental:views/dashlets/integration-ops-center', [
             return SimpleStomUi.panel({
                 title: 'MCP tools',
                 body: body,
+                classes: ['espo-dental-stom-panel--compact']
+            });
+        },
+
+        renderQueueControls: function (summary) {
+            if (!summary || !summary.queuedCount) {
+                return '';
+            }
+
+            return SimpleStomUi.panel({
+                title: 'Очередь уведомлений',
+                body: '<div class="espo-dental-stom-toolbar" style="margin:0">' +
+                    SimpleStomUi.badge('В очереди ' + summary.queuedCount, 'primary') +
+                    SimpleStomUi.button('Обработать', {
+                        tone: 'primary',
+                        attrs: {'data-action': 'processNotificationQueue'}
+                    }) +
+                    '</div>',
                 classes: ['espo-dental-stom-panel--compact']
             });
         },
@@ -223,6 +244,31 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                     }).bind(this))
                     .catch(function (xhr) {
                         Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось вернуть уведомление в очередь.');
+                    });
+            }).bind(this));
+        },
+
+        processNotificationQueue: function (e) {
+            e.preventDefault();
+
+            Dialogs.confirm(this, {
+                message: 'Будут обработаны queued уведомления через настроенный delivery gateway.',
+                confirmText: 'Обработать'
+            }).then((function (confirmed) {
+                if (!confirmed) {
+                    return;
+                }
+
+                Espo.Ajax.postRequest('EspoDental/NotificationLog/processQueue', {
+                    limit: parseInt(this.getOption('displayRecords'), 10) || 8
+                })
+                    .then((function (result) {
+                        var processed = result && result.processed ? result.processed : 0;
+                        Espo.Ui.success('Обработано уведомлений: ' + processed + '.');
+                        this.fetchData();
+                    }).bind(this))
+                    .catch(function (xhr) {
+                        Espo.Ui.error((xhr && xhr.responseText) || 'Не удалось обработать очередь уведомлений.');
                     });
             }).bind(this));
         }

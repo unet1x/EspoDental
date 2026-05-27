@@ -12,6 +12,7 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Modules\EspoDental\Entities\NotificationLog as NotificationLogEntity;
+use Espo\Modules\EspoDental\Services\NotificationDeliveryService;
 
 class NotificationLog extends Record
 {
@@ -71,6 +72,41 @@ class NotificationLog extends Record
             'attempts' => (int) ($log->get('attempts') ?? 0),
             'scheduledFor' => (string) ($log->get('scheduledFor') ?? $scheduledFor),
         ];
+    }
+
+    /**
+     * POST /EspoDental/NotificationLog/processQueue
+     *
+     * @return array<string, mixed>
+     */
+    public function postActionProcessQueue(Request $request): array
+    {
+        if (!$this->getAcl()->checkScope(NotificationLogEntity::ENTITY_TYPE, 'edit')) {
+            throw new Forbidden();
+        }
+
+        $body = $request->getParsedBody();
+        if (!is_object($body)) {
+            throw new BadRequest('Invalid payload');
+        }
+
+        /** @var NotificationDeliveryService $service */
+        $service = $this->injectableFactory->create(NotificationDeliveryService::class);
+
+        $id = isset($body->id) ? (string) $body->id : '';
+        if ($id !== '') {
+            $row = $service->processOne($id);
+
+            return [
+                'processed' => 1,
+                'sent' => $row['status'] === NotificationLogEntity::STATUS_SENT ? 1 : 0,
+                'failed' => $row['status'] === NotificationLogEntity::STATUS_FAILED ? 1 : 0,
+                'skipped' => 0,
+                'rows' => [$row],
+            ];
+        }
+
+        return $service->processQueued((int) ($body->limit ?? 5));
     }
 
     /**

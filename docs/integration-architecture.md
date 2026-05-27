@@ -68,6 +68,14 @@ requires edit ACL, only accepts failed rows below the retry limit, stores a
 `payload.requeueHistory` entry with reviewer context and the previous error,
 and does not call `MessageDeliveryGateway` or any external provider.
 
+Queued notification retries are processed explicitly through
+`POST /EspoDental/NotificationLog/processQueue`, implemented by
+`NotificationDeliveryService`. This is the only retry processing path added in
+Stage J. It requires normal `NotificationLog` edit ACL, processes either one
+queued row or a small bounded queue batch, calls `MessageDeliveryGateway`, then
+writes attempts, sent/failed status, provider ids/errors and
+`payload.deliveryHistory` back to the same audit row.
+
 ## 4. MCP And LLM Guardrails
 
 Future MCP and local LLM work should use the same pattern:
@@ -142,7 +150,9 @@ the proposal review screen and use the human approve/reject workflow without
 giving the assistant direct write authority. Failed notification retry
 candidates can also be requeued from the dashlet; the requeue action only moves
 the audit row back to `queued` and leaves actual provider delivery to the
-existing delivery boundary.
+existing delivery boundary. Queued retries can then be processed by staff from
+the same dashboard through `NotificationLog/processQueue`; this is an explicit
+operator action, not an MCP tool and not a hidden background mutation.
 
 ## 8. Virtual Administrator
 

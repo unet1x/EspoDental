@@ -637,3 +637,25 @@ Status:
 - failed notification rows can be returned to queue by staff review;
 - requeue prepares the outbox row for a later delivery pass but does not send
   email, Telegram or WhatsApp messages by itself.
+
+### Pass 9 - Queued Notification Delivery Pass
+
+Goal: complete the reviewed notification retry loop while keeping provider
+delivery behind one explicit boundary.
+
+Work:
+
+- add `NotificationDeliveryService`;
+- add `POST /EspoDental/NotificationLog/processQueue`;
+- process one queued row or a small bounded queue batch through
+  `MessageDeliveryGateway`;
+- increment attempts, set sent/failed status, record provider ids/errors and
+  append `payload.deliveryHistory`;
+- expose a queued-processing action from `NotificationLog` and
+  `IntegrationOpsCenter`.
+
+Status:
+
+- staff can requeue failed rows and then explicitly process queued retries;
+- `processQueue` is not part of the MCP contract and does not give assistants
+  direct write authority.

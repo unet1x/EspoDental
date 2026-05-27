@@ -235,6 +235,11 @@
         "params": {"controller": "NotificationLog", "action": "requeue"}
     },
     {
+        "route": "/EspoDental/NotificationLog/processQueue",
+        "method": "post",
+        "params": {"controller": "NotificationLog", "action": "processQueue"}
+    },
+    {
         "route": "/EspoDental/OrthodonticCard/close",
         "method": "post",
         "params": {"controller": "OrthodonticCard", "action": "close"}

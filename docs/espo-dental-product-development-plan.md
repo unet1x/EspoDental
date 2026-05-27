@@ -547,7 +547,13 @@ Status:
 - third Stage J slice added a reviewed `NotificationLog` requeue action.
   Staff can return failed retry candidates to `queued`, with requeue history
   stored in the payload, but the action does not call external providers or
-  bypass the existing reminder/delivery boundary.
+  bypass the existing reminder/delivery boundary;
+- fourth Stage J slice added `NotificationDeliveryService` and
+  `POST /EspoDental/NotificationLog/processQueue`. Staff can explicitly
+  process queued notification retries through the existing
+  `MessageDeliveryGateway`; delivery results are written back to
+  `NotificationLog` with `deliveryHistory`, attempts, sent/failed status and
+  provider error details.
 
 ### Stage K - Demo And Release Readiness
 
@@ -578,9 +584,12 @@ Continue Stage J acceptance:
 3. Verify that requeued notifications leave failed status, appear as queued in
    `IntegrationOpsCenter`, and preserve the original failure in
    `payload.requeueHistory`.
-4. Decide whether the next Stage J slice should process queued retries through
-   the existing delivery gateway or wait for provider credential acceptance.
-5. Keep all external provider sends and risky assistant actions behind existing
+4. Browser/API-check `NotificationLog/processQueue` on demo queued rows and
+   confirm provider failures are audited as `failed` without breaking
+   `payload.requeueHistory`.
+5. Decide whether the next Stage J slice should wait for provider credential
+   acceptance or add a stricter provider readiness checklist.
+6. Keep all external provider sends and risky assistant actions behind existing
    delivery/proposal boundaries.
 
 Do not start AI automation before the daily operational chain and manager

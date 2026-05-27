@@ -76,7 +76,10 @@ out of scope for this migration run.
     dashlet or action center and verify the approve/reject controls affect only
     review status, notes and reviewer metadata. Use one failed `NotificationLog`
     retry candidate to verify requeue moves it to `queued` without sending a
-    live provider message.
+    live provider message. Then use `NotificationLog/processQueue` from
+    `IntegrationOpsCenter` to process the queued row through
+    `NotificationDeliveryService` and confirm the delivery result is audited on
+    the same row.
 11. Open Report Definitions and Payroll, then inspect the salary entry source
     breakdown.
 
