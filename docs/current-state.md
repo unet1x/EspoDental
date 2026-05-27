@@ -610,6 +610,11 @@ Verification completed after this slice:
   walks through dashboard, calendar, patient workspace, cash desk, inventory,
   management reports and `IntegrationOpsCenter`, and explicitly keeps booking,
   payment, provider-send and inventory write actions cancelled or manual.
+- Current Stage K automated evidence is recorded in
+  `docs/release-acceptance-checklist.md`: release-readiness smoke,
+  deploy-readiness check, full PHPUnit suite and `git diff --check` passed
+  locally on 2026-05-27. Browser screenshots and live provider smoke remain
+  manual release evidence.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

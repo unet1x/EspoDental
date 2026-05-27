@@ -845,3 +845,21 @@ Status:
 - browser demo review now has a dedicated Stage K script;
 - `docs/release-acceptance-checklist.md` links to it as the browser workspace
   gate.
+
+### Pass 19 - Stage K Evidence Snapshot
+
+Goal: record which release-readiness gates are already complete and which
+remain manual.
+
+Work:
+
+- update `docs/release-acceptance-checklist.md` with current automated Stage K
+  evidence;
+- distinguish completed local automation from manual browser screenshots and
+  credentialed live provider smoke.
+
+Status:
+
+- release-readiness smoke, deploy-readiness check, full PHPUnit suite and
+  `git diff --check` passed locally on 2026-05-27;
+- browser workspace screenshots and live provider smoke remain manual release evidence.

@@ -92,3 +92,18 @@ Record the release candidate with:
 - browser workspace pass date;
 - deploy config check result;
 - any known manual-only provider smoke that was deliberately skipped.
+
+## 6. Current Stage K Evidence
+
+Local automated evidence recorded on 2026-05-27:
+
+- `bash deploy/local/release-readiness-smoke.sh`: passed;
+- `bash deploy/check-deploy-readiness.sh`: passed;
+- `vendor/bin/phpunit tests --no-coverage`: passed with the full suite;
+- `git diff --check`: passed.
+
+Manual evidence still required before calling a release candidate accepted:
+
+- browser workspace pass using `docs/release-browser-demo-script.md`;
+- live provider smoke only when a safe demo channel has real accepted credentials.
+  Otherwise record it as deliberately skipped.

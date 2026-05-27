@@ -226,6 +226,10 @@
 - Added `docs/release-browser-demo-script.md` for the browser-visible Stage K
   walkthrough across dashboard, calendar, patient workspace, cash desk,
   inventory, management reports and integration operations.
+- Recorded current automated Stage K evidence in
+  `docs/release-acceptance-checklist.md`: release-readiness smoke,
+  deploy-readiness check, full PHPUnit suite and `git diff --check` passed
+  locally on 2026-05-27.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`
