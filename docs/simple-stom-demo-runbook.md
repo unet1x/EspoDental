@@ -81,6 +81,8 @@ out of scope for this migration run.
     requeue moves it to `queued` without sending a live provider message. Before
     provider credential acceptance, `NotificationLog/processQueue` should audit
     or surface `provider_acceptance_required` instead of sending externally.
+    Check the queue preflight panel first: `queuedBlockedCount` should expose
+    blocked queued rows without mutating them.
     Use `Integration/acceptProviderCredentials` only on a safe demo channel with
     accepted credentials; after that, run `NotificationLog/processQueue` only in
     the credential-accepted environment and confirm `NotificationDeliveryService`

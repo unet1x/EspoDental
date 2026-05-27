@@ -53,6 +53,7 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                 '</div>' +
                 '<div>' +
                     this.renderQueueControls(notificationSummary) +
+                    this.renderQueuedNotifications(notifications.queuedRows || []) +
                     this.renderFailedNotifications(notifications.failedRows || []) +
                     this.renderProposalRows(proposals.rows || []) +
                 '</div>' +
@@ -66,6 +67,8 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                 ['Статус', SimpleStomUi.label(status)],
                 ['MCP tools', (toolAudit.safeToolCount || 0) + ' / ' + (toolAudit.toolCount || 0)],
                 ['В очереди', notificationSummary.queuedCount || 0],
+                ['Queue ready', notificationSummary.queuedReadyCount || 0],
+                ['Queue blocked', notificationSummary.queuedBlockedCount || 0],
                 ['Ошибки уведомлений', notificationSummary.failedCount || 0],
                 ['Кандидаты retry', notificationSummary.retryCandidateCount || 0],
                 ['На ревью', proposalSummary.pendingReviewCount || 0],
@@ -191,6 +194,27 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                         attrs: {'data-action': 'processNotificationQueue'}
                     }) +
                     '</div>',
+                classes: ['espo-dental-stom-panel--compact']
+            });
+        },
+
+        renderQueuedNotifications: function (rows) {
+            var body = this.renderTable(rows, ['channel', 'provider', 'gate', 'scheduled', 'open'], (function (row) {
+                var gate = row.deliveryGate || {};
+                var gateStatus = gate.ok ? 'ready' : (gate.error || 'blocked');
+
+                return [
+                    row.channel || '',
+                    row.provider || '',
+                    SimpleStomUi.badge(gateStatus, gateStatus),
+                    row.scheduledFor || '',
+                    this.renderRecordLink('NotificationLog', row.id, 'Открыть')
+                ];
+            }).bind(this), {rawColumns: [2, 4]});
+
+            return SimpleStomUi.panel({
+                title: 'Preflight очереди',
+                body: body,
                 classes: ['espo-dental-stom-panel--compact']
             });
         },

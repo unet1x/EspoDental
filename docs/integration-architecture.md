@@ -172,6 +172,12 @@ by accident. If accepted channel settings, enabled state or secret reference
 change later, the acceptance is revoked and staff must accept the new
 credential set before live sends are allowed again.
 
+Notification queue preflight uses the same provider gate without sending messages.
+`Integration/healthcheck` returns queued rows with `deliveryGate` status plus
+`queuedReadyCount` and `queuedBlockedCount`. `IntegrationOpsCenter` displays
+those blockers before staff invokes `NotificationLog/processQueue`; only the
+explicit process action mutates `NotificationLog` and calls delivery.
+
 ## 8. Virtual Administrator
 
 The local LLM design is documented in

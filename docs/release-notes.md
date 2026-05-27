@@ -201,6 +201,10 @@
   `IntegrationSettings`, and `MessageDeliveryGateway` returns
   `provider_acceptance_required` until SMTP, Telegram or WhatsApp credentials
   are accepted. Changing accepted channel settings revokes the acceptance.
+- Integration healthcheck now includes notification queue preflight:
+  `queuedRows`, `queuedReadyCount` and `queuedBlockedCount` show delivery gate
+  blockers in `IntegrationOpsCenter` before staff runs `processQueue`; queue
+  preflight is read-only and does not send provider messages.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

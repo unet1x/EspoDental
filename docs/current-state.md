@@ -571,6 +571,13 @@ Verification completed after this slice:
   Editing the channel type, enabled flag, secret reference or settings after
   acceptance revokes the accepted status so staff must re-accept the new
   credential set.
+- Stage J notification queue preflight is now part of
+  `Integration/healthcheck`. The endpoint lists queued rows with delivery gate
+  status and counts `queuedReadyCount` / `queuedBlockedCount` using the same
+  `MessageDeliveryGateway::preflight` logic as actual delivery. The manager
+  `IntegrationOpsCenter` shows the queue preflight blockers before staff runs
+  `NotificationLog/processQueue`; the preflight itself is read-only and does
+  not mutate `NotificationLog`.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

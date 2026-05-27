@@ -14,12 +14,14 @@ use Espo\Modules\EspoDental\Entities\AssistantActionProposal;
 use Espo\Modules\EspoDental\Entities\IntegrationSettings;
 use Espo\Modules\EspoDental\Entities\NotificationLog;
 use Espo\Modules\EspoDental\Entities\Patient;
+use Espo\Modules\EspoDental\Tools\Messaging\MessageDeliveryGateway;
 
 class IntegrationMcpService
 {
     public function __construct(
         private readonly EntityManager $entityManager,
-        private readonly Config $config
+        private readonly Config $config,
+        private readonly MessageDeliveryGateway $messageDeliveryGateway
     ) {
     }
 
@@ -584,7 +586,7 @@ class IntegrationMcpService
     }
 
     /**
-     * @return array{summary: array<string, int>, failedRows: list<array<string, mixed>>}
+     * @return array{summary: array<string, int>, failedRows: list<array<string, mixed>>, queuedRows: list<array<string, mixed>>}
      */
     private function buildNotificationHealth(int $limit): array
     {
@@ -594,8 +596,51 @@ class IntegrationMcpService
             'failedCount' => $this->countNotificationStatus(NotificationLog::STATUS_FAILED),
             'skippedCount' => $this->countNotificationStatus(NotificationLog::STATUS_SKIPPED),
             'retryCandidateCount' => 0,
+            'queuedReadyCount' => 0,
+            'queuedBlockedCount' => 0,
         ];
         $failedRows = [];
+        $queuedRows = [];
+
+        /** @var iterable<NotificationLog> $queuedLogs */
+        $queuedLogs = $this->entityManager
+            ->getRDBRepository(NotificationLog::ENTITY_TYPE)
+            ->where([
+                'deleted' => false,
+                'status' => NotificationLog::STATUS_QUEUED,
+            ])
+            ->order('scheduledFor', 'ASC')
+            ->find();
+
+        foreach ($queuedLogs as $log) {
+            $preflight = $this->messageDeliveryGateway->preflight($log);
+
+            if ($preflight['ok']) {
+                $summary['queuedReadyCount']++;
+            } else {
+                $summary['queuedBlockedCount']++;
+            }
+
+            if (count($queuedRows) >= $limit) {
+                continue;
+            }
+
+            $queuedRows[] = [
+                'id' => (string) $log->getId(),
+                'name' => (string) ($log->get('name') ?? ''),
+                'channel' => (string) ($log->get('channel') ?? ''),
+                'provider' => $preflight['provider'],
+                'kind' => (string) ($log->get('kind') ?? ''),
+                'recipient' => (string) ($log->get('recipient') ?? ''),
+                'scheduledFor' => (string) ($log->get('scheduledFor') ?? ''),
+                'attempts' => (int) ($log->get('attempts') ?? 0),
+                'deliveryGate' => [
+                    'ok' => $preflight['ok'],
+                    'error' => $preflight['error'],
+                    'accepted' => $preflight['accepted'],
+                ],
+            ];
+        }
 
         /** @var iterable<NotificationLog> $logs */
         $logs = $this->entityManager
@@ -633,7 +678,7 @@ class IntegrationMcpService
             ];
         }
 
-        return ['summary' => $summary, 'failedRows' => $failedRows];
+        return ['summary' => $summary, 'failedRows' => $failedRows, 'queuedRows' => $queuedRows];
     }
 
     private function countNotificationStatus(string $status): int
@@ -717,6 +762,7 @@ class IntegrationMcpService
 
         if (
             $notifications['summary']['failedCount'] > 0 ||
+            $notifications['summary']['queuedBlockedCount'] > 0 ||
             $proposals['summary']['highRiskPendingCount'] > 0 ||
             $integrations['summary']['needsSecretCount'] > 0 ||
             $integrations['summary']['runtimeMissingCount'] > 0 ||

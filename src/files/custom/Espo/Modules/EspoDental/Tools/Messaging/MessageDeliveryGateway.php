@@ -48,21 +48,21 @@ class MessageDeliveryGateway
      */
     public function send(NotificationLog $log, string $html = ''): array
     {
+        $preflight = $this->preflight($log);
+        if (!$preflight['ok']) {
+            return [
+                'ok' => false,
+                'error' => $preflight['error'],
+                'provider' => $preflight['provider'],
+                'externalMessageId' => null,
+            ];
+        }
+
         $channel = (string) $log->get('channel');
         $recipient = (string) $log->get('recipient');
         $subject = (string) $log->get('subject');
         $text = (string) $log->get('messageText');
-        $provider = $this->providerFor($channel);
-        $integrationType = $this->integrationTypeForChannel($channel);
-
-        if ($integrationType !== '' && !$this->isProviderAccepted($integrationType)) {
-            return [
-                'ok' => false,
-                'error' => 'provider_acceptance_required',
-                'provider' => $provider,
-                'externalMessageId' => null,
-            ];
-        }
+        $provider = $preflight['provider'];
 
         return match ($channel) {
             NotificationLog::CHANNEL_TELEGRAM => $this->sendTelegram($recipient, $text, $provider),
@@ -75,6 +75,56 @@ class MessageDeliveryGateway
                 'externalMessageId' => null,
             ],
         };
+    }
+
+    /**
+     * @return array{ok: bool, error: ?string, provider: string, channel: string, accepted: bool}
+     */
+    public function preflight(NotificationLog $log): array
+    {
+        $channel = (string) $log->get('channel');
+        $recipient = trim((string) ($log->get('recipient') ?? ''));
+        $provider = $this->providerFor($channel);
+        $integrationType = $this->integrationTypeForChannel($channel);
+        $accepted = $integrationType === '' || $this->isProviderAccepted($integrationType);
+
+        if ($integrationType === '') {
+            return [
+                'ok' => false,
+                'error' => 'unsupported_channel',
+                'provider' => $provider,
+                'channel' => $channel,
+                'accepted' => false,
+            ];
+        }
+
+        if (!$accepted) {
+            return [
+                'ok' => false,
+                'error' => 'provider_acceptance_required',
+                'provider' => $provider,
+                'channel' => $channel,
+                'accepted' => false,
+            ];
+        }
+
+        if ($recipient === '') {
+            return [
+                'ok' => false,
+                'error' => 'no_recipient',
+                'provider' => $provider,
+                'channel' => $channel,
+                'accepted' => true,
+            ];
+        }
+
+        return [
+            'ok' => true,
+            'error' => null,
+            'provider' => $provider,
+            'channel' => $channel,
+            'accepted' => true,
+        ];
     }
 
     private function integrationTypeForChannel(string $channel): string

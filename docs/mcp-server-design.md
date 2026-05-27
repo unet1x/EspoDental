@@ -47,6 +47,11 @@ credentials. Until a channel has accepted credentials,
 `MessageDeliveryGateway` returns `provider_acceptance_required` for SMTP,
 Telegram and WhatsApp instead of calling an external provider.
 
+Queue preflight is also read-only. `integration.healthcheck` may include
+`queuedRows`, `queuedReadyCount` and `queuedBlockedCount`, but it only calls the
+delivery gateway preflight gate and never sends provider messages or mutates
+`NotificationLog`.
+
 ## 2. Allowed Tool Behavior
 
 Allowed MCP behavior:

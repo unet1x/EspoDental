@@ -702,3 +702,24 @@ Status:
 - `pending_acceptance` can now be resolved by staff without sending a message;
 - queued processing and reminders cannot call external providers before
   provider credential acceptance is recorded.
+
+### Pass 12 - Notification Queue Preflight
+
+Goal: show delivery blockers before staff mutates queued notification rows.
+
+Work:
+
+- add `MessageDeliveryGateway::preflight` and make `send` reuse it;
+- extend `Integration/healthcheck` with `queuedRows`, `queuedReadyCount` and
+  `queuedBlockedCount`;
+- show queue preflight in `IntegrationOpsCenter` before the process button is
+  used;
+- keep queue preflight read-only: it must not send provider messages or change
+  `NotificationLog`.
+
+Status:
+
+- managers can see `provider_acceptance_required`, unsupported-channel and
+  no-recipient blockers while notifications are still queued;
+- `NotificationLog/processQueue` remains the only staff action that mutates the
+  queue and attempts delivery.

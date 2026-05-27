@@ -566,7 +566,13 @@ Status:
   complete, and the route is deliberately not an MCP tool. The message delivery
   gateway now returns `provider_acceptance_required` for SMTP, Telegram and
   WhatsApp until provider credential acceptance is recorded, so checklist status
-  is enforced before any external provider call.
+  is enforced before any external provider call;
+- seventh Stage J slice added passive notification queue preflight. The
+  healthcheck now returns `queuedRows`, `queuedReadyCount` and
+  `queuedBlockedCount` using the same delivery gateway gate, and
+  `IntegrationOpsCenter` shows those blockers before staff runs
+  `NotificationLog/processQueue`. Queue preflight does not send messages or
+  mutate `NotificationLog`.
 
 ### Stage K - Demo And Release Readiness
 
@@ -599,7 +605,8 @@ Continue Stage J acceptance:
    `payload.requeueHistory`.
 4. Browser/API-check `NotificationLog/processQueue` on demo queued rows and
    confirm provider failures are audited as `failed` without breaking
-   `payload.requeueHistory`.
+   `payload.requeueHistory`. Use queue preflight first to confirm
+   `queuedBlockedCount` and gate errors before processing.
 5. Browser-check the provider readiness checklist in `IntegrationOpsCenter`
    and confirm enabled channels with complete runtime settings show
    `pending_acceptance` while live provider smoke remains manual. Then use the
