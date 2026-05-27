@@ -223,6 +223,9 @@
 - Added `deploy/check-deploy-readiness.sh` to validate local/prod/staging
   compose config, backup/restore shell syntax and Synology/Proxmox recovery
   runbook coverage without starting containers or touching data.
+- Added `docs/release-browser-demo-script.md` for the browser-visible Stage K
+  walkthrough across dashboard, calendar, patient workspace, cash desk,
+  inventory, management reports and integration operations.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

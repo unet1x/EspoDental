@@ -615,7 +615,11 @@ Status:
 - third Stage K slice added `deploy/check-deploy-readiness.sh`. The check
   validates local, production and staging compose config, backup/restore shell
   syntax and Synology/Proxmox recovery runbook coverage without starting
-  containers, running backups or restoring databases.
+  containers, running backups or restoring databases;
+- fourth Stage K slice added `docs/release-browser-demo-script.md`. The script
+  gives a repeatable browser-visible walkthrough for dashboard, calendar,
+  patient workspace, cash desk, inventory, management reports and
+  `IntegrationOpsCenter`, while keeping risky actions cancelled or manual.
 
 ## 6. Suggested Immediate Next Step
 
@@ -623,9 +627,10 @@ Move to Stage K release readiness:
 
 1. Run `bash deploy/local/release-readiness-smoke.sh` on a fresh or known local
    stack and keep the output with the release notes.
-2. Use `docs/release-acceptance-checklist.md` for the browser workspace pass,
+2. Use `docs/release-browser-demo-script.md` for the browser workspace pass,
    starting with the manager dashboard and `IntegrationOpsCenter`
-   `stageJAcceptance` panel below the KPI strip.
+   `stageJAcceptance` panel below the KPI strip, then record the result in
+   `docs/release-acceptance-checklist.md`.
 3. Run `bash deploy/check-deploy-readiness.sh`, then record the result in the
    release evidence section of `docs/release-acceptance-checklist.md`.
 4. Keep live SMTP/Telegram/WhatsApp smoke manual and credential-accepted only;

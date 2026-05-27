@@ -825,3 +825,23 @@ Status:
 - deploy readiness has a repeatable non-destructive check;
 - `docs/release-acceptance-checklist.md` uses that check as the install and
   recovery gate.
+
+### Pass 18 - Release Browser Demo Script
+
+Goal: make the browser-visible acceptance pass repeatable after automated Stage
+K checks.
+
+Work:
+
+- add `docs/release-browser-demo-script.md`;
+- cover dashboard entry, calendar booking, patient workspace, cash desk,
+  inventory, management reports and integration operations;
+- define expected visual signals and evidence to record;
+- keep booking saves, payment posting, provider sends, `processQueue`,
+  credential acceptance, visit finish and inventory writes outside the pass.
+
+Status:
+
+- browser demo review now has a dedicated Stage K script;
+- `docs/release-acceptance-checklist.md` links to it as the browser workspace
+  gate.

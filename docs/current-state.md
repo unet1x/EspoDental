@@ -606,6 +606,10 @@ Verification completed after this slice:
   checks for backup/restore scripts and confirms Synology/Proxmox recovery docs
   cover bootstrap, backups, restore and rollback without starting containers or
   touching data.
+- Stage K browser evidence now has `docs/release-browser-demo-script.md`. It
+  walks through dashboard, calendar, patient workspace, cash desk, inventory,
+  management reports and `IntegrationOpsCenter`, and explicitly keeps booking,
+  payment, provider-send and inventory write actions cancelled or manual.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

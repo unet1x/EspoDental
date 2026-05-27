@@ -32,7 +32,7 @@ Required result:
 ## 2. Browser Workspace Gate
 
 Open <http://localhost:18080> as `admin / espodental-admin` after the automated
-gate.
+gate. Use `docs/release-browser-demo-script.md` for the detailed walkthrough.
 
 Accept the browser pass only when:
 

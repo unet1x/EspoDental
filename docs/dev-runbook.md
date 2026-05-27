@@ -124,6 +124,12 @@ Stage K release acceptance checklist:
 sed -n '1,220p' docs/release-acceptance-checklist.md
 ```
 
+Stage K browser demo script:
+
+```bash
+sed -n '1,220p' docs/release-browser-demo-script.md
+```
+
 ## 5. Development Discipline
 
 - Work by roadmap phases.

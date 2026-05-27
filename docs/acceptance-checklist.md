@@ -3,7 +3,8 @@
 Last updated: 2026-05-22
 
 Use this checklist before calling any vertical slice complete. For the compact
-Stage K release gate, use `docs/release-acceptance-checklist.md`.
+Stage K release gate, use `docs/release-acceptance-checklist.md` and
+`docs/release-browser-demo-script.md`.
 
 Known regression notes from 2026-05-21 are documented in
 `docs/regression-handoff-2026-05-21.md`. Review that handoff before accepting
