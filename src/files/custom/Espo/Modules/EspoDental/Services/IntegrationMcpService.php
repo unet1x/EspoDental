@@ -73,6 +73,13 @@ class IntegrationMcpService
         $integrations = $this->buildIntegrationReadiness();
         $notifications = $this->buildNotificationHealth($limit);
         $proposals = $this->buildProposalHealth($limit);
+        $stageJAcceptance = $this->buildStageJAcceptance(
+            $tools,
+            $toolAudit,
+            $integrations,
+            $notifications,
+            $proposals
+        );
         $status = $this->resolveHealthStatus($toolAudit, $integrations, $notifications, $proposals);
 
         return [
@@ -92,6 +99,7 @@ class IntegrationMcpService
             'integrations' => $integrations,
             'notifications' => $notifications,
             'proposals' => $proposals,
+            'stageJAcceptance' => $stageJAcceptance,
         ];
     }
 
@@ -742,6 +750,141 @@ class IntegrationMcpService
             ->getRDBRepository(AssistantActionProposal::ENTITY_TYPE)
             ->where(['deleted' => false, 'status' => $status])
             ->count();
+    }
+
+    /**
+     * @param list<array<string, mixed>> $tools
+     * @param array{directMutationToolCount: int} $toolAudit
+     * @param array{summary: array<string, int>, rows: list<array<string, mixed>>} $integrations
+     * @param array{summary: array<string, int>, failedRows: list<array<string, mixed>>, queuedRows: list<array<string, mixed>>} $notifications
+     * @param array{summary: array<string, int>, rows: list<array<string, mixed>>} $proposals
+     * @return array{status: string, readyCount: int, attentionCount: int, checks: list<array{key: string, label: string, status: string, detail: string}>}
+     */
+    private function buildStageJAcceptance(
+        array $tools,
+        array $toolAudit,
+        array $integrations,
+        array $notifications,
+        array $proposals
+    ): array {
+        $restrictedRoutes = [
+            '/EspoDental/AssistantActionProposal/approve',
+            '/EspoDental/AssistantActionProposal/reject',
+            '/EspoDental/NotificationLog/requeue',
+            '/EspoDental/NotificationLog/processQueue',
+            '/EspoDental/Integration/acceptProviderCredentials',
+        ];
+        $restrictedMcpRoutes = [];
+
+        foreach ($tools as $tool) {
+            $route = (string) ($tool['route'] ?? '');
+            if (in_array($route, $restrictedRoutes, true)) {
+                $restrictedMcpRoutes[] = $route;
+            }
+        }
+
+        $integrationRows = $integrations['rows'];
+        $providerRowsWithChecklist = 0;
+        foreach ($integrationRows as $row) {
+            if (!empty($row['checklist']) && is_array($row['checklist'])) {
+                $providerRowsWithChecklist++;
+            }
+        }
+
+        $ungatedLiveRows = 0;
+        foreach ($integrationRows as $row) {
+            $liveDelivery = $row['liveDelivery'] ?? [];
+            if (
+                (bool) ($liveDelivery['liveTestAllowed'] ?? false) &&
+                (string) ($row['credentialAcceptanceStatus'] ?? '') !== IntegrationSettings::ACCEPTANCE_ACCEPTED
+            ) {
+                $ungatedLiveRows++;
+            }
+        }
+
+        $checks = [
+            $this->acceptanceCheck(
+                'mcp_contract',
+                'MCP contract has no direct mutations',
+                $toolAudit['directMutationToolCount'] === 0 && count($restrictedMcpRoutes) === 0 ? 'ok' : 'critical',
+                'safeTools=' . (string) (($toolAudit['safeToolCount'] ?? 0)) .
+                    ', restrictedMcpRoutes=' . (string) count($restrictedMcpRoutes)
+            ),
+            $this->acceptanceCheck(
+                'provider_readiness',
+                'Provider readiness checklist is visible',
+                $providerRowsWithChecklist >= 3 ? 'ok' : 'attention',
+                'providers=' . (string) count($integrationRows) .
+                    ', dryRunReady=' . (string) ($integrations['summary']['dryRunReadyCount'] ?? 0) .
+                    ', accepted=' . (string) ($integrations['summary']['acceptedCount'] ?? 0)
+            ),
+            $this->acceptanceCheck(
+                'credential_gate',
+                'Credential gate blocks live sends until staff acceptance',
+                $ungatedLiveRows === 0 ? 'ok' : 'critical',
+                'liveTestAllowed=' . (string) ($integrations['summary']['liveTestAllowedCount'] ?? 0) .
+                    ', acceptancePending=' . (string) ($integrations['summary']['acceptancePendingCount'] ?? 0)
+            ),
+            $this->acceptanceCheck(
+                'queue_preflight',
+                'Queue preflight is visible before processing',
+                ($notifications['summary']['queuedBlockedCount'] ?? 0) > 0 ? 'attention' : 'ok',
+                'queuedReady=' . (string) ($notifications['summary']['queuedReadyCount'] ?? 0) .
+                    ', queuedBlocked=' . (string) ($notifications['summary']['queuedBlockedCount'] ?? 0)
+            ),
+            $this->acceptanceCheck(
+                'notification_retry_loop',
+                'Notification retry loop stays staff-controlled',
+                ($notifications['summary']['failedCount'] ?? 0) > 0 ? 'attention' : 'ok',
+                'failed=' . (string) ($notifications['summary']['failedCount'] ?? 0) .
+                    ', retryCandidates=' . (string) ($notifications['summary']['retryCandidateCount'] ?? 0)
+            ),
+            $this->acceptanceCheck(
+                'proposal_review_loop',
+                'Assistant proposals require human review',
+                ($proposals['summary']['pendingReviewCount'] ?? 0) > 0 ? 'attention' : 'ok',
+                'pending=' . (string) ($proposals['summary']['pendingReviewCount'] ?? 0) .
+                    ', highRisk=' . (string) ($proposals['summary']['highRiskPendingCount'] ?? 0)
+            ),
+        ];
+
+        $status = 'ok';
+        $readyCount = 0;
+        $attentionCount = 0;
+
+        foreach ($checks as $check) {
+            if ($check['status'] === 'ok') {
+                $readyCount++;
+                continue;
+            }
+
+            $attentionCount++;
+            if ($check['status'] === 'critical') {
+                $status = 'critical';
+            } elseif ($status !== 'critical') {
+                $status = 'attention';
+            }
+        }
+
+        return [
+            'status' => $status,
+            'readyCount' => $readyCount,
+            'attentionCount' => $attentionCount,
+            'checks' => $checks,
+        ];
+    }
+
+    /**
+     * @return array{key: string, label: string, status: string, detail: string}
+     */
+    private function acceptanceCheck(string $key, string $label, string $status, string $detail): array
+    {
+        return [
+            'key' => $key,
+            'label' => $label,
+            'status' => $status,
+            'detail' => $detail,
+        ];
     }
 
     /**

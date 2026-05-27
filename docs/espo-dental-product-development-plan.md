@@ -577,7 +577,13 @@ Status:
   `NotificationLog/processQueue` encounters a preflight-blocked row, it reports
   the row as skipped, remains queued, does not increment attempts and does not
   append delivery history. Skipped rows count against the process batch limit,
-  and only rows with a clear delivery gate can move to sent or failed.
+  and only rows with a clear delivery gate can move to sent or failed;
+- ninth Stage J slice added the read-only Stage J acceptance summary.
+  `GET /EspoDental/Integration/healthcheck` now returns `stageJAcceptance`
+  checks for MCP contract safety, provider readiness visibility, credential
+  gate enforcement, queue preflight, notification retry control and assistant
+  proposal review. `IntegrationOpsCenter` renders those checks as a manager
+  acceptance panel without sending providers or applying assistant payloads.
 
 ### Stage K - Demo And Release Readiness
 
@@ -597,28 +603,16 @@ Done when:
 
 ## 6. Suggested Immediate Next Step
 
-Continue Stage J acceptance:
+Move to Stage K release readiness:
 
-1. Browser-check the manager dashboard after bootstrap so
-   `IntegrationOpsCenter` renders under the report export center and shows
-   MCP tool audit, channel readiness, failed notifications and pending proposals.
-2. Use a demo `AssistantActionProposal` to verify approve/reject buttons update
-   only review status and reviewer metadata; applying proposal payloads remains
-   out of scope until a concrete safe action executor is designed.
-3. Verify that requeued notifications leave failed status, appear as queued in
-   `IntegrationOpsCenter`, and preserve the original failure in
-   `payload.requeueHistory`.
-4. Browser/API-check `NotificationLog/processQueue` on demo queued rows and
-   confirm preflight-blocked rows are skipped and remain queued without breaking
-   `payload.requeueHistory`. Use queue preflight first to confirm
-   `queuedBlockedCount` and gate errors before processing.
-5. Browser-check the provider readiness checklist in `IntegrationOpsCenter`
-   and confirm enabled channels with complete runtime settings show
-   `pending_acceptance` while live provider smoke remains manual. Then use the
-   staff provider credential acceptance action on a safe demo channel and
-   confirm `provider_acceptance_required` disappears only after acceptance.
-6. Keep all external provider sends and risky assistant actions behind existing
-   delivery/proposal boundaries.
-
-Do not start AI automation before the daily operational chain and manager
-control surfaces are accepted end to end.
+1. Run the local bootstrap and demo seed from
+   `docs/simple-stom-demo-runbook.md`, then verify `IntegrationOpsCenter`
+   exposes the `stageJAcceptance` panel below the KPI strip.
+2. Convert the manual demo runbook into a tighter release acceptance checklist:
+   one pass for browser-visible workspaces, one pass for API smoke endpoints and
+   one pass for install/deploy readiness.
+3. Add a bounded release-readiness smoke script or documented command group
+   that covers rebuild, bootstrap, demo seed, healthcheck, report export,
+   inventory workspace and management snapshot without provider sends.
+4. Keep live SMTP/Telegram/WhatsApp smoke manual and credential-accepted only;
+   release readiness may prove the gates, not send clinic messages.

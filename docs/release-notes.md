@@ -209,6 +209,10 @@
   preflight-blocked rows, so each row remains queued and does not spend retry attempts
   or append delivery history until the gate is clear. The batch limit also counts
   skipped rows, keeping staff-triggered queue processing bounded.
+- `Integration/healthcheck` now returns a read-only `stageJAcceptance` summary,
+  and `IntegrationOpsCenter` renders it as a Stage J acceptance panel covering
+  MCP safety, provider readiness, credential gating, queue preflight,
+  notification retry and proposal review.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

@@ -156,6 +156,10 @@ Checklist:
 - Local LLM virtual administrator uses only the MCP/Integration contract,
   creates `AssistantActionProposal(source=llm)` for state changes and refuses
   direct payment, visit-finish, medical-note, invoice-cancel and delete actions.
+- Integration healthcheck exposes `stageJAcceptance`; confirm the Stage J
+  acceptance panel shows MCP safety, provider readiness, credential gating,
+  queue preflight, notification retry and proposal review without sending live
+  provider messages.
 - Questionnaire older than 1 year shows a patient alert.
 - Questionnaire PDF contains answers in two columns and includes the stored
   signature.

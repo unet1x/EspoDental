@@ -583,6 +583,12 @@ Verification completed after this slice:
   attempt and does not append `payload.deliveryHistory`; only rows with a clear
   delivery gate can move to sent or failed. The batch limit counts skipped rows
   as well, so a bounded staff action cannot scan the whole queue.
+- Stage J acceptance is now summarized directly in the integration healthcheck.
+  `GET /EspoDental/Integration/healthcheck` returns `stageJAcceptance` checks
+  for MCP contract safety, provider readiness visibility, credential gate
+  enforcement, queue preflight, staff-controlled notification retry and human
+  assistant proposal review. `IntegrationOpsCenter` renders the same Stage J
+  acceptance panel without calling providers or applying proposal payloads.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

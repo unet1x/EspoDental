@@ -39,11 +39,14 @@ define('espo-dental:views/dashlets/integration-ops-center', [
             var proposals = data.proposals || {};
             var integrations = data.integrations || {};
             var mcp = data.mcp || {};
+            var stageJAcceptance = data.stageJAcceptance || {};
             var notificationSummary = notifications.summary || {};
             var proposalSummary = proposals.summary || {};
             var integrationSummary = integrations.summary || {};
             var toolAudit = (mcp && mcp.toolAudit) || {};
             var html = this.renderKpis(data.status || 'ok', notificationSummary, proposalSummary, integrationSummary, toolAudit);
+
+            html += this.renderStageJAcceptance(stageJAcceptance);
 
             html += '<div class="espo-dental-stom-layout espo-dental-stom-layout--two">' +
                 '<div>' +
@@ -85,6 +88,31 @@ define('espo-dental:views/dashlets/integration-ops-center', [
             });
 
             return html + '</div>';
+        },
+
+        renderStageJAcceptance: function (acceptance) {
+            var checks = acceptance.checks || [];
+            if (!checks.length) {
+                return '';
+            }
+
+            var body = this.renderTable(checks, ['check', 'status', 'detail'], function (row) {
+                return [
+                    row.label || row.key || '',
+                    SimpleStomUi.badge(row.status || 'attention', row.status || 'attention'),
+                    row.detail || ''
+                ];
+            }, {rawColumns: [1]});
+
+            return SimpleStomUi.panel({
+                title: 'Stage J acceptance',
+                body: '<div class="espo-dental-stom-toolbar" style="margin:0 0 8px">' +
+                    SimpleStomUi.badge(acceptance.status || 'attention', acceptance.status || 'attention') +
+                    SimpleStomUi.badge('Готово ' + (acceptance.readyCount || 0), 'primary') +
+                    SimpleStomUi.badge('Внимание ' + (acceptance.attentionCount || 0), 'warning') +
+                    '</div>' + body,
+                classes: ['espo-dental-stom-panel--compact']
+            });
         },
 
         renderIntegrationRows: function (rows) {

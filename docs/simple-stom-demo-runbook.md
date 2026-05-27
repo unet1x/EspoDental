@@ -70,8 +70,9 @@ out of scope for this migration run.
    revenue/cash/report dashlets with finance, risks, doctors, cabinets and
    payroll panels. Confirm `ReportExportCenter` is directly below it, preview a
    report source, then download CSV and JSON from `EspoDental/Report/export`.
-10. Confirm `IntegrationOpsCenter` shows MCP tool audit, provider readiness checklist,
-    failed notification status and pending assistant proposals
+10. Confirm `IntegrationOpsCenter` shows the Stage J acceptance panel from
+    `stageJAcceptance`, MCP tool audit, provider readiness checklist, failed
+    notification status and pending assistant proposals
     without sending live messages. A complete channel may show
     `pending_acceptance`; that is still a manual credential gate, not automatic
     permission for live provider smoke. Open the pending

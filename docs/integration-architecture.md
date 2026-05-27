@@ -182,6 +182,14 @@ Only a row with a clear delivery gate can be sent or marked failed by the
 explicit process action. The process batch limit counts skipped rows too, so a
 single staff action remains bounded even when every queued row is blocked.
 
+`Integration/healthcheck` also returns `stageJAcceptance`, a read-only summary
+of the Stage J acceptance gates. It checks that MCP tools contain no direct
+mutations, restricted staff routes are not exposed as MCP tools, provider
+readiness is visible, live sends remain behind credential acceptance, queue
+preflight is visible before processing, notification retry is staff-controlled
+and assistant proposals remain in human review. `IntegrationOpsCenter` renders
+that summary as the Stage J acceptance panel.
+
 ## 8. Virtual Administrator
 
 The local LLM design is documented in

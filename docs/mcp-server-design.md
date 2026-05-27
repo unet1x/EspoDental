@@ -54,6 +54,12 @@ delivery gateway preflight gate and never sends provider messages or mutates
 preflight-blocked rows are skipped and remain queued instead of spending retry
 attempts.
 
+The healthcheck response includes a read-only `stageJAcceptance` block. It is a
+manager-facing acceptance summary for MCP contract safety, provider readiness,
+credential gating, queue preflight, notification retry and proposal review. It
+does not add a tool and does not let MCP call staff-only review, requeue,
+processQueue or provider-acceptance routes.
+
 ## 2. Allowed Tool Behavior
 
 Allowed MCP behavior:

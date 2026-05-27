@@ -744,3 +744,24 @@ Status:
 - each preflight-blocked queued row remains queued until the gate is fixed;
 - only rows with a clear delivery gate can be sent or marked failed by
   `processQueue`.
+
+### Pass 14 - Stage J Acceptance Summary
+
+Goal: let a manager verify that integration automation is gated before moving to
+release readiness.
+
+Work:
+
+- add read-only `stageJAcceptance` checks to `Integration/healthcheck`;
+- verify MCP tools do not expose staff-only approve/reject, requeue,
+  processQueue or provider-acceptance routes;
+- summarize provider readiness, credential gating, queue preflight,
+  notification retry and assistant proposal review in one response block;
+- render the Stage J acceptance panel in `IntegrationOpsCenter`.
+
+Status:
+
+- `IntegrationOpsCenter` now shows the Stage J acceptance summary without
+  sending providers or applying assistant payloads;
+- Stage K can use `stageJAcceptance` as the integration acceptance input for
+  the final release-readiness pass.
