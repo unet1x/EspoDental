@@ -72,7 +72,9 @@ out of scope for this migration run.
    report source, then download CSV and JSON from `EspoDental/Report/export`.
 10. Confirm `IntegrationOpsCenter` shows MCP tool audit, disabled integration
     settings, failed notification status and pending assistant proposals without
-    sending live messages.
+    sending live messages. Open the pending `AssistantActionProposal` from the
+    dashlet or action center and verify the approve/reject controls affect only
+    review status, notes and reviewer metadata.
 11. Open Report Definitions and Payroll, then inspect the salary entry source
     breakdown.
 

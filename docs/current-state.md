@@ -542,6 +542,11 @@ Verification completed after this slice:
   settings readiness, failed `NotificationLog` rows, retry candidates and
   pending `AssistantActionProposal` rows without sending external messages or
   applying assistant proposals.
+- Stage J proposal review now has explicit `AssistantActionProposal`
+  approve/reject actions. They require edit ACL, only accept
+  `pending_review` proposals, stamp reviewer metadata and review notes, and do
+  not apply proposal payloads. `IntegrationOpsCenter` links failed
+  notifications and pending proposals to their CRM records for staff review.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

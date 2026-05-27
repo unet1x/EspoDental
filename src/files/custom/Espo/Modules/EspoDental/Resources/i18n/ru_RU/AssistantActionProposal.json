@@ -2,7 +2,13 @@
     "labels": {
         "Create AssistantActionProposal": "Создать предложение ассистента",
         "Overview": "Основное",
-        "Review": "Ревью"
+        "Review": "Ревью",
+        "Approve": "Одобрить",
+        "Reject": "Отклонить",
+        "Approved": "Одобрено",
+        "Rejected": "Отклонено",
+        "Approve assistant proposal": "Одобрить предложение ассистента",
+        "Reject assistant proposal": "Отклонить предложение ассистента"
     },
     "fields": {
         "name": "Название",
@@ -55,6 +61,9 @@
     },
     "boolFilters": {"pendingReview": "На ревью", "highRisk": "Высокий риск"},
     "messages": {
-        "Assistant proposal must be approved before it can be applied": "Предложение ассистента должно быть одобрено перед применением"
+        "Assistant proposal must be approved before it can be applied": "Предложение ассистента должно быть одобрено перед применением",
+        "Only pending review proposals can be reviewed": "Ревью доступно только для предложений в статусе На ревью",
+        "Review notes are optional": "Заметки ревью необязательны",
+        "Review failed": "Не удалось сохранить ревью"
     }
 }

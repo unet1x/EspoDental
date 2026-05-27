@@ -2,7 +2,13 @@
     "labels": {
         "Create AssistantActionProposal": "Create Assistant Proposal",
         "Overview": "Overview",
-        "Review": "Review"
+        "Review": "Review",
+        "Approve": "Approve",
+        "Reject": "Reject",
+        "Approved": "Approved",
+        "Rejected": "Rejected",
+        "Approve assistant proposal": "Approve assistant proposal",
+        "Reject assistant proposal": "Reject assistant proposal"
     },
     "fields": {
         "name": "Name",
@@ -55,6 +61,9 @@
     },
     "boolFilters": {"pendingReview": "Pending Review", "highRisk": "High Risk"},
     "messages": {
-        "Assistant proposal must be approved before it can be applied": "Assistant proposal must be approved before it can be applied"
+        "Assistant proposal must be approved before it can be applied": "Assistant proposal must be approved before it can be applied",
+        "Only pending review proposals can be reviewed": "Only pending review proposals can be reviewed",
+        "Review notes are optional": "Review notes are optional",
+        "Review failed": "Review failed"
     }
 }

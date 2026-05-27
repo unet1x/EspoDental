@@ -2,5 +2,27 @@
     "controller": "controllers/record",
     "color": "#546A76",
     "iconClass": "fas fa-robot",
-    "boolFilterList": ["pendingReview", "highRisk"]
+    "boolFilterList": ["pendingReview", "highRisk"],
+    "menu": {
+        "detail": {
+            "buttons": [
+                {
+                    "name": "approve",
+                    "label": "Approve",
+                    "style": "success",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/assistant-action-proposal/review",
+                    "actionFunction": "actionApprove"
+                },
+                {
+                    "name": "reject",
+                    "label": "Reject",
+                    "style": "danger",
+                    "acl": "edit",
+                    "handler": "espo-dental:handlers/assistant-action-proposal/review",
+                    "actionFunction": "actionReject"
+                }
+            ]
+        }
+    }
 }

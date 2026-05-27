@@ -596,3 +596,23 @@ Status:
   health and assistant proposal health without external network calls;
 - retry remains a reviewed staff workflow: this slice identifies retry
   candidates but does not resend messages automatically.
+
+### Pass 7 - Assistant Proposal Review Shortcut
+
+Goal: let staff close the first Stage J proposal loop without giving the
+assistant direct mutation authority.
+
+Work:
+
+- add explicit approve/reject actions for `AssistantActionProposal`;
+- require edit ACL and limit the actions to `pending_review` proposals;
+- stamp reviewer, review time and optional review notes;
+- keep proposal payload application out of scope;
+- link pending proposals and failed notifications from `IntegrationOpsCenter`
+  to their CRM records.
+
+Status:
+
+- proposal review can approve/reject audit records from the CRM detail view;
+- the review actions do not post payments, finish visits, edit notes, cancel
+  invoices or call external messaging providers.

@@ -2,7 +2,13 @@
     "labels": {
         "Create AssistantActionProposal": "Crear propuesta del asistente",
         "Overview": "Resumen",
-        "Review": "Revision"
+        "Review": "Revision",
+        "Approve": "Aprobar",
+        "Reject": "Rechazar",
+        "Approved": "Aprobada",
+        "Rejected": "Rechazada",
+        "Approve assistant proposal": "Aprobar propuesta del asistente",
+        "Reject assistant proposal": "Rechazar propuesta del asistente"
     },
     "fields": {
         "name": "Nombre",
@@ -55,6 +61,9 @@
     },
     "boolFilters": {"pendingReview": "Pendiente", "highRisk": "Alto riesgo"},
     "messages": {
-        "Assistant proposal must be approved before it can be applied": "La propuesta del asistente debe aprobarse antes de aplicarse"
+        "Assistant proposal must be approved before it can be applied": "La propuesta del asistente debe aprobarse antes de aplicarse",
+        "Only pending review proposals can be reviewed": "Solo las propuestas pendientes pueden revisarse",
+        "Review notes are optional": "Las notas de revision son opcionales",
+        "Review failed": "No se pudo guardar la revision"
     }
 }

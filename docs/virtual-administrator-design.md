@@ -67,8 +67,11 @@ For these actions, it may only draft a high-risk
 3. The assistant drafts a response or proposal.
 4. If CRM state must change, the assistant creates an
    `AssistantActionProposal` with source `llm`.
-5. A permitted user reviews and approves/rejects the proposal in EspoCRM.
-6. Only approved proposals can be applied by a normal workflow.
+5. A permitted user reviews and approves/rejects the proposal in EspoCRM with
+   the explicit approve/reject actions on `AssistantActionProposal`.
+6. The review action stamps reviewer metadata and notes but does not apply the
+   proposal payload.
+7. Only approved proposals can be applied by a normal workflow.
 
 The approval screen should show:
 

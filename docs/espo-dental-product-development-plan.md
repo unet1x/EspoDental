@@ -538,7 +538,12 @@ Status:
   `IntegrationOpsCenter` manager dashlet. The endpoint audits MCP tools,
   integration settings readiness, failed notification rows, retry candidates and
   pending assistant proposals without calling external providers or applying
-  risky actions.
+  risky actions;
+- second Stage J slice added human approve/reject actions for
+  `AssistantActionProposal` records. The actions require edit ACL, only accept
+  `pending_review` proposals, stamp reviewer metadata and deliberately do not
+  apply the proposal payload. `IntegrationOpsCenter` now links failed
+  notifications and pending proposals to their review records.
 
 ### Stage K - Demo And Release Readiness
 
@@ -563,10 +568,12 @@ Continue Stage J acceptance:
 1. Browser-check the manager dashboard after bootstrap so
    `IntegrationOpsCenter` renders under the report export center and shows
    MCP tool audit, channel readiness, failed notifications and pending proposals.
-2. Use demo failed/pending rows to decide whether the next Stage J slice should
-   be a requeue action, a proposal review shortcut or provider credential
-   acceptance.
-3. Keep all external provider sends and risky assistant actions behind existing
+2. Use a demo `AssistantActionProposal` to verify approve/reject buttons update
+   only review status and reviewer metadata; applying proposal payloads remains
+   out of scope until a concrete safe action executor is designed.
+3. Decide whether the next Stage J slice should be a reviewed notification
+   requeue action or provider credential acceptance.
+4. Keep all external provider sends and risky assistant actions behind existing
    delivery/proposal boundaries.
 
 Do not start AI automation before the daily operational chain and manager

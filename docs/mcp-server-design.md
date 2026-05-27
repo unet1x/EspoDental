@@ -47,6 +47,11 @@ Disallowed direct MCP behavior:
 For disallowed mutations, MCP must create an `AssistantActionProposal` with the
 corresponding action type and wait for human review.
 
+Human review is handled inside CRM through explicit
+`AssistantActionProposal` approve/reject actions. These actions require normal
+edit ACL, only accept `pending_review` proposals and record reviewer metadata;
+they do not apply proposal payloads or grant MCP write credentials.
+
 ## 3. Patient Context Shape
 
 `patient_context.read` returns patient identifiers, contact channels,

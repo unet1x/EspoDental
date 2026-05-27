@@ -220,6 +220,16 @@
         "params": {"controller": "Integration", "action": "proposeAction"}
     },
     {
+        "route": "/EspoDental/AssistantActionProposal/approve",
+        "method": "post",
+        "params": {"controller": "AssistantActionProposal", "action": "approve"}
+    },
+    {
+        "route": "/EspoDental/AssistantActionProposal/reject",
+        "method": "post",
+        "params": {"controller": "AssistantActionProposal", "action": "reject"}
+    },
+    {
         "route": "/EspoDental/OrthodonticCard/close",
         "method": "post",
         "params": {"controller": "OrthodonticCard", "action": "close"}

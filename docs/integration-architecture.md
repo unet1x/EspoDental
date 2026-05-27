@@ -94,7 +94,9 @@ The workflow is:
 
 1. MCP or LLM creates a `pending_review` proposal.
 2. A permitted user reviews the summary and payload.
-3. The user marks it `approved` or `rejected`.
+3. The user marks it `approved` or `rejected` through the
+   `AssistantActionProposal` approve/reject actions, which require edit ACL and
+   stamp `reviewedBy`, `reviewedAt` and optional `reviewNotes`.
 4. Only an already `approved` proposal can be marked `applied`.
 
 This keeps the assistant useful for drafting and triage while preserving the
@@ -128,7 +130,10 @@ mutations.
 
 The endpoint is deliberately passive. It does not call external providers and
 does not resend messages; retry candidates are shown for staff review while the
-existing reminder and messaging services remain the delivery boundary.
+existing reminder and messaging services remain the delivery boundary. Failed
+notifications and pending proposals link to their CRM records so staff can open
+the proposal review screen and use the human approve/reject workflow without
+giving the assistant direct write authority.
 
 ## 8. Virtual Administrator
 

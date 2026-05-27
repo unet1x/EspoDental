@@ -103,13 +103,14 @@ define('espo-dental:views/dashlets/integration-ops-center', [
         },
 
         renderFailedNotifications: function (rows) {
-            var body = this.renderTable(rows, ['channel', 'error', 'retry'], function (row) {
+            var body = this.renderTable(rows, ['channel', 'error', 'retry', 'open'], (function (row) {
                 return [
                     row.channel || '',
                     row.errorMessage || row.provider || '',
-                    row.retryCandidate ? 'retry' : 'hold'
+                    row.retryCandidate ? 'retry' : 'hold',
+                    this.renderRecordLink('NotificationLog', row.id, 'Открыть')
                 ];
-            });
+            }).bind(this), {rawColumns: [3]});
 
             return SimpleStomUi.panel({
                 title: 'Ошибки уведомлений',
@@ -119,13 +120,14 @@ define('espo-dental:views/dashlets/integration-ops-center', [
         },
 
         renderProposalRows: function (rows) {
-            var body = this.renderTable(rows, ['action', 'risk', 'summary'], function (row) {
+            var body = this.renderTable(rows, ['action', 'risk', 'summary', 'open'], (function (row) {
                 return [
                     row.actionType || '',
                     SimpleStomUi.label(row.riskLevel || 'medium'),
-                    row.summary || row.name || ''
+                    row.summary || row.name || '',
+                    this.renderRecordLink('AssistantActionProposal', row.id, 'Ревью')
                 ];
-            });
+            }).bind(this), {rawColumns: [3]});
 
             return SimpleStomUi.panel({
                 title: 'Предложения ассистента',
@@ -134,11 +136,13 @@ define('espo-dental:views/dashlets/integration-ops-center', [
             });
         },
 
-        renderTable: function (rows, headings, mapper) {
+        renderTable: function (rows, headings, mapper, options) {
             if (!rows.length) {
                 return SimpleStomUi.emptyState('Нет данных.');
             }
 
+            options = options || {};
+            var rawColumns = options.rawColumns || [];
             var html = '<table class="espo-dental-stom-table"><thead><tr>';
             headings.forEach(function (heading) {
                 html += '<th>' + SimpleStomUi.escapeHtml(heading) + '</th>';
@@ -148,13 +152,25 @@ define('espo-dental:views/dashlets/integration-ops-center', [
             rows.forEach(function (row) {
                 var cells = mapper(row);
                 html += '<tr>';
-                cells.forEach(function (cell) {
-                    html += '<td>' + SimpleStomUi.escapeHtml(cell) + '</td>';
+                cells.forEach(function (cell, index) {
+                    html += '<td>' +
+                        (rawColumns.indexOf(index) !== -1 ? (cell || '') : SimpleStomUi.escapeHtml(cell)) +
+                        '</td>';
                 });
                 html += '</tr>';
             });
 
             return html + '</tbody></table>';
+        },
+
+        renderRecordLink: function (entityType, id, label) {
+            if (!id) {
+                return '';
+            }
+
+            return '<a href="#' + encodeURIComponent(entityType) + '/view/' + encodeURIComponent(id) + '">' +
+                SimpleStomUi.escapeHtml(label) +
+                '</a>';
         }
     });
 });

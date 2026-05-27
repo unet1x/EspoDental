@@ -178,6 +178,11 @@
   manager dashlet. It shows MCP tool audit, channel readiness, failed
   notifications, retry candidates and pending assistant proposals without
   calling external providers.
+- Assistant proposal review now has explicit approve/reject actions on
+  `AssistantActionProposal` records. The actions only review
+  `pending_review` proposals, stamp reviewer metadata and review notes, and do
+  not apply the proposal payload. `IntegrationOpsCenter` links pending
+  proposals and failed notifications to their CRM records.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`
