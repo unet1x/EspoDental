@@ -636,5 +636,3 @@ Final manual release evidence:
    accepted credentials; otherwise record it as deliberately skipped.
 3. No further automated code stage is queued in this plan before manual release
    evidence.
-4. Keep live SMTP/Telegram/WhatsApp smoke manual and credential-accepted only;
-   release readiness may prove the gates, not send clinic messages.
