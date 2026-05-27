@@ -32,9 +32,10 @@
         "Only failed notifications can be requeued": "Only failed notifications can be requeued",
         "Only queued notifications can be processed": "Only queued notifications can be processed",
         "Requeue note is optional": "Requeue note is optional. This action does not send to the provider.",
-        "Process queued notification confirmation": "The notification will be sent through the configured delivery gateway.",
+        "Process queued notification confirmation": "The notification will be checked by preflight first, then sent only if the delivery gate is clear.",
         "Notification requeued": "Notification requeued",
         "Queued notification processed": "Queued notification processed",
+        "Queued notification skipped by preflight": "Queued notification skipped by preflight. The row remains queued.",
         "Requeue failed": "Requeue failed",
         "Process queued failed": "Process queued failed"
     }

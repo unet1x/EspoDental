@@ -205,6 +205,10 @@
   `queuedRows`, `queuedReadyCount` and `queuedBlockedCount` show delivery gate
   blockers in `IntegrationOpsCenter` before staff runs `processQueue`; queue
   preflight is read-only and does not send provider messages.
+- Queue processing is now preflight-aware: `processQueue` skips
+  preflight-blocked rows, so each row remains queued and does not spend retry attempts
+  or append delivery history until the gate is clear. The batch limit also counts
+  skipped rows, keeping staff-triggered queue processing bounded.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

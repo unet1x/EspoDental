@@ -32,9 +32,10 @@
         "Only failed notifications can be requeued": "Solo las notificaciones fallidas pueden reencolarse",
         "Only queued notifications can be processed": "Solo las notificaciones en cola pueden procesarse",
         "Requeue note is optional": "La nota es opcional. Esta accion no envia al proveedor.",
-        "Process queued notification confirmation": "La notificacion se enviara por el gateway configurado.",
+        "Process queued notification confirmation": "Primero se ejecutara preflight. El envio solo ocurre si el delivery gate esta limpio.",
         "Notification requeued": "Notificacion reencolada",
         "Queued notification processed": "Notificacion en cola procesada",
+        "Queued notification skipped by preflight": "Notificacion omitida por preflight. La fila permanece en cola.",
         "Requeue failed": "No se pudo reencolar la notificacion",
         "Process queued failed": "No se pudo procesar la notificacion"
     }

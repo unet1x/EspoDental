@@ -572,7 +572,12 @@ Status:
   `queuedBlockedCount` using the same delivery gateway gate, and
   `IntegrationOpsCenter` shows those blockers before staff runs
   `NotificationLog/processQueue`. Queue preflight does not send messages or
-  mutate `NotificationLog`.
+  mutate `NotificationLog`;
+- eighth Stage J slice made queue processing preflight-aware. When
+  `NotificationLog/processQueue` encounters a preflight-blocked row, it reports
+  the row as skipped, remains queued, does not increment attempts and does not
+  append delivery history. Skipped rows count against the process batch limit,
+  and only rows with a clear delivery gate can move to sent or failed.
 
 ### Stage K - Demo And Release Readiness
 
@@ -604,7 +609,7 @@ Continue Stage J acceptance:
    `IntegrationOpsCenter`, and preserve the original failure in
    `payload.requeueHistory`.
 4. Browser/API-check `NotificationLog/processQueue` on demo queued rows and
-   confirm provider failures are audited as `failed` without breaking
+   confirm preflight-blocked rows are skipped and remain queued without breaking
    `payload.requeueHistory`. Use queue preflight first to confirm
    `queuedBlockedCount` and gate errors before processing.
 5. Browser-check the provider readiness checklist in `IntegrationOpsCenter`

@@ -82,7 +82,9 @@ out of scope for this migration run.
     provider credential acceptance, `NotificationLog/processQueue` should audit
     or surface `provider_acceptance_required` instead of sending externally.
     Check the queue preflight panel first: `queuedBlockedCount` should expose
-    blocked queued rows without mutating them.
+    blocked queued rows without mutating them. If a preflight-blocked row is
+    processed anyway, it should be skipped and remains queued without spending
+    an attempt.
     Use `Integration/acceptProviderCredentials` only on a safe demo channel with
     accepted credentials; after that, run `NotificationLog/processQueue` only in
     the credential-accepted environment and confirm `NotificationDeliveryService`

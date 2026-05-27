@@ -723,3 +723,24 @@ Status:
   no-recipient blockers while notifications are still queued;
 - `NotificationLog/processQueue` remains the only staff action that mutates the
   queue and attempts delivery.
+
+### Pass 13 - Preflight-Aware Queue Processing
+
+Goal: prevent a staff click from spending retries on known blocked queued rows.
+
+Work:
+
+- make `NotificationDeliveryService` run delivery preflight before attempts are
+  incremented;
+- return preflight-blocked rows as skipped from `processQueue`;
+- keep preflight-blocked `NotificationLog` rows queued, with attempts and
+  `payload.deliveryHistory` unchanged;
+- count skipped preflight rows against the process batch limit;
+- update record and dashboard UI messages so staff sees that the row remains
+  queued.
+
+Status:
+
+- each preflight-blocked queued row remains queued until the gate is fixed;
+- only rows with a clear delivery gate can be sent or marked failed by
+  `processQueue`.

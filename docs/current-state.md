@@ -578,6 +578,11 @@ Verification completed after this slice:
   `IntegrationOpsCenter` shows the queue preflight blockers before staff runs
   `NotificationLog/processQueue`; the preflight itself is read-only and does
   not mutate `NotificationLog`.
+- `NotificationLog/processQueue` is now preflight-aware. A preflight-blocked
+  notification is returned as skipped, remains queued, does not spend an
+  attempt and does not append `payload.deliveryHistory`; only rows with a clear
+  delivery gate can move to sent or failed. The batch limit counts skipped rows
+  as well, so a bounded staff action cannot scan the whole queue.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

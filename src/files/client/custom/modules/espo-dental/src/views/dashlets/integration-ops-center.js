@@ -355,7 +355,12 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                 })
                     .then((function (result) {
                         var processed = result && result.processed ? result.processed : 0;
-                        Espo.Ui.success('Обработано уведомлений: ' + processed + '.');
+                        var skipped = result && result.skipped ? result.skipped : 0;
+                        var message = 'Обработано уведомлений: ' + processed + '.';
+                        if (skipped) {
+                            message += ' Пропущено preflight: ' + skipped + '.';
+                        }
+                        Espo.Ui.success(message);
                         this.fetchData();
                     }).bind(this))
                     .catch(function (xhr) {

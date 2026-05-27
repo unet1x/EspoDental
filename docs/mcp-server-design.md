@@ -50,7 +50,9 @@ Telegram and WhatsApp instead of calling an external provider.
 Queue preflight is also read-only. `integration.healthcheck` may include
 `queuedRows`, `queuedReadyCount` and `queuedBlockedCount`, but it only calls the
 delivery gateway preflight gate and never sends provider messages or mutates
-`NotificationLog`.
+`NotificationLog`. The separate staff `processQueue` action is preflight-aware:
+preflight-blocked rows are skipped and remain queued instead of spending retry
+attempts.
 
 ## 2. Allowed Tool Behavior
 

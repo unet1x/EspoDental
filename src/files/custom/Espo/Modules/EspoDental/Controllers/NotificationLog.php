@@ -96,12 +96,13 @@ class NotificationLog extends Record
         $id = isset($body->id) ? (string) $body->id : '';
         if ($id !== '') {
             $row = $service->processOne($id);
+            $skipped = $row['status'] === NotificationLogEntity::STATUS_SKIPPED;
 
             return [
-                'processed' => 1,
+                'processed' => $skipped ? 0 : 1,
                 'sent' => $row['status'] === NotificationLogEntity::STATUS_SENT ? 1 : 0,
                 'failed' => $row['status'] === NotificationLogEntity::STATUS_FAILED ? 1 : 0,
-                'skipped' => 0,
+                'skipped' => $skipped ? 1 : 0,
                 'rows' => [$row],
             ];
         }

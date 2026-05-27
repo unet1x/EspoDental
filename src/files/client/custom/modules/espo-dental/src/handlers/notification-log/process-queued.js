@@ -24,8 +24,12 @@ define('espo-dental:handlers/notification-log/process-queued', [
                 Espo.Ajax.postRequest('EspoDental/NotificationLog/processQueue', {
                     id: model.id
                 })
-                    .then(function () {
-                        Espo.Ui.success(view.translate('Queued notification processed', 'messages', 'NotificationLog'));
+                    .then(function (result) {
+                        if (result && result.skipped) {
+                            Espo.Ui.warning(view.translate('Queued notification skipped by preflight', 'messages', 'NotificationLog'));
+                        } else {
+                            Espo.Ui.success(view.translate('Queued notification processed', 'messages', 'NotificationLog'));
+                        }
                         model.fetch();
                     })
                     .catch(function (xhr) {

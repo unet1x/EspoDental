@@ -175,8 +175,12 @@ credential set before live sends are allowed again.
 Notification queue preflight uses the same provider gate without sending messages.
 `Integration/healthcheck` returns queued rows with `deliveryGate` status plus
 `queuedReadyCount` and `queuedBlockedCount`. `IntegrationOpsCenter` displays
-those blockers before staff invokes `NotificationLog/processQueue`; only the
-explicit process action mutates `NotificationLog` and calls delivery.
+those blockers before staff invokes `NotificationLog/processQueue`. The process
+action is also preflight-aware: a preflight-blocked row is returned as skipped,
+remains queued, does not spend an attempt and does not append delivery history.
+Only a row with a clear delivery gate can be sent or marked failed by the
+explicit process action. The process batch limit counts skipped rows too, so a
+single staff action remains bounded even when every queued row is blocked.
 
 ## 8. Virtual Administrator
 

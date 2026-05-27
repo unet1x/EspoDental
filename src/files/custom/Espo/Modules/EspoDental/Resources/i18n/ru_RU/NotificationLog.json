@@ -32,9 +32,10 @@
         "Only failed notifications can be requeued": "В очередь можно вернуть только уведомления с ошибкой",
         "Only queued notifications can be processed": "Обработать можно только уведомления в очереди",
         "Requeue note is optional": "Заметка необязательна. Отправка провайдеру этим действием не выполняется.",
-        "Process queued notification confirmation": "Уведомление будет отправлено через настроенный delivery gateway.",
+        "Process queued notification confirmation": "Сначала пройдет preflight. Отправка будет выполнена только если delivery gate чистый.",
         "Notification requeued": "Уведомление возвращено в очередь",
         "Queued notification processed": "Уведомление обработано",
+        "Queued notification skipped by preflight": "Уведомление пропущено preflight. Строка остается в очереди.",
         "Requeue failed": "Не удалось вернуть уведомление в очередь",
         "Process queued failed": "Не удалось обработать уведомление"
     }

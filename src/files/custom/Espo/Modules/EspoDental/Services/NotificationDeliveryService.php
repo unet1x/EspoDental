@@ -38,7 +38,7 @@ class NotificationDeliveryService
             ->find();
 
         foreach ($logs as $log) {
-            if ($stats['processed'] >= $limit) {
+            if (($stats['processed'] + $stats['skipped']) >= $limit) {
                 break;
             }
 
@@ -55,9 +55,19 @@ class NotificationDeliveryService
                 continue;
             }
 
+            if ($row['status'] === NotificationLog::STATUS_SKIPPED) {
+                $stats['skipped']++;
+                if (count($stats['rows']) < $limit) {
+                    $stats['rows'][] = $row;
+                }
+                continue;
+            }
+
             $stats['processed']++;
             $stats[$row['status'] === NotificationLog::STATUS_SENT ? 'sent' : 'failed']++;
-            $stats['rows'][] = $row;
+            if (count($stats['rows']) < $limit) {
+                $stats['rows'][] = $row;
+            }
         }
 
         return $stats;
@@ -96,8 +106,21 @@ class NotificationDeliveryService
             throw new Conflict('Notification retry limit reached');
         }
 
+        $preflight = $this->messageDeliveryGateway->preflight($log);
+        if (!$preflight['ok']) {
+            return [
+                'id' => (string) $log->getId(),
+                'status' => NotificationLog::STATUS_SKIPPED,
+                'provider' => $preflight['provider'],
+                'attempts' => $attempts,
+                'errorMessage' => $preflight['error'],
+                'externalMessageId' => null,
+                'skippedReason' => $preflight['error'],
+            ];
+        }
+
         $attemptedAt = (new DateTimeImmutable())->format('Y-m-d H:i:s');
-        $provider = $this->messageDeliveryGateway->providerFor((string) ($log->get('channel') ?? ''));
+        $provider = $preflight['provider'];
         $externalMessageId = null;
         $error = null;
         $ok = false;
