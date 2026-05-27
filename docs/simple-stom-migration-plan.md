@@ -551,6 +551,7 @@ Work:
 - place a `ManagementSnapshot` dashlet at the top of the manager dashboard;
 - add `GET /EspoDental/Report/export` for CSV/JSON exports over seeded report
   sources;
+- add a manager `ReportExportCenter` dashlet over that endpoint;
 - keep the existing detailed report dashlets below it for drill-down and demo
   comparison.
 
@@ -569,4 +570,7 @@ Status:
   `service_profitability`, `material_finance`, `doctor_utilization`,
   `cabinet_utilization`, `patient_funnel`, `appointments`, `inventory` and
   `payroll`. `ManagementSnapshot` exposes the finance CSV download from the
-  manager dashboard.
+  manager dashboard;
+- `ReportExportCenter` now sits below `ManagementSnapshot` in the manager
+  dashboard and provides source selection, optional date range, preview rows,
+  CSV download and JSON download without adding a broad report builder.

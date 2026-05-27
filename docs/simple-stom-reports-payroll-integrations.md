@@ -77,7 +77,10 @@ report builder:
 - endpoint: `GET /EspoDental/Report/export`;
 - formats: `csv` and `json`;
 - default source: `finance`;
-- manager UI entry point: `ManagementSnapshot` dashlet button `Экспорт CSV`.
+- manager UI entry points:
+  - `ManagementSnapshot` dashlet button `Экспорт CSV` for the finance export;
+  - `ReportExportCenter` dashlet for all supported sources, preview, CSV and
+    JSON download.
 
 Supported query parameters:
 
@@ -113,6 +116,12 @@ Source mapping:
 - `patient_funnel`: preliminary-patient status counts, converted leads and
   active patient count.
 - `payroll`: salary entries with source breakdown.
+
+`ReportExportCenter` is placed directly below `ManagementSnapshot` in the
+manager dashboard template. It keeps the first manager screen operational:
+select source, optional date range and limit, preview rows, then download CSV
+or JSON. This is intentionally narrower than a report builder; new columns or
+drill-down links should be added only after manager-demo feedback.
 
 ## Payroll Source Breakdown
 

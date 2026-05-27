@@ -68,8 +68,8 @@ out of scope for this migration run.
    inventory workspace without saving destructive demo changes.
 9. Open the manager dashboard and confirm `Управленческий срез` is above the
    revenue/cash/report dashlets with finance, risks, doctors, cabinets and
-   payroll panels, then use `Экспорт CSV` and confirm the file is generated
-   from `EspoDental/Report/export`.
+   payroll panels. Confirm `ReportExportCenter` is directly below it, preview a
+   report source, then download CSV and JSON from `EspoDental/Report/export`.
 10. Open Report Definitions and Payroll, then inspect the salary entry source
     breakdown.
 

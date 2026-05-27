@@ -533,7 +533,9 @@ Verification completed after this slice:
   It returns CSV/JSON metadata and content for seeded report sources, including
   finance, payments, service profitability, material finance, doctor/cabinet
   utilization, patient funnel, appointments, inventory and payroll. The manager
-  `ManagementSnapshot` dashlet exposes the finance CSV export action.
+  `ManagementSnapshot` dashlet exposes the finance CSV export action, and
+  `ReportExportCenter` gives managers source selection, preview, CSV download
+  and JSON download directly below the management snapshot.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

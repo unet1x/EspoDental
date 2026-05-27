@@ -511,7 +511,10 @@ Status:
 - second Stage I slice added `GET /EspoDental/Report/export` for CSV/JSON
   exports over the seeded report sources. The manager snapshot dashlet can
   download its finance export as CSV, while the broad report builder remains
-  deferred until manager-demo feedback identifies a concrete gap.
+  deferred until manager-demo feedback identifies a concrete gap;
+- third Stage I slice added the `ReportExportCenter` dashlet below the manager
+  snapshot. It lets the manager pick any seeded report source, preview rows and
+  download CSV or JSON from `GET /EspoDental/Report/export`.
 
 ### Stage J - Integrations And Virtual Administrator
 
@@ -551,8 +554,8 @@ Continue Stage I acceptance:
 
 1. Browser-check the manager dashboard after bootstrap so
    `ManagementSnapshot` renders above the existing revenue, cash, doctor,
-   cabinet, no-show, inventory and payroll dashlets, and verify `Экспорт CSV`
-   downloads data from `Report/export`.
+   cabinet, no-show, inventory and payroll dashlets, verify `ReportExportCenter`
+   renders under it, and confirm CSV/JSON downloads from `Report/export`.
 2. Compare exported rows against demo source records and decide which gaps need
    small drill-down links or extra columns.
 3. Keep a broad report builder deferred until manager-demo feedback proves a
