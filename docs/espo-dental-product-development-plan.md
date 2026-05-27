@@ -611,7 +611,11 @@ Status:
   credential acceptance, payment posting and inventory write actions;
 - second Stage K slice added `docs/release-acceptance-checklist.md`, a compact
   release gate that separates automated smoke, browser workspace review, safe
-  API checks, install/recovery checks and release evidence.
+  API checks, install/recovery checks and release evidence;
+- third Stage K slice added `deploy/check-deploy-readiness.sh`. The check
+  validates local, production and staging compose config, backup/restore shell
+  syntax and Synology/Proxmox recovery runbook coverage without starting
+  containers, running backups or restoring databases.
 
 ## 6. Suggested Immediate Next Step
 
@@ -622,7 +626,7 @@ Move to Stage K release readiness:
 2. Use `docs/release-acceptance-checklist.md` for the browser workspace pass,
    starting with the manager dashboard and `IntegrationOpsCenter`
    `stageJAcceptance` panel below the KPI strip.
-3. Run the install/recovery commands from the checklist: local, production and
-   staging compose config checks plus Synology/Proxmox doc review.
+3. Run `bash deploy/check-deploy-readiness.sh`, then record the result in the
+   release evidence section of `docs/release-acceptance-checklist.md`.
 4. Keep live SMTP/Telegram/WhatsApp smoke manual and credential-accepted only;
    release readiness may prove the gates, not send clinic messages.

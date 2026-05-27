@@ -90,6 +90,16 @@ docker compose --env-file deploy/.env.example -f deploy/docker-compose.yml confi
 docker compose --env-file deploy/staging/.env.example -f deploy/staging/docker-compose.yml config --quiet
 ```
 
+Deploy-readiness check:
+
+```bash
+bash deploy/check-deploy-readiness.sh
+```
+
+This validates local/prod/staging compose config, shell syntax for backup and
+restore scripts, and the Synology/Proxmox recovery runbooks. It does not start
+containers, run backups or restore databases.
+
 Calendar API:
 
 ```bash

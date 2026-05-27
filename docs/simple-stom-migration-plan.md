@@ -806,3 +806,22 @@ Status:
   runbook, demo runbook, product plan and general acceptance checklist;
 - final review can record `stageJAcceptance`, smoke, PHPUnit, browser and
   deploy-config results in one place.
+
+### Pass 17 - Deploy Readiness Check
+
+Goal: make install and recovery readiness verifiable without running a backup
+or destructive restore during release smoke.
+
+Work:
+
+- add `deploy/check-deploy-readiness.sh`;
+- validate local, production and staging compose config;
+- run shell syntax checks for backup and restore scripts;
+- check Synology and Proxmox runbooks for bootstrap, backup, restore and
+  rollback coverage.
+
+Status:
+
+- deploy readiness has a repeatable non-destructive check;
+- `docs/release-acceptance-checklist.md` uses that check as the install and
+  recovery gate.

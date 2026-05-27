@@ -601,6 +601,11 @@ Verification completed after this slice:
   smoke, browser workspace review, safe API checks, install/recovery checks and
   release evidence so final acceptance does not rely on the longer migration
   runbook alone.
+- Stage K deploy readiness now has `deploy/check-deploy-readiness.sh`. It
+  validates local, production and staging compose config, runs shell syntax
+  checks for backup/restore scripts and confirms Synology/Proxmox recovery docs
+  cover bootstrap, backups, restore and rollback without starting containers or
+  touching data.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

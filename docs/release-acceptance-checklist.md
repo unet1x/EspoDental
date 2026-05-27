@@ -12,6 +12,7 @@ Run from the repository root:
 
 ```bash
 bash deploy/local/release-readiness-smoke.sh
+bash deploy/check-deploy-readiness.sh
 vendor/bin/phpunit tests --no-coverage
 git diff --check
 ```
@@ -24,6 +25,8 @@ Required result:
   no restricted MCP routes;
 - management snapshot, finance JSON export and inventory workspace return
   seeded demo data;
+- deploy-readiness check validates local/prod/staging compose config, backup
+  script syntax and Synology/Proxmox recovery runbook coverage;
 - PHPUnit and whitespace checks pass.
 
 ## 2. Browser Workspace Gate
@@ -73,6 +76,7 @@ Before a deployable release:
 - `docker compose -f deploy/local/docker-compose.yml config --quiet` passes;
 - `docker compose --env-file deploy/.env.example -f deploy/docker-compose.yml config --quiet` passes;
 - `docker compose --env-file deploy/staging/.env.example -f deploy/staging/docker-compose.yml config --quiet` passes;
+- `bash deploy/check-deploy-readiness.sh` passes;
 - Synology install notes are current for rebuild/bootstrap;
 - Proxmox VM restore runbook is current for database dump, uploads restore,
   module revision, rebuild/bootstrap, verification and rollback;

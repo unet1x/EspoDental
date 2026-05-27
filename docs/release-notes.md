@@ -220,6 +220,9 @@
 - Added `docs/release-acceptance-checklist.md` as the compact Stage K release
   gate for automated smoke, browser workspace review, safe API checks,
   install/recovery checks and release evidence.
+- Added `deploy/check-deploy-readiness.sh` to validate local/prod/staging
+  compose config, backup/restore shell syntax and Synology/Proxmox recovery
+  runbook coverage without starting containers or touching data.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`
