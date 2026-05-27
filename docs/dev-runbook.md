@@ -108,6 +108,12 @@ SimpleStom demo runbook:
 sed -n '1,220p' docs/simple-stom-demo-runbook.md
 ```
 
+Stage K release acceptance checklist:
+
+```bash
+sed -n '1,220p' docs/release-acceptance-checklist.md
+```
+
 ## 5. Development Discipline
 
 - Work by roadmap phases.

@@ -596,6 +596,11 @@ Verification completed after this slice:
   `Inventory/workspace` through read-only API calls. It does not call provider
   sends, `processQueue`, provider credential acceptance, payment posting or
   inventory write endpoints.
+- Stage K release acceptance is tracked in
+  `docs/release-acceptance-checklist.md`. The checklist separates automated
+  smoke, browser workspace review, safe API checks, install/recovery checks and
+  release evidence so final acceptance does not rely on the longer migration
+  runbook alone.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

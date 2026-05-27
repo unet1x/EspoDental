@@ -608,7 +608,10 @@ Status:
   runs rebuild/bootstrap/demo seed and checks `stageJAcceptance`, management
   snapshot, finance JSON export and inventory workspace through read-only API
   calls. It deliberately avoids provider sends, `processQueue`, provider
-  credential acceptance, payment posting and inventory write actions.
+  credential acceptance, payment posting and inventory write actions;
+- second Stage K slice added `docs/release-acceptance-checklist.md`, a compact
+  release gate that separates automated smoke, browser workspace review, safe
+  API checks, install/recovery checks and release evidence.
 
 ## 6. Suggested Immediate Next Step
 
@@ -616,10 +619,10 @@ Move to Stage K release readiness:
 
 1. Run `bash deploy/local/release-readiness-smoke.sh` on a fresh or known local
    stack and keep the output with the release notes.
-2. Browser-check the manager dashboard after the smoke so `IntegrationOpsCenter`
-   exposes the `stageJAcceptance` panel below the KPI strip.
-3. Convert the manual demo runbook into a tighter release acceptance checklist:
-   one pass for browser-visible workspaces, one pass for API smoke endpoints and
-   one pass for install/deploy readiness.
+2. Use `docs/release-acceptance-checklist.md` for the browser workspace pass,
+   starting with the manager dashboard and `IntegrationOpsCenter`
+   `stageJAcceptance` panel below the KPI strip.
+3. Run the install/recovery commands from the checklist: local, production and
+   staging compose config checks plus Synology/Proxmox doc review.
 4. Keep live SMTP/Telegram/WhatsApp smoke manual and credential-accepted only;
    release readiness may prove the gates, not send clinic messages.

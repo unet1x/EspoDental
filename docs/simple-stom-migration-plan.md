@@ -786,3 +786,23 @@ Status:
 - release-readiness API smoke is now a bounded Stage K command;
 - manual browser review can start after the smoke without relying on chat-only
   command history.
+
+### Pass 16 - Release Acceptance Checklist
+
+Goal: split the final Stage K review into explicit gates that can be repeated
+without rereading the whole migration plan.
+
+Work:
+
+- add `docs/release-acceptance-checklist.md`;
+- separate automated smoke, browser workspace review, safe API checks,
+  install/recovery checks and evidence capture;
+- keep provider sends, `processQueue`, credential acceptance, payment posting,
+  visit finish and inventory write actions out of automated release smoke.
+
+Status:
+
+- release acceptance now has a compact checklist linked from the developer
+  runbook, demo runbook, product plan and general acceptance checklist;
+- final review can record `stageJAcceptance`, smoke, PHPUnit, browser and
+  deploy-config results in one place.

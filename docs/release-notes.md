@@ -217,6 +217,9 @@
   local stack, runs rebuild/bootstrap/demo seed and checks `stageJAcceptance`,
   management snapshot, finance JSON export and inventory workspace without
   calling live provider sends or risky write actions.
+- Added `docs/release-acceptance-checklist.md` as the compact Stage K release
+  gate for automated smoke, browser workspace review, safe API checks,
+  install/recovery checks and release evidence.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

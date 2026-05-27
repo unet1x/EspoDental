@@ -37,6 +37,10 @@ It is intentionally read-only for business actions: no live provider sends,
 `processQueue`, provider credential acceptance, payment posting or inventory
 write actions.
 
+Use `docs/release-acceptance-checklist.md` for the final Stage K pass. It
+separates the automated smoke, browser workspace pass, safe API checks,
+install/recovery checks and evidence to record for the release candidate.
+
 ## Demo Data
 
 `espo-dental-demo-seed` creates:
