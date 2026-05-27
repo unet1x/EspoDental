@@ -553,7 +553,13 @@ Status:
   process queued notification retries through the existing
   `MessageDeliveryGateway`; delivery results are written back to
   `NotificationLog` with `deliveryHistory`, attempts, sent/failed status and
-  provider error details.
+  provider error details;
+- fifth Stage J slice added a stricter provider readiness checklist to
+  `GET /EspoDental/Integration/healthcheck` and `IntegrationOpsCenter`. Each
+  SMTP, Telegram and WhatsApp row now exposes settings, runtime configuration,
+  secret-reference and credential-acceptance checks without leaking secret
+  values. `pending_acceptance` means the channel is ready for staff credential
+  acceptance, not that live provider smoke is allowed automatically.
 
 ### Stage K - Demo And Release Readiness
 
@@ -587,8 +593,9 @@ Continue Stage J acceptance:
 4. Browser/API-check `NotificationLog/processQueue` on demo queued rows and
    confirm provider failures are audited as `failed` without breaking
    `payload.requeueHistory`.
-5. Decide whether the next Stage J slice should wait for provider credential
-   acceptance or add a stricter provider readiness checklist.
+5. Browser-check the provider readiness checklist in `IntegrationOpsCenter`
+   and confirm enabled channels with complete runtime settings show
+   `pending_acceptance` while live provider smoke remains manual.
 6. Keep all external provider sends and risky assistant actions behind existing
    delivery/proposal boundaries.
 

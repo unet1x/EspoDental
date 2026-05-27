@@ -8,6 +8,7 @@ use DateTimeImmutable;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\Config;
 use Espo\Modules\EspoDental\Entities\AssistantActionProposal;
 use Espo\Modules\EspoDental\Entities\IntegrationSettings;
 use Espo\Modules\EspoDental\Entities\NotificationLog;
@@ -15,8 +16,10 @@ use Espo\Modules\EspoDental\Entities\Patient;
 
 class IntegrationMcpService
 {
-    public function __construct(private readonly EntityManager $entityManager)
-    {
+    public function __construct(
+        private readonly EntityManager $entityManager,
+        private readonly Config $config
+    ) {
     }
 
     /**
@@ -227,6 +230,14 @@ class IntegrationMcpService
             $enabled = $setting ? (bool) $setting->get('isEnabled') : false;
             $secretsReference = $setting ? trim((string) ($setting->get('secretsReference') ?? '')) : '';
             $status = $this->resolveIntegrationStatus($setting !== null, $enabled, $secretsReference);
+            $checklist = $this->buildProviderChecklist($type, $setting, $enabled, $secretsReference);
+            $liveDelivery = $this->buildLiveDeliveryReadiness($checklist);
+            $checklist[] = $this->checklistItem(
+                'provider_acceptance',
+                'Clinic credentials accepted before controlled live smoke',
+                $liveDelivery['status'] === 'pending_acceptance' ? 'pending_acceptance' : 'blocked',
+                true
+            );
 
             $rows[] = [
                 'type' => $type,
@@ -236,21 +247,34 @@ class IntegrationMcpService
                 'clinicId' => $setting ? (string) ($setting->get('clinicId') ?? '') : '',
                 'updatedAt' => $setting ? (string) ($setting->get('updatedAt') ?? '') : '',
                 'status' => $status,
+                'runtimeConfigured' => $this->isRuntimeConfigured($checklist),
+                'checklist' => $checklist,
+                'liveDelivery' => $liveDelivery,
             ];
         }
 
         $summary = [
             'configuredCount' => 0,
             'enabledCount' => 0,
+            'readyCount' => 0,
             'needsSecretCount' => 0,
             'missingSettingsCount' => 0,
+            'runtimeMissingCount' => 0,
+            'dryRunReadyCount' => 0,
+            'acceptancePendingCount' => 0,
+            'blockedLiveTestCount' => 0,
         ];
 
         foreach ($rows as $row) {
             $summary['configuredCount'] += $row['configured'] ? 1 : 0;
             $summary['enabledCount'] += $row['enabled'] ? 1 : 0;
+            $summary['readyCount'] += $row['status'] === 'ready' ? 1 : 0;
             $summary['needsSecretCount'] += $row['status'] === 'needs_secret' ? 1 : 0;
             $summary['missingSettingsCount'] += $row['status'] === 'missing_settings' ? 1 : 0;
+            $summary['runtimeMissingCount'] += $row['enabled'] && !$row['runtimeConfigured'] ? 1 : 0;
+            $summary['dryRunReadyCount'] += $row['liveDelivery']['dryRunReady'] ? 1 : 0;
+            $summary['acceptancePendingCount'] += $row['liveDelivery']['status'] === 'pending_acceptance' ? 1 : 0;
+            $summary['blockedLiveTestCount'] += $row['liveDelivery']['status'] === 'blocked' ? 1 : 0;
         }
 
         return ['summary' => $summary, 'rows' => $rows];
@@ -271,6 +295,205 @@ class IntegrationMcpService
         }
 
         return 'ready';
+    }
+
+    /**
+     * @return list<array<string, mixed>>
+     */
+    private function buildProviderChecklist(
+        string $type,
+        ?IntegrationSettings $setting,
+        bool $enabled,
+        string $secretsReference
+    ): array {
+        $checklist = [
+            $this->checklistItem(
+                'settings_record',
+                'IntegrationSettings record exists',
+                $setting !== null ? 'ok' : 'missing',
+                true
+            ),
+            $this->checklistItem(
+                'enabled_flag',
+                'Integration is enabled by staff',
+                $setting === null ? 'missing' : ($enabled ? 'ok' : 'disabled'),
+                true
+            ),
+            $this->checklistItem(
+                'secret_reference',
+                'Secret reference is assigned',
+                $secretsReference !== '' ? 'ok' : 'missing',
+                $enabled
+            ),
+        ];
+
+        foreach ($this->runtimeRequirements($type) as $requirement) {
+            $required = $enabled;
+            $checklist[] = $this->checklistItem(
+                'runtime_' . $requirement['key'],
+                $requirement['label'],
+                $required ? ($this->configValuePresent($requirement['configKey']) ? 'ok' : 'missing') : 'not_checked',
+                $required,
+                ['sensitive' => (bool) ($requirement['sensitive'] ?? false)]
+            );
+        }
+
+        return $checklist;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $checklist
+     * @return array{status: string, dryRunReady: bool, liveTestAllowed: bool, blockers: list<string>, nextStep: string}
+     */
+    private function buildLiveDeliveryReadiness(array $checklist): array
+    {
+        $blockers = [];
+
+        foreach ($checklist as $item) {
+            if (!(bool) ($item['required'] ?? false)) {
+                continue;
+            }
+
+            if (($item['status'] ?? '') !== 'ok') {
+                $blockers[] = (string) ($item['key'] ?? '');
+            }
+        }
+
+        $dryRunReady = count($blockers) === 0;
+
+        return [
+            'status' => $dryRunReady ? 'pending_acceptance' : 'blocked',
+            'dryRunReady' => $dryRunReady,
+            'liveTestAllowed' => false,
+            'blockers' => array_values(array_filter($blockers)),
+            'nextStep' => $dryRunReady
+                ? 'Credential checklist is ready for staff acceptance; run live provider smoke only after explicit approval.'
+                : 'Complete blocking checklist items before provider credential acceptance.',
+        ];
+    }
+
+    /**
+     * @param list<array<string, mixed>> $checklist
+     */
+    private function isRuntimeConfigured(array $checklist): bool
+    {
+        $hasRuntimeRequirement = false;
+
+        foreach ($checklist as $item) {
+            $key = (string) ($item['key'] ?? '');
+            if (!str_starts_with($key, 'runtime_') || !(bool) ($item['required'] ?? false)) {
+                continue;
+            }
+
+            $hasRuntimeRequirement = true;
+            if (($item['status'] ?? '') !== 'ok') {
+                return false;
+            }
+        }
+
+        return $hasRuntimeRequirement;
+    }
+
+    /**
+     * @param array<string, mixed> $extra
+     * @return array<string, mixed>
+     */
+    private function checklistItem(string $key, string $label, string $status, bool $required, array $extra = []): array
+    {
+        return array_merge([
+            'key' => $key,
+            'label' => $label,
+            'status' => $status,
+            'required' => $required,
+        ], $extra);
+    }
+
+    /**
+     * @return list<array{key: string, label: string, configKey: string, sensitive?: bool}>
+     */
+    private function runtimeRequirements(string $type): array
+    {
+        return match ($type) {
+            IntegrationSettings::TYPE_SMTP => [
+                [
+                    'key' => 'smtp_enabled',
+                    'label' => 'SMTP runtime setting is enabled',
+                    'configKey' => 'espoDentalSmtpEnabled',
+                ],
+                [
+                    'key' => 'smtp_host',
+                    'label' => 'SMTP host is configured',
+                    'configKey' => 'espoDentalSmtpHost',
+                ],
+                [
+                    'key' => 'smtp_port',
+                    'label' => 'SMTP port is configured',
+                    'configKey' => 'espoDentalSmtpPort',
+                ],
+                [
+                    'key' => 'smtp_from',
+                    'label' => 'SMTP sender address is configured',
+                    'configKey' => 'espoDentalSmtpFromAddress',
+                ],
+            ],
+            IntegrationSettings::TYPE_TELEGRAM => [
+                [
+                    'key' => 'telegram_enabled',
+                    'label' => 'Telegram runtime setting is enabled',
+                    'configKey' => 'espoDentalTelegramEnabled',
+                ],
+                [
+                    'key' => 'telegram_token',
+                    'label' => 'Telegram bot token is present',
+                    'configKey' => 'espoDentalTelegramBotToken',
+                    'sensitive' => true,
+                ],
+                [
+                    'key' => 'telegram_api_base',
+                    'label' => 'Telegram API base URL is configured',
+                    'configKey' => 'espoDentalTelegramApiBase',
+                ],
+            ],
+            IntegrationSettings::TYPE_WHATSAPP => [
+                [
+                    'key' => 'whatsapp_enabled',
+                    'label' => 'WhatsApp runtime setting is enabled',
+                    'configKey' => 'espoDentalWhatsAppEnabled',
+                ],
+                [
+                    'key' => 'whatsapp_provider',
+                    'label' => 'WhatsApp provider label is configured',
+                    'configKey' => 'espoDentalWhatsAppProvider',
+                ],
+                [
+                    'key' => 'whatsapp_api_base',
+                    'label' => 'WhatsApp API endpoint is configured',
+                    'configKey' => 'espoDentalWhatsAppApiBase',
+                ],
+                [
+                    'key' => 'whatsapp_token',
+                    'label' => 'WhatsApp access token is present',
+                    'configKey' => 'espoDentalWhatsAppAccessToken',
+                    'sensitive' => true,
+                ],
+            ],
+            default => [],
+        };
+    }
+
+    private function configValuePresent(string $key): bool
+    {
+        $value = $this->config->get($key);
+
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (is_scalar($value)) {
+            return trim((string) $value) !== '';
+        }
+
+        return $value !== null;
     }
 
     /**
@@ -408,7 +631,9 @@ class IntegrationMcpService
         if (
             $notifications['summary']['failedCount'] > 0 ||
             $proposals['summary']['highRiskPendingCount'] > 0 ||
-            $integrations['summary']['needsSecretCount'] > 0
+            $integrations['summary']['needsSecretCount'] > 0 ||
+            $integrations['summary']['runtimeMissingCount'] > 0 ||
+            $integrations['summary']['acceptancePendingCount'] > 0
         ) {
             return 'attention';
         }

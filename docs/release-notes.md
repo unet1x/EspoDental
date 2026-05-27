@@ -192,6 +192,10 @@
   `EspoDental/NotificationLog/processQueue`. The action processes queued rows
   through `MessageDeliveryGateway`, increments attempts and records sent/failed
   provider results in `payload.deliveryHistory`.
+- Integration healthcheck now exposes a provider readiness checklist for SMTP,
+  Telegram and WhatsApp. It verifies settings, runtime config, secret
+  references and credential acceptance gates without exposing secrets;
+  `pending_acceptance` still requires a staff-approved live provider smoke.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

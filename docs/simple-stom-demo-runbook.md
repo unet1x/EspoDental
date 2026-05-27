@@ -70,15 +70,17 @@ out of scope for this migration run.
    revenue/cash/report dashlets with finance, risks, doctors, cabinets and
    payroll panels. Confirm `ReportExportCenter` is directly below it, preview a
    report source, then download CSV and JSON from `EspoDental/Report/export`.
-10. Confirm `IntegrationOpsCenter` shows MCP tool audit, disabled integration
-    settings, failed notification status and pending assistant proposals without
-    sending live messages. Open the pending `AssistantActionProposal` from the
-    dashlet or action center and verify the approve/reject controls affect only
-    review status, notes and reviewer metadata. Use one failed `NotificationLog`
-    retry candidate to verify requeue moves it to `queued` without sending a
-    live provider message. Then use `NotificationLog/processQueue` from
-    `IntegrationOpsCenter` to process the queued row through
-    `NotificationDeliveryService` and confirm the delivery result is audited on
+10. Confirm `IntegrationOpsCenter` shows MCP tool audit, provider readiness checklist,
+    failed notification status and pending assistant proposals
+    without sending live messages. A complete channel may show
+    `pending_acceptance`; that is still a manual credential gate, not automatic
+    permission for live provider smoke. Open the pending
+    `AssistantActionProposal` from the dashlet or action center and verify the
+    approve/reject controls affect only review status, notes and reviewer
+    metadata. Use one failed `NotificationLog` retry candidate to verify
+    requeue moves it to `queued` without sending a live provider message. Run
+    `NotificationLog/processQueue` only in a credential-accepted environment;
+    then confirm `NotificationDeliveryService` audits the delivery result on
     the same row.
 11. Open Report Definitions and Payroll, then inspect the salary entry source
     breakdown.

@@ -33,6 +33,13 @@ staff action. It uses `NotificationDeliveryService` and `MessageDeliveryGateway`
 to process queued rows and audit provider results; MCP still receives no direct
 send tool.
 
+The same read-only healthcheck also returns a provider readiness checklist for
+SMTP, Telegram and WhatsApp. It reports whether each channel has an
+IntegrationSettings row, enabled flag, secret reference, runtime config and
+credential-acceptance gate without returning any secret values. A
+`pending_acceptance` row is still blocked from live provider smoke until staff
+approves the clinic credentials outside the MCP contract.
+
 ## 2. Allowed Tool Behavior
 
 Allowed MCP behavior:

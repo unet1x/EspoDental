@@ -154,6 +154,13 @@ existing delivery boundary. Queued retries can then be processed by staff from
 the same dashboard through `NotificationLog/processQueue`; this is an explicit
 operator action, not an MCP tool and not a hidden background mutation.
 
+The same healthcheck now includes a provider readiness checklist for SMTP,
+Telegram and WhatsApp. It checks the IntegrationSettings row, enabled flag,
+secret reference and runtime configuration without returning secret values.
+When those checks pass the row moves to `pending_acceptance`, which is still a
+manual gate: staff must explicitly accept clinic credentials before any live
+provider smoke is run.
+
 ## 8. Virtual Administrator
 
 The local LLM design is documented in

@@ -659,3 +659,25 @@ Status:
 - staff can requeue failed rows and then explicitly process queued retries;
 - `processQueue` is not part of the MCP contract and does not give assistants
   direct write authority.
+
+### Pass 10 - Provider Readiness Checklist
+
+Goal: make live-channel acceptance explicit before any provider credentials are
+used.
+
+Work:
+
+- extend `Integration/healthcheck` with a provider readiness checklist for
+  SMTP, Telegram and WhatsApp;
+- check IntegrationSettings, enabled flags, secret references and runtime
+  config without returning secret values;
+- expose runtime gaps, dry-run readiness and credential acceptance status in
+  `IntegrationOpsCenter`;
+- keep live provider smoke blocked as `pending_acceptance` until staff accepts
+  clinic credentials.
+
+Status:
+
+- managers can see exactly which channel checklist item blocks live acceptance;
+- `pending_acceptance` means the dry-run checklist is complete, not that an
+  assistant or background job may send live provider messages.

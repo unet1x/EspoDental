@@ -47,6 +47,7 @@ define('espo-dental:views/dashlets/integration-ops-center', [
             html += '<div class="espo-dental-stom-layout espo-dental-stom-layout--two">' +
                 '<div>' +
                     this.renderIntegrationRows(integrations.rows || []) +
+                    this.renderProviderReadiness(integrations.rows || []) +
                     this.renderToolRows((mcp && mcp.tools) || []) +
                 '</div>' +
                 '<div>' +
@@ -67,7 +68,10 @@ define('espo-dental:views/dashlets/integration-ops-center', [
                 ['Ошибки уведомлений', notificationSummary.failedCount || 0],
                 ['Кандидаты retry', notificationSummary.retryCandidateCount || 0],
                 ['На ревью', proposalSummary.pendingReviewCount || 0],
-                ['Нужны секреты', integrationSummary.needsSecretCount || 0]
+                ['Нужны секреты', integrationSummary.needsSecretCount || 0],
+                ['Runtime gaps', integrationSummary.runtimeMissingCount || 0],
+                ['Dry-run ready', integrationSummary.dryRunReadyCount || 0],
+                ['Acceptance', integrationSummary.acceptancePendingCount || 0]
             ];
             var html = '<div class="espo-dental-stom-layout" style="grid-template-columns:repeat(auto-fit,minmax(130px,1fr));margin-bottom:10px">';
 
@@ -79,17 +83,62 @@ define('espo-dental:views/dashlets/integration-ops-center', [
         },
 
         renderIntegrationRows: function (rows) {
-            var body = this.renderTable(rows, ['type', 'status', 'enabled'], function (row) {
+            var body = this.renderTable(rows, ['type', 'status', 'enabled', 'runtime', 'live'], function (row) {
+                var liveDelivery = row.liveDelivery || {};
+                var liveStatus = liveDelivery.status || 'blocked';
+                var runtimeStatus = row.enabled ? (row.runtimeConfigured ? 'ok' : 'missing') : 'not_checked';
+
                 return [
                     row.type || '',
                     SimpleStomUi.label(row.status || 'disabled'),
-                    row.enabled ? 'on' : 'off'
+                    row.enabled ? 'on' : 'off',
+                    SimpleStomUi.badge(runtimeStatus, runtimeStatus),
+                    SimpleStomUi.badge(liveStatus, liveStatus)
                 ];
-            });
+            }, {rawColumns: [3, 4]});
 
             return SimpleStomUi.panel({
                 title: 'Каналы',
                 body: body,
+                classes: ['espo-dental-stom-panel--compact']
+            });
+        },
+
+        renderProviderReadiness: function (rows) {
+            if (!rows.length) {
+                return '';
+            }
+
+            var html = '';
+
+            rows.forEach((function (row) {
+                var checklist = row.checklist || [];
+                var liveDelivery = row.liveDelivery || {};
+                var liveStatus = liveDelivery.status || 'blocked';
+
+                html += '<div style="margin-bottom:12px">' +
+                    '<div class="espo-dental-stom-toolbar" style="margin:0 0 6px">' +
+                        '<strong>' + SimpleStomUi.escapeHtml(row.type || '') + '</strong>' +
+                        SimpleStomUi.badge(liveStatus, liveStatus) +
+                    '</div>' +
+                    this.renderTable(checklist, ['check', 'status', 'required'], function (item) {
+                        var itemStatus = item.status || 'missing';
+
+                        return [
+                            item.label || item.key || '',
+                            SimpleStomUi.badge(itemStatus, itemStatus),
+                            SimpleStomUi.formatValue(!!item.required)
+                        ];
+                    }, {rawColumns: [1]}) +
+                    '<div class="espo-dental-stom-muted" style="margin-top:6px;font-size:12px">' +
+                        SimpleStomUi.escapeHtml(liveDelivery.nextStep || '') +
+                    '</div>' +
+                    '</div>';
+            }).bind(this));
+
+            return SimpleStomUi.panel({
+                title: 'Provider readiness',
+                body: html,
                 classes: ['espo-dental-stom-panel--compact']
             });
         },

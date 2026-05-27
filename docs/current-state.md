@@ -556,6 +556,12 @@ Verification completed after this slice:
   process queued retries through `MessageDeliveryGateway`; the same
   `NotificationLog` row records attempts, sent/failed status, provider errors
   and `payload.deliveryHistory`.
+- Stage J provider acceptance is guarded by a provider readiness checklist in
+  `GET /EspoDental/Integration/healthcheck` and `IntegrationOpsCenter`. The
+  checklist shows IntegrationSettings, runtime config, secret-reference and
+  credential-acceptance status for SMTP, Telegram and WhatsApp without exposing
+  secret values; `pending_acceptance` still blocks automatic live provider
+  smoke until staff explicitly accepts credentials.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and
@@ -740,7 +746,9 @@ Verification completed after this slice:
 The following requirements still need implementation or explicit verification:
 
 - WhatsApp live delivery still needs provider-specific browser or API
-  acceptance once clinic credentials exist.
+  acceptance once clinic credentials exist. The provider readiness checklist
+  now makes that gap visible as `pending_acceptance` instead of silently
+  treating settings as live-ready.
 
 ## 7. Development Rule
 
