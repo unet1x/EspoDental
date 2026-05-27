@@ -765,3 +765,24 @@ Status:
   sending providers or applying assistant payloads;
 - Stage K can use `stageJAcceptance` as the integration acceptance input for
   the final release-readiness pass.
+
+### Pass 15 - Local Release-Readiness Smoke
+
+Goal: make the final demo acceptance repeatable from one local command before
+manual browser review.
+
+Work:
+
+- add `deploy/local/release-readiness-smoke.sh`;
+- start the local Docker stack and run rebuild, `espo-dental-bootstrap` and
+  `espo-dental-demo-seed`;
+- check `stageJAcceptance`, management snapshot, finance JSON export and
+  inventory workspace through read-only API calls;
+- explicitly avoid live provider sends, `processQueue`, provider credential
+  acceptance, payment posting and inventory write endpoints.
+
+Status:
+
+- release-readiness API smoke is now a bounded Stage K command;
+- manual browser review can start after the smoke without relying on chat-only
+  command history.

@@ -589,6 +589,13 @@ Verification completed after this slice:
   enforcement, queue preflight, staff-controlled notification retry and human
   assistant proposal review. `IntegrationOpsCenter` renders the same Stage J
   acceptance panel without calling providers or applying proposal payloads.
+- Stage K release readiness now has a bounded local smoke command:
+  `deploy/local/release-readiness-smoke.sh`. It starts the local stack, runs
+  rebuild, `espo-dental-bootstrap` and `espo-dental-demo-seed`, then checks
+  `stageJAcceptance`, `Report/managementSnapshot`, finance `Report/export` and
+  `Inventory/workspace` through read-only API calls. It does not call provider
+  sends, `processQueue`, provider credential acceptance, payment posting or
+  inventory write endpoints.
 - Phase 10 payroll calculation hardening is in place. `SalaryService::buildEntry`
   accepts `hoursWorked` before calculating the base amount, so hourly profiles
   calculate from entered hours, fixed monthly profiles use the base rate, and

@@ -213,6 +213,10 @@
   and `IntegrationOpsCenter` renders it as a Stage J acceptance panel covering
   MCP safety, provider readiness, credential gating, queue preflight,
   notification retry and proposal review.
+- Added `deploy/local/release-readiness-smoke.sh` for Stage K. It starts the
+  local stack, runs rebuild/bootstrap/demo seed and checks `stageJAcceptance`,
+  management snapshot, finance JSON export and inventory workspace without
+  calling live provider sends or risky write actions.
 - Payroll calculation hardening: salary build now passes entered
   `hoursWorked` into hourly base calculation before the entry is saved, and
   doctor/assistant revenue percentages use the actual `VisitServiceLine.amount`

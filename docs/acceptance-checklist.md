@@ -194,6 +194,9 @@ Checklist:
 
 - `php rebuild.php` passes.
 - `php command.php espo-dental-bootstrap` is idempotent.
+- `bash deploy/local/release-readiness-smoke.sh` passes and verifies
+  `stageJAcceptance`, management snapshot, finance export and inventory
+  workspace without live provider sends or risky write actions.
 - PHP syntax check passes for module files.
 - JSON metadata parses.
 - Docker smoke test passes.

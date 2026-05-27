@@ -29,6 +29,20 @@ docker compose -f deploy/local/docker-compose.yml exec espocrm php command.php e
 patients, appointments, visit, invoice, inventory, payroll and integration
 settings for manual review. See `docs/simple-stom-demo-runbook.md`.
 
+## Release-Readiness Smoke
+
+From the repository root:
+
+```bash
+bash deploy/local/release-readiness-smoke.sh
+```
+
+The script starts this stack, runs rebuild/bootstrap/demo seed and checks
+read-only API surfaces for Stage K: `stageJAcceptance`,
+`Report/managementSnapshot`, `Report/export` and `Inventory/workspace`. It does
+not call provider sends, `processQueue`, provider credential acceptance,
+payment posting or inventory write endpoints.
+
 ## Stop
 
 ```bash

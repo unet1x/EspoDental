@@ -601,18 +601,25 @@ Done when:
 
 - a new developer or clinic owner can run the demo and see a complete dental CRM flow.
 
+Status:
+
+- first Stage K release-readiness slice added
+  `deploy/local/release-readiness-smoke.sh`. The script starts the local stack,
+  runs rebuild/bootstrap/demo seed and checks `stageJAcceptance`, management
+  snapshot, finance JSON export and inventory workspace through read-only API
+  calls. It deliberately avoids provider sends, `processQueue`, provider
+  credential acceptance, payment posting and inventory write actions.
+
 ## 6. Suggested Immediate Next Step
 
 Move to Stage K release readiness:
 
-1. Run the local bootstrap and demo seed from
-   `docs/simple-stom-demo-runbook.md`, then verify `IntegrationOpsCenter`
+1. Run `bash deploy/local/release-readiness-smoke.sh` on a fresh or known local
+   stack and keep the output with the release notes.
+2. Browser-check the manager dashboard after the smoke so `IntegrationOpsCenter`
    exposes the `stageJAcceptance` panel below the KPI strip.
-2. Convert the manual demo runbook into a tighter release acceptance checklist:
+3. Convert the manual demo runbook into a tighter release acceptance checklist:
    one pass for browser-visible workspaces, one pass for API smoke endpoints and
    one pass for install/deploy readiness.
-3. Add a bounded release-readiness smoke script or documented command group
-   that covers rebuild, bootstrap, demo seed, healthcheck, report export,
-   inventory workspace and management snapshot without provider sends.
 4. Keep live SMTP/Telegram/WhatsApp smoke manual and credential-accepted only;
    release readiness may prove the gates, not send clinic messages.

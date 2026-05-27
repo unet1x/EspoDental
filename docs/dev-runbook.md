@@ -1,6 +1,6 @@
 # EspoDental Developer Runbook
 
-Last updated: 2026-05-26
+Last updated: 2026-05-27
 
 This is the short operational guide for continuing development from a fresh
 chat/session.
@@ -69,6 +69,18 @@ Smoke test:
 ```bash
 SMOKE_PORT=18082 bash deploy/smoke/smoke.sh
 ```
+
+Stage K release-readiness smoke for the local demo stack:
+
+```bash
+bash deploy/local/release-readiness-smoke.sh
+```
+
+This command starts the local stack, runs rebuild, `espo-dental-bootstrap` and
+`espo-dental-demo-seed`, then checks read-only API surfaces:
+`stageJAcceptance`, management snapshot, finance JSON export and inventory
+workspace. It does not call provider sends, `processQueue`, provider
+credential acceptance, payment posting or inventory write actions.
 
 Compose config:
 

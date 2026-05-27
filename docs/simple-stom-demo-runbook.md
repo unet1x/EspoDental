@@ -25,6 +25,18 @@ admin / espodental-admin
 The demo command is idempotent. It matches records by stable `DEMO SimpleStom`
 markers and can be re-run after rebuilds.
 
+For the bounded Stage K API pass, run:
+
+```bash
+bash deploy/local/release-readiness-smoke.sh
+```
+
+The release-readiness smoke checks `stageJAcceptance`, management snapshot,
+finance JSON export and inventory workspace after rebuild/bootstrap/demo seed.
+It is intentionally read-only for business actions: no live provider sends,
+`processQueue`, provider credential acceptance, payment posting or inventory
+write actions.
+
 ## Demo Data
 
 `espo-dental-demo-seed` creates:
